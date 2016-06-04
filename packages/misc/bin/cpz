@@ -1,0 +1,22 @@
+#!/bin/bash
+# Copy files to names with a 'z' prepended
+
+function usage() {
+    echo "Usage: $(basename "${0}") files..."
+    exit 1
+}
+
+test -z "${1}" && usage
+
+function do-cpz() {
+    local BASE DIR
+    BASE="$(basename "${1}")"
+    DIR="$(dirname "${1}")"
+
+    cp -a "${1}" "${DIR}/z${BASE}"
+}
+
+while (($#)); do
+    do-cpz "${1}"
+    shift
+done

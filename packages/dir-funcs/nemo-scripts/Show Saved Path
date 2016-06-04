@@ -1,0 +1,16 @@
+#!/bin/bash
+# 'cdc' equivalent for nemo
+
+LINENUM='1'
+
+if [ ! -f "${DOTFILES_CDS_CDL}" ] || [ "${LINENUM}" -gt "$(wc -l <"${DOTFILES_CDS_CDL}")" ]; then
+    zenity --info --text='No path saved.'
+else
+    RESULT="$(sed -n "${LINENUM}p" "${DOTFILES_CDS_CDL}")"
+
+    if [ -z "${RESULT}" ]; then
+        zenity --info --text='No path saved.'
+    else
+        zenity --info --text="Saved path: ${RESULT}"
+    fi
+fi

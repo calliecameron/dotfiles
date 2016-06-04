@@ -1,0 +1,4 @@
+#!/bin/bash
+# Start VLC with the remote control interface
+
+vlc --intf qt --extraintf rc --rc-host :"${DOTFILES_VLC_PORT}" "${@}" &>/dev/null &

@@ -1,0 +1,3 @@
+#compdef sumnt
+
+_arguments "1: :($(if [ -e "${DOTFILES_SSH_MOUNT_DIR}" ]; then \ls "${DOTFILES_SSH_MOUNT_DIR}"; fi))"

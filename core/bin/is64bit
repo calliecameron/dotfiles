@@ -1,0 +1,33 @@
+#!/bin/bash
+
+QUIET="${1}"
+
+function say-yes() {
+    if [ "${QUIET}" != '-q' ]; then
+        echo 'Yes'
+    fi
+    exit 0
+}
+
+function say-no() {
+    if [ "${QUIET}" != '-q' ]; then
+        echo 'No'
+    fi
+    exit 1
+}
+
+if [ "${DOTFILES_OS}" = 'linux' ]; then
+    if [ "$(uname -m)" = 'x86_64' ]; then
+        say-yes
+    else
+        say-no
+    fi
+elif [ "${DOTFILES_OS}" = 'cygwin' ]; then
+    if [ "${PROCESSOR_ARCHITECTURE}" = 'x86' ] && [ -z "${PROCESSOR_ARCHITEW6432}" ]; then
+        say-no
+    else
+        say-yes
+    fi
+else
+    say-no
+fi

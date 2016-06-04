@@ -1,0 +1,18 @@
+#!/bin/bash
+# Shrink all images specified on the command line, in place, to be 800x600
+
+function usage() {
+    echo "Usage: $(basename "${0}") files..."
+    exit 1
+}
+
+function do-shrink() {
+    convert "${1}" -resize 800 "${1}"
+}
+
+test -z "${1}" && usage
+
+while (($#)); do
+    do-shrink "${1}"
+    shift
+done

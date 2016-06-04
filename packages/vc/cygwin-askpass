@@ -1,0 +1,13 @@
+#!/bin/bash
+# This is to make password entry for git work
+
+TTY="${SSH_TTY}"
+# shellcheck disable=SC2015
+[ -c "$TTY" ] && [ -r "$TTY" ] && [ -w "$TTY" ] || { echo "Failed to open device \`$TTY'!"; exit 1; }
+exec <"${TTY}"
+
+echo -n "$@" >"${TTY}"
+read -r -s P
+echo >"${TTY}"
+
+echo "${P}"

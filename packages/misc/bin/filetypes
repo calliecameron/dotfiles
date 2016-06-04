@@ -1,0 +1,10 @@
+#!/bin/bash
+# List all the file extensions in the specified folder, or the current folder if none specified
+
+if [ -z "${1}" ]; then
+    LOCATION='.'
+else
+    LOCATION="${1}"
+fi
+
+find "${LOCATION}" -type f -name '*.*' | sed 's|.*\.||' | sort -u

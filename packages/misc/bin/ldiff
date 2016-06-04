@@ -1,0 +1,4 @@
+#!/bin/bash
+# Pipe diff output to less in a single command
+
+diff "${@}" | less

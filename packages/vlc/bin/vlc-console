@@ -1,0 +1,15 @@
+#!/bin/bash
+
+if [ ! -z "${1}" ]; then
+    HOST="${1}"
+else
+    HOST='localhost'
+fi
+
+if [ ! -z "${2}" ]; then
+    PORT="${2}"
+else
+    PORT="${DOTFILES_VLC_PORT}"
+fi
+
+nc "${HOST}" "${PORT}"

@@ -1,0 +1,18 @@
+#!/bin/bash
+# Tar with maximum compression
+
+function usage() {
+    echo "Usage $(basename "${0}") infile [outfile]"
+    exit 1
+}
+
+test -z "${1}" && usage
+INFILE="${1}"
+
+if [ ! -z "${2}" ]; then
+    OUTFILE="${2}"
+else
+    OUTFILE="${INFILE}.tar.xz"
+fi
+
+XZ_OPT=-9 tar cJf "${OUTFILE}" "${INFILE}"

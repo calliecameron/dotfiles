@@ -1,0 +1,23 @@
+#!/bin/bash
+# Find symbols in elf files
+
+function usage() {
+    echo "Usage: $(basename "${0}") symbol location glob [readelf]"
+    exit 1
+}
+
+test -z "${1}" && usage
+test -z "${2}" && usage
+test -z "${3}" && usage
+
+if [ ! -z "${4}" ]; then
+    READELF="${4}"
+else
+    READELF='readelf'
+fi
+
+while IFS= read -d $'\0' -r file; do
+    if "${READELF}" -s "${file}" | grep "${1}" >/dev/null; then
+        echo "${file}"
+    fi
+done < <(find "${2}" -name "${3}" -print0)

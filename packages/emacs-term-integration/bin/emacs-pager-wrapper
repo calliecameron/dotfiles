@@ -1,0 +1,8 @@
+#!/bin/bash
+# Tell Emacs when we enter and exit the pager, to allow special behaviour
+
+type emacs-term-cmd &>/dev/null && emacs-term-cmd 'term-pager-on'
+"${DOTFILES_REAL_PAGER}" "${@}"
+RETVAL="${?}"
+type emacs-term-cmd &>/dev/null && emacs-term-cmd 'term-pager-off'
+exit "${RETVAL}"

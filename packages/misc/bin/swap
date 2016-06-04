@@ -1,0 +1,26 @@
+#!/bin/bash
+# Swap the filenames of the given two files
+
+function usage() {
+    echo "Usage: $(basename "${0}") file1 file2"
+    exit 1
+}
+
+function file-err() {
+    echo "'${1}' does not exist or is not a regular file."
+    exit 1
+}
+
+test -z "${1}" && usage
+test -z "${2}" && usage
+
+test ! -f "${1}" && file-err "${1}"
+test ! -f "${2}" && file-err "${2}"
+
+FILE1="${1}"
+FILE2="${2}"
+TEMPFILE="$(mktemp)"
+
+mv "${FILE1}" "${TEMPFILE}"
+mv "${FILE2}" "${FILE1}"
+mv "${TEMPFILE}" "${FILE2}"

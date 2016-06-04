@@ -1,0 +1,35 @@
+#!/bin/bash
+# Open Notepad++ with given arguments
+
+function usage () {
+    echo "Open Notepad++"
+    echo "Usage: $(basename "${0}") [-help] [path]"
+    echo "          [path]: files to open in Notepad++, will open a new file"
+    echo "                  if not supplied."
+    echo "          [-help] Display help (this message)."
+}
+
+if is64bit -q; then
+    tempprogfiles='Program Files (x86)'
+else
+    tempprogfiles='Program Files'
+fi
+
+
+function do-npp() {
+    WIN_PATH="$(cygpath -w -a "${1}")"
+    cygstart "/cygdrive/c/${tempprogfiles}/Notepad++/notepad++.exe" "\"${WIN_PATH}\""
+}
+
+
+case "$1" in
+    ""                 ) cygstart "/cygdrive/c/${tempprogfiles}/Notepad++/notepad++.exe"; exit 0;;
+    "-help"            ) usage; exit 0;;
+    *                  ) ;;
+esac
+
+
+while (($#)); do
+    do-npp "${1}"
+    shift
+done

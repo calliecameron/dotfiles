@@ -1,0 +1,21 @@
+#!/bin/bash
+# 'cds' equivalent for nemo
+
+LINENUM='1'
+TARGET="$(pwd)"
+
+touch "${DOTFILES_CDS_CDL}"
+
+if [ "${LINENUM}" -gt "$(wc -l <"${DOTFILES_CDS_CDL}")" ]; then
+    LINECOUNT="$(wc -l <"${DOTFILES_CDS_CDL}")"
+    i="$(( LINENUM - LINECOUNT - 1 ))"
+
+    while [ "${i}" -gt '0' ]; do
+        echo >> "${DOTFILES_CDS_CDL}"
+        (( i -= 1 ))
+    done
+
+    echo "${TARGET}" >> "${DOTFILES_CDS_CDL}"
+else
+    sed -i "${LINENUM}c ${TARGET}" "${DOTFILES_CDS_CDL}"
+fi

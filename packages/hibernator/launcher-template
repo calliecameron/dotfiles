@@ -1,0 +1,12 @@
+#!/usr/bin/env xdg-open
+[Desktop Entry]
+Version=1.0
+Type=Application
+Terminal=false
+Icon[en_GB]=@@@@@3
+Name[en_GB]=@@@@@1
+Exec=@@@@@2
+Comment[en_GB]=@@@@@4
+Name=@@@@@1
+Comment=@@@@@4
+Icon=@@@@@3

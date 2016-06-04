@@ -1,0 +1,19 @@
+#!/bin/bash
+
+function usage() {
+    echo "Usage: $(basename "${0}") infile [outfile]"
+    exit 1
+}
+
+test -z "${1}" && usage
+INFILE="$(readlink -f "${1}")"
+
+if [ ! -z "${2}" ]; then
+    OUTFILE="${2}"
+else
+    BASE="$(basename "${INFILE}" '.svg')"
+    DIRNAME="$(dirname "${INFILE}")"
+    OUTFILE="${DIRNAME}/${BASE}.pdf"
+fi
+
+inkscape --export-area-drawing "--export-pdf=${OUTFILE}" "${INFILE}"

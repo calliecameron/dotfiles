@@ -1,0 +1,55 @@
+#!/usr/bin/env python
+# Edit the cinnamon panel
+
+import argparse
+import json
+import os.path
+
+PANEL_FILE = os.path.join(os.path.expanduser("~"),
+                          ".cinnamon",
+                          "configs",
+                          "panel-launchers@cinnamon.org",
+                          "2.json")
+
+def load_file():
+    with open(PANEL_FILE) as f:
+        data = json.load(f)
+    return data, data["launcherList"]["value"]
+
+def save_file(data):
+    with open(PANEL_FILE, "w") as f:
+        json.dump(data, f)
+
+def add(args):
+    data, target = load_file()
+    if args.app not in target:
+        target.append(args.app)
+        save_file(data)
+
+def remove(args):
+    data, target = load_file()
+    if args.app in target:
+        target.remove(args.app)
+        save_file(data)
+
+def list_launchers(args):
+    _, launchers = load_file()
+    for app in launchers:
+        print app
+
+parser = argparse.ArgumentParser(description="Manipulate the contents of the Cinnamon launcher panel")
+subparsers = parser.add_subparsers()
+
+parser_add = subparsers.add_parser("add")
+parser_add.add_argument("app", help="An installed .desktop file")
+parser_add.set_defaults(func=add)
+
+parser_remove = subparsers.add_parser("remove")
+parser_remove.add_argument("app", help="An installed .desktop file")
+parser_remove.set_defaults(func=remove)
+
+parser_list = subparsers.add_parser("list")
+parser_list.set_defaults(func=list_launchers)
+
+args = parser.parse_args()
+args.func(args)

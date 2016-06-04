@@ -1,0 +1,22 @@
+#!/bin/bash
+# Prepend a 'z' to the given filenames
+
+function usage() {
+    echo "Usage: $(basename "${0}") files..."
+    exit 1
+}
+
+test -z "${1}" && usage
+
+function do-mvz() {
+    local BASE DIR
+    BASE="$(basename "${1}")"
+    DIR="$(dirname "${1}")"
+
+    mv "${1}" "${DIR}/z${BASE}"
+}
+
+while (($#)); do
+    do-mvz "${1}"
+    shift
+done

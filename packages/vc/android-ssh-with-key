@@ -1,0 +1,5 @@
+#!/system/bin/sh
+# Force ssh to use the generated key
+
+# shellcheck disable=SC2029
+ssh -i ~/.ssh/id_rsa "${@}"

@@ -1,0 +1,3 @@
+#!/bin/bash
+
+bash -c 'if type emacs-daemon &>/dev/null; then emacs-daemon; else x-terminal-emulator; fi' &

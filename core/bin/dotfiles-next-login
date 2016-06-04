@@ -1,0 +1,24 @@
+#!/bin/bash
+# Schedule a command to run at the next login
+
+function usage() {
+    echo "Usage: $(basename "${0}") command [args...]"
+    exit 1
+}
+
+test -z "${1}" && usage
+
+COMMAND="${*}"
+
+if [ -e "${DOTFILES_NEXT_LOGIN}" ]; then
+    if ! grep "${COMMAND}" "${DOTFILES_NEXT_LOGIN}" &>/dev/null; then
+        echo "${COMMAND}" >> "${DOTFILES_NEXT_LOGIN}"
+    fi
+else
+    cat > "${DOTFILES_NEXT_LOGIN}" <<EOF
+# This file will be run (and deleted) on the next login.
+# Add to it using dotfiles-next-login.
+
+${COMMAND}
+EOF
+fi

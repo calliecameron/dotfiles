@@ -1,0 +1,16 @@
+#!/bin/bash
+# 'cdl' equivalent for nemo
+
+LINENUM='1'
+
+if [ ! -f "${DOTFILES_CDS_CDL}" ] || [ "${LINENUM}" -gt "$(wc -l <"${DOTFILES_CDS_CDL}")" ]; then
+    zenity --warning --text='No path saved.'
+else
+    RESULT="$(sed -n "${LINENUM}p" "${DOTFILES_CDS_CDL}")"
+
+    if [ -z "${RESULT}" ]; then
+        zenity --warning --text='No path saved.'
+    else
+        xdg-open "${RESULT}"
+    fi
+fi

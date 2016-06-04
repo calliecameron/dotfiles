@@ -1,0 +1,30 @@
+#!/bin/bash
+
+function in-emacs-terminal() {
+    if [[ "${TERM}" =~ 'eterm' ]]; then
+        return 0
+    elif [ "${TERM}" = 'screen' ] && [ ! -z "${TMUX}" ] &&
+             [[ "$(tmux display-message -p '#{client_termname}')" =~ 'eterm' ]]; then
+        return 0
+    else
+        return 1
+    fi
+}
+
+function send-emacs-term-command() {
+    local CMD="${1}"
+
+    if in-emacs-terminal; then
+        if [ "${TERM}" = 'screen' ]; then
+            # Tmux, not screen
+            env printf "\033Ptmux;\033${CMD}\033\\"
+        else
+            # Top-level emacs terminal
+            env printf "${CMD}"
+        fi
+    fi
+}
+
+send-emacs-term-command "\033AnSiTu $(id -un)\n"
+send-emacs-term-command "\033AnSiTh ${EMACS_PROMPT_HOSTNAME}\n"
+send-emacs-term-command "\033AnSiTc $(pwd)\n"

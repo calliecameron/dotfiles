@@ -1,0 +1,20 @@
+#!/bin/bash
+# Unmount an SSH path easily
+
+function usage() {
+    echo "Usage: $(basename "${0}") dir"
+    exit 1
+}
+
+test -z "${1}" && usage
+
+DIR="${DOTFILES_SSH_MOUNT_DIR}/${1}"
+
+if [ -e "${DIR}" ]; then
+    fusermount -u "${DIR}" &&
+    rmdir "${DIR}" &&
+    rmdir --ignore-fail-on-non-empty "${DOTFILES_SSH_MOUNT_DIR}"
+else
+    echo "No such mount: ${DIR}"
+    exit 1
+fi

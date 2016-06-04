@@ -1,0 +1,9 @@
+#!/bin/bash
+# Start the samba server and open all ports appropriately
+
+sudo start smbd
+sudo start nmbd
+port open 137 udp
+port open 138 udp
+port open 139 tcp
+port open 445 tcp

@@ -1,0 +1,29 @@
+#!/bin/bash
+# A service starts at boot unless the file "/etc/init/$NAME.override" exists and contains the line 'manual'
+
+function usage() {
+    echo "Usage: $(basename "${0}") service"
+    exit 1
+}
+
+test -z "${1}" && usage
+
+CONF_FILE="/etc/init/${1}.conf"
+OVERRIDE_FILE="/etc/init/${1}.override"
+
+if [ ! -f "${CONF_FILE}" ]; then
+    echo "Unknown service '${1}'."
+    exit 1
+fi
+
+if [ -f "${OVERRIDE_FILE}" ]; then
+    if (echo 'manual' | diff "${OVERRIDE_FILE}" - >/dev/null); then
+        sudo rm "${OVERRIDE_FILE}"
+        exit 0
+    else
+        echo 'An override file exists with different contents - better sort this manually.'
+        exit 1
+    fi
+else
+    exit 0
+fi

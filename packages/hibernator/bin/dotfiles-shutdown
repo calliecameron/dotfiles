@@ -1,0 +1,4 @@
+#!/bin/bash
+# Shut down the computer immediately
+
+dbus-send --system --print-reply --dest="org.freedesktop.ConsoleKit" /org/freedesktop/ConsoleKit/Manager org.freedesktop.ConsoleKit.Manager.Stop

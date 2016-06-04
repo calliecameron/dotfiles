@@ -1,0 +1,13 @@
+#!/bin/bash
+
+function usage() {
+    echo "Usage: $(basename "${0}") file"
+    exit 1
+}
+
+test -z "${1}" && usage
+test ! -f "${1}" && usage
+
+FILE="${1}"
+
+inotify-cmd "${FILE}" emacs-term-cmd 'term-inotify' "${FILE}"

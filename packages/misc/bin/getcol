@@ -1,0 +1,11 @@
+#!/bin/bash
+# Print a column of numbers
+
+function usage() {
+    echo "Usage: $(basename "${0}") file"
+    exit 1
+}
+
+test -z "${1}" && usage
+
+awk "{print \$${1}}"

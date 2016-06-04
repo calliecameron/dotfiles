@@ -1,0 +1,36 @@
+#!/bin/bash
+# ShellExecute given arguments
+
+function usage () {
+    cat <<EOF
+ShellExecute the given paths
+Usage: $(basename "${0}") [-help] path
+          path: paths to ShellExecute. Only works on files created
+                by Cygwin if they are marked as executable!
+          [-help] Display help (this message).
+EOF
+    exit 1
+}
+
+function do-shellex() {
+    local WIN_PATH
+    if [ -e "${1}" ]; then
+        WIN_PATH="$(cygpath -w -a "${1}")"
+        cmd /C start "" "${WIN_PATH}"
+    else
+        echo "${1} does not exist!"
+    fi
+}
+
+
+case "${1}" in
+    ""                 ) do-shellex "."; exit 0;;
+    "-help"            ) usage;;
+    *                  ) ;;
+esac
+
+
+while (($#)); do
+    do-shellex "${1}"
+    shift
+done
