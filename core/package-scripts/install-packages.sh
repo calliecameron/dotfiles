@@ -13,7 +13,13 @@ function fail() {
 
 if [ ! -z "${DOTFILES_PRIVATE_REPO}" ] && [ ! -d "${DOTFILES_PRIVATE_DIR}" ]; then
     if yn-y 'A private repo has been specified; clone it?'; then
-        if ! git clone "${DOTFILES_PRIVATE_REPO}" "${DOTFILES_PRIVATE_DIR}"; then
+        if git clone "${DOTFILES_PRIVATE_REPO}" "${DOTFILES_PRIVATE_DIR}"; then
+            if [ ! -z "${DOTFILES_PRIVATE_BRANCH}" ]; then
+                cd "${DOTFILES_PRIVATE_DIR}" &&
+                # shellcheck disable=SC2015
+                git checkout "${DOTFILES_PRIVATE_BRANCH}" || fail 'Could not check out private branch'
+            fi
+        else
             fail 'Could not clone private repo.'
         fi
     fi
