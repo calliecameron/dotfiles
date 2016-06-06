@@ -57,7 +57,7 @@ gsettings-remove-from-list org.cinnamon.desktop.keybindings.media-keys video-out
 
 
 cinnamon-keybinding 'Emacs' 'emacs-daemon' '<Primary><Alt>e' &&
-cinnamon-keybinding 'Chrome' "${CHROME_COMMAND}" '<Primary><Alt>f' &&
+cinnamon-keybinding 'Chrome' "${CHROME_COMMAND}" '<Primary><Alt>b' &&
 cinnamon-keybinding 'Chrome Extra' "${CHROME_COMMAND}" 'HomePage' &&
 cinnamon-keybinding 'VLC' 'vlc-wrapper' '<Primary><Alt>v' &&
 cinnamon-keybinding 'VLC Pause' 'vlc-pause' '<Primary><Alt>space' &&
@@ -70,6 +70,7 @@ cinnamon-keybinding 'GnuCash' 'gnucash' '<Primary><Alt>g' &&
 cinnamon-keybinding 'Calculator' 'gnome-calculator' '<Primary><Alt>c' &&
 cinnamon-keybinding 'Anki' "anki -b ${HOME}/Anki" '<Primary><Alt>a' &&
 cinnamon-keybinding 'Switch monitor' 'monitor_switch.sh' '<Primary><Super>m' &&
+cinnamon-keybinding 'Workrave' 'workrave' '<Primary><Alt>w' &&
 
 gsettings-add-if-not-in-list org.gnome.libgnomekbd.keyboard options $'ctrl\tctrl:nocaps' || exit 1
 
