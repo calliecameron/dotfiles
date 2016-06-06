@@ -33,7 +33,7 @@ if [ -e "${DOTFILES_PACKAGE_INSTALL_DIR}" ]; then
         if [ -d "${DOTFILES_PRIVATE_DIR}" ]; then
             if dotfiles-repo-is-clean "${DOTFILES_PRIVATE_DIR}"; then
                 # shellcheck disable=SC2015
-                cd "{DOTFILES_PRIVATE_DIR}" &&
+                cd "${DOTFILES_PRIVATE_DIR}" &&
                 git pull || fail 'Failed to update private repo.'
             else
                 echo-yellow 'Private repo has uncommitted changes; not updating it.'
