@@ -169,14 +169,14 @@
 
   (defun dotfiles-pop-to-ipython ()
     (interactive)
+    (setq dotfiles--ipython-popped-from (current-buffer))
     (dotfiles--create-or-pop-to-buffer
      (lambda (buf) (buffer-local-value 'dotfiles--term-in-ipython buf))
      (lambda ()
        (multi-term)
        (term-send-string (get-buffer-process (current-buffer)) "py")
        (term-send-input)
-       (current-buffer))
-     (lambda () (setq dotfiles--ipython-popped-from (current-buffer)))))
+       (current-buffer))))
 
   (require 'python)
   (bind-keys

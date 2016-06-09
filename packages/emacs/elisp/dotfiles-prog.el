@@ -338,14 +338,27 @@
 
 (use-package helm-dash
   :config
+  (require 'eww)
   (setq
    helm-dash-min-length 0
    helm-dash-docsets-path (expand-file-name
                            (if dotfiles-on-android
                                (f-join (getenv "ANDROID_EXTRA") "emacs-docsets")
                              (concat user-emacs-directory "/dash-docsets")))
-   helm-dash-browser-func 'eww
+   helm-dash-browser-func 'dotfiles--helm-dash-eww
    helm-dash-enable-debugging nil)
+
+  (defvar dotfiles--helm-dash-eww-buffer nil)
+
+  (defun dotfiles--helm-dash-eww (url)
+    "Pop to an existing eww buffer if possible."
+    (interactive)
+    (dotfiles--create-or-pop-to-buffer
+     (lambda (buf) (eq buf dotfiles--helm-dash-eww-buffer))
+     (lambda () (eww-setup-buffer) (current-buffer)))
+    (setq dotfiles--helm-dash-eww-buffer (current-buffer))
+    (unless (eq eww-current-url url)
+      (eww-browse-url url)))
 
   (defconst dotfiles-required-docsets '("Bash" "Bootstrap_4" "C" "C++" "CSS" "Emacs_Lisp" "Haskell" "HTML" "Java_SE8" "JavaScript" "jQuery" "jQuery_UI" "LaTeX" "Markdown" "MATLAB" "NumPy" "Python_2" "Python_3" "SciPy")
     "Helm-dash docsets that will be installed.")
@@ -453,10 +466,10 @@
 
   (defun dotfiles-pop-to-ielm ()
     (interactive)
+    (setq dotfiles--ielm-popped-from (current-buffer))
     (dotfiles--create-or-pop-to-buffer
      "*ielm*"
-     (lambda () (ielm) (current-buffer))
-     (lambda () (setq dotfiles--ielm-popped-from (current-buffer)))))
+     (lambda () (ielm) (current-buffer))))
 
   (bind-keys
    :map emacs-lisp-mode-map

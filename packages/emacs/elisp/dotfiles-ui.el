@@ -85,12 +85,10 @@
 (dotfiles--local-aliases dotfiles-local-bash-aliases "bash")
 (dotfiles--local-aliases dotfiles-local-zsh-aliases "zsh")
 
-(defun dotfiles--create-or-pop-to-buffer (buffer creator &optional before after)
+(defun dotfiles--create-or-pop-to-buffer (buffer creator)
   "Display a buffer in another window, or if no suitable buffer is found, create one and diaplay it.
 
-If BUFFER is a string, it is the name of the buffer to find; if it is a predicate, use the first buffer for which it returns true.  CREATOR is used to create a new buffer if no suitable existing one is found, and should return the new buffer.  BEFORE is called at the beginning, and AFTER is called at the end."
-  (when before
-    (funcall before))
+If BUFFER is a string, it is the name of the buffer to find; if it is a predicate, use the first buffer for which it returns true.  CREATOR is used to create a new buffer if no suitable existing one is found, and should return the new buffer."
   (pop-to-buffer
    (let* ((initial-buf (current-buffer))
           (buf
@@ -104,9 +102,7 @@ If BUFFER is a string, it is the name of the buffer to find; if it is a predicat
        buf))
    '((display-buffer-reuse-window
       display-buffer-pop-up-window)
-     . ((inhibit-same-window . t))))
-  (when after
-    (funcall after)))
+     . ((inhibit-same-window . t)))))
 
 (defun dotfiles--try-pop-to-buffer (buf)
   "Pop to BUF, or display an error message if not possible."
