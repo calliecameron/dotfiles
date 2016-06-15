@@ -46,8 +46,8 @@ if which git >/dev/null; then
     git config --global pager.status true
     git config --global status.showUntrackedFiles all
 
-    if ([ "${DOTFILES_OS}" = 'linux' ] && [ "${DOTFILES_LINUX_VARIANT}" = 'pi' ]) || [ "${DOTFILES_OS}" = 'android' ]; then
-        # Git on the pi and on android is too old to support simple
+    if [ "${DOTFILES_OS}" = 'android' ]; then
+        # Git on android is too old to support simple
         git config --global push.default matching
     else
         git config --global push.default simple
