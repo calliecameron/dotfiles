@@ -1,7 +1,7 @@
 function _install() {
     function do-pip2() {
         if [ "${DOTFILES_OS}" = 'linux' ]; then
-            sudo pip install "${@}" || return 1
+            sudo -H pip install "${@}" || return 1
         elif [ "${DOTFILES_OS}" = 'cygwin' ]; then
             printf '\033[34m'
             cat <<EOF
@@ -17,7 +17,7 @@ EOF
 
     function do-pip3() {
         if [ "${DOTFILES_OS}" = 'linux' ]; then
-            sudo pip3 install "${@}" || return 1
+            sudo -H pip3 install "${@}" || return 1
         elif [ "${DOTFILES_OS}" = 'cygwin' ]; then
             printf '\033[34m'
             cat <<EOF

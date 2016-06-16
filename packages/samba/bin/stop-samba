@@ -1,8 +1,12 @@
 #!/bin/bash
 # Stop the samba server and close all ports appropriately
 
-sudo stop smbd
-sudo stop nmbd
+if lsb_release -a | grep rosa &>/dev/null; then
+    sudo stop smbd
+    sudo stop nmbd
+else
+    sudo systemctl stop smbd nmbd
+fi
 port close 137 udp
 port close 138 udp
 port close 139 tcp

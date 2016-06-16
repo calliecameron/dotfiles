@@ -12,7 +12,11 @@ else
 fi
 
 # Menu
-cinnamon-favourites remove mintInstall.desktop &&
+if lsb_release -a | grep rosa &>/dev/null; then
+    cinnamon-favourites remove mintInstall.desktop || exit 1
+else
+    cinnamon-favourites remove mintinstall.desktop || exit 1
+fi
 cinnamon-favourites remove xchat.desktop &&
 cinnamon-favourites remove firefox.desktop &&
 cinnamon-favourites add "${CHROME_DESKTOP}" &&

@@ -8,8 +8,14 @@ function _can-install() {
 
 function _install() {
     # Don't run at startup
-    echo 'manual' | sudo tee /etc/init/smbd.override &>/dev/null &&
-    echo 'manual' | sudo tee /etc/init/nmbd.override &>/dev/null
+    if lsb_release -a | grep rosa &>/dev/null; then
+        echo 'manual' | sudo tee /etc/init/smbd.override &>/dev/null &&
+        echo 'manual' | sudo tee /etc/init/nmbd.override &>/dev/null || return 1
+    else
+        sudo systemctl stop smbd nmbd &&
+        sudo systemctl disable smbd nmbd || return 1
+    fi
+    return 0
 }
 
 function _update() {
