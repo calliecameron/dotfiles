@@ -40,6 +40,7 @@
  tab-always-indent 'complete
  vc-make-backup-files t
  vc-follow-symlinks t
+ vc-handled-backends nil
  x-alt-keysym 'meta)
 
 (setq-default
