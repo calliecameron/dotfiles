@@ -1,8 +1,7 @@
 #!/bin/bash
 # Stop the samba server and close all ports appropriately
 
-sudo stop smbd
-sudo stop nmbd
+sudo systemctl stop smbd nmbd
 port close 137 udp
 port close 138 udp
 port close 139 tcp
