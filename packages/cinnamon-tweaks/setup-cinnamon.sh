@@ -12,7 +12,7 @@ else
 fi
 
 # Menu
-cinnamon-favourites remove mintInstall.desktop &&
+cinnamon-favourites remove mintinstall.desktop &&
 cinnamon-favourites remove xchat.desktop &&
 cinnamon-favourites remove firefox.desktop &&
 cinnamon-favourites add "${CHROME_DESKTOP}" &&

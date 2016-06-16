@@ -14,8 +14,7 @@ function _install() {
         sudo apt-get dist-upgrade || return 1
 
         if [ "${DOTFILES_LINUX_VARIANT}" = 'main' ]; then
-            "${PACKAGE_CONF_DIR}/packages-main-core.sh" &&
-            "${PACKAGE_CONF_DIR}/packages-main-gui.sh" || return 1
+            "${PACKAGE_CONF_DIR}/packages-main.sh" || return 1
         elif [ "${DOTFILES_LINUX_VARIANT}" = 'android' ]; then
             "${PACKAGE_CONF_DIR}/packages-android-linux.sh" || return 1
         elif [ "${DOTFILES_LINUX_VARIANT}" = 'pi' ]; then

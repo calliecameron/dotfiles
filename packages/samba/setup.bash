@@ -8,8 +8,8 @@ function _can-install() {
 
 function _install() {
     # Don't run at startup
-    echo 'manual' | sudo tee /etc/init/smbd.override &>/dev/null &&
-    echo 'manual' | sudo tee /etc/init/nmbd.override &>/dev/null
+    sudo systemctl stop smbd nmbd &&
+    sudo systemctl disable smbd nmbd
 }
 
 function _update() {
