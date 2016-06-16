@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # Add a value to a gsettings list, but only if it isn't there already
 
 import sys
@@ -6,8 +6,9 @@ import os.path
 import subprocess
 import ast
 
+
 def usage():
-    print "Usage: " + os.path.basename(sys.argv[0]) + " schema key value"
+    print("Usage: " + os.path.basename(sys.argv[0]) + " schema key value")
     sys.exit(1)
 
 if len(sys.argv) < 4:
@@ -17,13 +18,18 @@ schema = sys.argv[1]
 key = sys.argv[2]
 value = sys.argv[3]
 
-def gsettingsGetList(schema, key):
-    s = subprocess.check_output(["gsettings", "get", schema, key]).strip()
+
+def gsettings_get_list(schema, key):
+    s = subprocess.check_output([
+        "gsettings",
+        "get",
+        schema,
+        key]).strip().decode(sys.stdout.encoding)
     if s == "@as []":
         s = "[]"
     return ast.literal_eval(s)
 
-l = gsettingsGetList(schema, key)
+l = gsettings_get_list(schema, key)
 
 if value not in l:
     l.append(value)

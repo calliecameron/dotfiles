@@ -5,7 +5,7 @@ function _can-install() {
 function _install() {
     git clone https://github.com/junghans/cwdiff.git "${PACKAGE_INSTALL_DIR}" &&
     cd "${PACKAGE_INSTALL_DIR}" &&
-    git checkout v0.3.0 || return 1
+    git checkout v0.4.0 || return 1
 
     local LINE="%include ${PACKAGE_INSTALL_DIR}/cwdiff.rc"
     if ! grep "^${LINE}\$" "${DOTFILES_HG_LOCAL}" &>/dev/null; then

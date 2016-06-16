@@ -1,6 +1,7 @@
 function _can-install() {
     package-installed nodejs &&
-    type npm &>/dev/null
+    type npm &>/dev/null &&
+    [ ! -z "${NPM_PACKAGES}" ]
 }
 
 function _install() {
