@@ -44,6 +44,10 @@ else
     }
 fi
 
+if which pip &>/dev/null; then
+    eval "$(pip completion --${DOTFILES_SHELL})"
+fi
+
 if which activate.sh &>/dev/null; then
     source activate.sh
 fi
