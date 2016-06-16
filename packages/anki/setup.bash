@@ -8,8 +8,8 @@ function _can-install() {
 function _install() {
     # shellcheck disable=SC2155
     local TMPDIR="$(mktemp -d)" &&
-    local DEBFILE="${TMPDIR}/anki-2.0.33.deb" &&
-    wget -O "${DEBFILE}" 'http://ankisrs.net/download/mirror/anki-2.0.33.deb' &&
+    local DEBFILE="${TMPDIR}/anki-2.0.36.deb" &&
+    wget -O "${DEBFILE}" 'http://ankisrs.net/download/mirror/anki-2.0.36.deb' &&
     sudo gdebi "${DEBFILE}" &&
     rm "${DEBFILE}" &&
     rmdir "${TMPDIR}"

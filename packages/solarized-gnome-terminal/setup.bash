@@ -3,8 +3,12 @@ function _can-install() {
 }
 
 function _install() {
-    git clone https://github.com/Anthony25/gnome-terminal-colors-solarized.git "${PACKAGE_INSTALL_DIR}" &&
-    "${PACKAGE_INSTALL_DIR}/install.sh" --scheme dark --profile Default
+    git clone https://github.com/Anthony25/gnome-terminal-colors-solarized.git "${PACKAGE_INSTALL_DIR}" || return 1
+    if ! "${PACKAGE_INSTALL_DIR}/install.sh" --scheme dark --profile Default; then
+        echo-red "If this fails to install, change the profile name in Gnome Terminal to 'Default'"
+        return 1
+    fi
+    return 0
 }
 
 function _update() {

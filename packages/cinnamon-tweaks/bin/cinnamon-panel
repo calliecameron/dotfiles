@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # Edit the cinnamon panel
 
 import argparse
@@ -11,14 +11,17 @@ PANEL_FILE = os.path.join(os.path.expanduser("~"),
                           "panel-launchers@cinnamon.org",
                           "2.json")
 
+
 def load_file():
     with open(PANEL_FILE) as f:
         data = json.load(f)
     return data, data["launcherList"]["value"]
 
+
 def save_file(data):
     with open(PANEL_FILE, "w") as f:
         json.dump(data, f)
+
 
 def add(args):
     data, target = load_file()
@@ -26,18 +29,22 @@ def add(args):
         target.append(args.app)
         save_file(data)
 
+
 def remove(args):
     data, target = load_file()
     if args.app in target:
         target.remove(args.app)
         save_file(data)
 
+
 def list_launchers(args):
     _, launchers = load_file()
     for app in launchers:
-        print app
+        print(app)
 
-parser = argparse.ArgumentParser(description="Manipulate the contents of the Cinnamon launcher panel")
+
+parser = argparse.ArgumentParser(
+    description="Manipulate the contents of the Cinnamon launcher panel")
 subparsers = parser.add_subparsers()
 
 parser_add = subparsers.add_parser("add")
