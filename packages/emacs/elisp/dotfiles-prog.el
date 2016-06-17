@@ -540,13 +540,7 @@
   :pin melpa-stable
   :config
   (projectile-global-mode)
-  (setq
-   projectile-mode-line '(:eval
-                          (when
-                              (and (not (file-remote-p default-directory))
-                                   (projectile-project-p))
-                            (format " {%s}"
-                                    (projectile-project-name)))))
+  (setq projectile-mode-line nil)
   (bind-keys*
    ("s-p" . projectile-command-map)
    ("C-S-p" . projectile-command-map)))

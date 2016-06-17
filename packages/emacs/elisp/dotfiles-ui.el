@@ -270,6 +270,19 @@ If BUFFER is a string, it is the name of the buffer to find; if it is a predicat
        ("…" . "..."))
      (lambda (x) (query-replace (car x) (cdr x) nil (point-min) (point-max))))))
 
+(defvar dotfiles--original-mode-line nil)
+(make-variable-buffer-local 'dotfiles--original-mode-line)
+
+(defun dotfiles-toggle-mode-line ()
+  "Toggle the mode line for the current buffer."
+  (interactive)
+  (if dotfiles--original-mode-line
+      (progn
+        (setq mode-line-format dotfiles--original-mode-line)
+        (setq dotfiles--original-mode-line nil))
+    (setq dotfiles--original-mode-line mode-line-format)
+    (setq mode-line-format nil)))
+
 (bind-keys*
  ("C-x DEL". keyboard-quit)
  ("C-x <deletechar>" . keyboard-quit)
@@ -329,6 +342,7 @@ If BUFFER is a string, it is the name of the buffer to find; if it is a predicat
  ("b" . bury-buffer)
  ("c" . count-words)
  ("f" . fill-region)
+ ("m" . dotfiles-toggle-mode-line)
  ("p" . pwd)
  ("r" . dotfiles-rename-file-and-buffer)
  ("u" . dotfiles-utf8ify)
@@ -682,7 +696,6 @@ dotfiles-org-linkify-suffix) appended."
 
 (use-package solarized-theme
   :config
-  (setq solarized-high-contrast-mode-line t)
   (defvar dotfiles-current-theme (if dotfiles-on-android 'solarized-dark 'solarized-light))
   (defun dotfiles-toggle-theme ()
     "Toggle between light and dark themes."
@@ -697,6 +710,16 @@ dotfiles-org-linkify-suffix) appended."
   (bind-keys
    :map dotfiles-buffer-map
    ("-" . dotfiles-toggle-theme)))
+
+(use-package smart-mode-line
+  :config
+  (setq
+   sml/theme 'automatic
+   sml/no-confirm-load-theme t
+   sml/name-width '(16 . 44)
+   sml/col-number-format "%c"
+   sml/line-number-format "%l")
+  (sml/setup))
 
 (use-package switch-window
   :bind
