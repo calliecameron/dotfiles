@@ -1,9 +1,10 @@
 function _can-install() {
-    ([ "${DOTFILES_OS}" = 'linux' ] &&
-    ( [ "${DOTFILES_LINUX_VARIANT}" = 'main' ] || [ "${DOTFILES_LINUX_VARIANT}" = 'android' ] ) &&
-    [ ! -z "${DOTFILES_CAN_SUDO}" ] &&
-    [ ! -z "${DISPLAY}" ]) ||
-    [ "${DOTFILES_OS}" = 'cygwin' ]
+    ( ( [ "${DOTFILES_OS}" = 'linux' ] &&
+        ( [ "${DOTFILES_LINUX_VARIANT}" = 'main' ] || [ "${DOTFILES_LINUX_VARIANT}" = 'android' ] ) &&
+        [ ! -z "${DOTFILES_CAN_SUDO}" ] &&
+        [ ! -z "${DISPLAY}" ] ) ||
+      [ "${DOTFILES_OS}" = 'cygwin' ] ) &&
+    package-installed web-fonts
 }
 
 function _install() {

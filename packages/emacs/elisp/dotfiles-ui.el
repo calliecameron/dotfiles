@@ -603,6 +603,21 @@ If BUFFER is a string, it is the name of the buffer to find; if it is a predicat
   (bind-keys*
    ("M-?" . man)))
 
+(use-package mode-icons
+  :config
+  ;; Hacky madness to make it work with the daemon
+  (defun dotfiles--setup-mode-icons-daemon (frame)
+    (run-at-time 0.1 nil
+                 (lambda ()
+                   (remove-hook 'after-make-frame-functions
+                                'dotfiles--setup-mode-icons-daemon)
+                   (mode-icons-mode))))
+  (if (not (display-graphic-p (selected-frame)))
+      (add-hook
+       'after-make-frame-functions
+       'dotfiles--setup-mode-icons-daemon)
+    (mode-icons-mode)))
+
 (progn
   (require 'org)
   (setq
