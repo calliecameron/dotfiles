@@ -24,6 +24,22 @@
                         nil)
                     t))))
 
+  (advice-add 'term-update-mode-line :after
+              (lambda (&rest args)
+                (setq
+                 mode-line-process
+                 (if (term-in-line-mode)
+                     (list
+                      (propertize
+                       "l"
+                       'help-echo "mouse-1: Switch to char mode"
+                       'mouse-face 'mode-line-highlight
+                       'local-map
+                       '(keymap
+                         (mode-line keymap (down-mouse-1 . term-char-mode)))))
+                   nil))
+                (force-mode-line-update)))
+
   (defun dotfiles-term-toggle-sub-mode ()
     "Toggle between line and char mode."
     (interactive)
