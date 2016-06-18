@@ -61,7 +61,8 @@ In shell files, the following environment variables are available:
 - `DOTFILES_CAN_SUDO`: whether the user has sudo permissions on
   this machine; only set on Linux.
 
-In env and alias files, the following functions are available:
+In env and alias files, and in setup.bash, the following functions are
+available:
 - `message`: display a message in blue the next time an interactive
   shell is started (use instead of echo, which won't be seen in env
   scripts).
