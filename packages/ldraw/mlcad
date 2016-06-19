@@ -1,0 +1,5 @@
+#!/bin/bash
+
+THIS_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
+exec "$(realpath "${THIS_DIR}/../ldraw/MLCad_V3.40/MLCAD.exe")"
