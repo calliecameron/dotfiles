@@ -733,7 +733,8 @@ dotfiles-org-linkify-suffix) appended."
    sml/no-confirm-load-theme t
    sml/name-width '(16 . 44)
    sml/col-number-format "%c"
-   sml/line-number-format "%l")
+   sml/line-number-format "%l"
+   sml/show-eol t)
   (sml/setup))
 
 (use-package switch-window
