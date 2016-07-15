@@ -43,20 +43,6 @@
    TeX-auto-save t
    TeX-parse-self t))
 
-(use-package auto-complete
-  :pin melpa-stable
-  :diminish auto-complete-mode
-  :config
-  (ac-config-default)
-  (setq
-   ac-show-menu-immediately-on-auto-complete t
-   ac-expand-on-auto-complete t
-   ac-use-fuzzy t
-   ac-dwim t)
-  (ac-flyspell-workaround))
-
-(use-package auto-complete-auctex)
-
 (use-package bison-mode)
 
 (progn
@@ -69,6 +55,14 @@
    c-default-style "bsd"
    c-basic-offset 4
    c-tab-always-indent t))
+
+(use-package company
+  :config
+  (global-company-mode))
+
+(use-package company-quickhelp
+  :config
+  (company-quickhelp-mode))
 
 (use-package compile
   :config
