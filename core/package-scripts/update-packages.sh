@@ -18,7 +18,7 @@ if [ -e "${DOTFILES_PACKAGE_INSTALL_DIR}" ]; then
         LAST_UPDATE="$(cat "${UPDATE_FILE}")" &&
         NOW="$(date '+%s')" &&
         DIFF=$(( NOW - LAST_UPDATE )) &&
-        TARGET='1209600' || exit 1 # Seconds in two weeks
+        TARGET='2419200' || exit 1 # Seconds in four weeks
 
         if [ "${DIFF}" -ge "${TARGET}" ]; then
             if yn-y "It's been a while since packages were checked for updates. Check now?"; then

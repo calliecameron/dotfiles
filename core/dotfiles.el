@@ -197,7 +197,7 @@ message."
 
 (let* ((last-update-time (persistent-soft-fetch 'last-update-time "dotfiles"))
        (update-now (or (not last-update-time) (time-less-p
-                                               (time-add last-update-time (days-to-time 14))
+                                               (time-add last-update-time (days-to-time 28))
                                                (current-time)))))
   (when update-now
     (dotfiles--generic-packages-notify-callback
