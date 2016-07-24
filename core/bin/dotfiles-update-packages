@@ -39,12 +39,16 @@ if mkdir "${DOTFILES_PACKAGE_MUTEX}" &>/dev/null; then
             fi
         fi
 
+        touch "${UPDATED_ALREADY_FILE}"
+
         update-packages "${DOTFILES_PACKAGE_CONF_DIR}" || fail
         if [ -d "${DOTFILES_PRIVATE_PACKAGE_CONF_DIR}" ]; then
             update-packages "${DOTFILES_PRIVATE_PACKAGE_CONF_DIR}" || fail
         fi
 
         date '+%s' > "${UPDATE_FILE}"
+
+        rm "${UPDATED_ALREADY_FILE}"
 
         if [ -e "${DOTFILES_NEEDS_LOGOUT}" ]; then
             echo-yellow 'Log out and log in again to set everything up correctly.'

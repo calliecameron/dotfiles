@@ -40,6 +40,8 @@ if [ -e "${DOTFILES_PACKAGE_INSTALL_DIR}" ]; then
             fi
         fi
 
+        touch "${UPDATED_ALREADY_FILE}" || exit 1
+
         while (($#)); do
             test -z "${1}" && fail 'Could not update packages: no configuration root specified.'
             PACKAGE_CONF_ROOT="${1}"
@@ -58,5 +60,7 @@ if [ -e "${DOTFILES_PACKAGE_INSTALL_DIR}" ]; then
         done
 
         date '+%s' > "${UPDATE_FILE}"
+
+        rm "${UPDATED_ALREADY_FILE}"
     fi
 fi

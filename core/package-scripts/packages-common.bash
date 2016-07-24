@@ -3,6 +3,8 @@ source "${DOTFILES_BASH_COMMON}" || exit 1
 IGNORE_FILE="${DOTFILES_PACKAGE_INSTALL_DIR}/ignored.txt"
 # shellcheck disable=SC2034
 UPDATE_FILE="${DOTFILES_PACKAGE_INSTALL_DIR}/last-update.txt"
+# shellcheck disable=SC2034
+UPDATED_ALREADY_FILE="${DOTFILES_PACKAGE_INSTALL_DIR}/updated-already.txt"
 
 function package-setup-vars() {
     # Arg: the name of the package

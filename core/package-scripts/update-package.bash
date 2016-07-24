@@ -7,6 +7,10 @@ function update-package() {
         return 1
     fi
 
+    if grep "^${1}\$" "${UPDATED_ALREADY_FILE}" &>/dev/null; then
+        return 0
+    fi
+
     package-setup-vars "${1}"
     if [ -e "${PACKAGE_SETUP_FILE}" ] && package-installed; then
         if ! cd "${PACKAGE_CONF_DIR}"; then
@@ -34,5 +38,8 @@ function update-package() {
             touch "${DOTFILES_NEEDS_LOGOUT}"
         fi
     fi
+
+    echo "${PACKAGE_NAME}" >> "${UPDATED_ALREADY_FILE}"
+
     package-cleanup
 }
