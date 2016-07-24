@@ -14,7 +14,7 @@ function _install() {
         sudo apt-get dist-upgrade || return 1
 
         if [ "${DOTFILES_LINUX_VARIANT}" = 'main' ]; then
-            if lsb_release -a | grep rosa &>/dev/null; then
+            if lsb_release -a 2>/dev/null | grep rosa &>/dev/null; then
                 "${PACKAGE_CONF_DIR}/packages-main-core.sh" &&
                 "${PACKAGE_CONF_DIR}/packages-main-gui.sh" || return 1
             else

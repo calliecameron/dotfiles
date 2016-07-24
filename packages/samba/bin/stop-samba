@@ -1,7 +1,7 @@
 #!/bin/bash
 # Stop the samba server and close all ports appropriately
 
-if lsb_release -a | grep rosa &>/dev/null; then
+if lsb_release -a 2>/dev/null | grep rosa &>/dev/null; then
     sudo stop smbd
     sudo stop nmbd
 else

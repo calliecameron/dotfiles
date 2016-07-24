@@ -12,7 +12,7 @@ else
 fi
 
 # Menu
-if lsb_release -a | grep rosa &>/dev/null; then
+if lsb_release -a 2>/dev/null | grep rosa &>/dev/null; then
     cinnamon-favourites remove mintInstall.desktop || exit 1
 else
     cinnamon-favourites remove mintinstall.desktop || exit 1
