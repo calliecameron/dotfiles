@@ -26,7 +26,9 @@ if [ -e "${DOTFILES_PACKAGE_INSTALL_DIR}" ]; then
             fi
         fi
     else
-        UPDATE='1'
+        # No update file means we just installed; don't update, initialise things
+        UPDATE='0'
+        date '+%s' > "${UPDATE_FILE}"
     fi
 
     if [ "${UPDATE}" = '1' ]; then
