@@ -41,7 +41,8 @@
  vc-make-backup-files t
  vc-follow-symlinks t
  vc-handled-backends nil
- x-alt-keysym 'meta)
+ x-alt-keysym 'meta
+ x-gtk-use-system-tooltips nil) ; due to hidpi scaling bugs
 
 (setq-default
  major-mode 'text-mode
