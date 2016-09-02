@@ -1,12 +1,8 @@
 #!/bin/bash
 # Start the samba server and open all ports appropriately
 
-if lsb_release -a 2>/dev/null | grep rosa &>/dev/null; then
-    sudo start smbd
-    sudo start nmbd
-else
-    sudo systemctl start smbd nmbd
-fi
+sudo systemctl start smbd nmbd
+
 port open 137 udp
 port open 138 udp
 port open 139 tcp
