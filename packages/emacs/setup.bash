@@ -12,6 +12,7 @@ function _install() {
         mkdir "${PACKAGE_INSTALL_DIR}" &&
         "${PACKAGE_CONF_DIR}/install-emacs-from-source.sh" "${PACKAGE_INSTALL_DIR}" || return 1
         if [ "${DOTFILES_LINUX_VARIANT}" = 'main' ]; then
+            sed "s|@@@@@1@@@@@|${PACKAGE_CONF_DIR}|g" < "${PACKAGE_CONF_DIR}/emacs-daemon.desktop.template" > "${PACKAGE_CONF_DIR}/emacs-daemon.desktop" &&
             xdg-desktop-menu install --novendor "${PACKAGE_CONF_DIR}/emacs-daemon.desktop" &&
             xdg-desktop-icon install --novendor "${PACKAGE_CONF_DIR}/emacs-daemon.desktop" &&
             xdg-mime default emacs-daemon.desktop \

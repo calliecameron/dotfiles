@@ -8,7 +8,7 @@ function usage() {
 test -z "${1}" && usage
 INSTALL_DIR="$(readlink -f "${1}")"
 
-sudo apt-get -y install attr autoconf automake build-essential imagemagick libacl1-dev libasound2-dev libdbus-1-dev libgconf2-dev libgif-dev libgnutls-dev libgpm-dev libgtk-3-dev liblockfile-dev libm17n-dev libmagickwand-dev libncurses5-dev libotf-dev libpng-dev libpoppler-glib-dev libpoppler-private-dev librsvg2-dev libselinux1-dev libxpm-dev libz-dev paxctl texinfo valgrind
+sudo apt-get -y install attr autoconf automake build-essential imagemagick libacl1-dev libasound2-dev libdbus-1-dev libgconf2-dev libgif-dev libgnutls-dev libgpm-dev libgtk-3-dev liblockfile-dev libm17n-dev libmagickwand-dev libncurses5-dev libotf-dev libpng-dev libpoppler-glib-dev libpoppler-private-dev librsvg2-dev libselinux1-dev libwebkitgtk-3.0-dev libxpm-dev libz-dev paxctl texinfo valgrind
 
 function do-make() {
     # Take account of particular requirements on Android Linux
@@ -33,10 +33,10 @@ function do-make() {
 if [ ! -e "${INSTALL_DIR}/bin/emacs" ]; then
     BUILD_DIR="$(mktemp -d)" &&
     cd "${BUILD_DIR}" &&
-    wget 'http://ftp.gnu.org/gnu/emacs/emacs-24.5.tar.xz' &&
-    tar -xf 'emacs-24.5.tar.xz' &&
-    cd 'emacs-24.5' &&
-    ./configure "--prefix=${INSTALL_DIR}" &&
+    wget 'https://ftp.gnu.org/gnu/emacs/emacs-25.1.tar.xz' &&
+    tar -xf 'emacs-25.1.tar.xz' &&
+    cd 'emacs-25.1' &&
+    ./configure --with-modules --with-xwidgets "--prefix=${INSTALL_DIR}" &&
     do-make &&
     make install &&
     cd &&
