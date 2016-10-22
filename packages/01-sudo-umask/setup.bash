@@ -1,7 +1,5 @@
 function _can-install() {
-    [ "${DOTFILES_OS}" = 'linux' ] &&
-    [ ! -z "${DOTFILES_LINUX_VARIANT}" ] &&
-    [ ! -z "${DOTFILES_CAN_SUDO}" ]
+    os linux && known-linux-variant && can-sudo
 }
 
 function _install() {

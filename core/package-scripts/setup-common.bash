@@ -53,3 +53,21 @@ function package-ignored() {
         return 1
     fi
 }
+
+function linux-variant() {
+    while (($#)); do
+        if [ "${DOTFILES_LINUX_VARIANT}" = "${1}" ]; then
+            return 0
+        fi
+        shift
+    done
+    return 1
+}
+
+function known-linux-variant() {
+    test ! -z "${DOTFILES_LINUX_VARIANT}"
+}
+
+function can-sudo() {
+    test ! -z "${DOTFILES_CAN_SUDO}"
+}

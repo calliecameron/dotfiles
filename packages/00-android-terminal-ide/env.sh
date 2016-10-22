@@ -1,4 +1,4 @@
-if [ "${DOTFILES_OS}" = 'android' ]; then
+if os android; then
 
     # Setup /bin, etc.
     MUTEX="${HOME}/.dotfiles-android-mutex"

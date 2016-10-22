@@ -105,6 +105,16 @@ complainunset() {
     fi
 }
 
+os() {
+    while [ ! -z "${1}" ]; do
+        if [ "${DOTFILES_OS}" = "${1}" ]; then
+            return 0
+        fi
+        shift
+    done
+    return 1
+}
+
 commonfuncscleanup() {
-    unset -f message problem homelink homebinlink complainunset commonfuncscleanup
+    unset -f message problem homelink homebinlink complainunset os commonfuncscleanup
 }
