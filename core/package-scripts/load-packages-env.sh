@@ -1,7 +1,7 @@
 # This script will be sourced by $DOTFILES_VARIABLES, so must work in plain old sh
 
 . "${DOTFILES_PACKAGE_SCRIPTS}/load-package-env.sh"
-. "${DOTFILES_PACKAGE_SCRIPTS}/package-common-funcs.sh"
+. "${DOTFILES_PACKAGE_SCRIPTS}/common-funcs.sh"
 
 loadpackagesenv() {
     # shellcheck disable=SC2039
@@ -38,6 +38,6 @@ loadpackagesenv() {
 
 loadpackagesenvcleanup() {
     unset -f loadpackagesenv loadpackagesenvcleanup
-    packagecommonfuncscleanup
+    commonfuncscleanup
     loadpackageenvcleanup
 }

@@ -1,3 +1,5 @@
+# Functions available to setup.bash scripts, and others used by the installation and update scripts.
+
 source "${DOTFILES_BASH_COMMON}" || exit 1
 
 IGNORE_FILE="${DOTFILES_PACKAGE_INSTALL_DIR}/ignored.txt"
@@ -50,4 +52,22 @@ function package-ignored() {
     else
         return 1
     fi
+}
+
+function linux-variant() {
+    while (($#)); do
+        if [ "${DOTFILES_LINUX_VARIANT}" = "${1}" ]; then
+            return 0
+        fi
+        shift
+    done
+    return 1
+}
+
+function known-linux-variant() {
+    test ! -z "${DOTFILES_LINUX_VARIANT}"
+}
+
+function can-sudo() {
+    test ! -z "${DOTFILES_CAN_SUDO}"
 }

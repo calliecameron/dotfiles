@@ -2,7 +2,7 @@
 # This script must work in bash and zsh
 
 source "${DOTFILES_PACKAGE_SCRIPTS}/load-package-env.sh"
-source "${DOTFILES_PACKAGE_SCRIPTS}/package-common-funcs.sh"
+source "${DOTFILES_PACKAGE_SCRIPTS}/common-funcs.sh"
 
 function doaliases() {
     # Arg: shell
@@ -79,6 +79,6 @@ function load-packages-aliases() {
 
 function load-packages-aliases-cleanup() {
     unset -f doaliases load-packages-aliases load-packages-aliases-cleanup
-    packagecommonfuncscleanup
+    commonfuncscleanup
     loadpackageenvcleanup
 }

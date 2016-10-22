@@ -539,6 +539,18 @@
    ("s-p" . projectile-command-map)
    ("C-S-p" . projectile-command-map)))
 
+(use-package sr-speedbar
+  :config
+  (require 'sr-speedbar)
+  (setq
+   ezimage-use-images t
+   speedbar-show-unknown-files t
+   speedbar-use-images t
+   sr-speedbar-right-side nil)
+  (bind-keys*
+   ("s-s" . sr-speedbar-toggle)
+   ("C-S-s" . sr-speedbar-toggle)))
+
 (use-package projectile-speedbar)
 
 (progn
@@ -555,18 +567,6 @@
     "Zsh scripts should be in zsh mode."
     (shell-script-mode)
     (sh-set-shell "zsh" t nil)))
-
-(use-package sr-speedbar
-  :config
-  (require 'sr-speedbar)
-  (setq
-   ezimage-use-images t
-   speedbar-show-unknown-files t
-   speedbar-use-images t
-   sr-speedbar-right-side nil)
-  (bind-keys*
-   ("s-s" . sr-speedbar-toggle)
-   ("C-S-s" . sr-speedbar-toggle)))
 
 (use-package yaml-mode)
 

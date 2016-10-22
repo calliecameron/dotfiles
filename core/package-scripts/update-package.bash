@@ -1,5 +1,5 @@
-source "${DOTFILES_PACKAGE_SCRIPTS}/packages-common.bash" &&
-source "${DOTFILES_PACKAGE_SCRIPTS}/package-common-funcs.sh" || exit 1
+source "${DOTFILES_PACKAGE_SCRIPTS}/setup-common.bash" &&
+source "${DOTFILES_PACKAGE_SCRIPTS}/common-funcs.sh" || exit 1
 
 function update-package() {
     if [ -z "${1}" ]; then

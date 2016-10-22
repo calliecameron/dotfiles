@@ -7,6 +7,14 @@
 # If not running interactively, don't do anything
 [ -z "${PS1}" ] && return
 
+
+# If you can't change the default shell, but always want to use zsh
+# interactively, set this variable. Ugly, but sometimes necessary.
+if [ ! -z "${DOTFILES_FORCE_ZSH}" ]; then
+    exec zsh
+fi
+
+
 test ! -z "${DOTFILES_PROFILING}" && printf 'bash ' && date --rfc-3339=ns
 
 

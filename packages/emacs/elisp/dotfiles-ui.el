@@ -508,6 +508,10 @@ If BUFFER is a string, it is the name of the buffer to find; if it is a predicat
    ("C-#" . bm-toggle)
    ("M-#" . bm-remove-all-current-buffer)))
 
+(use-package connection)
+
+(use-package link)
+
 (use-package dictionary
   :pin melpa-stable
   :config
@@ -672,7 +676,7 @@ dotfiles-org-linkify-suffix) appended."
 
 (use-package pdf-tools
   :config
-  (pdf-tools-install t t))
+  (pdf-tools-install t t t))
 
 (use-package rainbow-delimiters
   :pin melpa-stable

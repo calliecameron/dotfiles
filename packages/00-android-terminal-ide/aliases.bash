@@ -1,4 +1,4 @@
-if [ "${DOTFILES_OS}" = 'android' ]; then
+if os android; then
     #######################################
     # From the Terminal IDE default .bashrc
 
