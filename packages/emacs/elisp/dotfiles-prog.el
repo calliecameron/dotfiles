@@ -25,7 +25,7 @@
 
 (add-hook 'prog-mode-hook
           (lambda ()
-            (flyspell-prog-mode)
+            ;; (flyspell-prog-mode) ;;;;;;;;;;;;;;;;;;;;;; TODO
             (setq show-trailing-whitespace t)))
 
 (advice-add 'comment-or-uncomment-region :before
@@ -210,7 +210,7 @@
                    (unless has-errors
                      (dotfiles-close-compile-window)))))
 
-  (bind-keys*
+  (bind-keys
    ("<f5>" . dotfiles-compile)
    ("<f7>" . dotfiles-close-compile-window)
    ("<f8>" . dotfiles-compile-clean)))
@@ -230,7 +230,7 @@
   :pin melpa-stable
   :config
   (setq-default flycheck-emacs-lisp-load-path 'inherit)
-  (bind-keys*
+  (bind-keys
    ("C-." . flycheck-next-error)
    ("C-," . flycheck-previous-error))
   (global-flycheck-mode))
@@ -421,7 +421,7 @@
   (defvar dotfiles--term-help-fn 'man)
   (make-variable-buffer-local 'dotfiles--term-help-fn)
 
-  (bind-keys*
+  (bind-keys
    ("M-/" . (lambda ()
               (interactive)
               (call-interactively
@@ -441,16 +441,9 @@
     (if (projectile-project-p)
         (helm-projectile-ag)
       (helm-ag)))
-  (bind-keys*
-   ("s-f" . dotfiles-helm-ag-dwim)
-   ("C-S-f" . dotfiles-helm-ag-dwim))
-  ;; Because of ergoemacs weirdness, we need this as well as the bind-key...
-  (unless overriding-terminal-local-map
-    (setq overriding-terminal-local-map (make-keymap)))
   (bind-keys
-   :map overriding-terminal-local-map
-   ("C-S-f" . dotfiles-helm-ag-dwim))
-  (global-set-key (kbd "C-S-f") 'dotfiles-helm-ag-dwim))
+   ("s-f" . dotfiles-helm-ag-dwim)
+   ("C-S-f" . dotfiles-helm-ag-dwim)))
 
 (progn
   (require 'lisp-mode)
@@ -489,7 +482,7 @@
    magit-diff-paint-whitespace t
    magit-diff-highlight-trailing t)
   (global-magit-file-mode)
-  (bind-keys*
+  (bind-keys
    ("s-g" . magit-status)
    ("C-S-g" . magit-status)
    ("<f3>" . magit-dispatch-popup)
@@ -535,7 +528,7 @@
   :config
   (projectile-global-mode)
   (setq projectile-mode-line nil)
-  (bind-keys*
+  (bind-keys
    ("s-p" . projectile-command-map)
    ("C-S-p" . projectile-command-map)))
 
@@ -547,7 +540,7 @@
    speedbar-show-unknown-files t
    speedbar-use-images t
    sr-speedbar-right-side nil)
-  (bind-keys*
+  (bind-keys
    ("s-s" . sr-speedbar-toggle)
    ("C-S-s" . sr-speedbar-toggle)))
 

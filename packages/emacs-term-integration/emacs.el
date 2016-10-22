@@ -1,3 +1,5 @@
+;;; TODO THIS IS PRETTY BROKEN ON 25.1....
+
 (use-package term
   :config
   (setq term-buffer-maximum-size 10000)
@@ -68,14 +70,14 @@
 
   (bind-keys
    :map term-mode-map
-   ("C-;" . dotfiles-term-toggle-sub-mode)
+   ("C-;" . dotfiles-term-toggle-sub-mode) ;;;;;;;;;; TODO
    ("C-q" . dotfiles-term-send-next-key)
    ("s-i" . dotfiles-term-do-interactive-command)
    ("C-S-i" . dotfiles-term-do-interactive-command))
 
   (bind-keys
    :map term-raw-map
-   ("C-v" . term-paste)))
+   ("C-v" . term-paste))) ;;;; TODO
 
 
 (use-package multi-term
@@ -100,7 +102,7 @@
   (advice-add 'multi-term :after
               (lambda (&rest args)
                 (set-buffer-process-coding-system 'utf-8-unix 'utf-8-unix)))
-  (bind-keys*
+  (bind-keys
    ("<f9>" . multi-term)
    ("<f10>" . multi-term-prev)
    ("<f11>" . multi-term-next)

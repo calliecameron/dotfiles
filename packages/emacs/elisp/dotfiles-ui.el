@@ -27,7 +27,7 @@
  backup-directory-alist nil
  case-fold-search t
  face-font-selection-order '(:width :height :weight :slant)
- inhibit-startup-message t
+ inhibit-startup-screen t
  initial-major-mode 'text-mode
  initial-scratch-message nil
  large-file-warning-threshold 100000000
@@ -241,12 +241,6 @@ If BUFFER is a string, it is the name of the buffer to find; if it is a predicat
     (call-interactively 'copy-to-register)
     (call-interactively 'delete-region)))
 
-(defun dotfiles-insert-register ()
-  "Insert register, with more useful behaviour."
-  (interactive)
-  (setq current-prefix-arg t)
-  (call-interactively 'insert-register))
-
 (defun dotfiles-force-insert-four-spaces ()
   "For when text mode's tab behaviour becomes too annoying."
   (interactive)
@@ -262,14 +256,14 @@ If BUFFER is a string, it is the name of the buffer to find; if it is a predicat
   (interactive)
   (save-excursion
     (-each
-     '(("–" . "--")
-       ("’" . "'")
-       ("‘" . "`")
-       ("  " . " ")
-       ("“" . "``")
-       ("”" . "''")
-       ("…" . "..."))
-     (lambda (x) (query-replace (car x) (cdr x) nil (point-min) (point-max))))))
+        '(("–" . "--")
+          ("’" . "'")
+          ("‘" . "`")
+          ("  " . " ")
+          ("“" . "``")
+          ("”" . "''")
+          ("…" . "..."))
+      (lambda (x) (query-replace (car x) (cdr x) nil (point-min) (point-max))))))
 
 (defvar dotfiles--original-mode-line nil)
 (make-variable-buffer-local 'dotfiles--original-mode-line)
@@ -284,59 +278,102 @@ If BUFFER is a string, it is the name of the buffer to find; if it is a predicat
     (setq dotfiles--original-mode-line mode-line-format)
     (setq mode-line-format nil)))
 
-(bind-keys*
- ("C-x DEL". keyboard-quit)
- ("C-x <deletechar>" . keyboard-quit)
- ("C-x C-g" . keyboard-quit)
- ("C-c C-g" . keyboard-quit)
- ("C-c c" . save-buffers-kill-emacs)
- ("C-<prior>" . dotfiles-smart-scroll-left)
- ("C-<next>" . dotfiles-smart-scroll-right)
- ("C-x <" . dotfiles-smart-scroll-left)
- ("C-x >" . dotfiles-smart-scroll-right)
- ("<mouse-6>" . dotfiles-smart-scroll-left)
- ("<mouse-7>" . dotfiles-smart-scroll-right)
- ("<C-mouse-5>" . text-scale-decrease)
- ("<C-mouse-4>" . text-scale-increase)
- ("s-c" . copy-to-register)
- ("C-S-c" . copy-to-register)
- ("s-x" . dotfiles-cut-to-register)
- ("C-S-x" . dotfiles-cut-to-register)
- ("s-v" . dotfiles-insert-register)
- ("C-\\" . switch-to-buffer)
+
+(add-hook 'after-save-hook 'executable-make-buffer-file-executable-if-script-p)
+(add-hook 'text-mode-hook (lambda () (setq show-trailing-whitespace t)))
+
+
+(blink-cursor-mode -1)
+(line-number-mode 1)
+(column-number-mode 1)
+(global-font-lock-mode 1)
+(delete-selection-mode 1)
+(tool-bar-mode -1)
+(scroll-bar-mode -1)
+(menu-bar-mode -1)
+(auto-insert-mode 1)
+
+
+(use-package ergoemacs-mode
+  :pin melpa-stable
+  :config
+  (setq
+   ergoemacs-theme "standard"
+   ergoemacs-keyboard-layout "gb"
+   ergoemacs-ctl-c-or-ctl-x-delay 0.2
+   ergoemacs-handle-ctl-c-or-ctl-x 'both
+   ergoemacs-smart-paste nil
+   ergoemacs-mode-line nil)
+  (add-to-list 'ergoemacs-theme-options '(save-options-on-exit off))
+  (ergoemacs-mode)
+
+  (defun dotfiles--startup-buffer ()
+    (let ((buf (get-buffer "untitled")))
+      (if buf
+          buf
+        (ergoemacs-new-empty-buffer)
+        (get-buffer "untitled"))))
+  (setq initial-buffer-choice 'dotfiles--startup-buffer))
+
+
+(ergoemacs-package dotfiles-keys-main
+    :bind
+  (("C-x DEL". keyboard-quit)
+   ("C-x <deletechar>" . keyboard-quit)
+   ("C-c c" . save-buffers-kill-emacs)
+   ("C-<prior>" . dotfiles-smart-scroll-left)
+   ("C-<next>" . dotfiles-smart-scroll-right)
+   ("C-x <" . dotfiles-smart-scroll-left)
+   ("C-x >" . dotfiles-smart-scroll-right)
+   ("<mouse-6>" . dotfiles-smart-scroll-left)
+   ("<mouse-7>" . dotfiles-smart-scroll-right)
+   ("<C-mouse-5>" . text-scale-decrease)
+   ("<C-mouse-4>" . text-scale-increase)
+   ("s-c" . copy-to-register)
+   ("C-S-c" . copy-to-register)
+   ("s-x" . dotfiles-cut-to-register)
+   ("C-S-x" . dotfiles-cut-to-register)
+   ("s-v" . insert-register)
+   ("C-\\" . switch-to-buffer)
+   ("s-u" . package-list-packages)
+   ("C-S-u" . package-list-packages)
+   ("s-k" . describe-personal-keybindings)
+   ("C-S-k" . describe-personal-keybindings)
+   ("<s-down>" . dotfiles-split-window-below-switch)
+   ("<s-right>" . dotfiles-split-window-right-switch)
+   ("<C-S-down>" . dotfiles-split-window-below-switch)
+   ("<C-S-right>" . dotfiles-split-window-right-switch)
+   ("C-c <left>" . windmove-left)
+   ("C-c <right>" . windmove-right)
+   ("C-c <up>" . windmove-up)
+   ("C-c <down>" . windmove-down)
+   ("<M-left>" . windmove-left)
+   ("<M-right>" . windmove-right)
+   ("<M-up>" . windmove-up)
+   ("<M-down>" . windmove-down)
+   ("C-/" . comment-or-uncomment-region)
+   ("M-m" . newline)
+   ("<f12>" . toggle-frame-fullscreen)))
+
+(bind-keys
  ("s-\\" . dotfiles-buffer-map)
  ("C-|" . dotfiles-buffer-map)
  ("s-o" . dotfiles-open-map)
- ("s-u" . package-list-packages)
- ("C-S-u" . package-list-packages)
- ("s-k" . describe-personal-keybindings)
- ("C-S-k" . describe-personal-keybindings)
+ ("C-S-o" . dotfiles-open-map)
  ([remap goto-line] . dotfiles-goto-line-with-feedback)
  ([remap move-beginning-of-line] . dotfiles-smart-home-key)
  ([remap move-end-of-line] . dotfiles-smart-end-key)
  ([remap split-window-below] . dotfiles-split-window-below-switch)
  ([remap split-window-right] . dotfiles-split-window-right-switch)
- ("<s-down>" . dotfiles-split-window-below-switch)
- ("<s-right>" . dotfiles-split-window-right-switch)
- ("<C-S-down>" . dotfiles-split-window-below-switch)
- ("<C-S-right>" . dotfiles-split-window-right-switch)
  ("<s-up>" . (lambda () (interactive) (split-window-below)))
  ("<s-left>" . (lambda () (interactive (split-window-right))))
  ("<C-S-up>" .(lambda () (interactive) (split-window-below)))
- ("<C-S-left>" . (lambda () (interactive (split-window-right))))
- ("C-c <left>" . windmove-left)
- ("C-c <right>" . windmove-right)
- ("C-c <up>" . windmove-up)
- ("C-c <down>" . windmove-down)
- ("<M-left>" . windmove-left)
- ("<M-right>" . windmove-right)
- ("<M-up>" . windmove-up)
- ("<M-down>" . windmove-down))
+ ("<C-S-left>" . (lambda () (interactive (split-window-right)))))
 
 (bind-keys
-  :map visual-line-mode-map
-  ([remap move-beginning-of-line] . dotfiles-smart-home-key)
-  ([remap move-end-of-line] . dotfiles-smart-end-key))
+ :map visual-line-mode-map
+ ([remap move-beginning-of-line] . dotfiles-smart-home-key)
+ ([remap move-end-of-line] . dotfiles-smart-end-key))
 
 (bind-keys
  :map dotfiles-buffer-map
@@ -347,7 +384,7 @@ If BUFFER is a string, it is the name of the buffer to find; if it is a predicat
  ("p" . pwd)
  ("r" . dotfiles-rename-file-and-buffer)
  ("u" . dotfiles-utf8ify)
- ("v" . dotfiles-insert-register)
+ ("v" . insert-register)
  ("=" . balance-windows))
 
 (bind-keys
@@ -392,65 +429,6 @@ If BUFFER is a string, it is the name of the buffer to find; if it is a predicat
     (lambda (k)
       (define-key key-translation-map (kbd (car k)) (kbd (cdr k))))))
 
-(add-hook 'after-save-hook 'executable-make-buffer-file-executable-if-script-p)
-(add-hook 'text-mode-hook (lambda () (setq show-trailing-whitespace t)))
-
-
-(blink-cursor-mode -1)
-(line-number-mode 1)
-(column-number-mode 1)
-(global-font-lock-mode 1)
-(delete-selection-mode 1)
-(tool-bar-mode -1)
-(scroll-bar-mode -1)
-(menu-bar-mode -1)
-(auto-insert-mode 1)
-
-
-(use-package ergoemacs-mode
-  :pin melpa-stable
-  :config
-  (if (fboundp 'ergoemacs-ini-mode)
-      (progn
-        ;; Stable version
-        (setq
-         ergoemacs-theme-options '((save-options-on-exit off))
-         ergoemacs-theme "standard"
-         ergoemacs-keyboard-layout "gb"
-         ergoemacs-ctl-c-or-ctl-x-delay 0.2
-         ergoemacs-handle-ctl-c-or-ctl-x 'both
-         ergoemacs-use-menus t
-         ergoemacs-smart-paste nil
-         ergoemacs-mode-line nil)
-        (ergoemacs-ini-mode)
-        (add-hook 'ergoemacs-mode-hook
-                  (lambda ()
-                    (global-set-key (kbd "M-m") 'newline)
-                    (define-key ergoemacs-keymap (kbd "C-e") 'switch-window)
-                    (define-key ergoemacs-keymap (kbd "C-S-o") 'dotfiles-open-map)
-                    (global-set-key (kbd "C-.") nil)
-                    (global-set-key (kbd "<f8>") nil)
-                    (global-set-key (kbd "<f12>") 'toggle-frame-fullscreen)
-                    (global-set-key (kbd "C-/") 'comment-or-uncomment-region))))
-    (progn
-      ;; Unstable version
-      (setq
-       ergoemacs-theme-options '((save-options-on-exit off))
-       ergoemacs-theme "standard"
-       ergoemacs-keyboard-layout "gb"
-       ergoemacs-ctl-c-or-ctl-x-delay 0.2
-       ergoemacs-handle-ctl-c-or-ctl-x 'both
-       ergoemacs-smart-paste nil
-       ergoemacs-mode-line nil)
-      (ergoemacs-mode)))
-
-  (defun dotfiles--startup-buffer ()
-    (let ((buf (get-buffer "untitled")))
-      (if buf
-          buf
-        (ergoemacs-new-empty-buffer))))
-  (setq initial-buffer-choice 'dotfiles--startup-buffer))
-
 (progn
   (setq
    save-abbrevs t
@@ -461,11 +439,12 @@ If BUFFER is a string, it is the name of the buffer to find; if it is a predicat
                                       (abbrev-put (car args) :count 0)))
   (add-hook 'text-mode-hook 'abbrev-mode))
 
-(use-package ace-isearch
-  :pin melpa-stable
-  :diminish ace-isearch-mode
-  :config
-  (global-ace-isearch-mode))
+;; TODO
+;; (use-package ace-isearch
+;;   :pin melpa-stable
+;;   :diminish ace-isearch-mode
+;;   :config
+;;   (global-ace-isearch-mode))
 
 (use-package ace-jump-mode
   :pin melpa-stable
@@ -529,31 +508,32 @@ If BUFFER is a string, it is the name of the buffer to find; if it is a predicat
   :config
   (setq  ediff-window-setup-function 'ediff-setup-windows-plain))
 
-(use-package flyspell
-  :diminish flyspell-mode
-  :config
-  (setq
-   ispell-dictionary "en_GB"
-   flyspell-issue-message-flag nil
-   flyspell-large-region 1)
-  (bind-keys*
-   ("C->" . flyspell-goto-next-error))
-  (add-hook 'flyspell-mode-hook
-            (lambda () (define-key flyspell-mode-map (kbd "C-;") nil)))
-  (add-hook 'text-mode-hook 'flyspell-mode)
-  (defvar dotfiles-auto-spellcheck t "Automatically spellcheck newly loaded buffers.  Set to nil if spellchecking makes things too slow.")
-  (defvar dotfiles-auto-spellchecked nil "Has this buffer been auto-spellchecked?")
-  (make-variable-buffer-local 'dotfiles-auto-spellchecked)
-  (defun dotfiles-auto-spellcheck-buffer ()
-    "Spellcheck a new buffer."
-    (when (and
-           flyspell-mode
-           dotfiles-auto-spellcheck
-           (not dotfiles-auto-spellchecked))
-      (setq dotfiles-auto-spellchecked t)
-      (with-local-quit
-        (flyspell-buffer))))
-  (run-with-idle-timer 1 t 'dotfiles-auto-spellcheck-buffer))
+;; TODO
+;; (use-package flyspell
+;;   :diminish flyspell-mode
+;;   :config
+;;   (setq
+;;    ispell-dictionary "en_GB"
+;;    flyspell-issue-message-flag nil
+;;    flyspell-large-region 1)
+;;   (bind-keys
+;;    ("C->" . flyspell-goto-next-error))
+;;   (add-hook 'flyspell-mode-hook
+;;             (lambda () (define-key flyspell-mode-map (kbd "C-;") nil)))
+;;   (add-hook 'text-mode-hook 'flyspell-mode)
+;;   (defvar dotfiles-auto-spellcheck t "Automatically spellcheck newly loaded buffers.  Set to nil if spellchecking makes things too slow.")
+;;   (defvar dotfiles-auto-spellchecked nil "Has this buffer been auto-spellchecked?")
+;;   (make-variable-buffer-local 'dotfiles-auto-spellchecked)
+;;   (defun dotfiles-auto-spellcheck-buffer ()
+;;     "Spellcheck a new buffer."
+;;     (when (and
+;;            flyspell-mode
+;;            dotfiles-auto-spellcheck
+;;            (not dotfiles-auto-spellchecked))
+;;       (setq dotfiles-auto-spellchecked t)
+;;       (with-local-quit
+;;         (flyspell-buffer))))
+;;   (run-with-idle-timer 1 t 'dotfiles-auto-spellcheck-buffer))
 
 (use-package framemove
   :config
@@ -573,16 +553,22 @@ If BUFFER is a string, it is the name of the buffer to find; if it is a predicat
   :diminish helm-mode
   :config
   (require 'helm-config)
-  (helm-mode 1))
+  (helm-mode 1)
+  (helm-adaptive-mode 1)
+  (helm-push-mark-mode 1)
+  (helm-popup-tip-mode 1)
+  (helm-top-poll-mode 1)
+  (setq helm-follow-mode nil)) ; work around an ergoemacs problem
 
 (use-package helm-bm
   :bind
   ("C-'" . helm-bm))
 
-(use-package helm-flyspell
-  :config
-  (bind-keys*
-   ("C-<" . helm-flyspell-correct)))
+;; TODO
+;; (use-package helm-flyspell
+;;   :config
+;;   (bind-keys
+;;    ("C-<" . helm-flyspell-correct)))
 
 (use-package highlight-indentation
   :pin melpa-stable
@@ -605,7 +591,7 @@ If BUFFER is a string, it is the name of the buffer to find; if it is a predicat
                nil
                frame)))
 
-  (bind-keys*
+  (bind-keys
    ("M-?" . man)))
 
 (use-package mode-icons
@@ -623,56 +609,57 @@ If BUFFER is a string, it is the name of the buffer to find; if it is a predicat
        'dotfiles--setup-mode-icons-daemon)
     (mode-icons-mode)))
 
-(progn
-  (require 'org)
-  (setq
-   org-log-done 'time
-   org-support-shift-select t
-   org-return-follows-link t
-   org-link-abbrev-alist '(("search" . "https://www.google.co.uk/#q=%h")
-                           ("map" . "https://maps.google.co.uk/maps?q=%h")
-                           ("scholar" . "http://scholar.google.co.uk/scholar?q=%h")))
-
-  (bind-keys
-   :map org-mode-map
-   ("C-t" . org-todo))
-
-  (add-hook 'org-mode-hook
-            (lambda ()
-              (when (boundp 'ergoemacs--for-org-mode-hook)
-                (setq ergoemacs--for-org-mode-hook nil))
-              (setcdr (assq 'file org-link-frame-setup) 'find-file)
-              (unless overriding-terminal-local-map
-                (setq overriding-terminal-local-map (make-keymap)))
-              (bind-keys
-               :map overriding-terminal-local-map
-               ("<M-left>" . windmove-left)
-               ("<M-right>" . windmove-right)
-               ("<M-up>" . windmove-up)
-               ("<M-down>" . windmove-down))))
-
-  (defvar dotfiles-org-linkify-suffix ".org" "If dotfiles-org-linkify's text doesn't contain a dot, append this suffix to the link file name.")
-  (make-variable-buffer-local 'dotfiles-org-linkify-suffix)
-
-  (defun dotfiles-org-linkify (start end &optional suffix)
-    "Convert text in region into an `org-mode' hyperlink, linking to a
-file with the same name as region.  Text containing a dot is
-considered a filename, and used as the link's target without
-modification.  Text without a dot has SUFFIX (which defaults to
-dotfiles-org-linkify-suffix) appended."
-    (interactive "r")
-    (let ((region (buffer-substring start end)))
-      (dotfiles-insert-around-region start end
-                                        (concat
-                                         "[[file:"
-                                         region
-                                         (if (cl-find ?. region)
-                                             ""
-                                           (if suffix
-                                               suffix
-                                             dotfiles-org-linkify-suffix))
-                                         "][")
-                                        "]]"))))
+;; TODO
+;(progn
+;(require 'org)
+;(setq
+;org-log-done 'time
+;org-support-shift-select t
+;org-return-follows-link t
+;org-link-abbrev-alist '(("search" . "https://www.google.co.uk/#q=%h")
+;("map" . "https://maps.google.co.uk/maps?q=%h")
+;("scholar" . "http://scholar.google.co.uk/scholar?q=%h")))
+;
+;(bind-keys
+;:map org-mode-map
+;("C-t" . org-todo))
+;
+;(add-hook 'org-mode-hook
+;(lambda ()
+;(when (boundp 'ergoemacs--for-org-mode-hook)
+;(setq ergoemacs--for-org-mode-hook nil))
+;(setcdr (assq 'file org-link-frame-setup) 'find-file)
+;(unless overriding-terminal-local-map
+;(setq overriding-terminal-local-map (make-keymap)))
+;(bind-keys
+;:map overriding-terminal-local-map
+;("<M-left>" . windmove-left)
+;("<M-right>" . windmove-right)
+;("<M-up>" . windmove-up)
+;("<M-down>" . windmove-down))))
+;
+;(defvar dotfiles-org-linkify-suffix ".org" "If dotfiles-org-linkify's text doesn't contain a dot, append this suffix to the link file name.")
+;(make-variable-buffer-local 'dotfiles-org-linkify-suffix)
+;
+;(defun dotfiles-org-linkify (start end &optional suffix)
+;"Convert text in region into an `org-mode' hyperlink, linking to a
+;file with the same name as region.  Text containing a dot is
+;considered a filename, and used as the link's target without
+;modification.  Text without a dot has SUFFIX (which defaults to
+;dotfiles-org-linkify-suffix) appended."
+;(interactive "r")
+;(let ((region (buffer-substring start end)))
+;(dotfiles-insert-around-region start end
+;(concat
+;"[[file:"
+;region
+;(if (cl-find ?. region)
+;""
+;(if suffix
+;suffix
+;dotfiles-org-linkify-suffix))
+;"][")
+;"]]"))))
 
 (use-package pdf-tools
   :config
@@ -704,7 +691,7 @@ dotfiles-org-linkify-suffix) appended."
 (use-package saveplace
   :config
   (setq save-place-file (expand-file-name ".places" user-emacs-directory))
-  (setq-default save-place t))
+  (save-place-mode))
 
 (use-package smartparens
   :diminish smartparens-mode
@@ -744,7 +731,8 @@ dotfiles-org-linkify-suffix) appended."
 
 (use-package switch-window
   :bind
-  ([remap other-window] . switch-window))
+  ([remap other-window] . switch-window)
+  ("C-e" . switch-window))
 
 (use-package syntax-subword
   :config
