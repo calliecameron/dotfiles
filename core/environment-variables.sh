@@ -8,8 +8,6 @@
 
 test ! -z "${DOTFILES_PROFILING}" && printf 'env ' && date --rfc-3339=ns
 
-umask 077
-
 export DOTFILES_OS=''
 export DOTFILES_LINUX_VARIANT=''
 
@@ -108,6 +106,13 @@ fi
 # visible to GUI programs, but should not be version controlled.
 if [ -f "${DOTFILES_LOCAL_VARIABLES}" ]; then
     . "${DOTFILES_LOCAL_VARIABLES}"
+fi
+
+
+# To prevent the umask change, set DOTFILES_NO_CUSTOM_UMASK in
+# ~/.dotfiles-variables.sh.
+if [ -z "${DOTFILES_NO_CUSTOM_UMASK}" ]; then
+    umask 077
 fi
 
 
