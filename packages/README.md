@@ -61,22 +61,10 @@ In shell files, the following environment variables are available:
 - `DOTFILES_CAN_SUDO`: whether the user has sudo permissions on
   this machine; only set on Linux.
 
-In env and alias files, and in setup.bash, the following functions are
-available:
-- `message`: display a message in blue the next time an interactive
-  shell is started (use instead of echo, which won't be seen in env
-  scripts).
-- `problem`: display a message in orange the next time an interactive
-  shell is started (use instead of echo, which won't be seen in env
-  scripts).
-- `homelink`: ensure the first argument is symlinked in the home
-  directory, or at another location if specified by a second argument.
-- `homebinlink`: ensure command in the first argument (must be on the
-  PATH) is symlinked in ~/.bin (which always has the highest priority
-  on the PATH) with the names given as the remaining arguments.
-- `complainunset`: display a problem message if the variable name
-  passed in as the first argument is unset; use the second argument as
-  a human-readable description.
+In env and alias files, and in setup.bash, the functions in
+../core/package-scripts/common-funcs.sh are available. In setup.bash
+only, the functions in ../core/package-scripts/setup-common.bash and
+../core/common.bash are also available.
 
 In the Emacs file, the following variables are available:
 - `this-package-name`: the package's name, which is the name of the

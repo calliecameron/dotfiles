@@ -1,14 +1,23 @@
-# Functions available to env and alias scripts. Must be sh compatible.
+# Functions available to env, alias and setup.bash scripts. Must be sh compatible.
 
 message() {
+    # Display a message in blue the next time an interactive shell is
+    # started (use instead of echo, which won't be seen in env
+    # scripts).
     echo "${@}" >> "${DOTFILES_PACKAGE_MESSAGES_FILE}"
 }
 
 problem() {
+    # Display a message in orange the next time an interactive shell
+    # is started (use instead of echo, which won't be seen in env
+    # scripts).
     echo "${@}" >> "${DOTFILES_PACKAGE_PROBLEMS_FILE}"
 }
 
 homelink() {
+    # Ensure the first argument is symlinked in the home directory, or
+    # at another location if specified by a second argument.
+
     # shellcheck disable=SC2039
     local SRC DST PROBLEM
     SRC="${1}"
@@ -50,6 +59,10 @@ homelink() {
 }
 
 homebinlink() {
+    # Ensure command in the first argument (must be on the PATH) is
+    # symlinked in ~/.bin (which always has the highest priority on
+    # the PATH) with the names given as the remaining arguments.
+
     # Args: command link [links...]
     # shellcheck disable=SC2039
     local COMMAND FULL_COMMAND LINKNAME
@@ -80,6 +93,10 @@ homebinlink() {
 }
 
 complainunset() {
+    # Display a problem message if the variable name passed in as the
+    # first argument is unset; use the second argument as a
+    # human-readable description.
+
     # shellcheck disable=SC2039
     local VAL
     eval VAL="\${${1}}"
@@ -88,6 +105,6 @@ complainunset() {
     fi
 }
 
-packagecommonfuncscleanup() {
-    unset -f message problem homelink homebinlink complainunset packagecommonfuncscleanup
+commonfuncscleanup() {
+    unset -f message problem homelink homebinlink complainunset commonfuncscleanup
 }

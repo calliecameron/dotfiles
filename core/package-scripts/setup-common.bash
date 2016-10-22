@@ -1,3 +1,5 @@
+# Functions available to setup.bash scripts, and others used by the installation and update scripts.
+
 source "${DOTFILES_BASH_COMMON}" || exit 1
 
 IGNORE_FILE="${DOTFILES_PACKAGE_INSTALL_DIR}/ignored.txt"
