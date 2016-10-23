@@ -609,57 +609,55 @@ If BUFFER is a string, it is the name of the buffer to find; if it is a predicat
        'dotfiles--setup-mode-icons-daemon)
     (mode-icons-mode)))
 
-;; TODO
-;(progn
-;(require 'org)
-;(setq
-;org-log-done 'time
-;org-support-shift-select t
-;org-return-follows-link t
-;org-link-abbrev-alist '(("search" . "https://www.google.co.uk/#q=%h")
-;("map" . "https://maps.google.co.uk/maps?q=%h")
-;("scholar" . "http://scholar.google.co.uk/scholar?q=%h")))
-;
-;(bind-keys
-;:map org-mode-map
-;("C-t" . org-todo))
-;
-;(add-hook 'org-mode-hook
-;(lambda ()
-;(when (boundp 'ergoemacs--for-org-mode-hook)
-;(setq ergoemacs--for-org-mode-hook nil))
-;(setcdr (assq 'file org-link-frame-setup) 'find-file)
-;(unless overriding-terminal-local-map
-;(setq overriding-terminal-local-map (make-keymap)))
-;(bind-keys
-;:map overriding-terminal-local-map
-;("<M-left>" . windmove-left)
-;("<M-right>" . windmove-right)
-;("<M-up>" . windmove-up)
-;("<M-down>" . windmove-down))))
-;
-;(defvar dotfiles-org-linkify-suffix ".org" "If dotfiles-org-linkify's text doesn't contain a dot, append this suffix to the link file name.")
-;(make-variable-buffer-local 'dotfiles-org-linkify-suffix)
-;
-;(defun dotfiles-org-linkify (start end &optional suffix)
-;"Convert text in region into an `org-mode' hyperlink, linking to a
-;file with the same name as region.  Text containing a dot is
-;considered a filename, and used as the link's target without
-;modification.  Text without a dot has SUFFIX (which defaults to
-;dotfiles-org-linkify-suffix) appended."
-;(interactive "r")
-;(let ((region (buffer-substring start end)))
-;(dotfiles-insert-around-region start end
-;(concat
-;"[[file:"
-;region
-;(if (cl-find ?. region)
-;""
-;(if suffix
-;suffix
-;dotfiles-org-linkify-suffix))
-;"][")
-;"]]"))))
+(progn
+  (require 'org)
+  (setq
+   org-log-done nil
+   org-return-follows-link t
+   org-link-abbrev-alist '(("search" . "https://www.google.co.uk/#q=%h")
+                           ("map" . "https://maps.google.co.uk/maps?q=%h")
+                           ("scholar" . "http://scholar.google.co.uk/scholar?q=%h")))
+
+  (setcdr (assq 'file org-link-frame-setup) 'find-file)
+
+  (bind-keys
+   :map org-mode-map
+   ("C-t" . org-todo))
+
+  (add-hook 'org-mode-hook
+            (lambda ()
+              (setq org-support-shift-select 'always)
+              (unless overriding-terminal-local-map
+                (setq overriding-terminal-local-map (make-keymap)))
+              (bind-keys
+               :map overriding-terminal-local-map
+               ("<M-left>" . windmove-left)
+               ("<M-right>" . windmove-right)
+               ("<M-up>" . windmove-up)
+               ("<M-down>" . windmove-down))))
+
+  (defvar dotfiles-org-linkify-suffix ".org" "If dotfiles-org-linkify's text doesn't contain a dot, append this suffix to the link file name.")
+  (make-variable-buffer-local 'dotfiles-org-linkify-suffix)
+
+  (defun dotfiles-org-linkify (start end &optional suffix)
+    "Convert text in region into an `org-mode' hyperlink, linking to a
+file with the same name as region.  Text containing a dot is
+considered a filename, and used as the link's target without
+modification.  Text without a dot has SUFFIX (which defaults to
+dotfiles-org-linkify-suffix) appended."
+    (interactive "r")
+    (let ((region (buffer-substring start end)))
+      (dotfiles-insert-around-region start end
+                                     (concat
+                                      "[[file:"
+                                      region
+                                      (if (cl-find ?. region)
+                                          ""
+                                        (if suffix
+                                            suffix
+                                          dotfiles-org-linkify-suffix))
+                                      "][")
+                                     "]]"))))
 
 (use-package pdf-tools
   :config
