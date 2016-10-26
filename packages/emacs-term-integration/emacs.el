@@ -1,8 +1,6 @@
-;;; TODO THIS IS PRETTY BROKEN ON 25.1....
-
 (use-package term
   :config
-  (setq term-buffer-maximum-size 10000)
+  (setq term-buffer-maximum-size 20000)
 
   (advice-add 'term-char-mode :after
               (lambda (&rest args)
@@ -61,6 +59,15 @@
             (lambda ()
               (visual-line-mode -1)))
 
+  (advice-add 'ansi-term :after
+              (lambda (&rest args)
+                (set-buffer-process-coding-system 'utf-8-unix 'utf-8-unix)
+                (set-process-sentinel
+                 (get-buffer-process (current-buffer))
+                 (lambda (proc change)
+                   (when (string-match "\\(finished\\|exited\\)" change)
+                     (kill-buffer (process-buffer proc)))))))
+
   (defvar dotfiles--term-interactive-command nil)
   (make-variable-buffer-local 'dotfiles--term-interactive-command)
 
@@ -68,156 +75,241 @@
     (interactive)
     (call-interactively dotfiles--term-interactive-command))
 
+  ;; Used to use multi-term for this, but it's such a pain to
+  ;; configure, and it's a wiki package too, that we just do some
+  ;; quick setup of our own here instead.
+  (defun dotfiles--term-name (n)
+    (format "terminal<%d>" n))
+
+  (defun dotfiles-new-term ()
+    "Create a new term-mode buffer."
+    (interactive)
+    (let ((prog (getenv "SHELL"))
+          (term-num 1))
+      (while (get-buffer (format "*%s*" (dotfiles--term-name term-num)))
+        (setq term-num (1+ term-num)))
+      (ansi-term prog (dotfiles--term-name term-num))))
+
+  (defun dotfiles-next-term (&optional prev)
+    "Switch to the next term-mode buffer, or create one if none."
+    (interactive)
+    (let ((bufs
+           (->> (buffer-list)
+                (-filter (lambda (b)
+                           (eq (buffer-local-value 'major-mode b) 'term-mode)))
+                (-map 'buffer-name)
+                (-sort (if prev 'string> 'string<)))))
+      (if bufs
+          (switch-to-buffer
+           (get-buffer
+            (if (eq (length bufs) 1)
+                (car bufs)
+              (-first
+               (lambda (b) (not (string= b (buffer-name))))
+               (-rotate
+                (-
+                 (let ((i (-elem-index (buffer-name) bufs)))
+                   (if i
+                       i
+                     0)))
+                bufs)))))
+        (dotfiles-new-term))))
+
+  (defun dotfiles-prev-term ()
+    "Switch to the previous term-mode buffer, or create one if none."
+    (interactive)
+    (dotfiles-next-term t))
+
   (bind-keys
    :map term-mode-map
-   ("C-;" . dotfiles-term-toggle-sub-mode) ;;;;;;;;;; TODO
-   ("C-q" . dotfiles-term-send-next-key)
-   ("s-i" . dotfiles-term-do-interactive-command)
-   ("C-S-i" . dotfiles-term-do-interactive-command))
+   ("C-;" . dotfiles-term-toggle-sub-mode))
+  ;;  ("C-q" . dotfiles-term-send-next-key)
+  ;;  ("s-i" . dotfiles-term-do-interactive-command)
+  ;;  ("C-S-i" . dotfiles-term-do-interactive-command))
 
   (bind-keys
    :map term-raw-map
-   ("C-v" . term-paste))) ;;;; TODO
+   ("C-;" . dotfiles-term-toggle-sub-mode)
+   ("C-c C-c" . term-interrupt-subjob)
+   ("C-c C-e" . term-send-esc)
+   ("C-p" . previous-line)
+   ("C-n" . next-line)
+   ("C-s" . isearch-forward)
+   ("C-r" . term-send-reverse-search-history)
+   ("C-m" . term-send-raw)
+   ("C-v" . term-paste)
+   ("M-f" . term-send-forward-word)
+   ("M-b" . term-send-backward-word)
+   ("M-o" . term-send-backspace)
+   ("M-p" . term-send-up)
+   ("M-n" . term-send-down)
+   ("M-M" . term-send-forward-kill-word)
+   ("M-N" . term-send-backward-kill-word)
+   ("<C-backspace>" . term-send-backward-kill-word)
+   ("M-r" . term-send-reverse-search-history)
+   ("M-d" . term-send-delete-word)
+   ("M-," . term-send-raw)
+   ("M-." . comint-dynamic-complete)
+   ("C-q" . dotfiles-term-send-next-key)
+   ("<C-right>" . term-send-forward-word)
+   ("<C-left>" . term-send-backward-word)
+   ("<C-delete>" . term-send-forward-kill-word)
+   ("<C-backspace>" . term-send-backward-kill-word)
+   ("s-i" . dotfiles-term-do-interactive-command)
+   ("C-S-i" . dotfiles-term-do-interactive-command)
+   ;; ("C-z" . nil)
+   ("C-x" . nil)
+   ("C-c" . nil)
+   ("C-h" . nil)
+   ("C-y" . nil)
+   ("<ESC>" . nil))
+
+;;   (add-to-list 'term-bind-key-alist '("C-\\" . nil))
 
 
-(use-package multi-term
-  :config
-  (setq
-   multi-term-dedicated-select-after-open-p t
-   multi-term-switch-after-close nil
-   multi-term-scroll-to-bottom-on-output t)
-  (setcdr (assoc "C-r" term-bind-key-alist) 'term-send-reverse-search-history)
-  (setcdr (assoc "C-m" term-bind-key-alist) 'term-send-raw)
-  (add-to-list 'term-bind-key-alist '("C-\\" . nil))
-  (add-to-list 'term-bind-key-alist '("C-;" . dotfiles-term-toggle-sub-mode))
-  (add-to-list 'term-bind-key-alist '("C-q" . dotfiles-term-send-next-key))
-  (add-to-list 'term-bind-key-alist '("<C-right>" . term-send-forward-word))
-  (add-to-list 'term-bind-key-alist '("<C-left>" . term-send-backward-word))
-  (add-to-list 'term-bind-key-alist '("<C-delete>" . term-send-forward-kill-word))
-  (add-to-list 'term-bind-key-alist '("<C-backspace>" . term-send-backward-kill-word))
-  (add-to-list 'term-bind-key-alist '("s-i" . dotfiles-term-do-interactive-command))
-  (add-to-list 'term-bind-key-alist '("C-S-i" . dotfiles-term-do-interactive-command))
-
-  (setq term-unbind-key-list (delete "C-z" term-unbind-key-list))
-  (advice-add 'multi-term :after
-              (lambda (&rest args)
-                (set-buffer-process-coding-system 'utf-8-unix 'utf-8-unix)))
   (bind-keys
-   ("<f9>" . multi-term)
-   ("<f10>" . multi-term-prev)
-   ("<f11>" . multi-term-next)
-   ("C-}" . multi-term-next)
-   ("C-{" . multi-term-prev)))
+   ("<f9>" . dotfiles-new-term)
+   ("<f10>" . dotfiles-prev-term)
+   ("<f11>" . dotfiles-next-term)
+   ("C-}" . dotfiles-next-tern)
+   ("C-{" . multi-prev-term)))
 
 
-(use-package term-cmd
-  :config
-  (defvar dotfiles--term-in-pager nil "Whether a term is currently in the pager.")
-  (make-variable-buffer-local 'dotfiles--term-in-pager)
+;; (use-package multi-term
+;;   :config
+;;   (setq
+;;    multi-term-dedicated-select-after-open-p t
+;;    multi-term-switch-after-close nil
+;;    multi-term-scroll-to-bottom-on-output t)
+;;   (setcdr (assoc "C-r" term-bind-key-alist) 'term-send-reverse-search-history)
+;;   (setcdr (assoc "C-m" term-bind-key-alist) 'term-send-raw)
+;;   (add-to-list 'term-bind-key-alist '("C-\\" . nil))
+;;   (add-to-list 'term-bind-key-alist '("C-;" . dotfiles-term-toggle-sub-mode))
+;;   (add-to-list 'term-bind-key-alist '("C-q" . dotfiles-term-send-next-key))
+;;   (add-to-list 'term-bind-key-alist '("<C-right>" . term-send-forward-word))
+;;   (add-to-list 'term-bind-key-alist '("<C-left>" . term-send-backward-word))
+;;   (add-to-list 'term-bind-key-alist '("<C-delete>" . term-send-forward-kill-word))
+;;   (add-to-list 'term-bind-key-alist '("<C-backspace>" . term-send-backward-kill-word))
+;;   (add-to-list 'term-bind-key-alist '("s-i" . dotfiles-term-do-interactive-command))
+;;   (add-to-list 'term-bind-key-alist '("C-S-i" . dotfiles-term-do-interactive-command))
 
-  (defun dotfiles--term-pager-on (c a)
-    (setq dotfiles--term-in-pager t))
-
-  (defun dotfiles--term-pager-off (c a)
-    (setq dotfiles--term-in-pager nil))
-
-  (add-to-list 'term-cmd-commands-alist '("term-pager-on" . dotfiles--term-pager-on))
-  (add-to-list 'term-cmd-commands-alist '("term-pager-off" . dotfiles--term-pager-off))
-
-  (defun dotfiles-term-mwheel-scroll-down (&optional arg)
-    "Respond to a mouse wheel scroll down."
-    (interactive)
-    (if (and dotfiles--term-in-pager (term-in-char-mode))
-        (progn
-          (term-send-up)
-          (term-send-up)
-          (term-send-up)
-          (term-send-up)
-          (term-send-up))
-      (scroll-down arg)))
-
-  (defun dotfiles-term-mwheel-scroll-up (&optional arg)
-    "Respond to a mouse wheel scroll up."
-    (interactive)
-    (if (and dotfiles--term-in-pager (term-in-char-mode))
-        (progn
-          (term-send-down)
-          (term-send-down)
-          (term-send-down)
-          (term-send-down)
-          (term-send-down))
-      (scroll-up arg)))
-
-  (add-hook 'term-mode-hook
-            (lambda ()
-              (make-local-variable 'mwheel-scroll-down-function)
-              (make-local-variable 'mwheel-scroll-up-function)
-              (setq mwheel-scroll-down-function 'dotfiles-term-mwheel-scroll-down)
-              (setq mwheel-scroll-up-function 'dotfiles-term-mwheel-scroll-up)))
-
-  (defun dotfiles--term-inotify-callback (c a)
-    "Respond to a completed command."
-    (alert
-     (format "File '%s' changed in %s" a (buffer-name))
-     :title "Emacs"))
-
-  (add-to-list 'term-cmd-commands-alist '("term-inotify" . dotfiles--term-inotify-callback))
-
-  (defvar dotfiles--term-in-ipython nil)
-  (make-variable-buffer-local 'dotfiles--term-in-ipython)
-
-  (defvar dotfiles--ipython-popped-from nil)
-
-  (defun dotfiles--term-ipython-start (c a)
-    (setq
-     dotfiles--term-in-ipython t
-     dotfiles--term-help-fn 'helm-dash-at-point
-     dotfiles--term-interactive-command 'dotfiles-pop-from-ipython)
-    (dotfiles-set-python-docsets (string-to-number a)))
-
-  (defun dotfiles--term-ipython-exit (c a)
-    (setq
-     dotfiles--term-in-ipython nil
-     dotfiles--term-help-fn 'man)
-    (setq-local helm-dash-docsets '("Bash"))
-    (kill-local-variable 'dotfiles--term-interactive-command))
-
-  (add-to-list 'term-cmd-commands-alist '("ipython-start" . dotfiles--term-ipython-start))
-  (add-to-list 'term-cmd-commands-alist '("ipython-exit" . dotfiles--term-ipython-exit))
-
-  (defun dotfiles-pop-to-ipython ()
-    (interactive)
-    (setq dotfiles--ipython-popped-from (current-buffer))
-    (dotfiles--create-or-pop-to-buffer
-     (lambda (buf) (buffer-local-value 'dotfiles--term-in-ipython buf))
-     (lambda ()
-       (multi-term)
-       (term-send-string (get-buffer-process (current-buffer)) "py")
-       (term-send-input)
-       (current-buffer))))
-
-  (require 'python)
-  (bind-keys
-   :map python-mode-map
-   ("s-i" . dotfiles-pop-to-ipython)
-   ("C-S-i" . dotfiles-pop-to-ipython))
-
-  (defun dotfiles-pop-from-ipython ()
-    (interactive)
-    (dotfiles--try-pop-to-buffer dotfiles--ipython-popped-from)))
-
-(use-package term-alert
-  :config
-  (bind-keys
-   :map term-mode-map
-   ("C-#" . term-alert-next-command-toggle)
-   ("M-#" . term-alert-all-toggle)
-   ("C-'" . term-alert-runtime))
-  (add-to-list 'term-bind-key-alist '("C-#" . term-alert-next-command-toggle))
-  (add-to-list 'term-bind-key-alist '("M-#" . term-alert-all-toggle))
-  (add-to-list 'term-bind-key-alist '("C-'" . term-alert-runtime)))
+;;   (setq term-unbind-key-list (delete "C-z" term-unbind-key-list))
+;;   (bind-keys
+;;    ("<f9>" . multi-term)
+;;    ("<f10>" . multi-term-prev)
+;;    ("<f11>" . multi-term-next)
+;;    ("C-}" . multi-term-next)
+;;    ("C-{" . multi-term-prev)))
 
 
-(progn
-  (require 'term-debug)
-  (setq-default dotfiles--term-interactive-command 'term-debug-dwim))
+;; (use-package term-cmd
+;;   :config
+;;   (defvar dotfiles--term-in-pager nil "Whether a term is currently in the pager.")
+;;   (make-variable-buffer-local 'dotfiles--term-in-pager)
+
+;;   (defun dotfiles--term-pager-on (c a)
+;;     (setq dotfiles--term-in-pager t))
+
+;;   (defun dotfiles--term-pager-off (c a)
+;;     (setq dotfiles--term-in-pager nil))
+
+;;   (add-to-list 'term-cmd-commands-alist '("term-pager-on" . dotfiles--term-pager-on))
+;;   (add-to-list 'term-cmd-commands-alist '("term-pager-off" . dotfiles--term-pager-off))
+
+;;   (defun dotfiles-term-mwheel-scroll-down (&optional arg)
+;;     "Respond to a mouse wheel scroll down."
+;;     (interactive)
+;;     (if (and dotfiles--term-in-pager (term-in-char-mode))
+;;         (progn
+;;           (term-send-up)
+;;           (term-send-up)
+;;           (term-send-up)
+;;           (term-send-up)
+;;           (term-send-up))
+;;       (scroll-down arg)))
+
+;;   (defun dotfiles-term-mwheel-scroll-up (&optional arg)
+;;     "Respond to a mouse wheel scroll up."
+;;     (interactive)
+;;     (if (and dotfiles--term-in-pager (term-in-char-mode))
+;;         (progn
+;;           (term-send-down)
+;;           (term-send-down)
+;;           (term-send-down)
+;;           (term-send-down)
+;;           (term-send-down))
+;;       (scroll-up arg)))
+
+;;   (add-hook 'term-mode-hook
+;;             (lambda ()
+;;               (make-local-variable 'mwheel-scroll-down-function)
+;;               (make-local-variable 'mwheel-scroll-up-function)
+;;               (setq mwheel-scroll-down-function 'dotfiles-term-mwheel-scroll-down)
+;;               (setq mwheel-scroll-up-function 'dotfiles-term-mwheel-scroll-up)))
+
+;;   (defun dotfiles--term-inotify-callback (c a)
+;;     "Respond to a completed command."
+;;     (alert
+;;      (format "File '%s' changed in %s" a (buffer-name))
+;;      :title "Emacs"))
+
+;;   (add-to-list 'term-cmd-commands-alist '("term-inotify" . dotfiles--term-inotify-callback))
+
+;;   (defvar dotfiles--term-in-ipython nil)
+;;   (make-variable-buffer-local 'dotfiles--term-in-ipython)
+
+;;   (defvar dotfiles--ipython-popped-from nil)
+
+;;   (defun dotfiles--term-ipython-start (c a)
+;;     (setq
+;;      dotfiles--term-in-ipython t
+;;      dotfiles--term-help-fn 'helm-dash-at-point
+;;      dotfiles--term-interactive-command 'dotfiles-pop-from-ipython)
+;;     (dotfiles-set-python-docsets (string-to-number a)))
+
+;;   (defun dotfiles--term-ipython-exit (c a)
+;;     (setq
+;;      dotfiles--term-in-ipython nil
+;;      dotfiles--term-help-fn 'man)
+;;     (setq-local helm-dash-docsets '("Bash"))
+;;     (kill-local-variable 'dotfiles--term-interactive-command))
+
+;;   (add-to-list 'term-cmd-commands-alist '("ipython-start" . dotfiles--term-ipython-start))
+;;   (add-to-list 'term-cmd-commands-alist '("ipython-exit" . dotfiles--term-ipython-exit))
+
+;;   (defun dotfiles-pop-to-ipython ()
+;;     (interactive)
+;;     (setq dotfiles--ipython-popped-from (current-buffer))
+;;     (dotfiles--create-or-pop-to-buffer
+;;      (lambda (buf) (buffer-local-value 'dotfiles--term-in-ipython buf))
+;;      (lambda ()
+;;        (multi-term)
+;;        (term-send-string (get-buffer-process (current-buffer)) "py")
+;;        (term-send-input)
+;;        (current-buffer))))
+
+;;   (require 'python)
+;;   (bind-keys
+;;    :map python-mode-map
+;;    ("s-i" . dotfiles-pop-to-ipython)
+;;    ("C-S-i" . dotfiles-pop-to-ipython))
+
+;;   (defun dotfiles-pop-from-ipython ()
+;;     (interactive)
+;;     (dotfiles--try-pop-to-buffer dotfiles--ipython-popped-from)))
+
+;; (use-package term-alert
+;;   :config
+;;   (bind-keys
+;;    :map term-mode-map
+;;    ("C-#" . term-alert-next-command-toggle)
+;;    ("M-#" . term-alert-all-toggle)
+;;    ("C-'" . term-alert-runtime))
+;;   (add-to-list 'term-bind-key-alist '("C-#" . term-alert-next-command-toggle))
+;;   (add-to-list 'term-bind-key-alist '("M-#" . term-alert-all-toggle))
+;;   (add-to-list 'term-bind-key-alist '("C-'" . term-alert-runtime)))
+
+
+;; (progn
+;;   (require 'term-debug)
+;;   (setq-default dotfiles--term-interactive-command 'term-debug-dwim))

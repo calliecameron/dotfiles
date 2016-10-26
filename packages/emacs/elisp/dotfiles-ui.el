@@ -295,6 +295,7 @@ If BUFFER is a string, it is the name of the buffer to find; if it is a predicat
 
 
 (use-package ergoemacs-mode
+  :diminish ergoemacs-mode
   :config
   (setq
    ergoemacs-theme "standard"
@@ -305,6 +306,13 @@ If BUFFER is a string, it is the name of the buffer to find; if it is a predicat
    ergoemacs-mode-line nil)
   (add-to-list 'ergoemacs-theme-options '(save-options-on-exit off))
   (ergoemacs-mode)
+
+  (add-to-list
+   'ergoemacs-user-buffer-functions
+   (lambda (buf)
+     (let ((mode (buffer-local-value 'major-mode buf)))
+       (or (eq mode 'term-mode)
+           (eq mode 'magit-status-mode)))))
 
   (defun dotfiles--startup-buffer ()
     (let ((buf (get-buffer "untitled")))
