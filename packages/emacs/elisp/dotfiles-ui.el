@@ -295,7 +295,6 @@ If BUFFER is a string, it is the name of the buffer to find; if it is a predicat
 
 
 (use-package ergoemacs-mode
-  :pin melpa-stable
   :config
   (setq
    ergoemacs-theme "standard"
@@ -557,8 +556,7 @@ If BUFFER is a string, it is the name of the buffer to find; if it is a predicat
   (helm-adaptive-mode 1)
   (helm-push-mark-mode 1)
   (helm-popup-tip-mode 1)
-  (helm-top-poll-mode 1)
-  (setq helm-follow-mode nil)) ; work around an ergoemacs problem
+  (helm-top-poll-mode 1))
 
 (use-package helm-bm
   :bind
