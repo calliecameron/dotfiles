@@ -1,6 +1,6 @@
 function _can-install() {
-    [ "${DOTFILES_OS}" != 'android' ] &&
-    [ "${DOTFILES_LINUX_VARIANT}" != 'pi' ] &&
+    ! os android &&
+    ! linux-variant pi &&
     type git &>/dev/null
 }
 

@@ -1,5 +1,5 @@
 function _can-install() {
-    [ "${DOTFILES_OS}" = 'linux' ] &&
+    os linux &&
     which ssmtp &>/dev/null
 }
 

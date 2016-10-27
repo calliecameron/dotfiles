@@ -1,7 +1,7 @@
 function _can-install() {
     # Also need the QT libraries, but we can assume the setup scripts installed those
-    [ "${DOTFILES_OS}" = 'linux' ] &&
-    [ "${DOTFILES_LINUX_VARIANT}" = 'main' ] &&
+    os linux &&
+    linux-variant main &&
     type qmake &>/dev/null
 }
 

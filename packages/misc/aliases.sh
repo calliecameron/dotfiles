@@ -36,7 +36,7 @@ alias t='tree -C'
 alias m='make'
 alias x='dtrx'
 
-if [ "${DOTFILES_OS}" = 'linux' ]; then
+if os linux; then
     alias cbc='xclip -i -selection clipboard'
     alias cbp='xclip -o -selection clipboard'
 

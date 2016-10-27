@@ -1,7 +1,7 @@
 function _can-install() {
-    [ "${DOTFILES_OS}" = 'linux' ] &&
-    [ "${DOTFILES_LINUX_VARIANT}" = 'main' ] &&
-    [ ! -z "${DISPLAY}" ] &&
+    os linux &&
+    linux-variant main &&
+    graphical &&
     package-installed iptables &&
     type port &>/dev/null &&
     type vlc &>/dev/null

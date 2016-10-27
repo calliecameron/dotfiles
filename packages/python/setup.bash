@@ -1,8 +1,8 @@
 function _install() {
     function do-pip2() {
-        if [ "${DOTFILES_OS}" = 'linux' ]; then
+        if os linux; then
             sudo -H pip install "${@}" || return 1
-        elif [ "${DOTFILES_OS}" = 'cygwin' ]; then
+        elif os cygwin; then
             printf '\033[34m'
             cat <<EOF
 Pip in Cygwin must be run as administrator, and cannot be done
@@ -16,9 +16,9 @@ EOF
     }
 
     function do-pip3() {
-        if [ "${DOTFILES_OS}" = 'linux' ]; then
+        if os linux; then
             sudo -H pip3 install "${@}" || return 1
-        elif [ "${DOTFILES_OS}" = 'cygwin' ]; then
+        elif os cygwin; then
             printf '\033[34m'
             cat <<EOF
 Pip in Cygwin must be run as administrator, and cannot be done
@@ -31,10 +31,8 @@ EOF
         fi
     }
 
-    if ([ "${DOTFILES_OS}" = 'linux' ] &&
-       [ "${DOTFILES_LINUX_VARIANT}" != 'pi' ] &&
-       [ ! -z "${DOTFILES_CAN_SUDO}" ]) ||
-       [ "${DOTFILES_OS}" = 'cygwin' ]; then
+    if (os linux && ! linux-variant pi && can-sudo) ||
+       os cygwin; then
         do-pip2 ipython &&
         do-pip3 jedi flake8 importmagic autopep8 yapf rope pygments ipython virtualenv virtualenvwrapper autoenv || exit 1
     fi

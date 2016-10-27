@@ -1,4 +1,4 @@
-if [ "${DOTFILES_OS}" = 'android' ] || [ "${DOTFILES_OS}" = 'cygwin' ]; then
+if os android cygwin; then
     source "${PACKAGE_CONF_DIR}/git-completion.bash"
 fi
 

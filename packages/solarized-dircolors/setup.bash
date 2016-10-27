@@ -1,5 +1,5 @@
 function _can-install() {
-    [ "${DOTFILES_OS}" = 'linux' ] || [ "${DOTFILES_OS}" = 'cygwin' ]
+    os linux cygwin
 }
 
 function _install() {

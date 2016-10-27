@@ -1,6 +1,5 @@
 function _can-install() {
-    [ "${DOTFILES_OS}" = 'linux' ] &&
-    [ "${DOTFILES_LINUX_VARIANT}" = 'main' ]
+    os linux && linux-variant main
 }
 
 function _install() {

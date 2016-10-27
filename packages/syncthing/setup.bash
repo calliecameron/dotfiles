@@ -1,7 +1,7 @@
 function _can-install() {
-    [ "${DOTFILES_OS}" = 'linux' ] &&
-    [ "${DOTFILES_LINUX_VARIANT}" = 'main' ] &&
-    [ ! -z "${DOTFILES_CAN_SUDO}" ] &&
+    os linux &&
+    linux-variant main &&
+    can-sudo &&
     package-installed iptables &&
     type port &>/dev/null
 }

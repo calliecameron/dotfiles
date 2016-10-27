@@ -4,7 +4,7 @@ export DOTFILES_HG_LOCAL="${HOME}/.dotfiles-hg-local"
 homelink "${PACKAGE_CONF_DIR}/hgrc"
 
 # Platform-specific settings
-if [ "${DOTFILES_OS}" = 'android' ]; then
+if os android; then
     # Make sure git actually works
     export GIT_SSH="${PACKAGE_CONF_DIR}/android-ssh-with-key"
 
@@ -18,7 +18,7 @@ if [ "${DOTFILES_OS}" = 'android' ]; then
     if [ -f "${HOME}/system/bin/git" ] && [ ! -e "${HOME}/system/bin/git-merge" ]; then
         ln -s "${HOME}/system/bin/git" "${HOME}/system/bin/git-merge"
     fi
-elif [ "${DOTFILES_OS}" = 'cygwin' ]; then
+elif os cygwin; then
     # Make password entry work
     if [ -z "${SSH_TTY}" ]; then
         export SSH_TTY
@@ -46,7 +46,7 @@ if which git >/dev/null; then
     git config --global pager.status true
     git config --global status.showUntrackedFiles all
 
-    if [ "${DOTFILES_OS}" = 'android' ]; then
+    if os android; then
         # Git on android is too old to support simple
         git config --global push.default matching
     else
@@ -54,7 +54,7 @@ if which git >/dev/null; then
     fi
 
     # More Cygwin password entry stuff
-    if [ "${DOTFILES_OS}" = 'cygwin' ]; then
+    if os cygwin; then
         git config --global core.askpass "${PACKAGE_CONF_DIR}/cygwin-askpass"
     fi
 fi
