@@ -665,9 +665,10 @@ dotfiles-org-linkify-suffix) appended."
                                       "][")
                                      "]]"))))
 
-(use-package pdf-tools
-  :config
-  (pdf-tools-install t t t))
+(unless (boundp 'dotfiles-no-pdf-tools)
+  (use-package pdf-tools
+    :config
+    (pdf-tools-install t t t)))
 
 (use-package rainbow-delimiters
   :pin melpa-stable
@@ -733,10 +734,11 @@ dotfiles-org-linkify-suffix) appended."
    sml/show-eol t)
   (sml/setup))
 
-(use-package switch-window
-  :bind
-  ([remap other-window] . switch-window)
-  ("C-e" . switch-window))
+(unless (boundp 'dotfiles-no-switch-window)
+  (use-package switch-window
+    :bind
+    ([remap other-window] . switch-window)
+    ("C-e" . switch-window)))
 
 (use-package syntax-subword
   :config
