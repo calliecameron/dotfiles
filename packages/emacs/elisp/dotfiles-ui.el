@@ -327,7 +327,7 @@ If BUFFER is a string, it is the name of the buffer to find; if it is a predicat
     :bind
   (("C-x DEL". keyboard-quit)
    ("C-x <deletechar>" . keyboard-quit)
-   ("C-c c" . save-buffers-kill-emacs)
+   ("C-x C-c" . save-buffers-kill-emacs)
    ("C-<prior>" . dotfiles-smart-scroll-left)
    ("C-<next>" . dotfiles-smart-scroll-right)
    ("C-x <" . dotfiles-smart-scroll-left)
