@@ -156,6 +156,8 @@
    ("C-\\" . nil)
    ;; ("M-/" . nil) ; todo
    ;; ("M-:" . nil) ; todo
+   ("M-2" . nil)
+   ("M-3" . nil)
    ("M-a" . nil))
 
   (bind-keys

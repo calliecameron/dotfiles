@@ -71,3 +71,7 @@ function known-linux-variant() {
 function can-sudo() {
     test ! -z "${DOTFILES_CAN_SUDO}"
 }
+
+function graphical() {
+    test ! -z "${DISPLAY}"
+}

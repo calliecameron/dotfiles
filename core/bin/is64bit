@@ -1,16 +1,16 @@
 #!/bin/bash
 
-QUIET="${1}"
+VERBOSE="${1}"
 
 function say-yes() {
-    if [ "${QUIET}" != '-q' ]; then
+    if [ "${VERBOSE}" = '-v' ]; then
         echo 'Yes'
     fi
     exit 0
 }
 
 function say-no() {
-    if [ "${QUIET}" != '-q' ]; then
+    if [ "${VERBOSE}" = '-v' ]; then
         echo 'No'
     fi
     exit 1

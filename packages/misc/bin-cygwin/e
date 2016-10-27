@@ -9,7 +9,7 @@ function usage () {
     echo "          [-help] Display help (this message)."
 }
 
-if is64bit -q; then
+if is64bit; then
     tempprogfiles='Program Files (x86)'
 else
     tempprogfiles='Program Files'

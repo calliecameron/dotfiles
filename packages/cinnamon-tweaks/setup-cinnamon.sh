@@ -3,7 +3,7 @@
 source "${DOTFILES_BASH_COMMON}" &&
 export PATH="${THIS_DIR}/bin:${PATH}" &&
 
-if is64bit -q; then
+if is64bit; then
     CHROME_DESKTOP='google-chrome.desktop'
     CHROME_COMMAND='google-chrome'
 else

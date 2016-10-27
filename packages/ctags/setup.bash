@@ -1,7 +1,5 @@
 function _can-install() {
-    [ "${DOTFILES_OS}" = 'linux' ] &&
-    ( [ "${DOTFILES_LINUX_VARIANT}" = 'main' ] || [ "${DOTFILES_LINUX_VARIANT}" = 'android' ] ) &&
-    [ ! -z "${DOTFILES_CAN_SUDO}" ]
+    os linux && linux-variant main android && can-sudo
 }
 
 function _install() {

@@ -3,7 +3,7 @@ homelink "${WINHOME}" "${HOME}/WinHome"
 homelink "${WINDOWNLOADS}" "${HOME}/WinDownloads"
 homelink "${CYGHOME}" "${HOME}/CygHome"
 
-if [ "${DOTFILES_OS}" = 'linux' ] && [ "${DOTFILES_LINUX_VARIANT}" = 'android' ]; then
+if os linux && [ "${DOTFILES_LINUX_VARIANT}" = 'android' ]; then
     complainunset 'ANDROID_SDCARD' 'Android sdcard location'
     complainunset 'ANDROID_DOCUMENTS' 'Android documents location'
     complainunset 'ANDROID_DOWNLOADS' 'Android downloads location'

@@ -1,5 +1,5 @@
 function _can-install() {
-    [ "${DOTFILES_OS}" != 'android' ]
+    ! os android
 }
 
 function _install() {

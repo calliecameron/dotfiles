@@ -7,7 +7,7 @@ function _can-install() {
 function _install() {
     local URL DIR
     local TARFILE="${PACKAGE_INSTALL_DIR}/stack.tar.gz"
-    if is64bit -q; then
+    if is64bit; then
         URL='https://www.stackage.org/stack/linux-x86_64'
         DIR='stack-1.1.2-linux-x86_64'
     else

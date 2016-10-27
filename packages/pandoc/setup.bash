@@ -7,7 +7,7 @@ function _can-install() {
 
 function _install() {
     local TMPDIR
-    if is64bit -q; then
+    if is64bit; then
         TMPDIR="$(mktemp -d)" &&
         wget -O "${TMPDIR}/pandoc.deb" 'https://github.com/jgm/pandoc/releases/download/1.17.1/pandoc-1.17.1-2-amd64.deb' &&
         sudo dpkg -i "${TMPDIR}/pandoc.deb" &&

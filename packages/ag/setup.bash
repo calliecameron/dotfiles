@@ -1,14 +1,11 @@
 function _can-install() {
-    ([ "${DOTFILES_OS}" = 'linux' ] &&
-    [ ! -z "${DOTFILES_LINUX_VARIANT}" ] &&
-    [ ! -z "${DOTFILES_CAN_SUDO}" ]) ||
-    [ "${DOTFILES_OS}" = 'cygwin' ]
+    (os linux && known-linux-variant && can-sudo) || os cygwin
 }
 
 function _install() {
-    if [ "${DOTFILES_OS}" = 'linux' ]; then
+    if os linux; then
         sudo apt-get -y install pkg-config libpcre3-dev liblzma-dev || return 1
-    elif [ "${DOTFILES_OS}" = 'cygwin' ]; then
+    elif os cygwin; then
         apt-cyg install pkg-config libpcre-devel liblzma-devel || return 1
     else
         echo-red "Unknown OS"
@@ -17,9 +14,9 @@ function _install() {
     # shellcheck disable=SC2155
     local TMPDIR="$(mktemp -d)" &&
     cd "${TMPDIR}" &&
-    wget 'http://geoff.greer.fm/ag/releases/the_silver_searcher-0.32.0.tar.gz' &&
-    tar -xf 'the_silver_searcher-0.32.0.tar.gz' &&
-    cd 'the_silver_searcher-0.32.0' &&
+    wget 'http://geoff.greer.fm/ag/releases/the_silver_searcher-0.33.0.tar.gz' &&
+    tar -xf 'the_silver_searcher-0.33.0.tar.gz' &&
+    cd 'the_silver_searcher-0.33.0' &&
     mkdir "${PACKAGE_INSTALL_DIR}" &&
     ./configure "--prefix=${PACKAGE_INSTALL_DIR}" &&
     make &&
