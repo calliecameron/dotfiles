@@ -53,15 +53,16 @@ fi
 
 export DOTFILES_PACKAGE_SCRIPTS="${DOTFILES_CORE_DIR}/package-scripts"
 export DOTFILES_PACKAGE_INSTALL_DIR="${HOME}/.dotfiles-packages"
-export DOTFILES_PACKAGE_CONF_DIR="${DOTFILES_DIR}/packages"
 export DOTFILES_PACKAGE_MUTEX="${HOME}/.dotfiles-package-mutex"
 export DOTFILES_PACKAGE_MESSAGES_FILE="${HOME}/.dotfiles-package-messages"
 export DOTFILES_PACKAGE_PROBLEMS_FILE="${HOME}/.dotfiles-package-problems"
 
 export DOTFILES_PRIVATE_DIR="${DOTFILES_DIR}/private"
-export DOTFILES_PRIVATE_PACKAGE_CONF_DIR="${DOTFILES_PRIVATE_DIR}/packages"
 export DOTFILES_PRIVATE_REPO=''
 export DOTFILES_PRIVATE_BRANCH=''
+
+export DOTFILES_PACKAGE_ROOTS="${DOTFILES_DIR}/packages:${DOTFILES_PRIVATE_DIR}/packages"
+
 
 if [ -e "${DOTFILES_PACKAGE_MESSAGES_FILE}" ]; then
     rm -f "${DOTFILES_PACKAGE_MESSAGES_FILE}"
@@ -102,11 +103,23 @@ elif [ "${DOTFILES_OS}" = 'linux' ] && [ "${DOTFILES_LINUX_VARIANT}" = 'android'
 fi
 
 
+appendpackageroot() {
+    export DOTFILES_PACKAGE_ROOTS="${DOTFILES_PACKAGE_ROOTS}:${1}"
+}
+
+prependpackageroot() {
+    export DOTFILES_PACKAGE_ROOTS="${1}:${DOTFILES_PACKAGE_ROOTS}"
+}
+
+
 # Use the ~/.dotfiles-variables.sh file for stuff that should be
 # visible to GUI programs, but should not be version controlled.
 if [ -f "${DOTFILES_LOCAL_VARIABLES}" ]; then
     . "${DOTFILES_LOCAL_VARIABLES}"
 fi
+
+
+unset appendpackageroot prependpackageroot
 
 
 # To prevent the umask change, set DOTFILES_NO_CUSTOM_UMASK in
@@ -118,9 +131,6 @@ fi
 
 # Load packages
 . "${DOTFILES_PACKAGE_SCRIPTS}/load-packages-env.sh"
-loadpackagesenv "${DOTFILES_PACKAGE_CONF_DIR}"
-test -d "${DOTFILES_PRIVATE_PACKAGE_CONF_DIR}" && loadpackagesenv "${DOTFILES_PRIVATE_PACKAGE_CONF_DIR}"
-loadpackagesenvcleanup
 
 
 export PATH="${DOTFILES_LOCAL_BIN}:${PATH}"

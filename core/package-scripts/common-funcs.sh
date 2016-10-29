@@ -1,5 +1,31 @@
 # Functions available to env, alias and setup.bash scripts. Must be sh compatible.
 
+packagerootloop() {
+    # Not intended for use by packages, but rather for package-loading
+    # scripts. Call arg with each package root as argument.
+    # shellcheck disable=SC2039
+    local ORIGINAL_IFS
+    ORIGINAL_IFS="${IFS}"
+    IFS=':'
+    test ! -z "${ZSH_VERSION}" && setopt sh_word_split
+
+    for PACKAGE_ROOT in ${DOTFILES_PACKAGE_ROOTS}; do
+        IFS="${ORIGINAL_IFS}"
+        test ! -z "${ZSH_VERSION}" && unsetopt sh_word_split
+
+        if ! "${1}" "${PACKAGE_ROOT}"; then
+            return 1
+        fi
+
+        test ! -z "${ZSH_VERSION}" && setopt sh_word_split
+        IFS=':'
+    done
+
+    test ! -z "${ZSH_VERSION}" && unsetopt sh_word_split
+    IFS="${ORIGINAL_IFS}"
+    return 0
+}
+
 message() {
     # Display a message in blue the next time an interactive shell is
     # started (use instead of echo, which won't be seen in env
@@ -116,5 +142,5 @@ os() {
 }
 
 commonfuncscleanup() {
-    unset -f message problem homelink homebinlink complainunset os commonfuncscleanup
+    unset -f packagerootloop message problem homelink homebinlink complainunset os commonfuncscleanup
 }

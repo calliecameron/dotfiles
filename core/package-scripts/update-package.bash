@@ -43,3 +43,38 @@ function update-package() {
 
     package-cleanup
 }
+
+function update-package-root() {
+    PACKAGE_CONF_ROOT="${1}"
+
+    if [ -d "${PACKAGE_CONF_ROOT}" ]; then
+        exec 3< <(ls -1 "${PACKAGE_CONF_ROOT}") || return 1
+        while read -r -u 3 line; do
+            update-package "${line}" || return 1
+        done
+    fi
+}
+
+function update-all-packages() {
+    update-private-repo &&
+    touch "${UPDATED_ALREADY_FILE}" &&
+    packagerootloop update-package-root &&
+    date '+%s' > "${UPDATE_FILE}" &&
+    rm "${UPDATED_ALREADY_FILE}"
+}
+
+function update-private-repo() {
+    if [ -d "${DOTFILES_PRIVATE_DIR}" ]; then
+        if repo-is-clean "${DOTFILES_PRIVATE_DIR}"; then
+            # shellcheck disable=SC2015
+            cd "${DOTFILES_PRIVATE_DIR}" || return 1
+            if ! git pull; then
+                echo-red 'Failed to update private repo.'
+                return 1
+            fi
+        else
+            echo-yellow 'Private repo has uncommitted changes; not updating it.'
+        fi
+    fi
+    return 0
+}

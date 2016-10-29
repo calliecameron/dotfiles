@@ -53,14 +53,29 @@
 (add-to-list 'display-buffer-alist
              '("*" . (display-buffer-reuse-window
                       . ((reusable-frames . visible)))))
-(add-to-list 'kill-emacs-query-functions
-             (lambda ()
-               (and (if (eq (call-process "dotfiles-repo-is-clean" nil nil nil dotfiles-dir) 0)
-                        t
-                      (y-or-n-p "Dotfiles has uncommitted changes; quit anyway? "))
-                    (if (eq (call-process "dotfiles-repo-is-clean" nil nil nil dotfiles-private-dir) 0)
-                        t
-                      (y-or-n-p "Dotfiles private has uncommitted changes; quit anyway? ")))))
+
+(defun dotfiles--repo-is-clean (dir)
+  (eq (call-process "repo-is-clean" nil nil nil dir) 0))
+
+(defun dotfiles--repo-blocks-quit (arg)
+  (let ((dir (if (consp arg) (car arg) arg))
+        (name (if (consp arg) (cdr arg) nil)))
+    (if (dotfiles--repo-is-clean dir)
+        nil
+      (not
+       (y-or-n-p
+        (format
+         "%s has uncommitted changes; quit anyway? "
+         (if name name dir)))))))
+
+(defun dotfiles--should-quit ()
+  (-none?
+   'dotfiles--repo-blocks-quit
+   `((,dotfiles-dir . "Dotfiles")
+     (,dotfiles-private-dir . "Dotfiles private")
+     ,@dotfiles--package-roots-list)))
+
+(add-to-list 'kill-emacs-query-functions 'dotfiles--should-quit)
 
 (when dotfiles-on-android
   (set-face-attribute 'default nil :height 150))

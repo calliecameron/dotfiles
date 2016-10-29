@@ -65,18 +65,15 @@ test -x /usr/bin/dircolors && eval "$(dircolors -b)"
 # Load packages
 test ! -z "${DOTFILES_PROFILING}" && printf 'packages ' && date --rfc-3339=ns
 if command mkdir "${DOTFILES_PACKAGE_MUTEX}" &>/dev/null; then
-    "${DOTFILES_PACKAGE_SCRIPTS}/install-packages.sh" "${DOTFILES_PACKAGE_CONF_DIR}" "${DOTFILES_PRIVATE_PACKAGE_CONF_DIR}"
+    "${DOTFILES_PACKAGE_SCRIPTS}/install-packages.sh"
     test ! -z "${DOTFILES_PROFILING}" && printf 'packages2 ' && date --rfc-3339=ns
-    "${DOTFILES_PACKAGE_SCRIPTS}/update-packages.sh" "${DOTFILES_PACKAGE_CONF_DIR}" "${DOTFILES_PRIVATE_PACKAGE_CONF_DIR}"
+    "${DOTFILES_PACKAGE_SCRIPTS}/update-packages.sh"
     test ! -z "${DOTFILES_PROFILING}" && printf 'packages3 ' && date --rfc-3339=ns
     command rmdir "${DOTFILES_PACKAGE_MUTEX}"
 else
     echo -e "\e[34mAnother shell is installing or updating packages; don't be surprised if things behave oddly in the meantime.\e[0m"
 fi
 source "${DOTFILES_PACKAGE_SCRIPTS}/load-packages-aliases.bash"
-load-packages-aliases "${DOTFILES_PACKAGE_CONF_DIR}"
-test -d "${DOTFILES_PRIVATE_PACKAGE_CONF_DIR}" && load-packages-aliases "${DOTFILES_PRIVATE_PACKAGE_CONF_DIR}"
-load-packages-aliases-cleanup
 test ! -z "${DOTFILES_PROFILING}" && printf 'packages ' && date --rfc-3339=ns
 
 

@@ -67,8 +67,6 @@ function load-packages-aliases() {
             else
                 problem 'Could not load package aliases; failed to create temporary file.'
             fi
-        else
-            problem "Package configuration root '${PACKAGE_CONF_ROOT}' does not exist."
         fi
 
         unset PACKAGE_CONF_ROOT
@@ -77,8 +75,10 @@ function load-packages-aliases() {
     fi
 }
 
-function load-packages-aliases-cleanup() {
-    unset -f doaliases load-packages-aliases load-packages-aliases-cleanup
-    commonfuncscleanup
-    loadpackageenvcleanup
-}
+
+packagerootloop load-packages-aliases
+
+
+unset -f doaliases load-packages-aliases
+commonfuncscleanup
+loadpackageenvcleanup

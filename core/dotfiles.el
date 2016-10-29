@@ -118,9 +118,8 @@
    dotfiles-local-emacs
    dotfiles-package-scripts
    dotfiles-package-install-dir
-   dotfiles-package-conf-dir
    dotfiles-private-dir
-   dotfiles-private-package-conf-dir))
+   dotfiles-package-roots))
 
 (defconst dotfiles-on-android
   (and
@@ -201,8 +200,6 @@ message."
 
 ;; Load dotfiles packages
 (load (f-join dotfiles-package-scripts "load-packages.el"))
-(dotfiles--load-packages dotfiles-package-conf-dir)
-(dotfiles--load-packages dotfiles-private-package-conf-dir)
 
 
 ;; Load stuff saved through the 'customise' system

@@ -26,7 +26,7 @@ if [ ! -z "${DOTFILES_PRIVATE_REPO}" ] && [ ! -d "${DOTFILES_PRIVATE_DIR}" ]; th
     fi
 fi
 
-while (($#)); do
+function install-package-root() {
     test -z "${1}" && fail 'Could not install packages: no configuration root specified.'
     PACKAGE_CONF_ROOT="${1}"
 
@@ -76,9 +76,11 @@ while (($#)); do
 
         rm "${TEMPFILE}"
     fi
+}
 
-    shift
-done
+
+packagerootloop install-package-root
+
 
 if [ -e "${DOTFILES_PACKAGE_INSTALL_DIR}" ]; then
     if [ ! -e "${UPDATE_FILE}" ]; then

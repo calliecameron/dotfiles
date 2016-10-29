@@ -26,8 +26,6 @@ loadpackagesenv() {
             else
                 problem 'Could not load package environments; unable to create temporary file.'
             fi
-        else
-            problem "Package configuration root '${PACKAGE_CONF_ROOT}' does not exist."
         fi
 
         unset PACKAGE_CONF_ROOT
@@ -36,8 +34,9 @@ loadpackagesenv() {
     fi
 }
 
-loadpackagesenvcleanup() {
-    unset -f loadpackagesenv loadpackagesenvcleanup
-    commonfuncscleanup
-    loadpackageenvcleanup
-}
+
+packagerootloop loadpackagesenv
+
+unset -f loadpackagesenv
+commonfuncscleanup
+loadpackageenvcleanup

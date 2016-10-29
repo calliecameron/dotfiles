@@ -17,3 +17,7 @@
             (cd this-package-conf-dir)
             (load (f-join this-package-conf-dir "emacs") t)
             (cd original-working-dir)))))))
+
+(defconst dotfiles--package-roots-list (s-split ":" dotfiles-package-roots))
+
+(mapc 'dotfiles--load-packages dotfiles--package-roots-list)
