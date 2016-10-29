@@ -1,4 +1,4 @@
-(use-package elpy
+(dotfiles-use-package elpy
   :pin melpa-stable
   :diminish elpy-mode
   :config
@@ -43,6 +43,6 @@
     (interactive "MWork on virtualenv: ")
     (add-dir-local-variable 'python-mode 'pyvenv-workon workon)))
 
-(use-package python
+(dotfiles-use-package python
   :mode (("SConscript\\'" . python-mode)
          ("SConstruct\\'" . python-mode)))

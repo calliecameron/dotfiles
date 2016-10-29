@@ -1,6 +1,6 @@
 ;; TODO - this is still a bit buggy after upgading emacs and ergoemacs
 
-(use-package term
+(dotfiles-use-package term
   :config
   (setq
    term-buffer-maximum-size 20000
@@ -168,7 +168,7 @@
    ("C-{" . dotfiles-prev-term)))
 
 
-(use-package term-cmd
+(dotfiles-use-package term-cmd
   :config
   (defvar dotfiles--term-in-pager nil "Whether a term is currently in the pager.")
   (make-variable-buffer-local 'dotfiles--term-in-pager)
@@ -264,7 +264,7 @@
     (interactive)
       (dotfiles--try-pop-to-buffer dotfiles--ipython-popped-from)))
 
-(use-package term-alert
+(dotfiles-use-package term-alert
   :config
   (bind-keys
    :map term-mode-map

@@ -36,19 +36,19 @@
                  (list (line-beginning-position) (line-end-position))))))
 
 
-(use-package tex-site
+(dotfiles-use-package tex-site
   :ensure auctex
   :config
   (setq
    TeX-auto-save t
    TeX-parse-self t))
 
-(use-package bison-mode)
+(dotfiles-use-package bison-mode)
 
 (progn
   (add-to-list 'auto-mode-alist '("Cask\\'" . emacs-lisp-mode)))
 
-(use-package cc-mode
+(dotfiles-use-package cc-mode
   :mode ("\\.nc\\'" . c-mode)
   :config
   (setq
@@ -56,15 +56,15 @@
    c-basic-offset 4
    c-tab-always-indent t))
 
-(use-package company
+(dotfiles-use-package company
   :config
   (global-company-mode))
 
-(use-package company-quickhelp
+(dotfiles-use-package company-quickhelp
   :config
   (company-quickhelp-mode))
 
-(use-package compile
+(dotfiles-use-package compile
   :config
   (setq
    compilation-ask-about-save nil
@@ -218,15 +218,15 @@
 (progn
   (require 'compilation-alert))
 
-(use-package csv-mode)
+(dotfiles-use-package csv-mode)
 
-(use-package dockerfile-mode)
+(dotfiles-use-package dockerfile-mode)
 
 (progn
   (require 'flex-mode)
   (add-to-list 'auto-mode-alist '("\\.l\\'" . flex-mode)))
 
-(use-package flycheck
+(dotfiles-use-package flycheck
   :pin melpa-stable
   :config
   (setq-default flycheck-emacs-lisp-load-path 'inherit)
@@ -235,38 +235,38 @@
    ("C-," . flycheck-previous-error))
   (global-flycheck-mode))
 
-(use-package flycheck-cask
+(dotfiles-use-package flycheck-cask
   :pin melpa-stable
   :config
   (add-hook 'flycheck-mode-hook 'flycheck-cask-setup))
 
-(use-package flycheck-checkbashisms
+(dotfiles-use-package flycheck-checkbashisms
   :pin melpa-stable
   :config
   (flycheck-checkbashisms-setup))
 
-(use-package flycheck-color-mode-line
+(dotfiles-use-package flycheck-color-mode-line
   :pin melpa-stable
   :config
   (add-hook 'flycheck-mode-hook 'flycheck-color-mode-line-mode))
 
-(use-package flycheck-haskell
+(dotfiles-use-package flycheck-haskell
   :pin melpa-stable
   :config
   (add-hook 'flycheck-mode-hook 'flycheck-haskell-setup))
 
-(use-package flycheck-package
+(dotfiles-use-package flycheck-package
   :pin melpa-stable
   :config
   (flycheck-package-setup))
 
-(use-package flycheck-pos-tip
+(dotfiles-use-package flycheck-pos-tip
   :config
   (flycheck-pos-tip-mode))
 
-(use-package go-mode)
+(dotfiles-use-package go-mode)
 
-(use-package haskell-mode
+(dotfiles-use-package haskell-mode
   :pin melpa-stable
   :diminish haskell-doc-mode haskell-indentation-mode
   :config
@@ -330,7 +330,7 @@
               (turn-on-haskell-doc)
               (turn-on-haskell-indentation))))
 
-(use-package helm-dash
+(dotfiles-use-package helm-dash
   :config
   (require 'eww)
   (setq
@@ -429,11 +429,11 @@
                    dotfiles--term-help-fn
                  'helm-dash-at-point))))))
 
-(use-package helm-make
+(dotfiles-use-package helm-make
   :bind
   ("<f6>" . helm-make))
 
-(use-package helm-projectile
+(dotfiles-use-package helm-projectile
   :config
   (helm-projectile-on)
   (defun dotfiles-helm-ag-dwim ()
@@ -474,7 +474,7 @@
    ("s-i" . dotfiles-pop-from-ielm)
    ("C-S-i" . dotfiles-pop-from-ielm)))
 
-(use-package magit
+(dotfiles-use-package magit
   :pin melpa-stable
   :config
   (setq
@@ -488,10 +488,10 @@
    ("<f3>" . magit-dispatch-popup)
    ("<f4>" . magit-file-popup)))
 
-(use-package make-mode
+(dotfiles-use-package make-mode
   :mode ("\\.make\\'" . makefile-mode))
 
-(use-package markdown-mode
+(dotfiles-use-package markdown-mode
   :mode
   ("\\.markdown\\'" "\\.md\\'" "\\.mkd\\'" "\\.text\\'"))
 
@@ -507,7 +507,7 @@
         (backward-char) (insert "\n"))
       (indent-region start end))))
 
-(use-package octave
+(dotfiles-use-package octave
   :mode ("\\.m\\'" . octave-mode)
   :config
   (defun octave-indent-comment ()
@@ -523,7 +523,7 @@
               (setq comment-start "% ")
               (setq comment-add 0))))
 
-(use-package projectile
+(dotfiles-use-package projectile
   :pin melpa-stable
   :config
   (projectile-global-mode)
@@ -532,7 +532,7 @@
    ("s-p" . projectile-command-map)
    ("C-S-p" . projectile-command-map)))
 
-(use-package sr-speedbar
+(dotfiles-use-package sr-speedbar
   :config
   (require 'sr-speedbar)
   (setq
@@ -544,16 +544,16 @@
    ("s-s" . sr-speedbar-toggle)
    ("C-S-s" . sr-speedbar-toggle)))
 
-(use-package projectile-speedbar)
+(dotfiles-use-package projectile-speedbar)
 
 (progn
   (require 'reftex)
   (add-hook 'LaTeX-mode-hook 'turn-on-reftex)
   (setq reftex-plug-into-AUCTeX t))
 
-(use-package scala-mode)
+(dotfiles-use-package scala-mode)
 
-(use-package sh-script
+(dotfiles-use-package sh-script
   :mode ("\\.zsh\\'" . dotfiles--zsh-auto-mode-setup)
   :config
   (defun dotfiles--zsh-auto-mode-setup ()
@@ -561,7 +561,7 @@
     (shell-script-mode)
     (sh-set-shell "zsh" t nil)))
 
-(use-package yaml-mode)
+(dotfiles-use-package yaml-mode)
 
 
 (provide 'dotfiles-prog)

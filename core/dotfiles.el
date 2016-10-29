@@ -54,6 +54,25 @@
 (use-package s :pin melpa-stable)
 
 
+(defvar dotfiles-ignored-packages nil
+  "Packages which should not be installed on this machine.  Note that this is for package.el packages, not dotfiles packages.")
+
+(defmacro dotfiles-use-package (name &rest args)
+  "Wrapper for use-package which only installs packages not in dotfiles-ignored-packages."
+  (declare (indent 1))
+  `(unless (-contains? dotfiles-ignored-packages ',name)
+     (use-package ,name ,@args)))
+
+(put 'dotfiles-use-package 'lisp-indent-function 'defun)
+
+(defconst dotfiles--use-package-font-lock-keywords
+  '(("(\\(dotfiles-use-package\\)\\_>[ \t']*\\(\\(?:\\sw\\|\\s_\\)+\\)?"
+     (1 font-lock-keyword-face)
+     (2 font-lock-constant-face nil t))))
+
+(font-lock-add-keywords 'emacs-lisp-mode dotfiles--use-package-font-lock-keywords)
+
+
 ;; Environment variables
 (defmacro dotfiles--env-vars (var-names)
   "Import environment variables."

@@ -294,7 +294,7 @@ If BUFFER is a string, it is the name of the buffer to find; if it is a predicat
 (auto-insert-mode 1)
 
 
-(use-package ergoemacs-mode
+(dotfiles-use-package ergoemacs-mode
   :diminish ergoemacs-mode
   :config
   (setq
@@ -447,19 +447,19 @@ If BUFFER is a string, it is the name of the buffer to find; if it is a predicat
   (add-hook 'text-mode-hook 'abbrev-mode))
 
 ;; TODO
-;; (use-package ace-isearch
+;; (dotfiles-use-package ace-isearch
 ;;   :pin melpa-stable
 ;;   :diminish ace-isearch-mode
 ;;   :config
 ;;   (global-ace-isearch-mode))
 
-(use-package ace-jump-mode
+(dotfiles-use-package ace-jump-mode
   :pin melpa-stable
   :bind
   (("s-j" . ace-jump-mode)
    ("C-S-j" . ace-jump-mode)))
 
-(use-package alert
+(dotfiles-use-package alert
   :pin melpa-stable
   :config
   (if (or dotfiles-on-android
@@ -467,7 +467,7 @@ If BUFFER is a string, it is the name of the buffer to find; if it is a predicat
       (setq alert-default-style 'fringe)
     (setq alert-default-style 'notifications)))
 
-(use-package autorevert
+(dotfiles-use-package autorevert
   :config
   (setq auto-revert-verbose nil)
   (bind-keys
@@ -476,7 +476,7 @@ If BUFFER is a string, it is the name of the buffer to find; if it is a predicat
   (add-hook 'dired-mode-hook 'auto-revert-mode)
   (add-hook 'doc-view-mode-hook 'auto-revert-mode))
 
-(use-package back-button
+(dotfiles-use-package back-button
   :diminish back-button-mode
   :bind
   ("<mouse-8>" . back-button-global-backward)
@@ -486,7 +486,7 @@ If BUFFER is a string, it is the name of the buffer to find; if it is a predicat
   :config
   (back-button-mode))
 
-(use-package bm
+(dotfiles-use-package bm
   :bind
   (("<left-fringe> <mouse-5>" . bm-next-mouse)
    ("<left-fringe> <mouse-4>" . bm-previous-mouse)
@@ -494,11 +494,11 @@ If BUFFER is a string, it is the name of the buffer to find; if it is a predicat
    ("C-#" . bm-toggle)
    ("M-#" . bm-remove-all-current-buffer)))
 
-(use-package connection)
+(dotfiles-use-package connection)
 
-(use-package link)
+(dotfiles-use-package link)
 
-(use-package dictionary
+(dotfiles-use-package dictionary
   :pin melpa-stable
   :config
   (when (executable-find "dictd")
@@ -507,16 +507,16 @@ If BUFFER is a string, it is the name of the buffer to find; if it is a predicat
    :map dotfiles-open-map
    ("d" . dictionary-search)))
 
-(use-package doc-view
+(dotfiles-use-package doc-view
   :config
   (setq doc-view-continuous t))
 
-(use-package ediff
+(dotfiles-use-package ediff
   :config
   (setq  ediff-window-setup-function 'ediff-setup-windows-plain))
 
 ;; TODO
-;; (use-package flyspell
+;; (dotfiles-use-package flyspell
 ;;   :diminish flyspell-mode
 ;;   :config
 ;;   (setq
@@ -542,11 +542,11 @@ If BUFFER is a string, it is the name of the buffer to find; if it is a predicat
 ;;         (flyspell-buffer))))
 ;;   (run-with-idle-timer 1 t 'dotfiles-auto-spellcheck-buffer))
 
-(use-package framemove
+(dotfiles-use-package framemove
   :config
   (setq framemove-hook-into-windmove t))
 
-(use-package guide-key
+(dotfiles-use-package guide-key
   :pin melpa-stable
   :diminish guide-key-mode
   :config
@@ -555,7 +555,7 @@ If BUFFER is a string, it is the name of the buffer to find; if it is a predicat
    guide-key/recursive-key-sequence-flag t)
   (guide-key-mode 1))
 
-(use-package helm
+(dotfiles-use-package helm
   :pin melpa-stable
   :diminish helm-mode
   :config
@@ -566,21 +566,21 @@ If BUFFER is a string, it is the name of the buffer to find; if it is a predicat
   (helm-popup-tip-mode 1)
   (helm-top-poll-mode 1))
 
-(use-package helm-bm
+(dotfiles-use-package helm-bm
   :bind
   ("C-'" . helm-bm))
 
 ;; TODO
-;; (use-package helm-flyspell
+;; (dotfiles-use-package helm-flyspell
 ;;   :config
 ;;   (bind-keys
 ;;    ("C-<" . helm-flyspell-correct)))
 
-(use-package highlight-indentation
+(dotfiles-use-package highlight-indentation
   :pin melpa-stable
   :diminish highlight-indentation-mode)
 
-(use-package hl-line
+(dotfiles-use-package hl-line
   :config
   (global-hl-line-mode 1)
   (make-variable-buffer-local 'global-hl-line-mode))
@@ -600,7 +600,7 @@ If BUFFER is a string, it is the name of the buffer to find; if it is a predicat
   (bind-keys
    ("M-?" . man)))
 
-(use-package mode-icons
+(dotfiles-use-package mode-icons
   :config
   ;; Hacky madness to make it work with the daemon
   (defun dotfiles--setup-mode-icons-daemon (frame)
@@ -665,18 +665,17 @@ dotfiles-org-linkify-suffix) appended."
                                       "][")
                                      "]]"))))
 
-(unless (boundp 'dotfiles-no-pdf-tools)
-  (use-package pdf-tools
-    :config
-    (pdf-tools-install t t t)))
+(dotfiles-use-package pdf-tools
+  :config
+  (pdf-tools-install t t t))
 
-(use-package rainbow-delimiters
+(dotfiles-use-package rainbow-delimiters
   :pin melpa-stable
   :config
   (add-hook 'text-mode-hook 'rainbow-delimiters-mode)
   (add-hook 'prog-mode-hook 'rainbow-delimiters-mode))
 
-(use-package recentf
+(dotfiles-use-package recentf
   :config
   (setq recentf-max-saved-items 100)
   (recentf-mode 1)
@@ -688,17 +687,17 @@ dotfiles-org-linkify-suffix) appended."
                   (string= (expand-file-name f)
                            (expand-file-name "~/.ido.last"))))))
 
-(use-package savehist
+(dotfiles-use-package savehist
   :config
   (setq savehist-additional-variables '(search ring regexp-search-ring))
   (savehist-mode 1))
 
-(use-package saveplace
+(dotfiles-use-package saveplace
   :config
   (setq save-place-file (expand-file-name ".places" user-emacs-directory))
   (save-place-mode))
 
-(use-package smartparens
+(dotfiles-use-package smartparens
   :diminish smartparens-mode
   :config
   (require 'smartparens-config)
@@ -706,7 +705,7 @@ dotfiles-org-linkify-suffix) appended."
   (show-smartparens-global-mode 1)
   (setq sp-autoescape-string-quote nil))
 
-(use-package solarized-theme
+(dotfiles-use-package solarized-theme
   :config
   (defvar dotfiles-current-theme (if dotfiles-on-android 'solarized-dark 'solarized-light))
   (defun dotfiles-toggle-theme ()
@@ -723,7 +722,7 @@ dotfiles-org-linkify-suffix) appended."
    :map dotfiles-buffer-map
    ("-" . dotfiles-toggle-theme)))
 
-(use-package smart-mode-line
+(dotfiles-use-package smart-mode-line
   :config
   (setq
    sml/theme 'automatic
@@ -734,17 +733,16 @@ dotfiles-org-linkify-suffix) appended."
    sml/show-eol t)
   (sml/setup))
 
-(unless (boundp 'dotfiles-no-switch-window)
-  (use-package switch-window
-    :bind
-    ([remap other-window] . switch-window)
-    ("C-e" . switch-window)))
+(dotfiles-use-package switch-window
+   :bind
+   ([remap other-window] . switch-window)
+   ("C-e" . switch-window))
 
-(use-package syntax-subword
+(dotfiles-use-package syntax-subword
   :config
   (global-syntax-subword-mode))
 
-(use-package transpose-frame
+(dotfiles-use-package transpose-frame
   :config
   (bind-keys
    :map dotfiles-buffer-map
@@ -754,7 +752,7 @@ dotfiles-org-linkify-suffix) appended."
    ("<right>" . flop-frame)
    ("t" . transpose-frame)))
 
-(use-package undo-tree
+(dotfiles-use-package undo-tree
   :diminish undo-tree-mode
   :bind
   (:map undo-tree-map
@@ -772,12 +770,12 @@ dotfiles-org-linkify-suffix) appended."
   (global-visual-line-mode 1)
   (diminish 'visual-line-mode))
 
-(use-package volatile-highlights
+(dotfiles-use-package volatile-highlights
   :diminish volatile-highlights-mode
   :config
   (volatile-highlights-mode t))
 
-(use-package webjump
+(dotfiles-use-package webjump
   :config
   (setq
    webjump-sites '(("google" . [simple-query
@@ -796,7 +794,7 @@ dotfiles-org-linkify-suffix) appended."
    :map dotfiles-open-map
    ("w" . webjump)))
 
-(use-package winner
+(dotfiles-use-package winner
   :config
   (bind-keys
    :map dotfiles-buffer-map
