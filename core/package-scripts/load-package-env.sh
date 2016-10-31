@@ -28,19 +28,21 @@ loadpackageenv() {
     PACKAGE_INSTALL_DIR="${DOTFILES_PACKAGE_INSTALL_DIR}/${PACKAGE_NAME}"
     PACKAGE_INSTALLED_FILE="${DOTFILES_PACKAGE_INSTALL_DIR}/${PACKAGE_NAME}.installed"
 
-    if [ -d "${PACKAGE_CONF_DIR}" ] && ! sh "${DOTFILES_PACKAGE_SCRIPTS}/inlist.sh" "${DOTFILES_PACKAGES_LOADED_ENV}" "${PACKAGE_NAME}"; then
+    if [ -d "${PACKAGE_CONF_DIR}" ] &&
+           ! sh "${DOTFILES_PACKAGE_SCRIPTS}/inlist.sh" "${DOTFILES_PACKAGES_LOADED_ENV}" "${PACKAGE_NAME}" &&
+           ! ignored "${PACKAGE_NAME}"; then
         if [ -e "${PACKAGE_INSTALLED_FILE}" ] || [ ! -e "${PACKAGE_CONF_DIR}/setup.bash" ]; then
 
             if [ -d "${PACKAGE_CONF_DIR}/bin" ]; then
-                export PATH="${PACKAGE_CONF_DIR}/bin:${PATH}"
+                addpath "${PACKAGE_CONF_DIR}/bin"
             fi
 
-            if [ "${DOTFILES_OS}" = 'linux' ] && [ -d "${PACKAGE_CONF_DIR}/bin-linux" ]; then
-                export PATH="${PACKAGE_CONF_DIR}/bin-linux:${PATH}"
-            elif [ "${DOTFILES_OS}" = 'cygwin' ] && [ -d "${PACKAGE_CONF_DIR}/bin-cygwin" ]; then
-                export PATH="${PACKAGE_CONF_DIR}/bin-cygwin:${PATH}"
-            elif [ "${DOTFILES_OS}" = 'android' ] && [ -d "${PACKAGE_CONF_DIR}/bin-android" ]; then
-                export PATH="${PACKAGE_CONF_DIR}/bin-android:${PATH}"
+            if os linux && [ -d "${PACKAGE_CONF_DIR}/bin-linux" ]; then
+                addpath "${PACKAGE_CONF_DIR}/bin-linux"
+            elif os cygwin && [ -d "${PACKAGE_CONF_DIR}/bin-cygwin" ]; then
+                addpath "${PACKAGE_CONF_DIR}/bin-cygwin"
+            elif os android && [ -d "${PACKAGE_CONF_DIR}/bin-android" ]; then
+                addpath "${PACKAGE_CONF_DIR}/bin-android"
             fi
 
             if [ -d "${PACKAGE_CONF_DIR}/python" ]; then

@@ -40,17 +40,19 @@ function load-packages-aliases() {
                         PACKAGE_INSTALL_DIR="${DOTFILES_PACKAGE_INSTALL_DIR}/${PACKAGE_NAME}"
                         PACKAGE_INSTALLED_FILE="${DOTFILES_PACKAGE_INSTALL_DIR}/${PACKAGE_NAME}.installed"
 
-                        if [ -d "${PACKAGE_CONF_DIR}" ] && ! sh "${DOTFILES_PACKAGE_SCRIPTS}/inlist.sh" "${DOTFILES_PACKAGES_LOADED_ALIASES}" "${PACKAGE_NAME}"; then
+                        if [ -d "${PACKAGE_CONF_DIR}" ] &&
+                               ! sh "${DOTFILES_PACKAGE_SCRIPTS}/inlist.sh" "${DOTFILES_PACKAGES_LOADED_ALIASES}" "${PACKAGE_NAME}" &&
+                               ! ignored "${PACKAGE_NAME}"; then
                             if [ -e "${PACKAGE_INSTALLED_FILE}" ] || [ ! -e "${PACKAGE_CONF_DIR}/setup.bash" ]; then
 
                                 # Newly-installed packages won't have been enved at login time
                                 loadpackageenv "${PACKAGE_NAME}" &&
 
-                                    doaliases 'sh' &&
-                                    doaliases "${DOTFILES_SHELL}" &&
+                                doaliases 'sh' &&
+                                doaliases "${DOTFILES_SHELL}" &&
 
-                                    # shellcheck disable=SC2015
-                                    DOTFILES_PACKAGES_LOADED_ALIASES="${DOTFILES_PACKAGES_LOADED_ALIASES}:${PACKAGE_NAME}" || problem "Failed to load aliases for package '${PACKAGE_NAME}'."
+                                # shellcheck disable=SC2015
+                                DOTFILES_PACKAGES_LOADED_ALIASES="${DOTFILES_PACKAGES_LOADED_ALIASES}:${PACKAGE_NAME}" || problem "Failed to load aliases for package '${PACKAGE_NAME}'."
                             fi
                         fi
 

@@ -26,6 +26,10 @@ packagerootloop() {
     return 0
 }
 
+addpath() {
+    export PATH="${1}:${PATH}"
+}
+
 message() {
     # Display a message in blue the next time an interactive shell is
     # started (use instead of echo, which won't be seen in env
@@ -131,6 +135,29 @@ complainunset() {
     fi
 }
 
+ignored() {
+    if [ -e "${DOTFILES_PACKAGE_IGNORE_FILE}" ]; then
+        if grep "^${1}\$" "${DOTFILES_PACKAGE_IGNORE_FILE}" >/dev/null 2>/dev/null; then
+            return 0
+        else
+            return 1
+        fi
+    else
+        return 1
+    fi
+}
+
+ignore() {
+    while [ ! -z "${1}" ]; do
+        if ! ignored "${1}"; then
+            mkdir -p "${DOTFILES_PACKAGE_INSTALL_DIR}" &&
+            echo "${1}" >>"${DOTFILES_PACKAGE_IGNORE_FILE}" || return 1
+        fi
+        shift
+    done
+    return 0
+}
+
 os() {
     while [ ! -z "${1}" ]; do
         if [ "${DOTFILES_OS}" = "${1}" ]; then
@@ -142,5 +169,5 @@ os() {
 }
 
 commonfuncscleanup() {
-    unset -f packagerootloop message problem homelink homebinlink complainunset os commonfuncscleanup
+    unset -f packagerootloop addpath message problem homelink homebinlink complainunset ignored ignore os commonfuncscleanup
 }

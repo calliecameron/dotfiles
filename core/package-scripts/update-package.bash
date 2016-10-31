@@ -12,7 +12,7 @@ function update-package() {
     fi
 
     package-setup-vars "${1}"
-    if [ -e "${PACKAGE_SETUP_FILE}" ] && package-installed; then
+    if [ -e "${PACKAGE_SETUP_FILE}" ] && ! package-ignored && package-installed; then
         if ! cd "${PACKAGE_CONF_DIR}"; then
             echo-red "Could not enter configuration directory for '${PACKAGE_NAME}'."
             package-cleanup

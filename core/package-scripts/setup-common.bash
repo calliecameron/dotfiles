@@ -2,7 +2,6 @@
 
 source "${DOTFILES_BASH_COMMON}" || exit 1
 
-IGNORE_FILE="${DOTFILES_PACKAGE_INSTALL_DIR}/ignored.txt"
 # shellcheck disable=SC2034
 UPDATE_FILE="${DOTFILES_PACKAGE_INSTALL_DIR}/last-update.txt"
 # shellcheck disable=SC2034
@@ -43,15 +42,7 @@ function package-ignored() {
         NAME="${PACKAGE_NAME}"
     fi
 
-    if [ -e "${IGNORE_FILE}" ]; then
-        if grep "${NAME}" "${IGNORE_FILE}" &>/dev/null; then
-            return 0
-        else
-            return 1
-        fi
-    else
-        return 1
-    fi
+    ignored "${NAME}"
 }
 
 function linux-variant() {

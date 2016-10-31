@@ -39,33 +39,29 @@ function install-package-root() {
 
         while read -r -u 3 line; do
             package-setup-vars "${line}"
-            if [ -e "${PACKAGE_SETUP_FILE}" ]; then
+            if [ -e "${PACKAGE_SETUP_FILE}" ] && ! package-ignored && ! package-installed; then
                 cd "${PACKAGE_CONF_DIR}" || fail "Could not find configuration directory for '${PACKAGE_NAME}'; quitting."
                 source "${PACKAGE_SETUP_FILE}" || fail "Could not load package setup file for '${PACKAGE_NAME}'; quitting."
 
-                if ! package-ignored && ! package-installed; then
-                    if ! type _can-install &>/dev/null || _can-install; then
-                        if yn-y "Package '${PACKAGE_NAME}' is missing. Install it?"; then
-                            mkdir -p "${DOTFILES_PACKAGE_INSTALL_DIR}" &&
-                            # shellcheck disable=SC2015
-                            cd "${DOTFILES_PACKAGE_INSTALL_DIR}" || fail "Could not find main package installation directory; quitting."
+                if ! type _can-install &>/dev/null || _can-install; then
+                    if yn-y "Package '${PACKAGE_NAME}' is missing. Install it?"; then
+                        mkdir -p "${DOTFILES_PACKAGE_INSTALL_DIR}" &&
+                        # shellcheck disable=SC2015
+                        cd "${DOTFILES_PACKAGE_INSTALL_DIR}" || fail "Could not find main package installation directory; quitting."
 
-                            if [ ! -z "${OFFER_GIT_SSH}" ]; then
-                                if yn-y "Use SSH for git clone?"; then
-                                    # shellcheck disable=SC2034
-                                    USE_GIT_SSH='true'
-                                fi
+                        if [ ! -z "${OFFER_GIT_SSH}" ]; then
+                            if yn-y "Use SSH for git clone?"; then
+                                # shellcheck disable=SC2034
+                                USE_GIT_SSH='true'
                             fi
-                            _install &&
-                            touch "${PACKAGE_INSTALLED_FILE}" &&
-                            # shellcheck disable=SC2015
-                            touch "${DOTFILES_NEEDS_LOGOUT}" || fail "Package '${PACKAGE_NAME}' failed to install; quitting."
-                        else
-                            if yn-n "Remember decision?"; then
-                                mkdir -p "${DOTFILES_PACKAGE_INSTALL_DIR}" &&
-                                # shellcheck disable=SC2015
-                                echo "${PACKAGE_NAME}" >> "${IGNORE_FILE}" || fail 'Could not ignore package.'
-                            fi
+                        fi
+                        _install &&
+                        touch "${PACKAGE_INSTALLED_FILE}" &&
+                        # shellcheck disable=SC2015
+                        touch "${DOTFILES_NEEDS_LOGOUT}" || fail "Package '${PACKAGE_NAME}' failed to install; quitting."
+                    else
+                        if yn-n "Remember decision?"; then
+                            ignore "${PACKAGE_NAME}" || fail 'Could not ignore package.'
                         fi
                     fi
                 fi

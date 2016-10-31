@@ -53,6 +53,7 @@ fi
 
 export DOTFILES_PACKAGE_SCRIPTS="${DOTFILES_CORE_DIR}/package-scripts"
 export DOTFILES_PACKAGE_INSTALL_DIR="${HOME}/.dotfiles-packages"
+export DOTFILES_PACKAGE_IGNORE_FILE="${DOTFILES_PACKAGE_INSTALL_DIR}/ignored.txt"
 export DOTFILES_PACKAGE_MUTEX="${HOME}/.dotfiles-package-mutex"
 export DOTFILES_PACKAGE_MESSAGES_FILE="${HOME}/.dotfiles-package-messages"
 export DOTFILES_PACKAGE_PROBLEMS_FILE="${HOME}/.dotfiles-package-problems"

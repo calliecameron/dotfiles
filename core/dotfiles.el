@@ -118,6 +118,7 @@
    dotfiles-local-emacs
    dotfiles-package-scripts
    dotfiles-package-install-dir
+   dotfiles-package-ignore-file
    dotfiles-private-dir
    dotfiles-package-roots))
 
