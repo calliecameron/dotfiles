@@ -18,5 +18,5 @@ set up first.
 7. Log in using VNC: password is 'ubuntu'
 8. `sudo apt-get install git`.
 9. Install dotfiles as normal.
-10. See ()[../../packages/03-common-dirs/README.md] for environment
+10. See ()[../../packages/04-common-dirs/README.md] for environment
     variables you can set to make things more convenient.

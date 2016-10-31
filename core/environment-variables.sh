@@ -123,13 +123,6 @@ fi
 unset appendpackageroot prependpackageroot
 
 
-# To prevent the umask change, set DOTFILES_NO_CUSTOM_UMASK in
-# ~/.dotfiles-variables.sh.
-if [ -z "${DOTFILES_NO_CUSTOM_UMASK}" ]; then
-    umask 077
-fi
-
-
 # Load packages
 . "${DOTFILES_PACKAGE_SCRIPTS}/load-packages-env.sh"
 

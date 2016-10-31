@@ -26,7 +26,7 @@ Access to Windows partitions on dual boot
 7. Mount the partition again, and put the UserMapping file in a folder
    '.NTFS-3G' in the root of the NTFS partition.
 8. Unmount and remount the partition so that the user mapping takes effect.
-9. See [](../packages/03-common-dirs/README.md) for environment
+9. See [](../packages/04-common-dirs/README.md) for environment
    variables you can set to make accessing the Windows partition more
    convenient.
 
