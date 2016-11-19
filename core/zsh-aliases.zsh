@@ -10,8 +10,10 @@ export DOTFILES_SHELL='zsh'
 # Might not have loaded environment variables yet, so have to do this with the full path
 source "${DOTFILES_DIR}/core/generic-aliases.bash"
 
+if [ -z "${DOTFILES_ZSH_NO_DEFAULT_PROMPT}" ]; then
 PROMPT="%n@%m:%~
 \$ "
+fi
 
 # Stop cd suggesting usernames
 zstyle ':completion:*' users
