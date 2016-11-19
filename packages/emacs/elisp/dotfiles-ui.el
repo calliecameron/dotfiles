@@ -378,6 +378,13 @@ If BUFFER is a string, it is the name of the buffer to find; if it is a predicat
    ("<f12>" . toggle-frame-fullscreen)))
 
 (bind-keys
+ :map ergoemacs-override-keymap
+ ("<M-left>" . windmove-left)
+ ("<M-right>" . windmove-right)
+ ("<M-up>" . windmove-up)
+ ("<M-down>" . windmove-down))
+
+(bind-keys
  ("s-\\" . dotfiles-buffer-map)
  ("C-|" . dotfiles-buffer-map)
  ("s-o" . dotfiles-open-map)
