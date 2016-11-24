@@ -468,12 +468,12 @@ If BUFFER is a string, it is the name of the buffer to find; if it is a predicat
                                       (abbrev-put (car args) :count 0)))
   (add-hook 'text-mode-hook 'abbrev-mode))
 
-;; TODO
-;; (dotfiles-use-package ace-isearch
-;;   :pin melpa-stable
-;;   :diminish ace-isearch-mode
-;;   :config
-;;   (global-ace-isearch-mode))
+(dotfiles-use-package ace-isearch
+  :pin melpa-stable
+  :diminish ace-isearch-mode
+  :config
+  (setq ace-isearch-input-length 2)
+  (global-ace-isearch-mode))
 
 (dotfiles-use-package ace-jump-mode
   :pin melpa-stable
