@@ -230,9 +230,10 @@
   :pin melpa-stable
   :config
   (setq-default flycheck-emacs-lisp-load-path 'inherit)
-  (bind-keys
-   ("C-." . flycheck-next-error)
-   ("C-," . flycheck-previous-error))
+  (ergoemacs-package dotfiles-keys-flycheck
+      :bind
+    (("C-." . flycheck-next-error)
+     ("C-," . flycheck-previous-error)))
   (global-flycheck-mode))
 
 (dotfiles-use-package flycheck-cask
