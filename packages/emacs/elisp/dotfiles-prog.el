@@ -25,7 +25,7 @@
 
 (add-hook 'prog-mode-hook
           (lambda ()
-            ;; (flyspell-prog-mode) ;;;;;;;;;;;;;;;;;;;;;; TODO
+            (flyspell-prog-mode)
             (setq show-trailing-whitespace t)))
 
 (advice-add 'comment-or-uncomment-region :before

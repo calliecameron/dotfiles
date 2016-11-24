@@ -537,32 +537,34 @@ If BUFFER is a string, it is the name of the buffer to find; if it is a predicat
   :config
   (setq  ediff-window-setup-function 'ediff-setup-windows-plain))
 
-;; TODO
-;; (dotfiles-use-package flyspell
-;;   :diminish flyspell-mode
-;;   :config
-;;   (setq
-;;    ispell-dictionary "en_GB"
-;;    flyspell-issue-message-flag nil
-;;    flyspell-large-region 1)
-;;   (bind-keys
-;;    ("C->" . flyspell-goto-next-error))
-;;   (add-hook 'flyspell-mode-hook
-;;             (lambda () (define-key flyspell-mode-map (kbd "C-;") nil)))
-;;   (add-hook 'text-mode-hook 'flyspell-mode)
-;;   (defvar dotfiles-auto-spellcheck t "Automatically spellcheck newly loaded buffers.  Set to nil if spellchecking makes things too slow.")
-;;   (defvar dotfiles-auto-spellchecked nil "Has this buffer been auto-spellchecked?")
-;;   (make-variable-buffer-local 'dotfiles-auto-spellchecked)
-;;   (defun dotfiles-auto-spellcheck-buffer ()
-;;     "Spellcheck a new buffer."
-;;     (when (and
-;;            flyspell-mode
-;;            dotfiles-auto-spellcheck
-;;            (not dotfiles-auto-spellchecked))
-;;       (setq dotfiles-auto-spellchecked t)
-;;       (with-local-quit
-;;         (flyspell-buffer))))
-;;   (run-with-idle-timer 1 t 'dotfiles-auto-spellcheck-buffer))
+(dotfiles-use-package flyspell
+  :diminish flyspell-mode
+  :config
+  (setq
+   ispell-dictionary "en_GB"
+   flyspell-issue-message-flag nil
+   flyspell-large-region 1)
+  (bind-keys
+   ("C->" . flyspell-goto-next-error))
+  (bind-keys
+   :map flyspell-mode-map
+   ("C-;" . nil)
+   ("C-," . nil)
+   ("C-." . nil))
+  (add-hook 'text-mode-hook 'flyspell-mode)
+  (defvar dotfiles-auto-spellcheck t "Automatically spellcheck newly loaded buffers.  Set to nil if spellchecking makes things too slow.")
+  (defvar dotfiles-auto-spellchecked nil "Has this buffer been auto-spellchecked?")
+  (make-variable-buffer-local 'dotfiles-auto-spellchecked)
+  (defun dotfiles-auto-spellcheck-buffer ()
+    "Spellcheck a new buffer."
+    (when (and
+           flyspell-mode
+           dotfiles-auto-spellcheck
+           (not dotfiles-auto-spellchecked))
+      (setq dotfiles-auto-spellchecked t)
+      (with-local-quit
+        (flyspell-buffer))))
+    (run-with-idle-timer 1 t 'dotfiles-auto-spellcheck-buffer))
 
 (dotfiles-use-package framemove
   :config
@@ -592,11 +594,10 @@ If BUFFER is a string, it is the name of the buffer to find; if it is a predicat
   :bind
   ("C-'" . helm-bm))
 
-;; TODO
-;; (dotfiles-use-package helm-flyspell
-;;   :config
-;;   (bind-keys
-;;    ("C-<" . helm-flyspell-correct)))
+(dotfiles-use-package helm-flyspell
+  :config
+  (bind-keys
+   ("C-<" . helm-flyspell-correct)))
 
 (dotfiles-use-package highlight-indentation
   :pin melpa-stable
