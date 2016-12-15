@@ -528,7 +528,14 @@
   :pin melpa-stable
   :config
   (projectile-global-mode)
-  (setq projectile-mode-line nil)
+  (setq
+   projectile-mode-line nil ; smart-mode-line handles this instead
+   frame-title-format '((:eval
+                         (if (projectile-project-p)
+                             (replace-regexp-in-string "%" "%%" (format "[%s] " (projectile-project-name)))
+                           ""))
+                        "%b")
+   icon-title-format frame-title-format)
   (bind-keys
    ("s-p" . projectile-command-map)
    ("C-S-p" . projectile-command-map)))
