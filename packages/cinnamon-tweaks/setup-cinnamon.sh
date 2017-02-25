@@ -54,6 +54,7 @@ gsettings-remove-from-list org.cinnamon.desktop.keybindings.wm push-tile-down '<
 gsettings-remove-from-list org.cinnamon.desktop.keybindings.wm push-tile-left '<Super>Left' &&
 gsettings-remove-from-list org.cinnamon.desktop.keybindings.wm push-tile-right '<Super>Right' &&
 gsettings-remove-from-list org.cinnamon.desktop.keybindings.media-keys video-outputs '<Super>p' &&
+gsettings-remove-from-list org.cinnamon.desktop.keybindings.media-keys video-rotation-lock '<Super>o' &&
 
 
 cinnamon-keybinding 'Emacs' 'emacs-daemon' '<Primary><Alt>e' &&
