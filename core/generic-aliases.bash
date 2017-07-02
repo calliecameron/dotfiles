@@ -16,7 +16,7 @@ elif [ "${DOTFILES_OS}" = 'linux' ] && [ -z "${DOTFILES_LINUX_VARIANT}" ]; then
     echo -e '\e[31mUnknown Linux version.\e[0m'
 fi
 
-if [ "${DOTFILES_OS}" = 'linux' ] && [ ! -e "${DOTFILES_CAN_SUDO_FILE}" ]; then
+if [ "${DOTFILES_OS}" = 'linux' ] && [ ! -e "${DOTFILES_CAN_SUDO_FILE}" ] && [ -z "${DOTFILES_NO_PACKAGE_UPDATES}" ]; then
     if bash -c 'source "${DOTFILES_BASH_COMMON}"; yn-n "Can you sudo on this machine?"'; then
         echo 'y' > "${DOTFILES_CAN_SUDO_FILE}"
         export DOTFILES_CAN_SUDO='y'
@@ -64,14 +64,16 @@ test -x /usr/bin/dircolors && eval "$(dircolors -b)"
 
 # Load packages
 test ! -z "${DOTFILES_PROFILING}" && printf 'packages ' && date --rfc-3339=ns
-if command mkdir "${DOTFILES_PACKAGE_MUTEX}" &>/dev/null; then
-    "${DOTFILES_PACKAGE_SCRIPTS}/install-packages.sh"
-    test ! -z "${DOTFILES_PROFILING}" && printf 'packages2 ' && date --rfc-3339=ns
-    "${DOTFILES_PACKAGE_SCRIPTS}/update-packages.sh"
-    test ! -z "${DOTFILES_PROFILING}" && printf 'packages3 ' && date --rfc-3339=ns
-    command rmdir "${DOTFILES_PACKAGE_MUTEX}"
-else
-    echo -e "\e[34mAnother shell is installing or updating packages; don't be surprised if things behave oddly in the meantime.\e[0m"
+if [ -z "${DOTFILES_NO_PACKAGE_UPDATES}" ]; then
+    if command mkdir "${DOTFILES_PACKAGE_MUTEX}" &>/dev/null; then
+        "${DOTFILES_PACKAGE_SCRIPTS}/install-packages.sh"
+        test ! -z "${DOTFILES_PROFILING}" && printf 'packages2 ' && date --rfc-3339=ns
+        "${DOTFILES_PACKAGE_SCRIPTS}/update-packages.sh"
+        test ! -z "${DOTFILES_PROFILING}" && printf 'packages3 ' && date --rfc-3339=ns
+        command rmdir "${DOTFILES_PACKAGE_MUTEX}"
+    else
+        echo -e "\e[34mAnother shell is installing or updating packages; don't be surprised if things behave oddly in the meantime.\e[0m"
+    fi
 fi
 source "${DOTFILES_PACKAGE_SCRIPTS}/load-packages-aliases.bash"
 test ! -z "${DOTFILES_PROFILING}" && printf 'packages ' && date --rfc-3339=ns
