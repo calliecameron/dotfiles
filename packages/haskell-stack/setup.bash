@@ -7,10 +7,10 @@ function _install() {
     local TARFILE="${PACKAGE_INSTALL_DIR}/stack.tar.gz"
     if is64bit; then
         URL='https://www.stackage.org/stack/linux-x86_64'
-        DIR='stack-1.1.2-linux-x86_64'
+        DIR='stack-1.4.0-linux-x86_64'
     else
         URL='https://www.stackage.org/stack/linux-i386'
-        DIR='stack-1.1.2-linux-i386'
+        DIR='stack-1.4.0-linux-i386'
     fi
 
     sudo apt-get -y install libgmp-dev &&
