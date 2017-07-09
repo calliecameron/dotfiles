@@ -33,9 +33,9 @@ function do-make() {
 if [ ! -e "${INSTALL_DIR}/bin/emacs" ]; then
     BUILD_DIR="$(mktemp -d)" &&
     cd "${BUILD_DIR}" &&
-    wget 'https://ftp.gnu.org/gnu/emacs/emacs-25.1.tar.xz' &&
-    tar -xf 'emacs-25.1.tar.xz' &&
-    cd 'emacs-25.1' &&
+    wget 'https://ftp.gnu.org/gnu/emacs/emacs-25.2.tar.xz' &&
+    tar -xf 'emacs-25.2.tar.xz' &&
+    cd 'emacs-25.2' &&
     ./configure --with-modules --with-xwidgets "--prefix=${INSTALL_DIR}" &&
     do-make &&
     make install &&
