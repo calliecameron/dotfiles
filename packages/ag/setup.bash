@@ -14,9 +14,9 @@ function _install() {
     # shellcheck disable=SC2155
     local TMPDIR="$(mktemp -d)" &&
     cd "${TMPDIR}" &&
-    wget 'http://geoff.greer.fm/ag/releases/the_silver_searcher-0.33.0.tar.gz' &&
-    tar -xf 'the_silver_searcher-0.33.0.tar.gz' &&
-    cd 'the_silver_searcher-0.33.0' &&
+    wget 'https://geoff.greer.fm/ag/releases/the_silver_searcher-2.0.0.tar.gz' &&
+    tar -xf 'the_silver_searcher-2.0.0.tar.gz' &&
+    cd 'the_silver_searcher-2.0.0' &&
     mkdir "${PACKAGE_INSTALL_DIR}" &&
     ./configure "--prefix=${PACKAGE_INSTALL_DIR}" &&
     make &&
