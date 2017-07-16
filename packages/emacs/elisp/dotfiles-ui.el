@@ -363,8 +363,8 @@ If BUFFER is a string, it is the name of the buffer to find; if it is a predicat
    ("C-S-k" . describe-personal-keybindings)
    ("<s-down>" . dotfiles-split-window-below-switch)
    ("<s-right>" . dotfiles-split-window-right-switch)
-   ("<C-S-down>" . dotfiles-split-window-below-switch)
-   ("<C-S-right>" . dotfiles-split-window-right-switch)
+   ("<C-M-S-down>" . dotfiles-split-window-below-switch)
+   ("<C-M-S-right>" . dotfiles-split-window-right-switch)
    ("C-c <left>" . windmove-left)
    ("C-c <right>" . windmove-right)
    ("C-c <up>" . windmove-up)
@@ -396,8 +396,8 @@ If BUFFER is a string, it is the name of the buffer to find; if it is a predicat
  ([remap split-window-right] . dotfiles-split-window-right-switch)
  ("<s-up>" . (lambda () (interactive) (split-window-below)))
  ("<s-left>" . (lambda () (interactive (split-window-right))))
- ("<C-S-up>" .(lambda () (interactive) (split-window-below)))
- ("<C-S-left>" . (lambda () (interactive (split-window-right)))))
+ ("<C-M-S-up>" .(lambda () (interactive) (split-window-below)))
+ ("<C-M-S-left>" . (lambda () (interactive (split-window-right)))))
 
 (bind-keys
  :map visual-line-mode-map
