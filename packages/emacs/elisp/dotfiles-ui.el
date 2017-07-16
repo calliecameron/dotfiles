@@ -375,7 +375,8 @@ If BUFFER is a string, it is the name of the buffer to find; if it is a predicat
    ("<M-down>" . windmove-down)
    ("C-/" . comment-or-uncomment-region)
    ("M-m" . newline)
-   ("<f12>" . toggle-frame-fullscreen)))
+   ("<f12>" . toggle-frame-fullscreen)
+   ("s-m" . dotfiles-toggle-mode-line)))
 
 (bind-keys
  :map ergoemacs-override-keymap
