@@ -16,6 +16,12 @@ elif [ "${DOTFILES_OS}" = 'linux' ] && [ -z "${DOTFILES_LINUX_VARIANT}" ]; then
     echo -e '\e[31mUnknown Linux version.\e[0m'
 fi
 
+if [ "${TERM}" = 'dumb' ]; then
+    # Not exporting, because we don't want this leaking into subprocesses
+    DOTFILES_NO_ALIASES='t'
+    echo "Not loading aliases because \$TERM is 'dumb' (probably TRAMP, which is easily confused)."
+fi
+
 if [ "${DOTFILES_OS}" = 'linux' ] && [ ! -e "${DOTFILES_CAN_SUDO_FILE}" ] && [ -z "${DOTFILES_NO_PACKAGE_UPDATES}" ]; then
     if bash -c 'source "${DOTFILES_BASH_COMMON}"; yn-n "Can you sudo on this machine?"'; then
         echo 'y' > "${DOTFILES_CAN_SUDO_FILE}"
@@ -75,7 +81,9 @@ if [ -z "${DOTFILES_NO_PACKAGE_UPDATES}" ]; then
         echo -e "\e[34mAnother shell is installing or updating packages; don't be surprised if things behave oddly in the meantime.\e[0m"
     fi
 fi
-source "${DOTFILES_PACKAGE_SCRIPTS}/load-packages-aliases.bash"
+if [ -z "${DOTFILES_NO_ALIASES}" ]; then
+    source "${DOTFILES_PACKAGE_SCRIPTS}/load-packages-aliases.bash"
+fi
 test ! -z "${DOTFILES_PROFILING}" && printf 'packages ' && date --rfc-3339=ns
 
 
@@ -92,8 +100,10 @@ function localaliases() {
     fi
 }
 
-localaliases 'sh'
-localaliases "${DOTFILES_SHELL}"
+if [ -z "${DOTFILES_NO_ALIASES}" ]; then
+    localaliases 'sh'
+    localaliases "${DOTFILES_SHELL}"
+fi
 
 unset -f localaliases
 
