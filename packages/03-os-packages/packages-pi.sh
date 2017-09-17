@@ -1,5 +1,5 @@
 #!/bin/bash
-# Install the basic packages for Raspbian Jessie
+# Install the basic packages for Raspbian Stretch
 
 sudo apt-get -y install git htop mercurial nano realpath tmux tree zsh zsh-doc || exit 1
 

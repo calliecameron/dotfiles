@@ -4,7 +4,7 @@ Callum's Dotfiles
 My configurations for Zsh, Emacs, and lots of other stuff.
 
 Currently set up to work with Linux Mint 18.2 Cinnamon, Raspbian
-Jessie, [LinuxOnAndroid](http://linuxonandroid.org/) running Ubuntu
+Stretch, [LinuxOnAndroid](http://linuxonandroid.org/) running Ubuntu
 14.04,
 [Android Terminal IDE](http://www.spartacusrex.com/terminalide.htm),
 and Cygwin. On these systems (especially Mint) it installs things
