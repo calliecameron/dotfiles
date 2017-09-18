@@ -30,12 +30,14 @@ function do-make() {
     return ${RETVAL}
 }
 
+EMACS_VERSION='25.3'
+
 if [ ! -e "${INSTALL_DIR}/bin/emacs" ]; then
     BUILD_DIR="$(mktemp -d)" &&
     cd "${BUILD_DIR}" &&
-    wget 'https://ftp.gnu.org/gnu/emacs/emacs-25.2.tar.xz' &&
-    tar -xf 'emacs-25.2.tar.xz' &&
-    cd 'emacs-25.2' &&
+    wget "https://ftp.gnu.org/gnu/emacs/emacs-${EMACS_VERSION}.tar.xz" &&
+    tar -xf "emacs-${EMACS_VERSION}.tar.xz" &&
+    cd "emacs-${EMACS_VERSION}" &&
     ./configure --with-modules --with-xwidgets "--prefix=${INSTALL_DIR}" &&
     do-make &&
     make install &&
