@@ -26,12 +26,13 @@
     (elpy-use-ipython (concat "i" command))
     (when (eq major-mode 'python-mode)
       (pyvenv-restart-python)
-      (dotfiles-set-python-docsets
-       (let ((text (with-temp-buffer
-                     (call-process elpy-rpc-python-command nil '(t t) nil "--version")
-                     (buffer-string))))
-         (string-match "^Python \\([0-9]+\\)\\.[0-9]+\\.[0-9]+\\+?$" text)
-         (string-to-number (match-string 1 text))))))
+      (when (fboundp 'dotfiles-set-python-docsets)
+        (dotfiles-set-python-docsets
+         (let ((text (with-temp-buffer
+                       (call-process elpy-rpc-python-command nil '(t t) nil "--version")
+                       (buffer-string))))
+           (string-match "^Python \\([0-9]+\\)\\.[0-9]+\\.[0-9]+\\+?$" text)
+           (string-to-number (match-string 1 text)))))))
 
   (add-hook 'pyvenv-post-activate-hooks (lambda () (dotfiles--venv-setup "python")))
   (add-hook 'pyvenv-post-deactivate-hooks (lambda () (dotfiles--venv-setup "python3")))
@@ -42,6 +43,11 @@
   (defun dotfiles-pyvenv-dir-locals (workon)
     (interactive "MWork on virtualenv: ")
     (add-dir-local-variable 'python-mode 'pyvenv-workon workon)))
+
+(dotfiles-use-package flycheck-pycheckers
+  :config
+  (add-hook 'flycheck-mode-hook 'flycheck-pycheckers-setup)
+  (setq flycheck-pycheckers-checkers '(pylint mypy3)))
 
 (dotfiles-use-package python
   :mode (("SConscript\\'" . python-mode)
