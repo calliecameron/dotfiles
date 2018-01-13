@@ -47,7 +47,8 @@
 (dotfiles-use-package flycheck-pycheckers
   :config
   (add-hook 'flycheck-mode-hook 'flycheck-pycheckers-setup)
-  (setq flycheck-pycheckers-checkers '(pylint mypy3)))
+  (setq flycheck-pycheckers-checkers '(pylint mypy3))
+  (setq flycheck-pycheckers-venv-root (getenv "WORKON_HOME")))
 
 (dotfiles-use-package python
   :mode (("SConscript\\'" . python-mode)

@@ -36,7 +36,7 @@ EOF
     if (os linux && ( ! linux-variant pi || [ ! -z "${DOTFILES_PI_INTERACTIVE}" ] ) && can-sudo) ||
        os cygwin; then
         do-pip2 ipython &&
-        do-pip3 jedi flake8 importmagic autopep8 yapf rope mypy pygments ipython virtualenv virtualenvwrapper autoenv || exit 1
+        do-pip3 jedi flake8 importmagic autopep8 yapf rope mypy pygments pylint pep8 ipython virtualenv virtualenvwrapper autoenv || exit 1
     fi
     unset -f do-pip2 do-pip3
     return 0

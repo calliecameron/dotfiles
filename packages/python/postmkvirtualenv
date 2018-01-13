@@ -1,3 +1,3 @@
 # -*- shell-script -*-
 
-pip install ipython jedi rope importmagic flake8 autopep8 yapf mypy
+pip install ipython jedi rope importmagic flake8 autopep8 yapf mypy pylint pep8
