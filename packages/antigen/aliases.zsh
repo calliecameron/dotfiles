@@ -4,6 +4,8 @@ source "${PACKAGE_INSTALL_DIR}/antigen.zsh"
 antigen use oh-my-zsh
 antigen bundle command-not-found
 antigen bundle zsh-users/zsh-syntax-highlighting
+antigen bundle vagrant
+antigen bundle zsh-users/zsh-completions
 
 if [ -z "${DOTFILES_ANTIGEN_CORE_ONLY}" ]; then
     antigen bundle callumcameron/argtypes
