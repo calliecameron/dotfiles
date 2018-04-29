@@ -2,6 +2,7 @@ function _install() {
     function do-pip2() {
         if os linux; then
             sudo -H python -m pip install --upgrade pip &&
+            python -m pip install --user --upgrade pip &&
             sudo -H pip install "${@}" || return 1
         elif os cygwin; then
             printf '\033[34m'
@@ -19,6 +20,7 @@ EOF
     function do-pip3() {
         if os linux; then
             sudo -H python3 -m pip install --upgrade pip &&
+            python3 -m pip install --user --upgrade pip &&
             sudo -H pip3 install "${@}" || return 1
         elif os cygwin; then
             printf '\033[34m'
