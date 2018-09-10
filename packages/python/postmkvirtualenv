@@ -1,3 +1,7 @@
 # -*- shell-script -*-
 
-pip install ipython jedi rope importmagic flake8 autopep8 yapf mypy pylint pep8
+pip install ipython jedi rope importmagic flake8 autopep8 yapf pylint pep8 rlipython
+
+if python --version 2>&1 | grep 'Python 3\.' >/dev/null; then
+    pip install mypy
+fi
