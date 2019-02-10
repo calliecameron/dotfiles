@@ -36,18 +36,16 @@ if [ -f /etc/bash_completion ] && ! shopt -oq posix; then
 fi
 
 
-if [ "${DOTFILES_OS}" != 'android' ]; then
-    PS1='\u@\h:\w\n\$ '
+PS1='\u@\h:\w\n\$ '
 
-    # If this is an xterm set the title to user@host:dir
-    case "${TERM}" in
-        xterm*|rxvt*)
-            PS1="\[\e]0;\u@\h: \w\a\]${PS1}"
-            ;;
-        *)
-            ;;
-    esac
-fi
+# If this is an xterm set the title to user@host:dir
+case "${TERM}" in
+    xterm*|rxvt*)
+        PS1="\[\e]0;\u@\h: \w\a\]${PS1}"
+        ;;
+    *)
+        ;;
+esac
 
 
 test ! -z "${DOTFILES_PROFILING}" && printf 'bash ' && date --rfc-3339=ns; true

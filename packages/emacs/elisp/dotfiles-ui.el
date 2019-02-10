@@ -77,10 +77,6 @@
 
 (add-to-list 'kill-emacs-query-functions 'dotfiles--should-quit)
 
-(when dotfiles-on-android
-  (set-face-attribute 'default nil :height 150))
-
-
 (dotfiles--file-openers
  '(dotfiles-variables
    dotfiles-generic-aliases
@@ -441,24 +437,6 @@ If BUFFER is a string, it is the name of the buffer to find; if it is a predicat
  ("v" . dotfiles-local-variables)
  ("z" . dotfiles-local-zsh-aliases))
 
-;; Access to the function keys on keyboards without function keys
-(when dotfiles-on-android
-  (-each
-      '(("C-!" . "<f1>")
-        ("C-\"" . "<f2>")
-        ("C-£" . "<f3>")
-        ("C-$" . "<f4>")
-        ("C-%" . "<f5>")
-        ("C-^" . "<f6>")
-        ("C-&" . "<f7>")
-        ("C-*" . "<f8>")
-        ("C-(" . "<f9>")
-        ("C-)" . "<f10>")
-        ("C-_" . "<f11>")
-        ("C-+" . "<f12>"))
-    (lambda (k)
-      (define-key key-translation-map (kbd (car k)) (kbd (cdr k))))))
-
 (progn
   (setq
    save-abbrevs t
@@ -485,8 +463,7 @@ If BUFFER is a string, it is the name of the buffer to find; if it is a predicat
 (dotfiles-use-package alert
   :pin melpa-stable
   :config
-  (if (or dotfiles-on-android
-          dotfiles-on-windows)
+  (if dotfiles-on-windows
       (setq alert-default-style 'fringe)
     (setq alert-default-style 'notifications)))
 
@@ -731,7 +708,7 @@ dotfiles-org-linkify-suffix) appended."
 
 (dotfiles-use-package solarized-theme
   :config
-  (defvar dotfiles-current-theme (if dotfiles-on-android 'solarized-dark 'solarized-light))
+  (defvar dotfiles-current-theme 'solarized-light)
   (defun dotfiles-toggle-theme ()
     "Toggle between light and dark themes."
     (interactive)

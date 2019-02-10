@@ -337,9 +337,7 @@
   (setq
    helm-dash-min-length 0
    helm-dash-docsets-path (expand-file-name
-                           (if dotfiles-on-android
-                               (f-join (getenv "ANDROID_EXTRA") "emacs-docsets")
-                             (concat user-emacs-directory "/dash-docsets")))
+                           (concat user-emacs-directory "/dash-docsets"))
    helm-dash-browser-func 'dotfiles--helm-dash-eww
    helm-dash-enable-debugging nil)
 
@@ -355,16 +353,8 @@
     (unless (eq eww-current-url url)
       (eww-browse-url url)))
 
-  (defconst dotfiles-required-docsets '("Bash" "Bootstrap_4" "C" "C++" "CSS" "Emacs_Lisp" "Haskell" "HTML" "Java_SE8" "JavaScript" "jQuery" "jQuery_UI" "LaTeX" "Markdown" "MATLAB" "NumPy" "Python_2" "Python_3" "SciPy")
+  (defconst dotfiles-required-docsets '("Bash" "Bootstrap_4" "C" "C++" "CSS" "Emacs_Lisp" "Haskell" "HTML" "Java_SE8" "JavaScript" "jQuery" "jQuery_UI" "LaTeX" "Markdown" "MATLAB" "NumPy" "Python_2" "Python_3" "SciPy" "Qt_5" "Matplotlib")
     "Helm-dash docsets that will be installed.")
-
-  (unless dotfiles-on-android
-    ;; Attempting to install Qt docs makes Android run out of memory
-    ;; and crash; we don't need Qt docs on Android anyway. Same
-    ;; happens with Matplotlib.
-    (add-to-list 'dotfiles-required-docsets "Qt_5")
-    (add-to-list 'dotfiles-required-docsets "Matplotlib"))
-
 
   (defun dotfiles--docset-installed (docset)
     (let* ((fixed-names-alist

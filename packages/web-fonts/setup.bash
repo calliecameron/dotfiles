@@ -1,5 +1,4 @@
 function _can-install() {
-    ! os android &&
     ! linux-variant pi &&
     type git &>/dev/null
 }

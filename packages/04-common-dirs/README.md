@@ -11,15 +11,3 @@ partition more convenient; these paths will be symlinked into home
 - `WINDOWNLOADS`: Windows user's downloads directory
 - `CYGHOME`: Windows user's Cygwin home directory
 
-A few similar variables exist for Android Linux:
-
-- `ANDROID_SDCARD`
-- `ANDROID_DOCUMENTS`
-- `ANDROID_DOWNLOADS`
-- `ANDROID_EXTRA`: because the Android Linux image is limited to 4 GB,
-  this should point to a folder outside the image where extra stuff
-  can be downloaded to (currently used by Dash docsets)
-
-On Android Linux, you can also set `DROPBOX` to point to the path used
-by e.g. Dropsync (on Mint, Dropbox goes in the home directory and is
-detected automatically).

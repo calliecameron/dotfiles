@@ -13,8 +13,6 @@ function _install() {
 
         if linux-variant main; then
             "${PACKAGE_CONF_DIR}/packages-main.sh" || return 1
-        elif linux-variant android; then
-            "${PACKAGE_CONF_DIR}/packages-android-linux.sh" || return 1
         elif linux-variant pi; then
             "${PACKAGE_CONF_DIR}/packages-pi.sh" || return 1
         else

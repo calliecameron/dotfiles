@@ -1,7 +1,3 @@
-function _can-install() {
-    ! os android
-}
-
 function _install() {
     git clone https://github.com/callumcameron/antigen "${PACKAGE_INSTALL_DIR}" &&
     cd "${PACKAGE_INSTALL_DIR}" &&

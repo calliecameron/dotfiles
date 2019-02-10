@@ -1,4 +1,4 @@
-if os android cygwin; then
+if os cygwin; then
     source "${PACKAGE_CONF_DIR}/git-completion.bash"
 fi
 

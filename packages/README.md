@@ -29,8 +29,6 @@ The folder can also contain any of the following subdirectories:
   exported, before `env.sh` is sourced.
 - `bin-cygwin`: if on Cygwin, will be prepended to the PATH and
   exported, before `env.sh` is sourced.
-- `bin-android`: if on Android, will be prepended to the PATH and
-  exported, before `env.sh` is sourced.
 - `python`: will be prepended to PYTHONPATH and exported, before
   `env.sh` is sourced.
 - `zsh-completions`: will be prepended to the zsh completions path
@@ -52,12 +50,11 @@ In shell files, the following environment variables are available:
 - `PACKAGE_INSTALL_DIR`: the full path of where anything should be
   installed; clone repositories here, or if anything else needs to
   be installed, create this directory and put things in it.
-- `DOTFILES_OS`: `linux`, `cygwin`, or `android` (for Android
-  Terminal IDE). If `linux`, then `DOTFILES_LINUX_VARIANT` will
-  also be set.
+- `DOTFILES_OS`: `linux` or `cygwin`. If `linux`, then
+  `DOTFILES_LINUX_VARIANT` will also be set.
 - `DOTFILES_LINUX_VARIANT`: only set on Linux; can be `main` (for
-  current preferred distro), `pi` (for Raspbian), `android` (for Linux
-  On Android), or empty for unknown.
+  current preferred distro), `pi` (for Raspbian), or empty for
+  unknown.
 - `DOTFILES_CAN_SUDO`: whether the user has sudo permissions on
   this machine; only set on Linux.
 

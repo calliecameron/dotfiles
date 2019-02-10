@@ -122,11 +122,6 @@
    dotfiles-private-dir
    dotfiles-package-roots))
 
-(defconst dotfiles-on-android
-  (and
-   (string= dotfiles-os "linux")
-   (string= dotfiles-linux-variant "android")))
-
 (defconst dotfiles-on-windows
   (string= dotfiles-os "cygwin"))
 
@@ -170,16 +165,12 @@ clicked.  TITLE is the system notification title; defaults to
 message."
   (message "%s%s" message (if extra extra ""))
 
-  ;; On systems without dbus support, notifications-notify raises an
-  ;; error.  We prefer it to fail silently, since the notification has
-  ;; already been delivered through the echo area.
-  (unless dotfiles-on-android
-    (notifications-notify
-     :title (if title title "Emacs")
-     :body message
-     :urgency 'normal
-     :actions (list callback-text callback-text)
-     :on-action (lambda (_a _b) (funcall callback)))))
+  (notifications-notify
+   :title (if title title "Emacs")
+   :body message
+   :urgency 'normal
+   :actions (list callback-text callback-text)
+   :on-action (lambda (_a _b) (funcall callback))))
 
 (defun dotfiles--generic-require-packages (name installed-fn install-fn package-list mx-name)
   "Make sure the packages specified in PACKAGE-LIST are installed; works for any notion of package using INSTALLED-FN and INSTALL-FN."

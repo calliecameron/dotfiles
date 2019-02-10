@@ -11,15 +11,11 @@ test ! -z "${DOTFILES_PROFILING}" && printf 'env ' && date --rfc-3339=ns
 export DOTFILES_OS=''
 export DOTFILES_LINUX_VARIANT=''
 
-if [ -d '/system' ]; then
-    export DOTFILES_OS='android'
-elif [ "$(uname -o)" = 'Cygwin' ]; then
+if [ "$(uname -o)" = 'Cygwin' ]; then
     export DOTFILES_OS='cygwin'
 else
     export DOTFILES_OS='linux'
-    if [ -d '/android' ]; then
-        export DOTFILES_LINUX_VARIANT='android'
-    elif [ -e '/boot/config.txt' ]; then
+    if [ -e '/boot/config.txt' ]; then
         export DOTFILES_LINUX_VARIANT='pi'
     elif which lsb_release >/dev/null && lsb_release -a 2>/dev/null | grep 'Mint' >/dev/null; then
         export DOTFILES_LINUX_VARIANT='main'
@@ -93,11 +89,6 @@ export LESS='FRMX'
 # Create SSH agent if necessary
 if [ -z "${SSH_AUTH_SOCK}" ] && [ -z "${DISPLAY}" ] && which ssh-agent >/dev/null; then
     eval "$(ssh-agent -s)" >/dev/null 2>/dev/null
-    export DOTFILES_STARTED_SSH_AGENT='t'
-    # shellcheck disable=SC2155
-    export DOTFILES_SSH_ADDED_FILE="$(readlink -f "$(mktemp)")"
-elif [ "${DOTFILES_OS}" = 'linux' ] && [ "${DOTFILES_LINUX_VARIANT}" = 'android' ]; then
-    # Already running an ssh agent, but for some reason ssh won't connect to it by itself
     export DOTFILES_STARTED_SSH_AGENT='t'
     # shellcheck disable=SC2155
     export DOTFILES_SSH_ADDED_FILE="$(readlink -f "$(mktemp)")"

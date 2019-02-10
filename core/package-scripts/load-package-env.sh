@@ -41,8 +41,6 @@ loadpackageenv() {
                 addpath "${PACKAGE_CONF_DIR}/bin-linux"
             elif os cygwin && [ -d "${PACKAGE_CONF_DIR}/bin-cygwin" ]; then
                 addpath "${PACKAGE_CONF_DIR}/bin-cygwin"
-            elif os android && [ -d "${PACKAGE_CONF_DIR}/bin-android" ]; then
-                addpath "${PACKAGE_CONF_DIR}/bin-android"
             fi
 
             if [ -d "${PACKAGE_CONF_DIR}/python" ]; then
