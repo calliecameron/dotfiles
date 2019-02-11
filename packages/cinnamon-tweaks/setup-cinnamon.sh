@@ -18,7 +18,6 @@ cinnamon-favourites remove firefox.desktop &&
 cinnamon-favourites add "${CHROME_DESKTOP}" &&
 cinnamon-favourites add emacs-daemon.desktop &&
 cinnamon-favourites add vlc.desktop &&
-cinnamon-favourites add thunderbird.desktop &&
 cinnamon-favourites add gnucash.desktop &&
 
 
@@ -31,7 +30,6 @@ gsettings set org.nemo.desktop volumes-visible true &&
 gsettings set org.nemo.desktop show-desktop-icons true &&
 
 xdg-desktop-icon install --novendor "/usr/share/applications/${CHROME_DESKTOP}" &&
-xdg-desktop-icon install --novendor '/usr/share/applications/thunderbird.desktop' &&
 xdg-desktop-icon install --novendor '/usr/share/applications/gnome-terminal.desktop' &&
 
 
@@ -39,7 +37,6 @@ xdg-desktop-icon install --novendor '/usr/share/applications/gnome-terminal.desk
 cinnamon-panel remove firefox.desktop &&
 cinnamon-panel add "${CHROME_DESKTOP}" &&
 cinnamon-panel add emacs-daemon.desktop &&
-cinnamon-panel add thunderbird.desktop &&
 
 
 # Calendar
@@ -66,12 +63,9 @@ cinnamon-keybinding 'VLC Next' 'vlc-next' '<Primary><Alt>period' &&
 cinnamon-keybinding 'VLC Previous' 'vlc-prev' '<Primary><Alt>comma' &&
 cinnamon-keybinding 'Nemo' 'nemo' '<Primary><Alt>h' &&
 cinnamon-keybinding 'Python' 'gnome-terminal -x ipython3' '<Primary><Alt>p'
-cinnamon-keybinding 'Thunderbird' 'thunderbird' '<Primary><Alt>m' &&
 cinnamon-keybinding 'GnuCash' 'gnucash' '<Primary><Alt>g' &&
 cinnamon-keybinding 'Calculator' 'gnome-calculator' '<Primary><Alt>c' &&
 cinnamon-keybinding 'Anki' "anki -b ${HOME}/Anki" '<Primary><Alt>a' &&
-cinnamon-keybinding 'Switch monitor' 'monitor_switch.sh' '<Primary><Super>m' &&
-cinnamon-keybinding 'Workrave' 'workrave' '<Primary><Alt>w' &&
 
 gsettings-add-if-not-in-list org.gnome.libgnomekbd.keyboard options $'ctrl\tctrl:nocaps' || exit 1
 

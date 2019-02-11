@@ -1,8 +1,7 @@
 function _can-install() {
-    os linux &&
-    which ssmtp &>/dev/null
+    os linux && linux-variant main pi && can-sudo
 }
 
 function _install() {
-    true
+    sudo apt-get -y install ssmtp
 }

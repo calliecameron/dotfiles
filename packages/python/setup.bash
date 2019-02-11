@@ -1,47 +1,15 @@
 function _install() {
-    function do-pip2() {
-        if os linux; then
-            sudo -H python -m pip install --upgrade pip &&
-            python -m pip install --user --upgrade pip &&
-            sudo -H pip install "${@}" || return 1
-        elif os cygwin; then
-            printf '\033[34m'
-            cat <<EOF
-Pip in Cygwin must be run as administrator, and cannot be done
-automatically. Open a Cygwin terminal using 'Run as Administrator' and
-do the following:
+    os linux && can-sudo
+}
 
-python -m pip install ${@}
-EOF
-            printf '\033[0m\n'
-        fi
-    }
-
-    function do-pip3() {
-        if os linux; then
-            sudo -H python3 -m pip install --upgrade pip &&
-            python3 -m pip install --user --upgrade pip &&
-            sudo -H pip3 install "${@}" || return 1
-        elif os cygwin; then
-            printf '\033[34m'
-            cat <<EOF
-Pip in Cygwin must be run as administrator, and cannot be done
-automatically. Open a Cygwin terminal using 'Run as Administrator' and
-do the following:
-
-python3 -m pip install ${@}
-EOF
-            printf '\033[0m\n'
-        fi
-    }
-
-    if (os linux && ( ! linux-variant pi || [ ! -z "${DOTFILES_PI_INTERACTIVE}" ] ) && can-sudo) ||
-       os cygwin; then
-        do-pip2 ipython &&
-        do-pip3 jedi flake8 importmagic autopep8 yapf rope mypy pygments pylint pep8 ipython virtualenv virtualenvwrapper autoenv || exit 1
-    fi
-    unset -f do-pip2 do-pip3
-    return 0
+function _install() {
+    sudo apt-get -y install python-dev python-pip python3-dev python3-pip &&
+    # Make sure we're using the local pip if it exists, not the apt-installed one
+    export PATH="${HOME}/.local/bin:${PATH}" &&
+    pip install --user --upgrade pip setuptools &&
+    pip3 install --user --upgrade pip setuptools &&
+    pip install --user --upgrade future gitpython ipython pyinotify pytimeparse rlipython &&
+    pip3 install --user --upgrade autoenv autopep8 future gitpython flake8 importmagic ipython jedi mypy pygments pyinotify pylint pytimeparse pep8 rlipython rope virtualenv virtualenvwrapper yapf
 }
 
 function _update() {

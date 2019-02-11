@@ -5,16 +5,13 @@ function _can-install() {
 function _install() {
     mkdir -p "${PACKAGE_INSTALL_DIR}" &&
     cd "${PACKAGE_INSTALL_DIR}" &&
-    sudo dpkg --add-architecture i386 &&
-    wget -nc https://dl.winehq.org/wine-builds/Release.key &&
-    sudo apt-key add Release.key &&
-    sudo apt-add-repository 'deb https://dl.winehq.org/wine-builds/ubuntu/ xenial main' &&
-    sudo apt-get update &&
-    sudo apt-get -y install --install-recommends winehq-devel gnome-exe-thumbnailer xserver-xephyr x11vnc xdotool vinagre &&
+    sudo apt-get -y install --install-recommends wine-stable gnome-exe-thumbnailer xserver-xephyr x11vnc xdotool vinagre &&
     wget -O complete.zip 'http://www.ldraw.org/library/updates/complete.zip' &&
     unzip complete.zip &&
     cd ldraw &&
     wget -O mlcad.zip 'http://mlcad.lm-software.com/MLCad_V3.40.zip' &&
+    echo '0a95e93dc59c059274255df7c1e30396d30472dfa2649f02f0657923abe282d8  mlcad.zip' > checksum &&
+    sha256sum -c checksum &&
     unzip mlcad.zip &&
     chmod u+x MLCad_V3.40/MLCAD.exe &&
     wget -O make-list 'https://raw.githubusercontent.com/nathaneltitane/ldraw/master/make-list' &&

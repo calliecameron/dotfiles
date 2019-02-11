@@ -2,6 +2,9 @@ if which pygmentize >/dev/null; then
     homelink "${PACKAGE_CONF_DIR}/lessfilter"
 fi
 
+# This is where pip --user installs binaries
+export PATH="${HOME}/.local/bin:${PATH}"
+
 export WORKON_HOME="${HOME}/.virtualenvs"
 mkdir -p "${WORKON_HOME}"
 # shellcheck disable=SC2155

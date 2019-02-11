@@ -3,8 +3,7 @@ function _can-install() {
     linux-variant main &&
     graphical &&
     package-installed iptables &&
-    type port &>/dev/null &&
-    type vlc &>/dev/null
+    type port &>/dev/null
 }
 
 function _install() {

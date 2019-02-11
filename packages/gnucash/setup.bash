@@ -3,5 +3,5 @@ function _can-install() {
 }
 
 function _install() {
-    sudo apt-get -y install calibre
+    sudo apt-get -y install gnucash gnucash-docs
 }

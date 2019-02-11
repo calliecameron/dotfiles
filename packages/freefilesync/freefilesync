@@ -1,0 +1,5 @@
+#!/bin/bash
+
+THIS_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
+exec "${THIS_DIR}/../FreeFileSync/Bin/FreeFileSync_x86_64"

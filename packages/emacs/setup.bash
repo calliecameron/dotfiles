@@ -5,6 +5,7 @@ function _can-install() {
 
 function _install() {
     if os linux; then
+        sudo apt-get -y install emacs25 emacs25-el emacs-goodies-el &&
         mkdir "${PACKAGE_INSTALL_DIR}" &&
         "${PACKAGE_CONF_DIR}/install-emacs-from-source.sh" "${PACKAGE_INSTALL_DIR}" || return 1
         if ! linux-variant pi; then

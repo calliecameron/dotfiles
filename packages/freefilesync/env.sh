@@ -1,1 +1,1 @@
-export PATH="${PACKAGE_INSTALL_DIR}/FreeFileSync:${PATH}"
+export PATH="${PACKAGE_INSTALL_DIR}/bin:${PATH}"

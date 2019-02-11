@@ -3,6 +3,5 @@ function _can-install() {
 }
 
 function _install() {
-    sudo apt-get -y install nodejs-legacy npm &&
-    mkdir -p "${HOME}/.npm-packages"
+    sudo apt-get -y install hlint
 }

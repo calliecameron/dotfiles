@@ -6,7 +6,7 @@ function _can-install() {
 function _install() {
     git clone https://github.com/cask/cask.git "${PACKAGE_INSTALL_DIR}" &&
     cd "${PACKAGE_INSTALL_DIR}" &&
-    git checkout v0.8.1
+    git checkout v0.8.4
 }
 
 # function _update() {

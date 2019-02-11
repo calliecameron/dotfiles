@@ -3,11 +3,14 @@ function _can-install() {
 }
 
 function _install() {
-    # This is temporary, until the PPA supports xenial
     mkdir -p "${PACKAGE_INSTALL_DIR}" &&
     cd "${PACKAGE_INSTALL_DIR}" &&
-    wget http://download1181.mediafireuserdownload.com/jbdxd778socg/i9ojswkht4eonlk/FreeFileSync_9.2_Ubuntu_16.04_64-bit.tar.gz &&
-    tar -xf FreeFileSync_9.2_Ubuntu_16.04_64-bit.tar.gz &&
+    wget http://download13.mediafire.com/o2liidpbzedg/gy66u6oa9ftddgs/FreeFileSync_10.9_Linux.tar.gz &&
+    echo 'b8326b87c5349b7798b6047e49b425580eef12aaefe57b3e2c0609dd1a39d540  FreeFileSync_10.9_Linux.tar.gz' > checksum &&
+    sha256sum -c checksum &&
+    tar -xf FreeFileSync_10.9_Linux.tar.gz &&
     cd FreeFileSync &&
-    chmod a-x CHANGELOG LICENSE Resources.zip ding.wav gong.wav harp.wav
+    chmod a-x CHANGELOG LICENSE RealTimeSync Resources.zip 'User Manual.pdf' cacert.pem ding.wav gong.wav harp.wav styles.gtk_rc Bin/FreeFileSync_i686 Bin/RealTimeSync_i686 Bin/RealTimeSync_x86_64 &&
+    mkdir -p "${PACKAGE_INSTALL_DIR}/bin" &&
+    cp "${PACKAGE_CONF_DIR}/freefilesync" "${PACKAGE_INSTALL_DIR}/bin"
 }

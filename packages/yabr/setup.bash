@@ -1,11 +1,9 @@
 function _can-install() {
-    # Also need the QT libraries, but we can assume the setup scripts installed those
-    os linux &&
-    linux-variant main &&
-    type qmake &>/dev/null
+    os linux && linux-variant main && package-installed dev-tools && can-sudo
 }
 
 function _install() {
+    sudo apt-get -y install qtbase5-dev
     git clone https://github.com/CallumCameron/yabr.git "${PACKAGE_INSTALL_DIR}" &&
     cd "${PACKAGE_INSTALL_DIR}" &&
     qmake -qt=5 &&

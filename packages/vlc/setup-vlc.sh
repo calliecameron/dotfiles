@@ -1,5 +1,7 @@
 #!/bin/bash
 
+sudo apt-get -y install vlc &&
+
 source "${DOTFILES_BASH_COMMON}" &&
 source "${THIS_DIR}/env.sh" &&
 
@@ -41,4 +43,4 @@ xdg-desktop-icon install --novendor "${THIS_DIR}/vlc.desktop" &&
 
 xdg-mime default vlc.desktop application/vnd.adobe.flash.movie application/xspf+xml audio/mpeg audio/mp4 audio/x-mpegurl audio/x-vorbis+ogg audio/x-wav video/mpeg video/mp4 video/ogg video/quicktime video/x-msvideo video/x-matroska &&
 
-"${THIS_DIR}/non-default-association.el" 'inode/directory' 'vlc.desktop' "${HOME}/.local/share/applications/mimeapps.list"
+"${THIS_DIR}/non-default-association.el" 'inode/directory' 'vlc.desktop' "${HOME}/.config/mimeapps.list"

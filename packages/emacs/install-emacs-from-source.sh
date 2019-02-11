@@ -15,7 +15,10 @@ EMACS_VERSION='25.3'
 if [ ! -e "${INSTALL_DIR}/bin/emacs" ]; then
     BUILD_DIR="$(mktemp -d)" &&
     cd "${BUILD_DIR}" &&
+    wget "https://ftp.gnu.org/gnu/gnu-keyring.gpg" &&
+    wget "https://ftp.gnu.org/gnu/emacs/emacs-${EMACS_VERSION}.tar.xz.sig" &&
     wget "https://ftp.gnu.org/gnu/emacs/emacs-${EMACS_VERSION}.tar.xz" &&
+    gpg --verify --keyring ./gnu-keyring.gpg "emacs-${EMACS_VERSION}.tar.xz.sig" &&
     tar -xf "emacs-${EMACS_VERSION}.tar.xz" &&
     cd "emacs-${EMACS_VERSION}" &&
     ./configure --with-modules --with-xwidgets "--prefix=${INSTALL_DIR}" &&
