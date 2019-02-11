@@ -23,7 +23,6 @@
 
   (defun dotfiles--venv-setup (command)
     (setq elpy-rpc-python-command command)
-    (elpy-use-ipython (concat "i" command))
     (when (eq major-mode 'python-mode)
       (pyvenv-restart-python)
       (when (fboundp 'dotfiles-set-python-docsets)

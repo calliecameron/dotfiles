@@ -544,10 +544,6 @@ If BUFFER is a string, it is the name of the buffer to find; if it is a predicat
         (flyspell-buffer))))
     (run-with-idle-timer 1 t 'dotfiles-auto-spellcheck-buffer))
 
-(dotfiles-use-package framemove
-  :config
-  (setq framemove-hook-into-windmove t))
-
 (dotfiles-use-package guide-key
   :pin melpa-stable
   :diminish guide-key-mode
@@ -564,7 +560,6 @@ If BUFFER is a string, it is the name of the buffer to find; if it is a predicat
   (require 'helm-config)
   (helm-mode 1)
   (helm-adaptive-mode 1)
-  (helm-push-mark-mode 1)
   (helm-popup-tip-mode 1)
   (helm-top-poll-mode 1))
 
