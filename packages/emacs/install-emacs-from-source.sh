@@ -8,9 +8,9 @@ function usage() {
 test -z "${1}" && usage
 INSTALL_DIR="$(readlink -f "${1}")"
 
-sudo apt-get -y install attr autoconf automake build-essential imagemagick libacl1-dev libasound2-dev libdbus-1-dev libgconf2-dev libgif-dev libgnutls28-dev libgpm-dev libgtk-3-dev liblockfile-dev libm17n-dev libmagickwand-dev libncurses5-dev libotf-dev libpng-dev libpoppler-glib-dev libpoppler-private-dev librsvg2-dev libselinux1-dev libwebkitgtk-3.0-dev libxpm-dev libz-dev paxctl texinfo valgrind
+sudo apt-get -y install attr autoconf automake build-essential imagemagick libacl1-dev libasound2-dev libdbus-1-dev libgconf2-dev libgif-dev libgnutls28-dev libgpm-dev libgtk-3-dev liblockfile-dev libm17n-dev libmagickwand-dev libncurses5-dev libotf-dev libpng-dev libpoppler-glib-dev libpoppler-private-dev librsvg2-dev libselinux1-dev libwebkitgtk-3.0-dev libwebkit2gtk-4.0-dev libxpm-dev libz-dev paxctl texinfo valgrind
 
-EMACS_VERSION='25.3'
+EMACS_VERSION='26.1'
 
 if [ ! -e "${INSTALL_DIR}/bin/emacs" ]; then
     BUILD_DIR="$(mktemp -d)" &&
