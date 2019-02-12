@@ -3,7 +3,7 @@ Dotfiles
 
 Configurations for Zsh, Emacs, and lots of other stuff.
 
-Currently set up to work with Linux Mint 18.3 Cinnamon, Raspbian Stretch, and
+Currently set up to work with Linux Mint 19.1 Cinnamon, Raspbian Stretch, and
 Cygwin. On these systems (especially Mint) it installs things through the
 package manager and does extensive customisation, in addition to just setting up
 dotfiles; the basic shell parts that don't need root, however, should work fine
