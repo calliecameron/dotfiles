@@ -352,7 +352,7 @@ If BUFFER is a string, it is the name of the buffer to find; if it is a predicat
    ("s-x" . dotfiles-cut-to-register)
    ("C-S-x" . dotfiles-cut-to-register)
    ("s-v" . insert-register)
-   ("C-\\" . switch-to-buffer)
+   ("C-\\" . helm-mini)
    ("s-u" . package-list-packages)
    ("C-S-u" . package-list-packages)
    ("s-k" . describe-personal-keybindings)
@@ -372,7 +372,8 @@ If BUFFER is a string, it is the name of the buffer to find; if it is a predicat
    ("C-/" . comment-or-uncomment-region)
    ("M-m" . newline)
    ("<f12>" . toggle-frame-fullscreen)
-   ("s-m" . dotfiles-toggle-mode-line)))
+   ("s-m" . dotfiles-toggle-mode-line)
+   ("M-:" . eval-expression)))
 
 (bind-keys
  :map ergoemacs-override-keymap
