@@ -8,7 +8,7 @@ function _install() {
         return 1
     fi
     git clone https://github.com/Anthony25/gnome-terminal-colors-solarized.git "${PACKAGE_INSTALL_DIR}" &&
-    "${PACKAGE_INSTALL_DIR}/install.sh" --scheme light --profile "${DOTFILES_GNOME_TERMINAL_PROFILE}" --skip-dircolors
+    "${PACKAGE_INSTALL_DIR}/install.sh" --scheme dark --profile "${DOTFILES_GNOME_TERMINAL_PROFILE}" --skip-dircolors
 }
 
 function _update() {
@@ -17,5 +17,5 @@ function _update() {
         return 1
     fi
     git pull &&
-    "${PACKAGE_INSTALL_DIR}/install.sh" --scheme light --profile "${DOTFILES_GNOME_TERMINAL_PROFILE}" --skip-dircolors
+    "${PACKAGE_INSTALL_DIR}/install.sh" --scheme dark --profile "${DOTFILES_GNOME_TERMINAL_PROFILE}" --skip-dircolors
 }
