@@ -2,8 +2,6 @@ function _can-install() {
     os linux &&
     linux-variant main &&
     graphical &&
-    package-installed emacs &&
-    package-installed vlc &&
     pgrep cinnamon &>/dev/null
 }
 
