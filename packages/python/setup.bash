@@ -10,7 +10,7 @@ function _install() {
     "${LOCAL_PIP_DIR}/pip" install --user --upgrade pip setuptools &&
     "${LOCAL_PIP_DIR}/pip3" install --user --upgrade pip setuptools &&
     "${LOCAL_PIP_DIR}/pip" install --user --upgrade future gitpython ipython pyinotify pytimeparse rlipython &&
-    "${LOCAL_PIP_DIR}/pip3" install --user --upgrade autoenv autopep8 future gitpython flake8 importmagic ipython jedi mypy pygments pyinotify pylint pytimeparse pep8 rlipython rope virtualenv virtualenvwrapper yapf
+    "${LOCAL_PIP_DIR}/pip3" install --user --upgrade autoenv autopep8 future gitpython flake8 importmagic 'ipython<7' jedi mypy pygments pyinotify pylint pytimeparse pep8 rlipython rope virtualenv virtualenvwrapper yapf
 }
 
 function _update() {
