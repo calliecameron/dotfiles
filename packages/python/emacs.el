@@ -53,7 +53,10 @@
   :config
   (add-hook 'flycheck-mode-hook 'flycheck-pycheckers-setup)
   (setq flycheck-pycheckers-checkers '(pylint mypy3))
-  (setq flycheck-pycheckers-venv-root (getenv "WORKON_HOME")))
+  (setq flycheck-pycheckers-venv-root (getenv "WORKON_HOME"))
+  ; Fallback to .pylintrc rather than using pycheckers' builtin config
+  (setq flycheck-pycheckers-ignore-codes nil)
+  (setq flycheck-pycheckers-enable-codes nil))
 
 (dotfiles-use-package python
   :mode (("SConscript\\'" . python-mode)
