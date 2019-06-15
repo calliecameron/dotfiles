@@ -2,6 +2,12 @@
   :pin melpa-stable
   :diminish elpy-mode
   :config
+  (bind-keys
+   :map elpy-mode-map
+   ("M-<left>" . nil)
+   ("M-<right>" . nil)
+   ("M-<up>" . nil)
+   ("M-<down>" . nil))
   (when (require 'flycheck nil t)
     (setq elpy-modules (delq 'elpy-module-flymake elpy-modules))
     (add-hook 'elpy-mode-hook 'flycheck-mode))
