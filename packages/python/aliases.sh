@@ -60,3 +60,5 @@ if [ ! -z "${VIRTUAL_ENV}" ] &&
     # shell.
     source "${VIRTUAL_ENV}/bin/activate"
 fi
+
+alias j='jupyter notebook'
