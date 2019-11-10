@@ -265,6 +265,22 @@
   :config
   (flycheck-pos-tip-mode))
 
+(dotfiles-use-package git-gutter
+  :pin melpa-stable
+  :diminish git-gutter-mode
+  :config
+  (setq
+   git-gutter:update-interval 2
+   git-gutter:visual-line t
+   git-gutter:hide-gutter t)
+  (set-face-background 'git-gutter:modified "yellow")
+  (set-face-background 'git-gutter:added "green")
+  (set-face-background 'git-gutter:deleted "red")
+  (global-git-gutter-mode)
+  (bind-keys
+   ("s-." . git-gutter:next-hunk)
+   ("s-," . git-gutter:previous-hunk)))
+
 (dotfiles-use-package go-mode)
 
 (dotfiles-use-package haskell-mode
