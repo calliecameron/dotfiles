@@ -516,6 +516,7 @@
 
 (dotfiles-use-package projectile
   :pin melpa-stable
+  :diminish projectile-mode
   :config
   (projectile-global-mode)
   (setq
