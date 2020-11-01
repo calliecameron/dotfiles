@@ -12,6 +12,6 @@ function _install() {
     npm install -g csslint eslint jscs jsonlint js-yaml
 }
 
-function _update() {
-    _install
-}
+# function _update() {
+#     _install
+# }
