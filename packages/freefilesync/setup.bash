@@ -5,7 +5,7 @@ function _can-install() {
 function _install() {
     mkdir -p "${PACKAGE_INSTALL_DIR}" &&
     cd "${PACKAGE_INSTALL_DIR}" &&
-    wget http://download13.mediafire.com/o2liidpbzedg/gy66u6oa9ftddgs/FreeFileSync_10.9_Linux.tar.gz &&
+    wget https://download13.mediafire.com/b7utbw57t44g/gy66u6oa9ftddgs/FreeFileSync_10.9_Linux.tar.gz &&
     echo 'b8326b87c5349b7798b6047e49b425580eef12aaefe57b3e2c0609dd1a39d540  FreeFileSync_10.9_Linux.tar.gz' > checksum &&
     sha256sum -c checksum &&
     tar -xf FreeFileSync_10.9_Linux.tar.gz &&
