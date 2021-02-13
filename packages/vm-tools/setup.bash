@@ -13,14 +13,15 @@ function _install() {
     sudo adduser "$(id -un)" vboxusers &&
 
     # Vagrant
-    local DEB_FILE='vagrant_2.2.7_x86_64.deb'
-    local SHA_FILE='vagrant_2.2.7_SHA256SUMS'
-    local SIG_FILE='vagrant_2.2.7_SHA256SUMS.sig'
+    local VAGRANT_VERSION='2.2.14'
+    local DEB_FILE="vagrant_${VAGRANT_VERSION}_x86_64.deb"
+    local SHA_FILE="vagrant_${VAGRANT_VERSION}_SHA256SUMS"
+    local SIG_FILE="vagrant_${VAGRANT_VERSION}_SHA256SUMS.sig"
     local TMP_DIR
     TMP_DIR="$(mktemp -d)" &&
-    wget -O "${TMP_DIR}/${DEB_FILE}" "https://releases.hashicorp.com/vagrant/2.2.7/${DEB_FILE}" &&
-    wget -O "${TMP_DIR}/${SHA_FILE}" "https://releases.hashicorp.com/vagrant/2.2.7/${SHA_FILE}" &&
-    wget -O "${TMP_DIR}/${SIG_FILE}" "https://releases.hashicorp.com/vagrant/2.2.7/${SIG_FILE}" &&
+    wget -O "${TMP_DIR}/${DEB_FILE}" "https://releases.hashicorp.com/vagrant/${VAGRANT_VERSION}/${DEB_FILE}" &&
+    wget -O "${TMP_DIR}/${SHA_FILE}" "https://releases.hashicorp.com/vagrant/${VAGRANT_VERSION}/${SHA_FILE}" &&
+    wget -O "${TMP_DIR}/${SIG_FILE}" "https://releases.hashicorp.com/vagrant/${VAGRANT_VERSION}/${SIG_FILE}" &&
     cd "${TMP_DIR}" &&
     sha256sum --ignore-missing -c "${SHA_FILE}" &&
     gpg --recv-keys 51852D87348FFC4C &&
