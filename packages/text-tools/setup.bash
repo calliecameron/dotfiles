@@ -5,6 +5,12 @@ function _can-install() {
 function _install() {
     sudo apt-get -y install asciidoc aspell biber chktex dict dictd dict-foldoc dict-gcide dict-jargon dict-wn epstool hunspell hunspell-en-gb markdown texinfo texlive-full transfig unoconv || exit 1
 
+    if [ ! -d "${PACKAGE_INSTALL_DIR}" ]; then
+        mkdir -p "${PACKAGE_INSTALL_DIR}" &&
+        cd "${PACKAGE_INSTALL_DIR}" &&
+        git clone https://github.com/prosegrinder/pandoc-templates || exit 1
+    fi
+
     if linux-variant main; then
         if ! which pandoc &>/dev/null; then
             TMPDIR="$(mktemp -d)" &&
@@ -14,4 +20,10 @@ function _install() {
             rmdir "${TMPDIR}" || exit 1
         fi
     fi
+}
+
+function _update() {
+    _install &&
+    cd "${PACKAGE_INSTALL_DIR}/pandoc-temlates" &&
+    git pull
 }
