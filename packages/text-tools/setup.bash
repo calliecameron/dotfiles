@@ -3,7 +3,7 @@ function _can-install() {
 }
 
 function _install() {
-    sudo apt-get -y install asciidoc aspell biber chktex dict dictd dict-foldoc dict-gcide dict-jargon dict-wn epstool hunspell hunspell-en-gb markdown texinfo texlive-full transfig unoconv || exit 1
+    sudo apt-get -y install asciidoc aspell biber chktex dict dictd dict-foldoc dict-gcide dict-jargon dict-wn epstool hunspell hunspell-en-gb markdown strip-nondeterminism texinfo texlive-full transfig unoconv || exit 1
 
     if [ ! -d "${PACKAGE_INSTALL_DIR}" ]; then
         mkdir -p "${PACKAGE_INSTALL_DIR}" &&
