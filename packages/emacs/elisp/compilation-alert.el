@@ -1,10 +1,10 @@
 ;;; compilation-alert.el --- Alert when a long-running compilation finishes -*- lexical-binding: t; -*-
 
-;; Copyright (C) 2016 Callum J. Cameron
+;; Copyright (C) 2016 Callie Cameron
 
-;; Author: Callum J. Cameron <cjcameron7@gmail.com>
+;; Author: Callie Cameron <cjcameron7@gmail.com>
 ;; Version: 1.0
-;; URL: https://github.com/CallumCameron/compilation-alert
+;; URL: https://github.com/calliecameron/compilation-alert
 ;; Keywords: notifications processes
 ;; Package-Requires: ((emacs "24") (alert "1.1"))
 

@@ -8,13 +8,13 @@ antigen bundle vagrant
 antigen bundle zsh-users/zsh-completions
 
 if [ -z "${DOTFILES_ANTIGEN_CORE_ONLY}" ]; then
-    antigen bundle callumcameron/argtypes
-    antigen bundle callumcameron/argus
-    antigen bundle callumcameron/distributor
-    antigen bundle callumcameron/markdown-makefile
+    antigen bundle calliecameron/argtypes
+    antigen bundle calliecameron/argus
+    antigen bundle calliecameron/distributor
+    antigen bundle calliecameron/markdown-makefile
 fi
 
-antigen bundle callumcameron/emacs-launchers
+antigen bundle calliecameron/emacs-launchers
 antigen apply
 
 # Don't mess with my LESS, oh-my-zsh!

@@ -1,8 +1,8 @@
 ;;; dotfiles-ui.el --- -*- lexical-binding: t -*- user interface settings
 
-;; Copyright (C) 2016  Callum Cameron
+;; Copyright (C) 2016  Callie Cameron
 
-;; Author: Callum Cameron
+;; Author: Callie Cameron
 
 ;; This program is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by

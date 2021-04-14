@@ -1,8 +1,8 @@
 ;;; dotfiles.el --- Main dotfiles file.        -*- lexical-binding: t; -*-
 
-;; Copyright (C) 2016  Callum Cameron
+;; Copyright (C) 2016  Callie Cameron
 
-;; Author: Callum Cameron <cjcameron7@gmail.com>
+;; Author: Callie Cameron <cjcameron7@gmail.com>
 
 ;; This program is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by

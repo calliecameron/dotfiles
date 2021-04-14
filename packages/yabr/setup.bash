@@ -4,7 +4,7 @@ function _can-install() {
 
 function _install() {
     sudo apt-get -y install qtbase5-dev
-    git clone https://github.com/CallumCameron/yabr.git "${PACKAGE_INSTALL_DIR}" &&
+    git clone https://github.com/calliecameron/yabr "${PACKAGE_INSTALL_DIR}" &&
     cd "${PACKAGE_INSTALL_DIR}" &&
     qmake -qt=5 &&
     make &&

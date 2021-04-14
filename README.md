@@ -14,8 +14,8 @@ Install
 -------
 
 1. `sudo apt-get install git`
-2. `git clone git@github.com:CallumCameron/dotfiles ~/.dotfiles`, or using
-HTTPS, `git clone https://github.com/CallumCameron/dotfiles ~/.dotfiles`
+2. `git clone git@github.com:calliecameron/dotfiles ~/.dotfiles`, or using
+HTTPS, `git clone https://github.com/calliecameron/dotfiles ~/.dotfiles`
 3. `~/.dotfiles/install.sh`. This will backup and replace any existing dotfiles.
 4. Log out and log back in (don't just start a new shell!).
 5. Start a shell and follow the instructions. You may need to log out and in
