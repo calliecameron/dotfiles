@@ -6,14 +6,14 @@ function _can-install() {
 
 function _install() {
     # Virtualbox
-    echo deb https://download.virtualbox.org/virtualbox/debian bionic contrib | sudo tee /etc/apt/sources.list.d/virtualbox.list &&
+    echo deb https://download.virtualbox.org/virtualbox/debian focal contrib | sudo tee /etc/apt/sources.list.d/virtualbox.list &&
     wget -q https://www.virtualbox.org/download/oracle_vbox_2016.asc -O- | sudo apt-key add - &&
     sudo apt-get update &&
     sudo apt-get -y install virtualbox-6.1 &&
     sudo adduser "$(id -un)" vboxusers &&
 
     # Vagrant
-    local VAGRANT_VERSION='2.2.14'
+    local VAGRANT_VERSION='2.2.15'
     local DEB_FILE="vagrant_${VAGRANT_VERSION}_x86_64.deb"
     local SHA_FILE="vagrant_${VAGRANT_VERSION}_SHA256SUMS"
     local SIG_FILE="vagrant_${VAGRANT_VERSION}_SHA256SUMS.sig"
