@@ -1,5 +1,5 @@
 #!/bin/bash
-# Install packages for Mint 19
+# Install packages for Mint 20
 
 sudo apt-get update &&
 sudo apt-get autoremove pix hexchat samba-common samba-libs thunderbird transmission-gtk &&
