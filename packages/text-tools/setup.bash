@@ -8,7 +8,8 @@ function _install() {
     if [ ! -d "${PACKAGE_INSTALL_DIR}" ]; then
         mkdir -p "${PACKAGE_INSTALL_DIR}" &&
         cd "${PACKAGE_INSTALL_DIR}" &&
-        git clone https://github.com/prosegrinder/pandoc-templates || exit 1
+        git clone https://github.com/prosegrinder/pandoc-templates &&
+        git clone https://github.com/calliecameron/markdown-makefile || exit 1
     fi
 
     if linux-variant main; then
@@ -25,5 +26,7 @@ function _install() {
 function _update() {
     _install &&
     cd "${PACKAGE_INSTALL_DIR}/pandoc-temlates" &&
-    git pull
+    git pull &&
+    cd "${PACKAGE_INSTALL_DIR}/markdown-makefile" &&
+    gi pull
 }

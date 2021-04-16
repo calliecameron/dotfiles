@@ -7,10 +7,6 @@ antigen bundle zsh-users/zsh-syntax-highlighting
 antigen bundle vagrant
 antigen bundle zsh-users/zsh-completions
 
-if [ -z "${DOTFILES_ANTIGEN_CORE_ONLY}" ]; then
-    antigen bundle calliecameron/markdown-makefile
-fi
-
 antigen bundle calliecameron/emacs-launchers
 antigen apply
 
