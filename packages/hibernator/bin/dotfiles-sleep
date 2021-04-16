@@ -1,4 +1,0 @@
-#!/bin/bash
-# Put the computer to sleep
-
-dbus-send --system --print-reply --dest="org.freedesktop.UPower" /org/freedesktop/UPower org.freedesktop.UPower.Suspend
