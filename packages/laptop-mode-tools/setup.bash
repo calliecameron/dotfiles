@@ -7,5 +7,5 @@ function _can-install() {
 }
 
 function _install() {
-    sudo apt-get install laptop-mode-tools
+    sudo apt-get -y install laptop-mode-tools
 }
