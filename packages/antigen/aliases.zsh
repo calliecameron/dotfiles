@@ -8,9 +8,6 @@ antigen bundle vagrant
 antigen bundle zsh-users/zsh-completions
 
 if [ -z "${DOTFILES_ANTIGEN_CORE_ONLY}" ]; then
-    antigen bundle calliecameron/argtypes
-    antigen bundle calliecameron/argus
-    antigen bundle calliecameron/distributor
     antigen bundle calliecameron/markdown-makefile
 fi
 
