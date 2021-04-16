@@ -5,7 +5,7 @@ function _can-install() {
 function _install() {
     mkdir -p "${PACKAGE_INSTALL_DIR}" &&
     cd "${PACKAGE_INSTALL_DIR}" &&
-    sudo apt-get -y install --install-recommends wine-stable gnome-exe-thumbnailer xserver-xephyr x11vnc xdotool vinagre &&
+    sudo apt-get -y install --install-recommends wine-installer gnome-exe-thumbnailer xserver-xephyr x11vnc xdotool vinagre &&
     wget -O complete.zip 'http://www.ldraw.org/library/updates/complete.zip' &&
     unzip complete.zip &&
     cd ldraw &&
@@ -14,7 +14,7 @@ function _install() {
     sha256sum -c checksum &&
     unzip mlcad.zip &&
     chmod u+x MLCad_V3.40/MLCAD.exe &&
-    wget -O make-list 'https://raw.githubusercontent.com/nathaneltitane/ldraw/master/make-list' &&
+    wget -O make-list 'https://raw.githubusercontent.com/nathaneltitane/l2cu/c6881c35fd033b3b3a63d4dfd4f779cfc1caaff5/make-list' &&
     chmod u+x make-list &&
     ./make-list -d &&
     mkdir -p "${PACKAGE_INSTALL_DIR}/bin" &&
@@ -29,7 +29,7 @@ function _install() {
 function _update() {
     cd "${PACKAGE_INSTALL_DIR}" &&
     wget -O complete.zip 'http://www.ldraw.org/library/updates/complete.zip' &&
-    unzip complete.zip &&
+    unzip -o complete.zip &&
     cd ldraw &&
     ./make-list -d
 }
