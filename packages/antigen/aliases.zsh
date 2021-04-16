@@ -6,8 +6,6 @@ antigen bundle command-not-found
 antigen bundle zsh-users/zsh-syntax-highlighting
 antigen bundle vagrant
 antigen bundle zsh-users/zsh-completions
-
-antigen bundle calliecameron/emacs-launchers
 antigen apply
 
 # Don't mess with my LESS, oh-my-zsh!
