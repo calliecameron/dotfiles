@@ -9,7 +9,7 @@ PANEL_FILE = os.path.join(os.path.expanduser("~"),
                           ".cinnamon",
                           "configs",
                           "panel-launchers@cinnamon.org",
-                          "14.json")
+                          "31.json")
 
 
 def load_file():
@@ -59,4 +59,8 @@ parser_list = subparsers.add_parser("list")
 parser_list.set_defaults(func=list_launchers)
 
 args = parser.parse_args()
-args.func(args)
+try:
+    func = args.func
+except AttributeError:
+    parser.error("too few arguments")
+func(args)

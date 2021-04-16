@@ -30,7 +30,7 @@ gsettings set org.nemo.desktop volumes-visible true &&
 gsettings set org.nemo.desktop show-desktop-icons true &&
 
 xdg-desktop-icon install --novendor "/usr/share/applications/${CHROME_DESKTOP}" &&
-xdg-desktop-icon install --novendor '/usr/share/applications/gnome-terminal.desktop' &&
+xdg-desktop-icon install --novendor '/usr/share/applications/org.gnome.Terminal.desktop' &&
 
 
 # Panel
