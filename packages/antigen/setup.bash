@@ -1,7 +1,5 @@
 function _install() {
-    git clone https://github.com/calliecameron/antigen "${PACKAGE_INSTALL_DIR}" &&
-    cd "${PACKAGE_INSTALL_DIR}" &&
-    git checkout bash-support-temp
+    git clone https://github.com/zsh-users/antigen "${PACKAGE_INSTALL_DIR}"
 }
 
 function _update() {
