@@ -1,5 +1,3 @@
-;; TODO - this is still a bit buggy after upgading emacs and ergoemacs
-
 (dotfiles-use-package term
   :config
   (setq
@@ -106,8 +104,11 @@
     "Toggle between line and char mode."
     (interactive)
     (if (term-in-char-mode)
-        (term-line-mode)
-      (term-char-mode)))
+        (progn
+          (setq dotfiles--term-override nil)
+          (term-line-mode))
+      (term-char-mode)
+      (setq dotfiles--term-override t)))
 
   (defun dotfiles-term-send-next-key ()
     "Send the next key to the terminal.  Use this to send keys that Emacs would usually capture, e.g. to send C-x to the terminal, use M-x dotfiles-term-send-next-key RET C-x."
@@ -128,44 +129,49 @@
   (bind-keys
    :map term-mode-map
    ("C-;" . dotfiles-term-toggle-sub-mode)
-   ("C-c C-c" . term-interrupt-subjob)
-   ("C-q" . dotfiles-term-send-next-key)
    ("s-i" . dotfiles-term-do-interactive-command)
    ("C-S-i" . dotfiles-term-do-interactive-command))
 
   (bind-keys
    :map term-raw-map
    ("C-;" . dotfiles-term-toggle-sub-mode)
-   ("C-c C-c" . term-interrupt-subjob) ; todo
-   ("C-c C-e" . term-send-esc) ; todo
-   ;; ("C-r" . term-send-reverse-search-history) ; todo
-   ("C-v" . term-paste)
-   ;; ("<C-backspace>" . term-send-backward-kill-word) ; todo
-   ("C-q" . dotfiles-term-send-next-key)
-   ;; ("<C-right>" . term-send-forward-word) ; todo
-   ;; ("<C-left>" . term-send-backward-word) ; todo
-   ;; ("<C-delete>" . term-send-forward-kill-word) ; todo
    ("s-i" . dotfiles-term-do-interactive-command)
    ("C-S-i" . dotfiles-term-do-interactive-command)
-   ("C-z" . term-send-raw)
-   ("C-x" . nil)
-   ("C-c" . nil)
    ("C-h" . nil)
-   ("C-o" . nil)
    ("C-w" . nil)
    ("C-\\" . nil)
-   ;; ("M-/" . nil) ; todo
-   ;; ("M-:" . nil) ; todo
+   ("M-:" . nil)
+   ("M-x" . nil)
    ("M-2" . nil)
-   ("M-3" . nil)
-   ("M-a" . nil))
+   ("M-3" . nil))
 
   (bind-keys
    ("<f9>" . dotfiles-new-term)
    ("<f10>" . dotfiles-prev-term)
    ("<f11>" . dotfiles-next-term)
    ("C-}" . dotfiles-next-term)
-   ("C-{" . dotfiles-prev-term)))
+   ("C-{" . dotfiles-prev-term))
+
+  ;; Override global keys set by wakib-keys
+  (defvar dotfiles--term-override nil)
+  (make-variable-buffer-local 'dotfiles--term-override)
+  (add-hook 'term-mode-hook (lambda () (setq dotfiles--term-override t)))
+  (defvar dotfiles--term-override-map (make-sparse-keymap))
+  (add-to-list 'emulation-mode-map-alists
+               `((dotfiles--term-override . ,dotfiles--term-override-map)))
+
+  (bind-keys
+   :map dotfiles--term-override-map
+   ("C-d" . term-send-raw)
+   ("C-z" . term-send-raw)
+   ("C-c" . term-send-raw)
+   ("C-x" . term-send-raw)
+   ("C-v" . term-paste)
+   ("C-r" . term-send-raw)
+   ("C-s" . term-send-raw)
+   ("C-f" . term-send-raw)
+   ("C-o" . term-send-raw)
+   ("C-q" . dotfiles-term-send-next-key)))
 
 
 (dotfiles-use-package term-cmd
@@ -269,13 +275,13 @@
   (bind-keys
    :map term-mode-map
    ("C-#" . term-alert-next-command-toggle)
-   ;; ("M-#" . term-alert-all-toggle) ; todo
+   ("M-#" . term-alert-all-toggle)
    ("C-'" . term-alert-runtime))
 
   (bind-keys
    :map term-raw-map
    ("C-#" . term-alert-next-command-toggle)
-   ;; ("M-#" . term-alert-all-toggle) ; todo
+   ("M-#" . term-alert-all-toggle)
    ("C-'" . term-alert-runtime)))
 
 (progn

@@ -1,6 +1,6 @@
 ;;; dotfiles-ui.el --- -*- lexical-binding: t -*- user interface settings
 
-;; Copyright (C) 2016  Callie Cameron
+;; Copyright (C) 2021  Callie Cameron
 
 ;; Author: Callie Cameron
 
@@ -276,6 +276,11 @@ If BUFFER is a string, it is the name of the buffer to find; if it is a predicat
           ("…" . "..."))
       (lambda (x) (query-replace (car x) (cdr x) nil (point-min) (point-max))))))
 
+(defun dotfiles-text-scale-reset ()
+  "Reset text scale."
+  (interactive)
+  (text-scale-set 0))
+
 (defvar dotfiles--original-mode-line nil)
 (make-variable-buffer-local 'dotfiles--original-mode-line)
 
@@ -305,97 +310,73 @@ If BUFFER is a string, it is the name of the buffer to find; if it is a predicat
 (auto-insert-mode 1)
 
 
-(dotfiles-use-package ergoemacs-mode
-  :diminish ergoemacs-mode
+(dotfiles-use-package wakib-keys
+  :diminish wakib-keys
   :config
-  (setq
-   ergoemacs-theme "standard"
-   ergoemacs-keyboard-layout "gb"
-   ergoemacs-ctl-c-or-ctl-x-delay 0.2
-   ergoemacs-handle-ctl-c-or-ctl-x 'both
-   ergoemacs-smart-paste nil
-   ergoemacs-mode-line nil)
-  (add-to-list 'ergoemacs-theme-options '(save-options-on-exit off))
-  (ergoemacs-mode)
-
-  (add-to-list
-   'ergoemacs-user-buffer-functions
-   (lambda (buf)
-     (let ((mode (buffer-local-value 'major-mode buf)))
-       (or (eq mode 'term-mode)
-           (eq mode 'magit-status-mode)))))
+  (wakib-keys)
 
   (defun dotfiles--startup-buffer ()
     (let ((buf (get-buffer "untitled")))
       (if buf
           buf
-        (ergoemacs-new-empty-buffer)
+        (wakib-new-empty-buffer)
         (get-buffer "untitled"))))
-  (setq initial-buffer-choice 'dotfiles--startup-buffer))
+  (setq initial-buffer-choice 'dotfiles--startup-buffer)
 
-
-(ergoemacs-package dotfiles-keys-main
-    :bind
-  (("C-x DEL". keyboard-quit)
-   ("C-x <deletechar>" . keyboard-quit)
-   ("C-x C-c" . save-buffers-kill-emacs)
+  (bind-keys
+   :map wakib-keys-overriding-map
+   ("C-q" . save-buffers-kill-emacs)
    ("C-<prior>" . dotfiles-smart-scroll-left)
    ("C-<next>" . dotfiles-smart-scroll-right)
-   ("C-x <" . dotfiles-smart-scroll-left)
-   ("C-x >" . dotfiles-smart-scroll-right)
-   ("<mouse-6>" . dotfiles-smart-scroll-left)
-   ("<mouse-7>" . dotfiles-smart-scroll-right)
-   ("<C-mouse-5>" . text-scale-decrease)
-   ("<C-mouse-4>" . text-scale-increase)
-   ("s-c" . copy-to-register)
-   ("C-S-c" . copy-to-register)
-   ("s-x" . dotfiles-cut-to-register)
-   ("C-S-x" . dotfiles-cut-to-register)
-   ("s-v" . insert-register)
-   ("C-\\" . helm-mini)
-   ("s-u" . package-list-packages)
-   ("C-S-u" . package-list-packages)
-   ("s-k" . describe-personal-keybindings)
-   ("C-S-k" . describe-personal-keybindings)
-   ("<s-down>" . dotfiles-split-window-below-switch)
-   ("<s-right>" . dotfiles-split-window-right-switch)
-   ("<C-M-S-down>" . dotfiles-split-window-below-switch)
-   ("<C-M-S-right>" . dotfiles-split-window-right-switch)
-   ("C-c <left>" . windmove-left)
-   ("C-c <right>" . windmove-right)
-   ("C-c <up>" . windmove-up)
-   ("C-c <down>" . windmove-down)
-   ("<M-left>" . windmove-left)
-   ("<M-right>" . windmove-right)
-   ("<M-up>" . windmove-up)
-   ("<M-down>" . windmove-down)
-   ("C-/" . comment-or-uncomment-region)
-   ("M-m" . newline)
-   ("<f12>" . toggle-frame-fullscreen)
-   ("s-m" . dotfiles-toggle-mode-line)
-   ("M-:" . eval-expression)))
+   ("C-;" . nil)
+   ("M-:" . eval-expression)
+   ("M-#" . nil)
+   ("M-2" . delete-window)
+   ("C-S-o" . dotfiles-open-map)))
 
 (bind-keys
- :map ergoemacs-override-keymap
+ ("<mouse-6>" . dotfiles-smart-scroll-left)
+ ("<mouse-7>" . dotfiles-smart-scroll-right)
+ ("C-x <" . dotfiles-smart-scroll-left)
+ ("C-x >" . dotfiles-smart-scroll-right)
+ ("C-0" . dotfiles-text-scale-reset)
+ ("s-c" . copy-to-register)
+ ("C-S-c" . copy-to-register)
+ ("s-x" . dotfiles-cut-to-register)
+ ("C-S-x" . dotfiles-cut-to-register)
+ ("s-v" . insert-register)
+ ("s-u" . package-list-packages)
+ ("C-S-u" . package-list-packages)
+ ("s-k" . describe-personal-keybindings)
+ ("C-S-k" . describe-personal-keybindings)
+ ("<s-down>" . dotfiles-split-window-below-switch)
+ ("<s-right>" . dotfiles-split-window-right-switch)
+ ("<s-up>" . (lambda () (interactive) (split-window-below)))
+ ("<s-left>" . (lambda () (interactive) (split-window-right)))
+ ("<C-M-S-down>" . dotfiles-split-window-below-switch)
+ ("<C-M-S-right>" . dotfiles-split-window-right-switch)
+ ("<C-M-S-up>" . (lambda () (interactive) (split-window-below)))
+ ("<C-M-S-left>" . (lambda () (interactive) (split-window-right)))
  ("<M-left>" . windmove-left)
  ("<M-right>" . windmove-right)
  ("<M-up>" . windmove-up)
- ("<M-down>" . windmove-down))
-
-(bind-keys
+ ("<M-down>" . windmove-down)
+ ("C-c <left>" . windmove-left)
+ ("C-c <right>" . windmove-right)
+ ("C-c <up>" . windmove-up)
+ ("C-c <down>" . windmove-down)
+ ("M-m" . newline)
+ ("<f12>" . toggle-frame-fullscreen)
+ ("s-m" . dotfiles-toggle-mode-line)
  ("s-\\" . dotfiles-buffer-map)
  ("C-|" . dotfiles-buffer-map)
  ("s-o" . dotfiles-open-map)
- ("C-S-o" . dotfiles-open-map)
+ ("C-l" . goto-line)
  ([remap goto-line] . dotfiles-goto-line-with-feedback)
  ([remap move-beginning-of-line] . dotfiles-smart-home-key)
  ([remap move-end-of-line] . dotfiles-smart-end-key)
  ([remap split-window-below] . dotfiles-split-window-below-switch)
- ([remap split-window-right] . dotfiles-split-window-right-switch)
- ("<s-up>" . (lambda () (interactive) (split-window-below)))
- ("<s-left>" . (lambda () (interactive (split-window-right))))
- ("<C-M-S-up>" .(lambda () (interactive) (split-window-below)))
- ("<C-M-S-left>" . (lambda () (interactive (split-window-right)))))
+ ([remap split-window-right] . dotfiles-split-window-right-switch))
 
 (bind-keys
  :map visual-line-mode-map
@@ -438,31 +419,12 @@ If BUFFER is a string, it is the name of the buffer to find; if it is a predicat
  ("v" . dotfiles-local-variables)
  ("z" . dotfiles-local-zsh-aliases))
 
-(progn
-  (setq
-   save-abbrevs t
-   abbrev-file-name (f-join this-package-conf-dir "emacs-abbrevs.el"))
-  (when (file-exists-p abbrev-file-name)
-    (quietly-read-abbrev-file))
-  (advice-add 'abbrev-insert :after (lambda (&rest args)
-                                      (abbrev-put (car args) :count 0)))
-  (add-hook 'text-mode-hook 'abbrev-mode))
-
-(dotfiles-use-package ace-isearch
-  :pin melpa-stable
-  :diminish ace-isearch-mode
-  :config
-  (setq ace-isearch-input-length 2)
-  (global-ace-isearch-mode))
-
 (dotfiles-use-package ace-jump-mode
-  :pin melpa-stable
   :bind
   (("s-j" . ace-jump-mode)
    ("C-S-j" . ace-jump-mode)))
 
 (dotfiles-use-package alert
-  :pin melpa-stable
   :config
   (if dotfiles-on-windows
       (setq alert-default-style 'fringe)
@@ -492,7 +454,10 @@ If BUFFER is a string, it is the name of the buffer to find; if it is a predicat
   (("<left-fringe> <mouse-5>" . bm-next-mouse)
    ("<left-fringe> <mouse-4>" . bm-previous-mouse)
    ("<left-fringe> <mouse-1>" . bm-toggle-mouse)
-   ("C-#" . bm-toggle)
+   ("C-#" . bm-toggle))
+  :config
+  (bind-keys
+   :map wakib-keys-overriding-map
    ("M-#" . bm-remove-all-current-buffer)))
 
 (dotfiles-use-package connection)
@@ -500,7 +465,6 @@ If BUFFER is a string, it is the name of the buffer to find; if it is a predicat
 (dotfiles-use-package link)
 
 (dotfiles-use-package dictionary
-  :pin melpa-stable
   :config
   (when (executable-find "dictd")
     (setq dictionary-server "localhost"))
@@ -546,17 +510,17 @@ If BUFFER is a string, it is the name of the buffer to find; if it is a predicat
     (run-with-idle-timer 1 t 'dotfiles-auto-spellcheck-buffer))
 
 (dotfiles-use-package guide-key
-  :pin melpa-stable
   :diminish guide-key-mode
   :config
   (setq
-   guide-key/guide-key-sequence '("C-x" "C-c" "C-h" "s-o" "C-S-o" "s-\\" "C-|" "s-p" "C-S-p")
+   guide-key/guide-key-sequence '("C-e" "C-d" "C-h" "s-o" "C-S-o" "s-\\" "C-|" "s-p" "C-S-p")
    guide-key/recursive-key-sequence-flag t)
   (guide-key-mode 1))
 
 (dotfiles-use-package helm
-  :pin melpa-stable
   :diminish helm-mode
+  :bind
+  (("C-\\" . helm-mini))
   :config
   (require 'helm-config)
   (helm-mode 1)
@@ -573,8 +537,13 @@ If BUFFER is a string, it is the name of the buffer to find; if it is a predicat
   (bind-keys
    ("C-<" . helm-flyspell-correct)))
 
+(dotfiles-use-package ace-isearch
+  :diminish ace-isearch-mode
+  :config
+  (setq ace-isearch-input-length 2)
+  (global-ace-isearch-mode))
+
 (dotfiles-use-package highlight-indentation
-  :pin melpa-stable
   :diminish highlight-indentation-mode)
 
 (dotfiles-use-package hl-line
@@ -599,18 +568,7 @@ If BUFFER is a string, it is the name of the buffer to find; if it is a predicat
 
 (dotfiles-use-package mode-icons
   :config
-  ;; Hacky madness to make it work with the daemon
-  (defun dotfiles--setup-mode-icons-daemon (frame)
-    (run-at-time 0.1 nil
-                 (lambda ()
-                   (remove-hook 'after-make-frame-functions
-                                'dotfiles--setup-mode-icons-daemon)
-                   (mode-icons-mode))))
-  (if (not (display-graphic-p (selected-frame)))
-      (add-hook
-       'after-make-frame-functions
-       'dotfiles--setup-mode-icons-daemon)
-    (mode-icons-mode)))
+  (mode-icons-mode))
 
 (progn
   (require 'org)
@@ -662,12 +620,7 @@ dotfiles-org-linkify-suffix) appended."
                                       "][")
                                      "]]"))))
 
-(dotfiles-use-package pdf-tools
-  :config
-  (pdf-tools-install t t t))
-
 (dotfiles-use-package rainbow-delimiters
-  :pin melpa-stable
   :config
   (add-hook 'text-mode-hook 'rainbow-delimiters-mode)
   (add-hook 'prog-mode-hook 'rainbow-delimiters-mode))
@@ -732,8 +685,7 @@ dotfiles-org-linkify-suffix) appended."
 
 (dotfiles-use-package switch-window
    :bind
-   ([remap other-window] . switch-window)
-   ("C-e" . switch-window))
+   ([remap other-window] . switch-window))
 
 (dotfiles-use-package syntax-subword
   :config

@@ -1,5 +1,4 @@
 (dotfiles-use-package elpy
-  :pin melpa-stable
   :diminish elpy-mode
   :config
   (bind-keys

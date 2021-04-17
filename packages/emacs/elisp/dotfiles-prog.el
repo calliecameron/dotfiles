@@ -1,6 +1,6 @@
 ;;; dotfiles-prog.el --- -*- lexical-binding: t -*- programming modes configuration
 
-;; Copyright (C) 2016  Callie Cameron
+;; Copyright (C) 2021  Callie Cameron
 
 ;; Author: Callie Cameron
 
@@ -22,6 +22,9 @@
 ;; Programming modes configuration.
 
 ;;; Code:
+
+(bind-keys
+ ("C-/" . comment-or-uncomment-region))
 
 (add-hook 'prog-mode-hook
           (lambda ()
@@ -57,6 +60,7 @@
    c-tab-always-indent t))
 
 (dotfiles-use-package company
+  :diminish company-mode
   :config
   (global-company-mode))
 
@@ -227,37 +231,30 @@
   (add-to-list 'auto-mode-alist '("\\.l\\'" . flex-mode)))
 
 (dotfiles-use-package flycheck
-  :pin melpa-stable
+  :bind
+  (("C-." . flycheck-next-error)
+   ("C-," . flycheck-previous-error))
   :config
   (setq-default flycheck-emacs-lisp-load-path 'inherit)
-  (ergoemacs-package dotfiles-keys-flycheck
-      :bind
-    (("C-." . flycheck-next-error)
-     ("C-," . flycheck-previous-error)))
   (global-flycheck-mode))
 
 (dotfiles-use-package flycheck-cask
-  :pin melpa-stable
   :config
   (add-hook 'flycheck-mode-hook 'flycheck-cask-setup))
 
 (dotfiles-use-package flycheck-checkbashisms
-  :pin melpa-stable
   :config
   (flycheck-checkbashisms-setup))
 
 (dotfiles-use-package flycheck-color-mode-line
-  :pin melpa-stable
   :config
   (add-hook 'flycheck-mode-hook 'flycheck-color-mode-line-mode))
 
 (dotfiles-use-package flycheck-haskell
-  :pin melpa-stable
   :config
   (add-hook 'flycheck-mode-hook 'flycheck-haskell-setup))
 
 (dotfiles-use-package flycheck-package
-  :pin melpa-stable
   :config
   (flycheck-package-setup))
 
@@ -266,7 +263,6 @@
   (flycheck-pos-tip-mode))
 
 (dotfiles-use-package git-gutter
-  :pin melpa-stable
   :diminish git-gutter-mode
   :config
   (setq
@@ -284,7 +280,6 @@
 (dotfiles-use-package go-mode)
 
 (dotfiles-use-package haskell-mode
-  :pin melpa-stable
   :diminish haskell-doc-mode haskell-indentation-mode
   :config
   (require 'haskell-mode)
@@ -347,95 +342,6 @@
               (turn-on-haskell-doc)
               (turn-on-haskell-indentation))))
 
-(dotfiles-use-package helm-dash
-  :config
-  (require 'eww)
-  (setq
-   helm-dash-min-length 0
-   helm-dash-docsets-path (expand-file-name
-                           (concat user-emacs-directory "/dash-docsets"))
-   helm-dash-browser-func 'dotfiles--helm-dash-eww
-   helm-dash-enable-debugging nil)
-
-  (defvar dotfiles--helm-dash-eww-buffer nil)
-
-  (defun dotfiles--helm-dash-eww (url)
-    "Pop to an existing eww buffer if possible."
-    (interactive)
-    (dotfiles--create-or-pop-to-buffer
-     (lambda (buf) (eq buf dotfiles--helm-dash-eww-buffer))
-     (lambda () (eww-setup-buffer) (current-buffer)))
-    (setq dotfiles--helm-dash-eww-buffer (current-buffer))
-    (unless (eq eww-current-url url)
-      (eww-browse-url url)))
-
-  (defconst dotfiles-required-docsets '("Bash" "Bootstrap_4" "C" "C++" "CSS" "Emacs_Lisp" "Haskell" "HTML" "Java_SE8" "JavaScript" "jQuery" "jQuery_UI" "LaTeX" "Markdown" "MATLAB" "NumPy" "Python_2" "Python_3" "SciPy" "Qt_5" "Matplotlib")
-    "Helm-dash docsets that will be installed.")
-
-  (defun dotfiles--docset-installed (docset)
-    (let* ((fixed-names-alist
-            '(("Bootstrap_4" . "Bootstrap 4")
-              ("Emacs_Lisp" . "Emacs Lisp")
-              ("Java_SE8" . "Java")
-              ("jQuery_UI" . "jQuery UI")
-              ("Python_2" . "Python 2")
-              ("Python_3" . "Python 3")
-              ("Qt_5" . "Qt")))
-           (fixed-name
-            (assoc-string docset fixed-names-alist)))
-      (helm-dash-docset-path (if fixed-name (cdr fixed-name) docset))))
-
-  (dotfiles--generic-require-packages
-   "docset"
-   'dotfiles--docset-installed
-   'helm-dash-install-docset
-   dotfiles-required-docsets
-   "dotfiles-install-missing-docsets")
-
-  (defun dotfiles-install-missing-docsets ()
-    "Install missing helm-dash docsets."
-    (interactive)
-    (dotfiles--generic-install-missing-packages "docset" 'dotfiles--docset-installed 'helm-dash-install-docset dotfiles-required-docsets))
-
-  (defun dotfiles-configure-mode-docset (mode-hook docsets)
-    (add-hook mode-hook (lambda () (setq-local helm-dash-docsets docsets))))
-
-  (dotfiles-configure-mode-docset 'c-mode-hook '("C"))
-  (dotfiles-configure-mode-docset 'c++-mode-hook '("C" "C++" "Qt"))
-  (dotfiles-configure-mode-docset 'css-mode-hook '("Bootstrap 4" "CSS" "HTML" "JavaScript" "jQuery" "jQuery UI"))
-  (dotfiles-configure-mode-docset 'emacs-lisp-mode-hook '("Emacs Lisp"))
-  (dotfiles-configure-mode-docset 'ielm-mode-hook '("Emacs Lisp"))
-  (dotfiles-configure-mode-docset 'haskell-mode-hook '("Haskell"))
-  (dotfiles-configure-mode-docset 'html-mode-hook '("Bootstrap 4" "CSS" "HTML" "JavaScript" "jQuery" "jQuery UI"))
-  (dotfiles-configure-mode-docset 'java-mode-hook '("Java"))
-  (dotfiles-configure-mode-docset 'javascript-mode-hook '("Bootstrap 4" "CSS" "HTML" "JavaScript" "jQuery" "jQuery UI"))
-  (dotfiles-configure-mode-docset 'LaTeX-mode-hook '("LaTeX"))
-  (dotfiles-configure-mode-docset 'markdown-mode-hook '("Markdown"))
-  (dotfiles-configure-mode-docset 'octave-mode-hook '("MATLAB"))
-  (dotfiles-configure-mode-docset 'sh-mode-hook '("Bash"))
-  (dotfiles-configure-mode-docset 'term-mode-hook '("Bash"))
-
-  (defun dotfiles-set-python-docsets (version)
-    (setq-local helm-dash-docsets `(,(if (eq version 2)
-                                         "Python 2"
-                                       "Python 3")
-                                    "NumPy"
-                                    "SciPy"
-                                    "Matplotlib")))
-
-  (add-hook 'python-mode-hook (lambda () (dotfiles-set-python-docsets 3)))
-
-  (defvar dotfiles--term-help-fn 'man)
-  (make-variable-buffer-local 'dotfiles--term-help-fn)
-
-  (bind-keys
-   ("M-/" . (lambda ()
-              (interactive)
-              (call-interactively
-               (if (eq major-mode 'term-mode)
-                   dotfiles--term-help-fn
-                 'helm-dash-at-point))))))
-
 (dotfiles-use-package helm-make
   :bind
   ("<f6>" . helm-make))
@@ -482,13 +388,11 @@
    ("C-S-i" . dotfiles-pop-from-ielm)))
 
 (dotfiles-use-package magit
-  :pin melpa-stable
   :config
   (setq
    magit-diff-refine-hunk 'all
    magit-diff-paint-whitespace t
    magit-diff-highlight-trailing t)
-  (global-magit-file-mode)
   (bind-keys
    ("s-g" . magit-status)
    ("C-S-g" . magit-status)
@@ -531,7 +435,6 @@
               (setq comment-add 0))))
 
 (dotfiles-use-package projectile
-  :pin melpa-stable
   :diminish projectile-mode
   :config
   (projectile-global-mode)
@@ -546,20 +449,6 @@
   (bind-keys
    ("s-p" . projectile-command-map)
    ("C-S-p" . projectile-command-map)))
-
-(dotfiles-use-package sr-speedbar
-  :config
-  (require 'sr-speedbar)
-  (setq
-   ezimage-use-images t
-   speedbar-show-unknown-files t
-   speedbar-use-images t
-   sr-speedbar-right-side nil)
-  (bind-keys
-   ("s-s" . sr-speedbar-toggle)
-   ("C-S-s" . sr-speedbar-toggle)))
-
-(dotfiles-use-package projectile-speedbar)
 
 (progn
   (require 'reftex)

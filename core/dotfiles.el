@@ -1,6 +1,6 @@
 ;;; dotfiles.el --- Main dotfiles file.        -*- lexical-binding: t; -*-
 
-;; Copyright (C) 2016  Callie Cameron
+;; Copyright (C) 2021  Callie Cameron
 
 ;; Author: Callie Cameron <cjcameron7@gmail.com>
 
@@ -26,12 +26,7 @@
 ;; Bootstrap packages
 
 (require 'package)
-(eval-when-compile
-  (setq
-   package-enable-at-startup nil
-   package-archives '(("melpa-stable" . "https://stable.melpa.org/packages/")
-                      ("melpa" . "https://melpa.org/packages/")
-                      ("gnu" . "https://elpa.gnu.org/packages/"))))
+(add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
 
 (package-initialize)
 
@@ -44,14 +39,13 @@
 
 (setq use-package-always-ensure t)
 
-(use-package alert :pin melpa-stable)
+(use-package alert)
 (use-package dash :config (dash-enable-font-lock))
-(use-package dash-functional :pin melpa-stable)
-(use-package diminish :pin melpa-stable)
-(use-package epl :pin melpa-stable)
-(use-package f :pin melpa-stable)
-(use-package persistent-soft :pin melpa-stable)
-(use-package s :pin melpa-stable)
+(use-package diminish)
+(use-package epl)
+(use-package f)
+(use-package persistent-soft)
+(use-package s)
 
 
 (defvar dotfiles-ignored-packages nil

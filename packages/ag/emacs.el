@@ -1,2 +1,1 @@
-(dotfiles-use-package helm-ag
-  :pin melpa-stable)
+(dotfiles-use-package helm-ag)
