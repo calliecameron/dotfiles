@@ -32,6 +32,7 @@ if which git >/dev/null; then
     git config --global pager.status true
     git config --global status.showUntrackedFiles all
     git config --global push.default simple
+    git config --global log.mailmap true
 
     # More Cygwin password entry stuff
     if os cygwin; then
