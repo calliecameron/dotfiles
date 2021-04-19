@@ -9,7 +9,7 @@ PANEL_FILE = os.path.join(os.path.expanduser("~"),
                           ".cinnamon",
                           "configs",
                           "panel-launchers@cinnamon.org",
-                          "31.json")
+                          "16.json")
 
 
 def load_file():
