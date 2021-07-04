@@ -25,8 +25,8 @@ function _install() {
 
 function _update() {
     _install &&
-    cd "${PACKAGE_INSTALL_DIR}/pandoc-temlates" &&
+    cd "${PACKAGE_INSTALL_DIR}/pandoc-templates" &&
     git pull &&
     cd "${PACKAGE_INSTALL_DIR}/markdown-makefile" &&
-    gi pull
+    git pull
 }
