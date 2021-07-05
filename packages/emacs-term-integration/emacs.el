@@ -235,15 +235,11 @@
   (defun dotfiles--term-ipython-start (c a)
     (setq
      dotfiles--term-in-ipython t
-     dotfiles--term-help-fn 'helm-dash-at-point
-     dotfiles--term-interactive-command 'dotfiles-pop-from-ipython)
-    (dotfiles-set-python-docsets (string-to-number a)))
+     dotfiles--term-interactive-command 'dotfiles-pop-from-ipython))
 
   (defun dotfiles--term-ipython-exit (c a)
     (setq
-     dotfiles--term-in-ipython nil
-     dotfiles--term-help-fn 'man)
-    (setq-local helm-dash-docsets '("Bash"))
+     dotfiles--term-in-ipython nil)
     (kill-local-variable 'dotfiles--term-interactive-command))
 
   (add-to-list 'term-cmd-commands-alist '("ipython-start" . dotfiles--term-ipython-start))

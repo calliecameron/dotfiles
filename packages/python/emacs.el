@@ -29,14 +29,7 @@
   (defun dotfiles--venv-setup (command)
     (setq elpy-rpc-python-command command)
     (when (eq major-mode 'python-mode)
-      (pyvenv-restart-python)
-      (when (fboundp 'dotfiles-set-python-docsets)
-        (dotfiles-set-python-docsets
-         (let ((text (with-temp-buffer
-                       (call-process elpy-rpc-python-command nil '(t t) nil "--version")
-                       (buffer-string))))
-           (string-match "^Python \\([0-9]+\\)\\.[0-9]+\\.[0-9]+\\+?$" text)
-           (string-to-number (match-string 1 text)))))))
+      (pyvenv-restart-python)))
 
   (add-hook 'pyvenv-post-activate-hooks (lambda () (dotfiles--venv-setup "python")))
   (add-hook 'pyvenv-post-deactivate-hooks (lambda () (dotfiles--venv-setup "python3")))

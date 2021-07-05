@@ -8,7 +8,7 @@ function python-wrapper2() {
 
 function python-wrapper3() {
     if [ -z "${1}" ] && type ipython3 &>/dev/null; then
-        ipython3 --TerminalIPythonApp.interactive_shell_class=rlipython.TerminalInteractiveShell --no-confirm-exit
+        ipython3 --no-confirm-exit
     else
         python3 "${@}"
     fi
@@ -19,7 +19,7 @@ function python-wrapper() {
         python-wrapper3 "${@}"
     else
         if [ -z "${1}" ] && type ipython &>/dev/null; then
-            ipython --TerminalIPythonApp.interactive_shell_class=rlipython.TerminalInteractiveShell --no-confirm-exit
+            ipython --no-confirm-exit
         else
             python "${@}"
         fi

@@ -13,7 +13,7 @@ function _install() {
         BASE_PIP='pip3'
     fi
     "${BASE_PIP}" install --user --upgrade pip setuptools wheel &&
-    "${LOCAL_PIP_DIR}/pip3" install --user --upgrade autoenv autopep8 future gitpython flake8 importmagic 'ipython<7' jupyter 'jupyter-console<6' jedi mypy pandoc-include pdfminer pygments pyinotify pylint pytimeparse pep8 rlipython rope snakeviz virtualenv virtualenvwrapper yapf
+    "${LOCAL_PIP_DIR}/pip3" install --user --upgrade autoenv autopep8 future gitpython flake8 importmagic ipython jupyter jupyter-console jedi mypy pandoc-include pdfminer pygments pyinotify pylint pytimeparse pep8 rlipython rope snakeviz virtualenv virtualenvwrapper yapf
 }
 
 function _update() {
