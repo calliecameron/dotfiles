@@ -3,5 +3,5 @@ function _can-install() {
 }
 
 function _install() {
-    sudo apt-get -y install abcde eyed3 lame handbrake
+    sudo apt-get -y install abcde eyed3 gimp lame handbrake
 }
