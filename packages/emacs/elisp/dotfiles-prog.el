@@ -62,6 +62,10 @@
 (dotfiles-use-package company
   :diminish company-mode
   :config
+  (add-hook 'text-mode-hook
+            (lambda ()
+              (when (boundp 'company-backends)
+                (setq company-backends (delete 'company-dabbrev company-backends)))))
   (global-company-mode))
 
 (dotfiles-use-package company-quickhelp
