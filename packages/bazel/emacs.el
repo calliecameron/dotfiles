@@ -1,0 +1,1 @@
+(dotfiles-use-package bazel)
