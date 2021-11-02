@@ -29,6 +29,7 @@ fi
 
 # Stop cd suggesting usernames
 zstyle ':completion:*' users
+zstyle ':completion:*' use-cache on
 
 autoload -U compinit
 compinit
