@@ -1,17 +1,15 @@
 function _can-install() {
-    os linux && linux-variant main && can-sudo
+    # Depends on antigen for npm
+    os linux && linux-variant main && can-sudo && package-installed antigen
 }
 
 function _install() {
-    sudo apt-get -y install tidy nodejs npm &&
-    mkdir -p "${HOME}/.npm-packages"
-    if [ -d "${HOME}/tmp" ]; then
-        rmdir "${HOME}/tmp" || return 1
-    fi
-    source "${PACKAGE_CONF_DIR}/env.sh" &&
-    npm install -g csslint eslint jscs jsonlint js-yaml
+    sudo apt-get -y install tidy &&
+    source "${NVM_DIR}/nvm.sh" &&
+    nvm use node &&
+    npm install -g csslint eslint jsonlint js-yaml
 }
 
-# function _update() {
-#     _install
-# }
+function _update() {
+    _install
+}
