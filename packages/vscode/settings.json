@@ -1,0 +1,22 @@
+{
+    "workbench.colorTheme": "Solarized Dark",
+    "telemetry.telemetryLevel": "off",
+    "workbench.enableExperiments": false,
+    "files.insertFinalNewline": true,
+    "files.trimFinalNewlines": true,
+    "python.diagnostics.sourceMapsEnabled": true,
+    "python.linting.banditEnabled": true,
+    "python.linting.flake8Enabled": true,
+    "python.linting.mypyEnabled": true,
+    "python.linting.pylintEnabled": true,
+    "python.testing.pytestEnabled": true,
+    "editor.formatOnSave": true,
+    "files.autoSave": "afterDelay",
+    "python.experiments.enabled": false,
+    "files.exclude": {
+        "**/__pycache__": true,
+        "**/.ipynb_checkpoints": true,
+        "**/.mypy_cache": true,
+        "**/*~": true
+    }
+}
