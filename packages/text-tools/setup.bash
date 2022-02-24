@@ -1,5 +1,5 @@
 function _can-install() {
-    os linux && linux-variant main pi && can-sudo
+    os linux && linux-variant main pi && can-sudo && package-installed python
 }
 
 function _install() {
@@ -9,7 +9,8 @@ function _install() {
         mkdir -p "${PACKAGE_INSTALL_DIR}" &&
         cd "${PACKAGE_INSTALL_DIR}" &&
         git clone https://github.com/prosegrinder/pandoc-templates &&
-        git clone https://github.com/calliecameron/markdown-makefile || exit 1
+        git clone https://github.com/calliecameron/markdown-makefile &&
+        pip install --user --upgrade -r "${PACKAGE_INSTALL_DIR}/markdown-makefile/requirements.txt" || exit 1
     fi
 
     if linux-variant main; then
@@ -28,5 +29,6 @@ function _update() {
     cd "${PACKAGE_INSTALL_DIR}/pandoc-templates" &&
     git pull &&
     cd "${PACKAGE_INSTALL_DIR}/markdown-makefile" &&
-    git pull
+    git pull &&
+    pip install --user --upgrade -r "${PACKAGE_INSTALL_DIR}/markdown-makefile/requirements.txt"
 }

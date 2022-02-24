@@ -1,7 +1,3 @@
 # -*- shell-script -*-
 
-pip install ipython jupyter jupyter-console snakeviz jedi rope importmagic flake8 autopep8 yapf pylint pep8 rlipython
-
-if python --version 2>&1 | grep 'Python 3\.' >/dev/null; then
-    pip install mypy
-fi
+pip install autopep8 bandit flake8 ipython jupyter jupyter-console mypy pylint snakeviz

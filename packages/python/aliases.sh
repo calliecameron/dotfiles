@@ -1,12 +1,4 @@
-function python-wrapper2() {
-    if [ -z "${1}" ] && type ipython2 &>/dev/null; then
-        ipython2 --TerminalIPythonApp.interactive_shell_class=rlipython.TerminalInteractiveShell --no-confirm-exit
-    else
-        python2 "${@}"
-    fi
-}
-
-function python-wrapper3() {
+function python-wrapper() {
     if [ -z "${1}" ] && type ipython3 &>/dev/null; then
         ipython3 --no-confirm-exit
     else
@@ -14,20 +6,6 @@ function python-wrapper3() {
     fi
 }
 
-function python-wrapper() {
-    if [ -z "${VIRTUAL_ENV}" ]; then
-        python-wrapper3 "${@}"
-    else
-        if [ -z "${1}" ] && type ipython &>/dev/null; then
-            ipython --no-confirm-exit
-        else
-            python "${@}"
-        fi
-    fi
-}
-
-alias py2='python-wrapper2'
-alias py3='python-wrapper3'
 alias py='python-wrapper'
 
 if which virtualenvwrapper.sh &>/dev/null; then
