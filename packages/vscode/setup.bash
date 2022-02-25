@@ -20,7 +20,13 @@ function _install() {
     rm "${TMPFILE}" &&
     sudo apt-get update &&
     sudo apt-get -y install code &&
-    code --install-extension=ms-python.python \
+    code --install-extension=BazelBuild.vscode-bazel \
+         --install-extension=DavidAnson.vscode-markdownlint \
+         --install-extension=eamodio.gitlens \
+         --install-extension=ms-python.python \
+         --install-extension=redhat.vscode-yaml \
+         --install-extension=streetsidesoftware.code-spell-checker \
+         --install-extension=timonwong.shellcheck \
          --install-extension=VisualStudioExptTeam.vscodeintellicode
 }
 

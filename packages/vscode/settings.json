@@ -18,5 +18,14 @@
         "**/.ipynb_checkpoints": true,
         "**/.mypy_cache": true,
         "**/*~": true
-    }
+    },
+    "workbench.startupEditor": "none",
+    "redhat.telemetry.enabled": false,
+    "bazel.buildifierFixOnFormat": true,
+    "bazel.enableCodeLens": true,
+    "cSpell.language": "en-GB",
+    "gitlens.showWhatsNewAfterUpgrades": false,
+    "gitlens.currentLine.enabled": false,
+    "gitlens.currentLine.pullRequests.enabled": false,
+    "gitlens.codeLens.enabled": false
 }
