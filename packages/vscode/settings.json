@@ -27,5 +27,12 @@
     "gitlens.showWhatsNewAfterUpgrades": false,
     "gitlens.currentLine.enabled": false,
     "gitlens.currentLine.pullRequests.enabled": false,
-    "gitlens.codeLens.enabled": false
+    "gitlens.codeLens.enabled": false,
+    "python.terminal.launchArgs": [
+        "-m",
+        "IPython",
+        "--no-autoindent",
+        "--no-confirm-exit"
+    ],
+    "bashIde.highlightParsingErrors": true,
 }

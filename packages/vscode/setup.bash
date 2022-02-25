@@ -23,6 +23,7 @@ function _install() {
     code --install-extension=BazelBuild.vscode-bazel \
          --install-extension=DavidAnson.vscode-markdownlint \
          --install-extension=eamodio.gitlens \
+         --install-extension=mads-hartmann.bash-ide-vscode \
          --install-extension=ms-python.python \
          --install-extension=redhat.vscode-yaml \
          --install-extension=streetsidesoftware.code-spell-checker \
