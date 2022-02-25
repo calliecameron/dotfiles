@@ -4,8 +4,6 @@ function _can-install() {
 }
 
 function _install() {
-    source "${NVM_DIR}/nvm.sh" &&
-    nvm use node &&
     npm install -g @bazel/bazelisk @bazel/buildifier @bazel/buildozer
 }
 

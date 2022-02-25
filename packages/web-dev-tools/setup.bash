@@ -5,8 +5,6 @@ function _can-install() {
 
 function _install() {
     sudo apt-get -y install tidy &&
-    source "${NVM_DIR}/nvm.sh" &&
-    nvm use node &&
     npm install -g csslint eslint jsonlint js-yaml
 }
 
