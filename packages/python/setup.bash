@@ -13,7 +13,7 @@ function _install() {
         BASE_PIP='pip3'
     fi
     "${BASE_PIP}" install --user --upgrade pip setuptools wheel &&
-    "${LOCAL_PIP_DIR}/pip3" install --user --upgrade autoenv autopep8 bandit flake8 gitpython mypy pygments pylint virtualenv virtualenvwrapper &&
+    "${LOCAL_PIP_DIR}/pip3" install --user --upgrade autoenv autopep8 bandit flake8 gitpython ipython jupyter mypy pygments pylint virtualenv virtualenvwrapper &&
     source "${PACKAGE_CONF_DIR}/env.sh"
 }
 
