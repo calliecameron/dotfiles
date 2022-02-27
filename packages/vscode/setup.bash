@@ -27,10 +27,12 @@ function _install() {
          --install-extension=foxundermoon.shell-format \
          --install-extension=mads-hartmann.bash-ide-vscode \
          --install-extension=ms-python.python \
+         --install-extension=redhat.ansible \
          --install-extension=redhat.vscode-yaml \
          --install-extension=streetsidesoftware.code-spell-checker \
          --install-extension=timonwong.shellcheck \
-         --install-extension=VisualStudioExptTeam.vscodeintellicode
+         --install-extension=VisualStudioExptTeam.vscodeintellicode \
+         --install-extension=wholroyd.jinja
 }
 
 function _update() {

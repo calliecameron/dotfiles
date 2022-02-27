@@ -82,4 +82,9 @@
     "python.linting.banditArgs": [
         "--ini=${workspaceFolder}/.bandit"
     ],
+    "files.associations": {
+        "**/tasks/*.yml": "ansible",
+        "**/defaults/*.yml": "ansible",
+        "**/handlers/*.yml": "ansible"
+    },
 }
