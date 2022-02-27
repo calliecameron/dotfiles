@@ -19,6 +19,7 @@ cinnamon-favourites add "${CHROME_DESKTOP}" &&
 cinnamon-favourites add emacs-daemon.desktop &&
 cinnamon-favourites add vlc.desktop &&
 cinnamon-favourites add gnucash.desktop &&
+cinnamon-favourites add code.desktop &&
 
 
 # Desktop icons
@@ -31,6 +32,7 @@ gsettings set org.nemo.desktop show-desktop-icons true &&
 
 xdg-desktop-icon install --novendor "/usr/share/applications/${CHROME_DESKTOP}" &&
 xdg-desktop-icon install --novendor '/usr/share/applications/org.gnome.Terminal.desktop' &&
+xdg-desktop-icon install --novendor '/usr/share/applications/code.desktop' &&
 
 
 # Panel
@@ -57,15 +59,14 @@ gsettings-remove-from-list org.cinnamon.desktop.keybindings.media-keys video-rot
 cinnamon-keybinding 'Emacs' 'emacs-daemon' '<Primary><Alt>e' &&
 cinnamon-keybinding 'Chrome' "${CHROME_COMMAND}" '<Primary><Alt>b' &&
 cinnamon-keybinding 'Chrome Extra' "${CHROME_COMMAND}" 'HomePage' &&
-cinnamon-keybinding 'VLC' 'vlc-wrapper' '<Primary><Alt>v' &&
+cinnamon-keybinding 'VLC' 'vlc-wrapper' '<Primary><Alt>m' &&
 cinnamon-keybinding 'VLC Pause' 'vlc-pause' '<Primary><Alt>space' &&
 cinnamon-keybinding 'VLC Next' 'vlc-next' '<Primary><Alt>period' &&
 cinnamon-keybinding 'VLC Previous' 'vlc-prev' '<Primary><Alt>comma' &&
 cinnamon-keybinding 'Nemo' 'nemo' '<Primary><Alt>h' &&
-cinnamon-keybinding 'Python' 'gnome-terminal -x ipython3' '<Primary><Alt>p'
 cinnamon-keybinding 'GnuCash' 'gnucash' '<Primary><Alt>g' &&
 cinnamon-keybinding 'Calculator' 'gnome-calculator' '<Primary><Alt>c' &&
-cinnamon-keybinding 'Anki' "anki -b ${HOME}/Anki" '<Primary><Alt>a' &&
+cinnamon-keybinding 'Visual Studio Code' 'code' '<Primary><Alt>v' &&
 
 gsettings-add-if-not-in-list org.gnome.libgnomekbd.keyboard options $'ctrl\tctrl:nocaps' || exit 1
 
