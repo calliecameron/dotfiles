@@ -46,8 +46,6 @@
    TeX-auto-save t
    TeX-parse-self t))
 
-(dotfiles-use-package bison-mode)
-
 (progn
   (add-to-list 'auto-mode-alist '("Cask\\'" . emacs-lisp-mode)))
 
@@ -72,167 +70,7 @@
   :config
   (company-quickhelp-mode))
 
-(dotfiles-use-package compile
-  :config
-  (setq
-   compilation-ask-about-save nil
-   compilation-scroll-output t
-   compilation-always-kill t)
-
-  (defvar dotfiles-compile-command nil "Command used to compile a whole program, e.g. 'make'.  If nil, try and guess based on the files in the directory.")
-  (defvar dotfiles-compile-clean-command nil "Command used to clean a directory, e.g. 'make clean'.  If nil, try and guess based on the files in the directory.")
-  (defvar dotfiles-compile-target-command nil "Command used to compile a single target (target is appended), e.g. 'make'.  If nil, try and guess based on the files in the directory.")
-
-  (make-variable-buffer-local 'dotfiles-compile-command)
-  (make-variable-buffer-local 'dotfiles-compile-clean-command)
-  (make-variable-buffer-local 'dotfiles-compile-target-command)
-
-  (put 'dotfiles-compile-command 'safe-local-variable 'stringp)
-  (put 'dotfiles-compile-clean-command 'safe-local-variable 'stringp)
-  (put 'dotfiles-compile-target-command 'safe-local-variable 'stringp)
-
-  (defun dotfiles-compile ()
-    "Quick way to compile without prompting for a command, and without saving the previous command."
-    (interactive)
-    (compile (dotfiles--smart-compile-command dotfiles-compile-command)))
-
-  (defun dotfiles-compile-clean ()
-    "Quick way to 'make clean' without prompting for a command."
-    (interactive)
-    (compile (dotfiles--smart-compile-clean-command dotfiles-compile-clean-command)))
-
-  (defun dotfiles-compile-target (&optional target)
-    "Run 'make TARGET' quickly.  Defaults to the current buffer, with some file-extension handling."
-    (interactive (list
-                  (read-string
-                   (format "Make target (default %s): "
-                           (dotfiles--compile-choose-extension (buffer-file-name))))))
-    (if (not (string= target ""))
-        (compile (concat
-                  (dotfiles--smart-compile-target-command
-                   dotfiles-compile-target-command)
-                  " "
-                  target))
-      (compile (concat
-                (dotfiles--smart-compile-target-command
-                 dotfiles-compile-target-command)
-                " "
-                (dotfiles--compile-choose-extension (buffer-file-name))))))
-
-  (defun dotfiles-close-compile-window ()
-    "Close the compilation window without having to move into it."
-    (interactive)
-    (let ((win
-           (get-window-with-predicate
-            (lambda (window) (string= (buffer-name (window-buffer window)) "*compilation*"))
-            nil
-            'visible)))
-      (when win
-        (quit-window nil win))))
-
-  (defun dotfiles--smart-compile-command (local)
-    "Pick a compile command to use; use LOCAL if non-nil, else look at what files are available in the current directory."
-    (if local
-        local
-      (let ((saved nil))
-        (save-excursion
-          ;; This forces the loading of directory-local variables, if they exist
-          (find-file ".#dotfiles-compile-temp")
-          (setq saved dotfiles-compile-command)
-          (kill-buffer))
-        (cond
-         (saved
-          saved)
-         ((file-exists-p "SConstruct")
-          "scons -Q")
-         (t
-          "make")))))
-
-  (defun dotfiles--smart-compile-target-command (local)
-    "Pick a compile command to use; use LOCAL if non-nil, else look at what files are available in the current directory."
-    (if local
-        local
-      (let ((saved nil))
-        (save-excursion
-          ;; This forces the loading of directory-local variables, if they exist
-          (find-file ".#dotfiles-compile-temp")
-          (setq saved dotfiles-compile-target-command)
-          (kill-buffer))
-        (cond
-         (saved
-          saved)
-         ((file-exists-p "SConstruct")
-          "scons -Q")
-         (t
-          "make")))))
-
-  (defun dotfiles--smart-compile-clean-command (local)
-    "Pick a clean command to use; use LOCAL if non-nil, else look at what files are available in the current directory."
-    (if local
-        local
-      (let ((saved nil))
-        (save-excursion
-          ;; This forces the loading of directory-local variables, if they exist
-          (find-file ".#dotfiles-compile-temp")
-          (setq saved dotfiles-compile-clean-command)
-          (kill-buffer))
-        (cond
-         (saved
-          saved)
-         ((file-exists-p "SConstruct")
-          "scons -Q -c")
-         (t
-          "make clean")))))
-
-  (defun dotfiles--compile-choose-extension (file)
-    "Automatically work out the compile target based on the extension of FILE."
-    (if file
-        (let ((base (file-name-sans-extension file))
-              (ext (file-name-extension file)))
-          (concat base
-                  (cond ((or (string= ext "c")
-                             (string= ext "h")
-                             (string= ext "cpp")
-                             (string= ext "hpp"))
-                         ".o")
-                        ((string= ext "java")
-                         ".class")
-                        ((string= ext "tex")
-                         ".pdf")
-                        (t
-                         (concat "." ext)))))
-      ""))
-
-  (add-to-list 'compilation-finish-functions
-               (lambda (buffer s)
-                 (let ((has-errors nil))
-                   (with-current-buffer buffer
-                     (goto-char (point-min))
-                     (ignore-errors
-                       (compilation-next-error 1))
-                     (when (not (eq (point) (point-min)))
-                       (setq has-errors t)
-                       (goto-char (point-min))))
-                   (when (not (string= s "finished\n"))
-                     (setq has-errors t))
-                   (unless has-errors
-                     (dotfiles-close-compile-window)))))
-
-  (bind-keys
-   ("<f5>" . dotfiles-compile)
-   ("<f7>" . dotfiles-close-compile-window)
-   ("<f8>" . dotfiles-compile-clean)))
-
-(progn
-  (require 'compilation-alert))
-
 (dotfiles-use-package csv-mode)
-
-(dotfiles-use-package dockerfile-mode)
-
-(progn
-  (require 'flex-mode)
-  (add-to-list 'auto-mode-alist '("\\.l\\'" . flex-mode)))
 
 (dotfiles-use-package flycheck
   :bind
@@ -253,10 +91,6 @@
 (dotfiles-use-package flycheck-color-mode-line
   :config
   (add-hook 'flycheck-mode-hook 'flycheck-color-mode-line-mode))
-
-(dotfiles-use-package flycheck-haskell
-  :config
-  (add-hook 'flycheck-mode-hook 'flycheck-haskell-setup))
 
 (dotfiles-use-package flycheck-package
   :config
@@ -281,86 +115,9 @@
    ("s-." . git-gutter:next-hunk)
    ("s-," . git-gutter:previous-hunk)))
 
-(dotfiles-use-package go-mode)
-
-(dotfiles-use-package haskell-mode
-  :diminish haskell-doc-mode haskell-indentation-mode
-  :config
-  (require 'haskell-mode)
-  (require 'haskell-indentation)
-  (require 'haskell-doc)
-  (require 'haskell-process)
-  (setq
-   haskell-ask-also-kill-buffers nil
-   haskell-interactive-popup-errors nil)
-  (add-to-list 'completion-ignored-extensions ".hi")
-
-  (defvar dotfiles-extra-ghci-args '() "Pass these args to GHCi when launching an interactive Haskell process.")
-  (make-variable-buffer-local 'haskell-process-args-ghci)
-  (make-variable-buffer-local 'dotfiles-extra-ghci-args)
-  (put 'dotfiles-extra-ghci-args 'safe-local-variable 'flycheck-string-list-p)
-
-  (defun dotfiles--haskell-file-module-name ()
-    (save-excursion
-      (beginning-of-buffer)
-      (if (search-forward-regexp "^module +\\([a-zA-Z0-9\\.]+\\)" nil t)
-          (match-string 1)
-        (file-name-sans-extension (buffer-file-name)))))
-
-  (defun dotfiles-haskell-interactive-reload ()
-    (interactive)
-    (when (eq major-mode 'haskell-interactive-mode)
-      (end-of-buffer)
-      (haskell-interactive-mode-kill-whole-line)
-      (insert ":r")
-      (haskell-interactive-mode-return)))
-
-  (defun dotfiles-haskell-smart-interactive-switch ()
-    (interactive)
-    (when (eq major-mode 'haskell-mode)
-      (if (and (boundp 'haskell-session) haskell-session)
-          (progn
-            (haskell-interactive-switch)
-            (dotfiles-haskell-interactive-reload))
-        (setq haskell-process-args-ghci
-              (append (default-value 'haskell-process-args-ghci)
-                      dotfiles-extra-ghci-args))
-        (let ((module (dotfiles--haskell-file-module-name)))
-          (haskell-interactive-switch)
-          (end-of-buffer)
-          (haskell-interactive-mode-kill-whole-line)
-          (insert (concat ":l " module))
-          (haskell-interactive-mode-return)))))
-  (bind-keys
-   :map haskell-mode-map
-   ("s-i" . dotfiles-haskell-smart-interactive-switch)
-   ("C-S-i" . dotfiles-haskell-smart-interactive-switch))
-
-  (bind-keys
-   :map haskell-interactive-mode-map
-   ("s-i" . dotfiles-haskell-interactive-reload)
-   ("C-S-i" . dotfiles-haskell-interactive-reload))
-
-  (add-hook 'haskell-mode-hook
-            (lambda ()
-              (turn-on-haskell-doc)
-              (turn-on-haskell-indentation))))
-
 (dotfiles-use-package helm-make
   :bind
   ("<f6>" . helm-make))
-
-(dotfiles-use-package helm-projectile
-  :config
-  (helm-projectile-on)
-  (defun dotfiles-helm-ag-dwim ()
-    (interactive)
-    (if (projectile-project-p)
-        (helm-projectile-ag)
-      (helm-ag)))
-  (bind-keys
-   ("s-f" . dotfiles-helm-ag-dwim)
-   ("C-S-f" . dotfiles-helm-ag-dwim)))
 
 (progn
   (require 'lisp-mode)
@@ -437,29 +194,6 @@
               (setq octave-comment-char ?%)
               (setq comment-start "% ")
               (setq comment-add 0))))
-
-(dotfiles-use-package projectile
-  :diminish projectile-mode
-  :config
-  (projectile-global-mode)
-  (setq
-   projectile-mode-line nil ; smart-mode-line handles this instead
-   frame-title-format '((:eval
-                         (if (projectile-project-p)
-                             (replace-regexp-in-string "%" "%%" (format "[%s] " (projectile-project-name)))
-                           ""))
-                        "%b")
-   icon-title-format frame-title-format)
-  (bind-keys
-   ("s-p" . projectile-command-map)
-   ("C-S-p" . projectile-command-map)))
-
-(progn
-  (require 'reftex)
-  (add-hook 'LaTeX-mode-hook 'turn-on-reftex)
-  (setq reftex-plug-into-AUCTeX t))
-
-(dotfiles-use-package scala-mode)
 
 (dotfiles-use-package sh-script
   :mode ("\\.zsh\\'" . dotfiles--zsh-auto-mode-setup)
