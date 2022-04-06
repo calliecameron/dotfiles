@@ -22,6 +22,7 @@ function _install() {
     sudo apt-get update &&
     sudo apt-get -y install code &&
     code --install-extension=BazelBuild.vscode-bazel \
+         --install-extension=coolbear.systemd-unit-file \
          --install-extension=DavidAnson.vscode-markdownlint \
          --install-extension=eamodio.gitlens \
          --install-extension=foxundermoon.shell-format \
