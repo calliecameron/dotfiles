@@ -87,4 +87,5 @@
         "**/defaults/*.yml": "ansible",
         "**/handlers/*.yml": "ansible"
     },
+    "diffEditor.ignoreTrimWhitespace": false,
 }
