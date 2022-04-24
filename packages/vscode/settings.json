@@ -88,4 +88,13 @@
         "**/handlers/*.yml": "ansible"
     },
     "diffEditor.ignoreTrimWhitespace": false,
+    "workbench.editor.enablePreview": false,
+    "editor.bracketPairColorization.enabled": true,
+    "editor.bracketPairColorization.independentColorPoolPerBracketType": true,
+    "editor.scrollBeyondLastLine": false,
+    "files.trimTrailingWhitespace": true,
+    "editor.rulers": [
+        80,
+        100
+    ],
 }
