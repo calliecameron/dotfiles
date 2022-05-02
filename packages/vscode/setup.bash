@@ -26,6 +26,7 @@ function _install() {
          --install-extension=DavidAnson.vscode-markdownlint \
          --install-extension=eamodio.gitlens \
          --install-extension=foxundermoon.shell-format \
+         --install-extension=jetmartin.bats \
          --install-extension=mads-hartmann.bash-ide-vscode \
          --install-extension=ms-python.python \
          --install-extension=redhat.ansible \
