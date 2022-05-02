@@ -1,7 +1,7 @@
-# -*- Shell-script -*-
+# shellcheck shell=sh
 
 if [ -z "${DOTFILES_DIR}" ]; then
-   export DOTFILES_DIR='@@@@@'
+    export DOTFILES_DIR='@@@@@'
 fi
 
 VARIABLES_FILE="${DOTFILES_DIR}/core/environment-variables.sh"

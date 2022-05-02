@@ -1,7 +1,5 @@
-# -*- Shell-script -*-
-
 if [ -z "${DOTFILES_DIR}" ]; then
-   export DOTFILES_DIR='@@@@@'
+    export DOTFILES_DIR='@@@@@'
 fi
 
 # Uncomment the following line to enable profiling at startup

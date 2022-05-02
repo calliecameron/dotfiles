@@ -1,33 +1,51 @@
 #!/bin/bash
 # Setup the basic dotfiles system, assuming everything is in the
-# core/default-dotfiles folder.  Run this first, then log out and log
-# in again.
+# core/default-dotfiles folder. Run this first, then log out and log in again.
 
-DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-TEMP_DOTFILES_DIR="$(readlink -f "${DIR}")"
-SRC_DIR="${TEMP_DOTFILES_DIR}/core/default-dotfiles"
+set -eu
+
+THIS_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+SRC_DIR="${THIS_DIR}/core/default-dotfiles"
+PROCESSED_DIR="${HOME}/.dotfiles-processed"
 
 function dofile() {
-    if [ ! -e "${1}" ]; then
-        echo -e "\e[31mError: ${1} does not exist.\e[0m"
-        exit 1
+    local SRC="${SRC_DIR}/${1}"
+    local PROCESSED="${PROCESSED_DIR}/${2}"
+    local DST="${HOME}/${2}"
+
+    if [ ! -e "${SRC}" ]; then
+        echo -e "\e[31mError: ${SRC} does not exist.\e[0m"
+        return 1
     fi
 
-    local TMPFILE="${1}.processed"
-    sed "s|@@@@@|${TEMP_DOTFILES_DIR}|g" <"${1}" >"${TMPFILE}"
-    bash "${TEMP_DOTFILES_DIR}/core/bin/compare-and-replace" "${TMPFILE}" "${2}" || exit 1
+    sed "s|@@@@@|${THIS_DIR}|g" <"${SRC}" >"${PROCESSED}"
+
+    if [ -e "${DST}" ]; then
+        if ! cmp "${PROCESSED}" "${DST}" &>/dev/null; then
+            # They're different; backup before copying
+            if [ -e "${DST}.backup" ]; then
+                echo "Error: ${PROCESSED} and ${DST} differ, but ${DST}.backup already exists"
+                return 1
+            fi
+            mv "${DST}" "${DST}.backup"
+        fi
+    fi
+
+    cp "${PROCESSED}" "${DST}"
 }
 
-dofile "${SRC_DIR}/default-profile.sh" "${HOME}/.profile" &&
-dofile "${SRC_DIR}/default-bash-profile.bash" "${HOME}/.bash_profile" &&
-dofile "${SRC_DIR}/default-bash-login.bash" "${HOME}/.bash_login" &&
-dofile "${SRC_DIR}/default-bash-logout.bash" "${HOME}/.bash_logout" &&
-dofile "${SRC_DIR}/default-bashrc.bash" "${HOME}/.bashrc" &&
-dofile "${SRC_DIR}/default-zshenv.zsh" "${HOME}/.zshenv" &&
-dofile "${SRC_DIR}/default-zprofile.zsh" "${HOME}/.zprofile" &&
-dofile "${SRC_DIR}/default-zlogin.zsh" "${HOME}/.zlogin" &&
-dofile "${SRC_DIR}/default-zlogout.zsh" "${HOME}/.zlogout" &&
-dofile "${SRC_DIR}/default-zshrc.zsh" "${HOME}/.zshrc" &&
-dofile "${SRC_DIR}/default-emacs.el" "${HOME}/.emacs" &&
+mkdir -p "${PROCESSED_DIR}"
+
+dofile 'default-profile.sh' '.profile'
+dofile 'default-bash-profile.bash' '.bash_profile'
+dofile 'default-bash-login.bash' '.bash_login'
+dofile 'default-bash-logout.bash' '.bash_logout'
+dofile 'default-bashrc.bash' '.bashrc'
+dofile 'default-zshenv.zsh' '.zshenv'
+dofile 'default-zprofile.zsh' '.zprofile'
+dofile 'default-zlogin.zsh' '.zlogin'
+dofile 'default-zlogout.zsh' '.zlogout'
+dofile 'default-zshrc.zsh' '.zshrc'
+dofile 'default-emacs.el' '.emacs'
 
 echo -e "\e[33mLog out and log in again to set everything up correctly.\e[0m"
