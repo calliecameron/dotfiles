@@ -37,12 +37,6 @@ loadpackageenv() {
                 addpath "${PACKAGE_CONF_DIR}/bin"
             fi
 
-            if os linux && [ -d "${PACKAGE_CONF_DIR}/bin-linux" ]; then
-                addpath "${PACKAGE_CONF_DIR}/bin-linux"
-            elif os cygwin && [ -d "${PACKAGE_CONF_DIR}/bin-cygwin" ]; then
-                addpath "${PACKAGE_CONF_DIR}/bin-cygwin"
-            fi
-
             if [ -d "${PACKAGE_CONF_DIR}/python" ]; then
                 export PYTHONPATH="${PACKAGE_CONF_DIR}/python:${PYTHONPATH}"
             fi

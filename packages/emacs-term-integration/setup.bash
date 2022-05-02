@@ -1,5 +1,5 @@
 function _can-install() {
-    os linux cygwin
+    os linux
 }
 
 function _install() {

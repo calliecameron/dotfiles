@@ -116,9 +116,6 @@
    dotfiles-private-dir
    dotfiles-package-roots))
 
-(defconst dotfiles-on-windows
-  (string= dotfiles-os "cygwin"))
-
 (setq custom-file (f-full (f-join user-emacs-directory "emacs-custom.el")))
 
 (define-prefix-command 'dotfiles-buffer-map)

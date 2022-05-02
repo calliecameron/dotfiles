@@ -22,12 +22,6 @@ if [ "${DOTFILES_OS}" = 'linux' ]; then
     else
         say-no
     fi
-elif [ "${DOTFILES_OS}" = 'cygwin' ]; then
-    if [ "${PROCESSOR_ARCHITECTURE}" = 'x86' ] && [ -z "${PROCESSOR_ARCHITEW6432}" ]; then
-        say-no
-    else
-        say-yes
-    fi
 else
     say-no
 fi

@@ -11,15 +11,11 @@ test ! -z "${DOTFILES_PROFILING}" && printf 'env ' && date --rfc-3339=ns
 export DOTFILES_OS=''
 export DOTFILES_LINUX_VARIANT=''
 
-if [ "$(uname -o)" = 'Cygwin' ]; then
-    export DOTFILES_OS='cygwin'
-else
-    export DOTFILES_OS='linux'
-    if [ -e '/boot/config.txt' ]; then
-        export DOTFILES_LINUX_VARIANT='pi'
-    elif which lsb_release >/dev/null && lsb_release -a 2>/dev/null | grep 'Mint' >/dev/null; then
-        export DOTFILES_LINUX_VARIANT='main'
-    fi
+export DOTFILES_OS='linux'
+if [ -e '/boot/config.txt' ]; then
+    export DOTFILES_LINUX_VARIANT='pi'
+elif which lsb_release >/dev/null && lsb_release -a 2>/dev/null | grep 'Mint' >/dev/null; then
+    export DOTFILES_LINUX_VARIANT='main'
 fi
 
 export DOTFILES_CORE_DIR="${DOTFILES_DIR}/core"

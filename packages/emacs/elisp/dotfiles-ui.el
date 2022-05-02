@@ -426,9 +426,7 @@ If BUFFER is a string, it is the name of the buffer to find; if it is a predicat
 
 (dotfiles-use-package alert
   :config
-  (if dotfiles-on-windows
-      (setq alert-default-style 'fringe)
-    (setq alert-default-style 'notifications)))
+  (setq alert-default-style 'notifications))
 
 (dotfiles-use-package autorevert
   :config

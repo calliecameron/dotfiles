@@ -3,18 +3,6 @@ export DOTFILES_HG_LOCAL="${HOME}/.dotfiles-hg-local"
 
 homelink "${PACKAGE_CONF_DIR}/hgrc"
 
-# Platform-specific settings
-if os cygwin; then
-    # Make password entry work
-    if [ -z "${SSH_TTY}" ]; then
-        export SSH_TTY
-        SSH_TTY="$(/bin/tty.exe)"
-    fi
-
-    export GIT_SSH="${PACKAGE_CONF_DIR}/cygwin-auto-ssh-agent"
-fi
-
-
 # Git config complains if multiple copies try to run at once; protect it with a mutex
 MUTEX="${HOME}/.dotfiles-gitconfig-mutex"
 while ! mkdir "${MUTEX}" >/dev/null 2>/dev/null; do
@@ -33,11 +21,6 @@ if which git >/dev/null; then
     git config --global status.showUntrackedFiles all
     git config --global push.default simple
     git config --global log.mailmap true
-
-    # More Cygwin password entry stuff
-    if os cygwin; then
-        git config --global core.askpass "${PACKAGE_CONF_DIR}/cygwin-askpass"
-    fi
 fi
 
 rmdir "${MUTEX}"
