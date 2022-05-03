@@ -5,7 +5,7 @@ if [ -z "${DOTFILES_DIR}" ]; then
 fi
 
 VARIABLES_FILE="${DOTFILES_DIR}/core/environment-variables.sh"
-if [ -z "${DOTFILES_OS}" ]; then
+if [ -z "${DOTFILES_ENV_LOADED}" ]; then
     if [ -f "${VARIABLES_FILE}" ]; then
         . "${VARIABLES_FILE}"
     else

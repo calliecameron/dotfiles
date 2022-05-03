@@ -1,3 +1,5 @@
+# shellcheck shell=bash
+
 if [ -z "${DOTFILES_DIR}" ]; then
     export DOTFILES_DIR='@@@@@'
 fi

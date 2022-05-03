@@ -1,11 +1,11 @@
 #!/bin/bash
-# Setup the basic dotfiles system, assuming everything is in the
-# core/default-dotfiles folder. Run this first, then log out and log in again.
+# Setup the basic dotfiles system, assuming everything is in the core/stubs
+# folder. Run this first, then log out and log in again.
 
 set -eu
 
 THIS_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-SRC_DIR="${THIS_DIR}/core/default-dotfiles"
+SRC_DIR="${THIS_DIR}/core/stubs"
 PROCESSED_DIR="${HOME}/.dotfiles-processed"
 
 function dofile() {
@@ -36,16 +36,16 @@ function dofile() {
 
 mkdir -p "${PROCESSED_DIR}"
 
-dofile 'default-profile.sh' '.profile'
-dofile 'default-bash-profile.bash' '.bash_profile'
-dofile 'default-bash-login.bash' '.bash_login'
-dofile 'default-bash-logout.bash' '.bash_logout'
-dofile 'default-bashrc.bash' '.bashrc'
-dofile 'default-zshenv.zsh' '.zshenv'
-dofile 'default-zprofile.zsh' '.zprofile'
-dofile 'default-zlogin.zsh' '.zlogin'
-dofile 'default-zlogout.zsh' '.zlogout'
-dofile 'default-zshrc.zsh' '.zshrc'
-dofile 'default-emacs.el' '.emacs'
+dofile 'profile.sh' '.profile'
+dofile 'bash-profile.bash' '.bash_profile'
+dofile 'bash-login.bash' '.bash_login'
+dofile 'bash-logout.bash' '.bash_logout'
+dofile 'bashrc.bash' '.bashrc'
+dofile 'zshenv.zsh' '.zshenv'
+dofile 'zprofile.zsh' '.zprofile'
+dofile 'zlogin.zsh' '.zlogin'
+dofile 'zlogout.zsh' '.zlogout'
+dofile 'zshrc.zsh' '.zshrc'
+dofile 'emacs.el' '.emacs'
 
 echo -e "\e[33mLog out and log in again to set everything up correctly.\e[0m"
