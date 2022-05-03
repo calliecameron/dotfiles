@@ -17,6 +17,7 @@ teardown() {
 @test "install" {
     # Initial call, creates everything
     HOME="${TMP_DIR}" run "${INSTALL}"
+    assert_success
     assert_output --partial 'Log out and log in again to set everything up correctly.'
     assert_equal "$(find "${TMP_DIR}" -maxdepth 1 -type f -name '.*' | wc -l)" '11'
     assert_equal "$(find "${PROCESSED_DIR}" -type f -name '.*' | wc -l)" '11'
@@ -25,6 +26,7 @@ teardown() {
 
     # Second call, no change
     HOME="${TMP_DIR}" run "${INSTALL}"
+    assert_success
     assert_output --partial 'Log out and log in again to set everything up correctly.'
     assert_equal "$(find "${TMP_DIR}" -maxdepth 1 -type f -name '.*' | wc -l)" '11'
     assert_equal "$(find "${PROCESSED_DIR}" -type f -name '.*' | wc -l)" '11'
@@ -34,6 +36,7 @@ teardown() {
     # Modify a file, will be backed up
     echo 'foo' >>"${TMP_DIR}/.bashrc"
     HOME="${TMP_DIR}" run "${INSTALL}"
+    assert_success
     assert_output --partial 'Log out and log in again to set everything up correctly.'
     assert_equal "$(find "${TMP_DIR}" -maxdepth 1 -type f -name '.*' | wc -l)" '12'
     assert_equal "$(find "${TMP_DIR}" -maxdepth 1 -type f -name '.*.backup' | wc -l)" '1'
