@@ -46,11 +46,8 @@ In shell files, the following environment variables are available:
 - `PACKAGE_INSTALL_DIR`: the full path of where anything should be
   installed; clone repositories here, or if anything else needs to
   be installed, create this directory and put things in it.
-- `DOTFILES_OS`: `linux`. If `linux`, then `DOTFILES_LINUX_VARIANT`
-  will also be set.
-- `DOTFILES_LINUX_VARIANT`: only set on Linux; can be `main` (for
-  current preferred distro), `pi` (for Raspbian), or empty for
-  unknown.
+- `DOTFILES_LINUX_VARIANT`: can be `main` (for current preferred distro), `pi`
+  (for Raspbian), or empty for unknown.
 - `DOTFILES_CAN_SUDO`: whether the user has sudo permissions on
   this machine; only set on Linux.
 

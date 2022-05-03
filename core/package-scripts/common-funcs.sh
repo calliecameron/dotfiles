@@ -159,13 +159,8 @@ ignore() {
 }
 
 os() {
-    while [ ! -z "${1}" ]; do
-        if [ "${DOTFILES_OS}" = "${1}" ]; then
-            return 0
-        fi
-        shift
-    done
-    return 1
+    # TODO remove this
+    return 0
 }
 
 commonfuncscleanup() {
