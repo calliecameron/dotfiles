@@ -10,7 +10,7 @@ setup() {
     INSTALL="${THIS_DIR}/../../install.sh"
 
     setup_common
-    HOME="${TMP_DIR}" "${INSTALL}"
+    HOME="${TMP_DIR}" "${INSTALL}" >/dev/null
 }
 
 teardown() {
@@ -22,7 +22,7 @@ function run_dash() {
 }
 
 function assert_ran() {
-    assert_output --partial 'DOTFILES'
+    assert_stub_ran
     assert_package_env_run_by 'dash'
     assert_not_package_generic_aliases_run
     assert_not_package_bash_aliases_run
@@ -31,9 +31,8 @@ function assert_ran() {
     assert_not_local_generic_aliases_run
     assert_not_local_bash_aliases_run
     assert_not_local_zsh_aliases_run
-    assert_line --regexp "^PATH=.*$(readlink -f "${THIS_DIR}/../..")/core/bin.*\$"
-    assert_line --regexp "^PATH=.*$(readlink -f "${TMP_DIR}")/\\.bin.*\$"
-    assert_line "TEST_PACKAGE_ROOTS=/bar:$(readlink -f "${THIS_DIR}/../..")/private/packages-pre:$(readlink -f "${THIS_DIR}/../..")/packages:$(readlink -f "${THIS_DIR}/../..")/private/packages:/foo"
+    assert_path
+    assert_package_roots
 }
 
 @test 'run simple' {
@@ -68,23 +67,23 @@ function assert_ran() {
     run_dash -l
     assert_success
     assert_ran
-    assert_line "DOTFILES_CAN_SUDO="
+    assert_not_can_sudo
 }
 
 @test 'can-sudo empty' {
-    touch "${TMP_DIR}/.dotfiles-can-sudo"
+    touch "${TEST_CAN_SUDO}"
     run_dash -l
     assert_success
     assert_ran
-    assert_line "DOTFILES_CAN_SUDO="
+    assert_not_can_sudo
 }
 
 @test 'can-sudo non-empty' {
-    echo 'y' >"${TMP_DIR}/.dotfiles-can-sudo"
+    echo 'y' >"${TEST_CAN_SUDO}"
     run_dash -l
     assert_success
     assert_ran
-    assert_line "DOTFILES_CAN_SUDO=y"
+    assert_can_sudo
 }
 
 @test 'needs-logout nonexistent' {

@@ -29,11 +29,37 @@ function setup_common() {
     TEST_PACKAGE_MESSAGES="${TMP_DIR}/.dotfiles-package-messages"
     TEST_PACKAGE_PROBLEMS="${TMP_DIR}/.dotfiles-package-problems"
     TEST_NEXT_LOGIN="${TMP_DIR}/.dotfiles-next-login.bash"
+    TEST_CAN_SUDO="${TMP_DIR}/.dotfiles-can-sudo"
 }
 
 function assert_num_matching_lines() {
     # shellcheck disable=SC2154
     assert_equal "$(echo "${output}" | grep -E -c "${1}")" "${2}"
+}
+
+function assert_path() {
+    assert_line --regexp "^PATH=.*$(readlink -f "${THIS_DIR}/../..")/core/bin.*\$"
+    assert_line --regexp "^PATH=.*$(readlink -f "${TMP_DIR}")/\\.bin.*\$"
+}
+
+function assert_package_roots() {
+    assert_line "TEST_PACKAGE_ROOTS=/bar:$(readlink -f "${THIS_DIR}/../..")/private/packages-pre:$(readlink -f "${THIS_DIR}/../..")/packages:$(readlink -f "${THIS_DIR}/../..")/private/packages:/foo"
+}
+
+function assert_can_sudo() {
+    assert_line 'DOTFILES_CAN_SUDO=y'
+}
+
+function assert_not_can_sudo() {
+    assert_line 'DOTFILES_CAN_SUDO='
+}
+
+function assert_stub_ran() {
+    assert_line --partial 'DOTFILES_DIR'
+}
+
+function assert_not_stub_run() {
+    refute_line --partial 'DOTFILES_DIR'
 }
 
 function assert_package_env_run_by() {
@@ -109,7 +135,7 @@ function assert_not_local_zsh_aliases_run() {
 }
 
 function assert_nothing_ran() {
-    refute_output --partial 'DOTFILES'
+    assert_not_stub_run
     assert_not_package_env_run
     assert_not_package_generic_aliases_run
     assert_not_package_bash_aliases_run
