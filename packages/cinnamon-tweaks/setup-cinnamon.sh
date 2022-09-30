@@ -31,9 +31,10 @@ gsettings set org.nemo.desktop volumes-visible true &&
 gsettings set org.nemo.desktop show-desktop-icons true &&
 
 xdg-desktop-icon install --novendor "/usr/share/applications/${CHROME_DESKTOP}" &&
-xdg-desktop-icon install --novendor '/usr/share/applications/org.gnome.Terminal.desktop' &&
-xdg-desktop-icon install --novendor '/usr/share/applications/code.desktop' &&
-
+xdg-desktop-icon install --novendor '/usr/share/applications/org.gnome.Terminal.desktop' || exit 1
+if [ -f '/usr/share/applications/code.desktop' ]; then
+    xdg-desktop-icon install --novendor '/usr/share/applications/code.desktop' || exit 1
+fi
 
 # Panel
 cinnamon-panel remove firefox.desktop &&
