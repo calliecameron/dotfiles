@@ -99,7 +99,6 @@
 
 (dotfiles--env-vars
  '(dotfiles-dir
-   dotfiles-os
    dotfiles-linux-variant
    dotfiles-core-dir
    dotfiles-variables
