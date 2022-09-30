@@ -5,20 +5,13 @@ setup() {
     bats_load_library 'bats-assert'
     load 'helpers.bash'
 
-    THIS_DIR="$(cd "$(dirname "${BATS_TEST_FILENAME}")" && pwd)"
-    TMP_DIR="$(mktemp -d)"
-    INSTALL="${THIS_DIR}/../../install.sh"
-
     setup_common
+    INSTALL="${THIS_DIR}/../../install.sh"
     HOME="${TMP_DIR}" "${INSTALL}" >/dev/null
 }
 
 teardown() {
-    rm -rf "${TMP_DIR}"
-}
-
-function run_dash() {
-    run env -i -C "${TMP_DIR}" HOME="${TMP_DIR}" dash "${@}" -c 'env' 3>&-
+    teardown_common
 }
 
 function assert_ran() {

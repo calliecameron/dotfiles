@@ -1,21 +1,23 @@
 #!/bin/bash
 # Schedule a command to run at the next interactive terminal init
 
+set -eu
+
 function usage() {
     echo "Usage: $(basename "${0}") command [args...]"
     exit 1
 }
 
-test -z "${1}" && usage
+test -z "${1:-}" && usage
 
 COMMAND="${*}"
 
 if [ -e "${DOTFILES_NEXT_INIT}" ]; then
     if ! grep "${COMMAND}" "${DOTFILES_NEXT_INIT}" &>/dev/null; then
-        echo "${COMMAND}" >> "${DOTFILES_NEXT_INIT}"
+        echo "${COMMAND}" >>"${DOTFILES_NEXT_INIT}"
     fi
 else
-    cat > "${DOTFILES_NEXT_INIT}" <<EOF
+    cat >"${DOTFILES_NEXT_INIT}" <<EOF
 # This file will be run (and deleted) on the next interactive terminal init.
 # Add to it using dotfiles-next-init.
 

@@ -1,9 +1,9 @@
-# -*- Shell-script -*-
+# shellcheck shell=sh
 
-if [ ! -z "${DOTFILES_STARTED_SSH_AGENT}" ] && [ ! -z "${SSH_AGENT_PID}" ]; then
+if [ -n "${DOTFILES_STARTED_SSH_AGENT}" ] && [ -n "${SSH_AGENT_PID}" ]; then
     ssh-agent -k >/dev/null 2>/dev/null
 fi
 
-if [ ! -z "${DOTFILES_SSH_ADDED_FILE}" ]; then
+if [ -n "${DOTFILES_SSH_ADDED_FILE}" ]; then
     command rm -f "${DOTFILES_SSH_ADDED_FILE}"
 fi

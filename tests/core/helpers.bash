@@ -1,35 +1,76 @@
 # shellcheck disable=SC2034
 function setup_common() {
+    THIS_DIR="$(cd "$(dirname "${BATS_TEST_FILENAME}")" && pwd)"
+    TMP_DIR="$(mktemp -d)"
+
     TEST_PACKAGE_ROOT="${TMP_DIR}/packages"
     mkdir -p "${TEST_PACKAGE_ROOT}/foo"
-    echo "echo \"TEST_PACKAGE_ENV=\$(basename \"\${0}\")\"" >"${TEST_PACKAGE_ROOT}/foo/env.sh"
-    echo "echo \"TEST_PACKAGE_GENERIC_ALIASES=\$(basename \"\${0}\")\"" >"${TEST_PACKAGE_ROOT}/foo/aliases.sh"
-    echo "echo \"TEST_PACKAGE_BASH_ALIASES=\$(basename \"\${0}\")\"" >"${TEST_PACKAGE_ROOT}/foo/aliases.bash"
-    echo "echo \"TEST_PACKAGE_ZSH_ALIASES=\$(basename \"\${0}\")\"" >"${TEST_PACKAGE_ROOT}/foo/aliases.zsh"
+    echo "export TEST_PACKAGE_ENV=\"\$(basename \"\${0}\")\"" >"${TEST_PACKAGE_ROOT}/foo/env.sh"
+    echo "export TEST_PACKAGE_GENERIC_ALIASES=\"\$(basename \"\${0}\")\"" >"${TEST_PACKAGE_ROOT}/foo/aliases.sh"
+    echo "export TEST_PACKAGE_BASH_ALIASES=\"\$(basename \"\${0}\")\"" >"${TEST_PACKAGE_ROOT}/foo/aliases.bash"
+    echo "export TEST_PACKAGE_ZSH_ALIASES=\"\$(basename \"\${0}\")\"" >"${TEST_PACKAGE_ROOT}/foo/aliases.zsh"
 
-    TEST_LOCAL_ENV="${TMP_DIR}/.dotfiles-variables.sh"
+    TEST_LOCAL_ENV_FILE="${TMP_DIR}/.dotfiles-variables.sh"
     {
-        echo "echo \"TEST_LOCAL_ENV=\$(basename \"\${0}\")\""
+        echo "export TEST_LOCAL_ENV=\"\$(basename \"\${0}\")\""
         echo "appendpackageroot /foo"
         echo "prependpackageroot /bar"
-        echo "echo \"TEST_PACKAGE_ROOTS=\${DOTFILES_PACKAGE_ROOTS}\""
+        echo "export TEST_PACKAGE_ROOTS=\"\${DOTFILES_PACKAGE_ROOTS}\""
         echo "export DOTFILES_PACKAGE_ROOTS='${TEST_PACKAGE_ROOT}'"
-    } >"${TEST_LOCAL_ENV}"
+    } >"${TEST_LOCAL_ENV_FILE}"
 
-    TEST_LOCAL_GENERIC_ALIASES="${TMP_DIR}/.dotfiles-aliases.sh"
-    echo "echo \"TEST_LOCAL_GENERIC_ALIASES=\$(basename \"\${0}\")\"" >"${TEST_LOCAL_GENERIC_ALIASES}"
+    TEST_LOCAL_GENERIC_ALIASES_FILE="${TMP_DIR}/.dotfiles-aliases.sh"
+    echo "export TEST_LOCAL_GENERIC_ALIASES=\"\$(basename \"\${0}\")\"" >"${TEST_LOCAL_GENERIC_ALIASES_FILE}"
 
-    TEST_LOCAL_BASH_ALIASES="${TMP_DIR}/.dotfiles-aliases.bash"
-    echo "echo \"TEST_LOCAL_BASH_ALIASES=\$(basename \"\${0}\")\"" >"${TEST_LOCAL_BASH_ALIASES}"
+    TEST_LOCAL_BASH_ALIASES_FILE="${TMP_DIR}/.dotfiles-aliases.bash"
+    echo "export TEST_LOCAL_BASH_ALIASES=\"\$(basename \"\${0}\")\"" >"${TEST_LOCAL_BASH_ALIASES_FILE}"
 
-    TEST_LOCAL_ZSH_ALIASES="${TMP_DIR}/.dotfiles-aliases.zsh"
-    echo "echo \"TEST_LOCAL_ZSH_ALIASES=\$(basename \"\${0}\")\"" >"${TEST_LOCAL_ZSH_ALIASES}"
+    TEST_LOCAL_ZSH_ALIASES_FILE="${TMP_DIR}/.dotfiles-aliases.zsh"
+    echo "export TEST_LOCAL_ZSH_ALIASES=\"\$(basename \"\${0}\")\"" >"${TEST_LOCAL_ZSH_ALIASES_FILE}"
 
     TEST_NEEDS_LOGOUT="${TMP_DIR}/.dotfiles-needs-logout"
     TEST_PACKAGE_MESSAGES="${TMP_DIR}/.dotfiles-package-messages"
     TEST_PACKAGE_PROBLEMS="${TMP_DIR}/.dotfiles-package-problems"
     TEST_NEXT_LOGIN="${TMP_DIR}/.dotfiles-next-login.bash"
+    TEST_NEXT_INIT="${TMP_DIR}/.dotfiles-next-init.bash"
     TEST_CAN_SUDO="${TMP_DIR}/.dotfiles-can-sudo"
+}
+
+function teardown_common() {
+    rm -rf "${TMP_DIR}"
+}
+
+function run_dash() {
+    run env -i -C "${TMP_DIR}" HOME="${TMP_DIR}" TERM='xterm-256color' DOTFILES_NO_PACKAGE_UPDATES='t' dash "${@}" -c 'env | LC_ALL=C sort' 3>&-
+}
+
+function run_bash() {
+    # TODO get rid of DOTFILES_NO_PACKAGE_UPDATES
+    run env -i -C "${TMP_DIR}" HOME="${TMP_DIR}" TERM='xterm-256color' DOTFILES_NO_PACKAGE_UPDATES='t' bash "${@}" -c 'env | LC_ALL=C sort' 3>&-
+}
+
+function _after_login() {
+    (
+        source <(env -i -C "${TMP_DIR}" HOME="${TMP_DIR}" TERM='xterm-256color' DOTFILES_NO_PACKAGE_UPDATES='t' dash -l -c 'env -0' | xargs -0 bash -c 'printf "export %q\n" "$@"' -- | LC_ALL=C sort)
+        bash -c "${1}"
+        "${@:2}"
+    )
+}
+
+function run_after_login() {
+    run _after_login true "${@}" 3>&-
+}
+
+function run_bash_after_login() {
+    run_after_login bash "${@}" -c 'env | LC_ALL=C sort'
+}
+
+function run_between_login_and_shell() {
+    run _after_login "${@}" 3>&-
+}
+
+function run_between_login_and_bash() {
+    run_between_login_and_shell "${1}" bash "${@:2}" -c 'env | LC_ALL=C sort'
 }
 
 function assert_num_matching_lines() {
