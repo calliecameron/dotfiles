@@ -17,13 +17,13 @@ teardown() {
 function assert_ran() {
     assert_stub_ran
     assert_package_env_run_by "${1}"
-    assert_package_generic_aliases_run_by 'bash'
-    assert_package_bash_aliases_run_by 'bash'
-    assert_not_package_zsh_aliases_run
+    assert_package_generic_aliases_run_by 'zsh'
+    assert_not_package_bash_aliases_run
+    assert_package_zsh_aliases_run_by 'zsh'
     assert_local_env_run_by "${1}"
-    assert_local_generic_aliases_run_by 'bash'
-    assert_local_bash_aliases_run_by 'bash'
-    assert_not_local_zsh_aliases_run
+    assert_local_generic_aliases_run_by 'zsh'
+    assert_not_local_bash_aliases_run
+    assert_local_zsh_aliases_run_by 'zsh'
     assert_path
     assert_package_roots
 }
@@ -44,85 +44,85 @@ function assert_ran_env_only() {
 
 @test 'run simple' {
     # Non-interactive, non-login - shouldn't load anything
-    run_bash
+    run_zsh
     assert_success
     assert_nothing_ran
 }
 
 @test 'run interactive' {
     # Interactive, non-login - should load everything
-    run_bash -i
+    run_zsh -i
     assert_success
-    assert_ran 'bash'
+    assert_ran 'zsh'
 }
 
 @test 'run login' {
     # Non-interactive, login - should load env
-    run_bash -l
+    run_zsh -l
     assert_success
-    assert_ran_env_only 'bash'
+    assert_ran_env_only 'zsh'
 }
 
 @test 'run interactive-login' {
     # Interactive, login - should load everything
-    run_bash -i -l
+    run_zsh -i -l
     assert_success
-    assert_ran 'bash'
+    assert_ran 'zsh'
 }
 
 @test 'run simple after login' {
     # Non-interactive, non-login - should load env
-    run_bash_after_login
+    run_zsh_after_login
     assert_success
     assert_ran_env_only 'dash'
 }
 
 @test 'run interactive after login' {
     # Interactive, non-login - should load everything
-    run_bash_after_login -i
+    run_zsh_after_login -i
     assert_success
     assert_ran 'dash'
 }
 
 @test 'run login after login' {
     # Non-interactive, login - should load env
-    run_bash_after_login -l
+    run_zsh_after_login -l
     assert_success
     assert_ran_env_only 'dash'
 }
 
 @test 'run interactive-login after login' {
     # Interactive, login - should load everything
-    run_bash_after_login -i -l
+    run_zsh_after_login -i -l
     assert_success
     assert_ran 'dash'
 }
 
 @test 'can-sudo nonexistent' {
-    run_bash -i
+    run_zsh -i
     assert_success
-    assert_ran 'bash'
+    assert_ran 'zsh'
     assert_not_can_sudo
 }
 
 @test 'can-sudo empty' {
     touch "${TEST_CAN_SUDO}"
-    run_bash -i
+    run_zsh -i
     assert_success
-    assert_ran 'bash'
+    assert_ran 'zsh'
     assert_not_can_sudo
 }
 
 @test 'can-sudo non-empty' {
     echo 'y' >"${TEST_CAN_SUDO}"
-    run_bash -i
+    run_zsh -i
     assert_success
-    assert_ran 'bash'
+    assert_ran 'zsh'
     assert_can_sudo
 }
 
 @test 'needs-logout nonexistent' {
-    run_bash_after_login -i
+    run_zsh_after_login -i
     assert_success
     assert_ran 'dash'
     assert [ ! -e "${TEST_NEEDS_LOGOUT}" ]
@@ -130,7 +130,7 @@ function assert_ran_env_only() {
 }
 
 @test 'needs-logout existing' {
-    run_between_login_and_bash "touch '${TEST_NEEDS_LOGOUT}'" -i
+    run_between_login_and_zsh "touch '${TEST_NEEDS_LOGOUT}'" -i
     assert_success
     assert_ran 'dash'
     assert [ -e "${TEST_NEEDS_LOGOUT}" ]
@@ -138,7 +138,7 @@ function assert_ran_env_only() {
 }
 
 @test 'package-messages nonexistent' {
-    run_bash_after_login -i
+    run_zsh_after_login -i
     assert_success
     assert_ran 'dash'
     assert [ ! -e "${TEST_PACKAGE_MESSAGES}" ]
@@ -146,7 +146,7 @@ function assert_ran_env_only() {
 }
 
 @test 'package-messages existing' {
-    run_between_login_and_bash "echo 'test package message' > '${TEST_PACKAGE_MESSAGES}'" -i
+    run_between_login_and_zsh "echo 'test package message' > '${TEST_PACKAGE_MESSAGES}'" -i
     assert_success
     assert_ran 'dash'
     assert [ -e "${TEST_PACKAGE_MESSAGES}" ]
@@ -154,7 +154,7 @@ function assert_ran_env_only() {
 }
 
 @test 'package-problems nonexistent' {
-    run_bash_after_login -i
+    run_zsh_after_login -i
     assert_success
     assert_ran 'dash'
     assert [ ! -e "${TEST_PACKAGE_PROBLEMS}" ]
@@ -162,7 +162,7 @@ function assert_ran_env_only() {
 }
 
 @test 'package-problems existing' {
-    run_between_login_and_bash "echo 'test package problem' > '${TEST_PACKAGE_PROBLEMS}'" -i
+    run_between_login_and_zsh "echo 'test package problem' > '${TEST_PACKAGE_PROBLEMS}'" -i
     assert_success
     assert_ran 'dash'
     assert [ -e "${TEST_PACKAGE_PROBLEMS}" ]
@@ -170,44 +170,44 @@ function assert_ran_env_only() {
 }
 
 @test 'next-login nonexistent' {
-    run_bash -l -i
+    run_zsh -l -i
     assert_success
-    assert_ran 'bash'
+    assert_ran 'zsh'
     assert [ ! -e "${TEST_NEXT_LOGIN}" ]
     refute_line 'TEST_NEXT_LOGIN'
 }
 
 @test 'next-login existing' {
     echo 'echo TEST_NEXT_LOGIN' >"${TEST_NEXT_LOGIN}"
-    run_bash -l -i
+    run_zsh -l -i
     assert_success
-    assert_ran 'bash'
+    assert_ran 'zsh'
     assert [ ! -e "${TEST_NEXT_LOGIN}" ]
     assert_line 'TEST_NEXT_LOGIN'
 }
 
 @test 'next-init nonexistent' {
-    run_bash -l -i
+    run_zsh -l -i
     assert_success
-    assert_ran 'bash'
+    assert_ran 'zsh'
     assert [ ! -e "${TEST_NEXT_INIT}" ]
     refute_line 'TEST_NEXT_INIT'
 }
 
 @test 'next-init existing' {
     echo 'echo TEST_NEXT_INIT' >"${TEST_NEXT_INIT}"
-    run_bash -l -i
+    run_zsh -l -i
     assert_success
-    assert_ran 'bash'
+    assert_ran 'zsh'
     assert [ ! -e "${TEST_NEXT_INIT}" ]
     assert_line 'TEST_NEXT_INIT'
 }
 
 @test 'check-init-file' {
     echo 'true' >>"${TMP_DIR}/.zlogin"
-    run_bash -i
+    run_zsh -i
     assert_success
-    assert_ran 'bash'
+    assert_ran 'zsh'
     assert_line --partial "Your .zlogin doesn't look right - maybe something has tampered with it"
     refute_line --partial "Your .profile doesn't look right - maybe something has tampered with it"
 }
