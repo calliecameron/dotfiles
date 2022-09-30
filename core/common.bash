@@ -4,7 +4,7 @@
 # Doesn't work if this file is sourced while in a function (rather than a
 # top-level script) -- but that should never be done anyway!
 # shellcheck disable=SC2034
-THIS_DIR="$( cd "$( dirname "${BASH_SOURCE[1]}" )" && pwd )"
+THIS_DIR="$(cd "$(dirname "${BASH_SOURCE[1]}")" && pwd)"
 
 function echo-colour() {
     echo -e "\e[${1}m${2}\e[0m"
@@ -57,9 +57,9 @@ function valid-protocol() {
 }
 
 function valid-port() {
-    if [ ! -z "${1}" ]; then
+    if [ -n "${1}" ]; then
         if [[ "${1}" != *[!0-9]* ]]; then
-            if (( "${1}" >= 0 && "${1}" <= 65535 )); then
+            if (("${1}" >= 0 && "${1}" <= 65535)); then
                 return 0
             fi
         fi

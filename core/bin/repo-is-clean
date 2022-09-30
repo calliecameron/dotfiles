@@ -2,7 +2,9 @@
 # Check if a git repository is clean. Directories that are not git
 # repos at all also count as clean.
 
-test -z "${1}" && exit 1
+set -eu
+
+test -z "${1:-}" && exit 1
 type git &>/dev/null || exit 1
 
 if [ -d "${1}" ]; then
@@ -13,7 +15,7 @@ if [ -d "${1}" ]; then
     fi
 
     TMPFILE="$(mktemp)"
-    git status --porcelain -b > "${TMPFILE}"
+    git status --porcelain -b >"${TMPFILE}"
 
     if grep -q '^##.*\[ahead.*\]$' "${TMPFILE}" || grep -q '^[^##]' "${TMPFILE}"; then
         rm "${TMPFILE}"
