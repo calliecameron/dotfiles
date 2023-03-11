@@ -3,13 +3,8 @@
 source "${DOTFILES_BASH_COMMON}" &&
 export PATH="${THIS_DIR}/bin:${PATH}" &&
 
-if is64bit; then
-    CHROME_DESKTOP='google-chrome.desktop'
-    CHROME_COMMAND='google-chrome'
-else
-    CHROME_DESKTOP='chromium-browser.desktop'
-    CHROME_COMMAND='chromium-browser'
-fi
+CHROME_DESKTOP='google-chrome.desktop'
+CHROME_COMMAND='google-chrome'
 
 # Menu
 cinnamon-favourites remove mintinstall.desktop &&
