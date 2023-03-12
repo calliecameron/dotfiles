@@ -15,6 +15,7 @@ fi
 export DOTFILES_SHELL='bash'
 # Might not have loaded environment variables yet, so have to do this with the
 # full path
+# shellcheck source=/dev/null
 source "${DOTFILES_DIR}/core/generic-aliases.bash"
 
 HISTCONTROL='ignoredups:ignorespace'

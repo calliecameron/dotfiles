@@ -4,6 +4,7 @@
 
 if [ -z "${DOTFILES_ENV_LOADED}" ]; then
     # Haven't loaded environment variables, so have to use full path
+    # shellcheck source=/dev/null
     source "${DOTFILES_DIR}/core/environment-variables.sh"
 fi
 
@@ -74,6 +75,7 @@ if [ -z "${DOTFILES_NO_PACKAGE_UPDATES}" ]; then
     fi
 fi
 if [ -z "${DOTFILES_NO_ALIASES}" ]; then
+    # shellcheck source=/dev/null
     source "${DOTFILES_PACKAGE_SCRIPTS}/load-packages-aliases.bash"
 fi
 [ -n "${DOTFILES_PROFILING}" ] && printf 'packages ' && date --rfc-3339=ns
@@ -86,6 +88,7 @@ fi
 # version controlled.
 function localaliases() {
     if [ -f "${DOTFILES_LOCAL_ALIASES}.${1}" ]; then
+        # shellcheck source=/dev/null
         source "${DOTFILES_LOCAL_ALIASES}.${1}"
     fi
 }

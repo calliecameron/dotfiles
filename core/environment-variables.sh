@@ -9,7 +9,7 @@
 
 export DOTFILES_LINUX_VARIANT=''
 
-if which lsb_release >/dev/null && lsb_release -a 2>/dev/null | grep 'Mint' >/dev/null; then
+if command -v lsb_release >/dev/null && lsb_release -a 2>/dev/null | grep 'Mint' >/dev/null; then
     export DOTFILES_LINUX_VARIANT='main'
 fi
 
@@ -25,7 +25,10 @@ export DOTFILES_STUBS="${DOTFILES_CORE_DIR}/stubs"
 export DOTFILES_BASH_COMMON="${DOTFILES_CORE_DIR}/common.bash"
 export DOTFILES_CORE_BIN="${DOTFILES_CORE_DIR}/bin"
 
-export DOTFILES_PROCESSED_DIR="${HOME}/.dotfiles-processed"
+export DOTFILES_LOCAL_DIR="${HOME}/.dotfiles.d"
+mkdir -p "${DOTFILES_LOCAL_DIR}"
+
+export DOTFILES_PROCESSED_DIR="${DOTFILES_LOCAL_DIR}/processed"
 export DOTFILES_LOCAL_VARIABLES="${HOME}/.dotfiles-variables.sh"
 export DOTFILES_LOCAL_ALIASES="${HOME}/.dotfiles-aliases"
 export DOTFILES_LOCAL_EMACS="${HOME}/.dotfiles-emacs.el"
@@ -79,7 +82,7 @@ export PAGER='less'
 export LESS='FRMX'
 
 # Create SSH agent if necessary
-if [ -z "${SSH_AUTH_SOCK}" ] && [ -z "${DISPLAY}" ] && which ssh-agent >/dev/null; then
+if [ -z "${SSH_AUTH_SOCK}" ] && [ -z "${DISPLAY}" ] && command -v ssh-agent >/dev/null; then
     eval "$(ssh-agent -s)" >/dev/null 2>/dev/null
     export DOTFILES_STARTED_SSH_AGENT='t'
     DOTFILES_SSH_ADDED_FILE="$(readlink -f "$(mktemp)")"
@@ -87,22 +90,26 @@ if [ -z "${SSH_AUTH_SOCK}" ] && [ -z "${DISPLAY}" ] && which ssh-agent >/dev/nul
 fi
 
 appendpackageroot() {
+    # shellcheck disable=SC2317
     export DOTFILES_PACKAGE_ROOTS="${DOTFILES_PACKAGE_ROOTS}:${1}"
 }
 
 prependpackageroot() {
+    # shellcheck disable=SC2317
     export DOTFILES_PACKAGE_ROOTS="${1}:${DOTFILES_PACKAGE_ROOTS}"
 }
 
 # Use the ~/.dotfiles-variables.sh file for stuff that should be visible to GUI
 # programs, but should not be version controlled.
 if [ -f "${DOTFILES_LOCAL_VARIABLES}" ]; then
+    # shellcheck source=/dev/null
     . "${DOTFILES_LOCAL_VARIABLES}"
 fi
 
 unset appendpackageroot prependpackageroot
 
 # Load packages
+# shellcheck source=/dev/null
 . "${DOTFILES_PACKAGE_SCRIPTS}/load-packages-env.sh"
 
 export PATH="${DOTFILES_LOCAL_BIN}:${PATH}"

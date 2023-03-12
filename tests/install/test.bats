@@ -6,7 +6,7 @@ setup() {
 
     THIS_DIR="$(cd "$(dirname "${BATS_TEST_FILENAME}")" && pwd)"
     TMP_DIR="$(mktemp -d)"
-    PROCESSED_DIR="${TMP_DIR}/.dotfiles-processed"
+    PROCESSED_DIR="${TMP_DIR}/.dotfiles.d/processed"
     INSTALL="${THIS_DIR}/../../install.sh"
 }
 

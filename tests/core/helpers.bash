@@ -56,6 +56,7 @@ function run_zsh() {
 
 function _after_login() {
     (
+        # shellcheck source=/dev/null
         source <(env -i -C "${TMP_DIR}" HOME="${TMP_DIR}" TERM='xterm-256color' DOTFILES_NO_PACKAGE_UPDATES='t' dash -l -c 'env -0' | xargs -0 bash -c 'printf "export %q\n" "$@"' -- | LC_ALL=C sort)
         bash -c "${1}"
         "${@:2}"

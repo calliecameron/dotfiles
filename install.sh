@@ -5,8 +5,8 @@
 set -eu
 
 THIS_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-SRC_DIR="${THIS_DIR}/core/stubs"
-PROCESSED_DIR="${HOME}/.dotfiles-processed"
+SRC_DIR="${THIS_DIR}/core/templates"
+PROCESSED_DIR="${HOME}/.dotfiles.d/processed"
 
 function dofile() {
     local SRC="${SRC_DIR}/${1}"

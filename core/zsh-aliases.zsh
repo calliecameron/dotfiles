@@ -6,6 +6,7 @@
 export DOTFILES_SHELL='zsh'
 # Might not have loaded environment variables yet, so have to do this with the
 # full path
+# shellcheck source=/dev/null
 source "${DOTFILES_DIR}/core/generic-aliases.bash"
 
 if [ -n "${DOTFILES_NO_ALIASES}" ]; then
