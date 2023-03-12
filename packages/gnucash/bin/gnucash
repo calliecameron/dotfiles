@@ -12,7 +12,7 @@
 # in UTC, UTC+1, or UTC+2; with UTC+2 they will all be displayed using
 # the correct date (and future transactions will always be UTC+2).
 
-if [ ! -z "${DOTFILES_ORIGINAL_GNUCASH}" ]; then
+if [ -n "${DOTFILES_ORIGINAL_GNUCASH}" ]; then
     export TZ='CEST-2'
     exec "${DOTFILES_ORIGINAL_GNUCASH}" "${@}"
 fi

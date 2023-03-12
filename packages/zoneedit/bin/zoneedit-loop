@@ -14,7 +14,7 @@ HOST="${1}"
 USERNAME="${2}"
 PASSWORD="${3}"
 
-if [ ! -z "${4}" ]; then
+if [ -n "${4}" ]; then
     DELAY="${4}"
 else
     DELAY='30m'

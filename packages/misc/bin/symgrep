@@ -10,7 +10,7 @@ test -z "${1}" && usage
 test -z "${2}" && usage
 test -z "${3}" && usage
 
-if [ ! -z "${4}" ]; then
+if [ -n "${4}" ]; then
     READELF="${4}"
 else
     READELF='readelf'
