@@ -1,1 +1,0 @@
-alias mm='markdown-makefile'
