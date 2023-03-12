@@ -1,5 +1,4 @@
 function _can-install() {
-    os linux &&
     linux-variant main &&
     graphical &&
     pgrep cinnamon &>/dev/null

@@ -35,11 +35,9 @@ alias ........='cd ../../../../../../..'
 alias t='tree -C'
 alias m='make'
 
-if os linux; then
-    alias cbc='xclip -i -selection clipboard'
-    alias cbp='xclip -o -selection clipboard'
+alias cbc='xclip -i -selection clipboard'
+alias cbp='xclip -o -selection clipboard'
 
-    if [ "${DOTFILES_LINUX_VARIANT}" = 'main' ]; then
-        alias alert='notify-send --urgency=low -i "$([ $? = 0 ] && echo terminal || echo error)" "$(history|tail -n1|sed -e '\''s/^\s*[0-9]\+\s*//;s/[;&|]\s*alert$//'\'')"'
-    fi
+if [ "${DOTFILES_LINUX_VARIANT}" = 'main' ]; then
+    alias alert='notify-send --urgency=low -i "$([ $? = 0 ] && echo terminal || echo error)" "$(history|tail -n1|sed -e '\''s/^\s*[0-9]\+\s*//;s/[;&|]\s*alert$//'\'')"'
 fi

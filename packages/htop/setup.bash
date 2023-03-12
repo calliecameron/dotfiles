@@ -1,5 +1,5 @@
 function _can-install() {
-    os linux && linux-variant main && can-sudo
+    linux-variant main && can-sudo
 }
 
 function _install() {

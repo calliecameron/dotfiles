@@ -1,7 +1,5 @@
-if os linux; then
-    alias u='sudo apt-get update && sudo apt-get upgrade && sudo apt-get dist-upgrade && hash -f'
-    function i() {
-        sudo apt-get install "${@}" &&
-        hash -f
-    }
-fi
+alias u='sudo apt-get update && sudo apt-get upgrade && sudo apt-get dist-upgrade && hash -f'
+function i() {
+    sudo apt-get install "${@}" &&
+    hash -f
+}

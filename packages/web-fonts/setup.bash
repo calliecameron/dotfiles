@@ -1,5 +1,4 @@
 function _can-install() {
-    os linux &&
     type git &>/dev/null
 }
 

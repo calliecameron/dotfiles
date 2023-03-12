@@ -1,5 +1,5 @@
 function _install() {
-    os linux && can-sudo && package-installed dev-tools
+    can-sudo && package-installed dev-tools
 }
 
 function _install() {

@@ -1,5 +1,5 @@
 function _can-install() {
-    os linux
+    true
 }
 
 function _install() {

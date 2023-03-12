@@ -1,5 +1,5 @@
 function _can-install() {
-    os linux && graphical && can-sudo
+    graphical && can-sudo
 }
 
 function _install() {

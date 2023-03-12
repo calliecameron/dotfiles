@@ -1,5 +1,5 @@
 function _install() {
-    os linux && linux-variant main && package-installed dev-tools
+    linux-variant main && package-installed dev-tools
 }
 
 function _install() {

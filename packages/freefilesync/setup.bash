@@ -1,5 +1,5 @@
 function _can-install() {
-    os linux && linux-variant main && graphical
+    linux-variant main && graphical
 }
 
 function _install() {

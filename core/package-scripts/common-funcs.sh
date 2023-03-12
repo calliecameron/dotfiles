@@ -158,11 +158,6 @@ ignore() {
     return 0
 }
 
-os() {
-    # TODO remove this
-    return 0
-}
-
 commonfuncscleanup() {
-    unset -f packagerootloop addpath message problem homelink homebinlink complainunset ignored ignore os commonfuncscleanup
+    unset -f packagerootloop addpath message problem homelink homebinlink complainunset ignored ignore commonfuncscleanup
 }

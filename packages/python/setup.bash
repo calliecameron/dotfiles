@@ -1,5 +1,5 @@
 function _install() {
-    os linux && can-sudo
+    can-sudo
 }
 
 function _install() {
