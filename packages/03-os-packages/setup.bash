@@ -11,8 +11,6 @@ function _install() {
 
     if linux-variant main; then
         "${PACKAGE_CONF_DIR}/packages-main.sh" || return 1
-    elif linux-variant pi; then
-        "${PACKAGE_CONF_DIR}/packages-pi.sh" || return 1
     else
         echo-red "Unknown Linux variant - how did we even get here?"
         return 1

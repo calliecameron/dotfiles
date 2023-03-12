@@ -1,6 +1,6 @@
 function _can-install() {
     # Depends on antigen for npm
-    os linux && linux-variant main pi && can-sudo && package-installed antigen
+    os linux && linux-variant main && can-sudo && package-installed antigen
 }
 
 function _install() {

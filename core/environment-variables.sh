@@ -9,9 +9,7 @@
 
 export DOTFILES_LINUX_VARIANT=''
 
-if [ -e '/boot/config.txt' ]; then
-    export DOTFILES_LINUX_VARIANT='pi'
-elif which lsb_release >/dev/null && lsb_release -a 2>/dev/null | grep 'Mint' >/dev/null; then
+if which lsb_release >/dev/null && lsb_release -a 2>/dev/null | grep 'Mint' >/dev/null; then
     export DOTFILES_LINUX_VARIANT='main'
 fi
 
