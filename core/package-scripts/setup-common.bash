@@ -26,7 +26,7 @@ function package-cleanup() {
 
 function package-installed() {
     local NAME
-    if [ ! -z "${1}" ]; then
+    if [ -n "${1}" ]; then
         NAME="${1}"
     else
         NAME="${PACKAGE_NAME}"
@@ -36,7 +36,7 @@ function package-installed() {
 
 function package-ignored() {
     local NAME
-    if [ ! -z "${1}" ]; then
+    if [ -n "${1}" ]; then
         NAME="${1}"
     else
         NAME="${PACKAGE_NAME}"
