@@ -18,16 +18,6 @@ if [ "${TERM}" = 'dumb' ]; then
     echo "Not loading aliases because \$TERM is 'dumb' (probably TRAMP, which is easily confused)."
 fi
 
-if [ ! -e "${DOTFILES_CAN_SUDO_FILE}" ] && [ -z "${DOTFILES_NO_PACKAGE_UPDATES}" ]; then
-    if bash -c 'source "${DOTFILES_BASH_COMMON}"; yn-n "Can you sudo on this machine?"'; then
-        echo 'y' >"${DOTFILES_CAN_SUDO_FILE}"
-        export DOTFILES_CAN_SUDO='y'
-    else
-        touch "${DOTFILES_CAN_SUDO_FILE}"
-    fi
-    touch "${DOTFILES_NEEDS_LOGOUT}"
-fi
-
 function check-init-file() {
     local REPO_FILE="${DOTFILES_STUBS}/${1}"
     local PROCESSED_FILE="${DOTFILES_PROCESSED_DIR}/${2}"

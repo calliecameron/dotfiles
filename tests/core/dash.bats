@@ -56,29 +56,6 @@ function assert_ran() {
     assert_ran
 }
 
-@test 'can-sudo nonexistent' {
-    run_dash -l
-    assert_success
-    assert_ran
-    assert_not_can_sudo
-}
-
-@test 'can-sudo empty' {
-    touch "${TEST_CAN_SUDO}"
-    run_dash -l
-    assert_success
-    assert_ran
-    assert_not_can_sudo
-}
-
-@test 'can-sudo non-empty' {
-    echo 'y' >"${TEST_CAN_SUDO}"
-    run_dash -l
-    assert_success
-    assert_ran
-    assert_can_sudo
-}
-
 @test 'needs-logout nonexistent' {
     run_dash -l
     assert_success

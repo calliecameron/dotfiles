@@ -98,29 +98,6 @@ function assert_ran_env_only() {
     assert_ran 'dash'
 }
 
-@test 'can-sudo nonexistent' {
-    run_zsh -i
-    assert_success
-    assert_ran 'zsh'
-    assert_not_can_sudo
-}
-
-@test 'can-sudo empty' {
-    touch "${TEST_CAN_SUDO}"
-    run_zsh -i
-    assert_success
-    assert_ran 'zsh'
-    assert_not_can_sudo
-}
-
-@test 'can-sudo non-empty' {
-    echo 'y' >"${TEST_CAN_SUDO}"
-    run_zsh -i
-    assert_success
-    assert_ran 'zsh'
-    assert_can_sudo
-}
-
 @test 'needs-logout nonexistent' {
     run_zsh_after_login -i
     assert_success

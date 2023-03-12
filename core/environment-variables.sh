@@ -63,16 +63,6 @@ if [ -e "${DOTFILES_PACKAGE_PROBLEMS_FILE}" ]; then
     rm -f "${DOTFILES_PACKAGE_PROBLEMS_FILE}"
 fi
 
-# We use the contents of the file to determine whether we can sudo, because the
-# presence/absence of the file is used to determine whether we should ask.
-export DOTFILES_CAN_SUDO_FILE="${HOME}/.dotfiles-can-sudo"
-if [ -e "${DOTFILES_CAN_SUDO_FILE}" ]; then
-    DOTFILES_CAN_SUDO="$(cat "${DOTFILES_CAN_SUDO_FILE}")"
-    export DOTFILES_CAN_SUDO
-else
-    export DOTFILES_CAN_SUDO=''
-fi
-
 export DOTFILES_ETC_DIR='/etc/dotfiles'
 
 export PATH="${DOTFILES_CORE_BIN}:${PATH}"

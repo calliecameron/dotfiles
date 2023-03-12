@@ -33,7 +33,6 @@ function setup_common() {
     TEST_PACKAGE_PROBLEMS="${TMP_DIR}/.dotfiles-package-problems"
     TEST_NEXT_LOGIN="${TMP_DIR}/.dotfiles-next-login.bash"
     TEST_NEXT_INIT="${TMP_DIR}/.dotfiles-next-init.bash"
-    TEST_CAN_SUDO="${TMP_DIR}/.dotfiles-can-sudo"
 }
 
 function teardown_common() {
@@ -99,14 +98,6 @@ function assert_path() {
 
 function assert_package_roots() {
     assert_line "TEST_PACKAGE_ROOTS=/bar:$(readlink -f "${THIS_DIR}/../..")/private/packages-pre:$(readlink -f "${THIS_DIR}/../..")/packages:$(readlink -f "${THIS_DIR}/../..")/private/packages:/foo"
-}
-
-function assert_can_sudo() {
-    assert_line 'DOTFILES_CAN_SUDO=y'
-}
-
-function assert_not_can_sudo() {
-    assert_line 'DOTFILES_CAN_SUDO='
 }
 
 function assert_stub_ran() {

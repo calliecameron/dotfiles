@@ -60,7 +60,7 @@ function known-linux-variant() {
 }
 
 function can-sudo() {
-    test ! -z "${DOTFILES_CAN_SUDO}"
+    sudo -l | grep '(ALL : ALL) ALL' &>/dev/null
 }
 
 function graphical() {

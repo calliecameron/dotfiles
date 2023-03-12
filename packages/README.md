@@ -48,8 +48,6 @@ In shell files, the following environment variables are available:
   be installed, create this directory and put things in it.
 - `DOTFILES_LINUX_VARIANT`: can be `main` (for current preferred distro)
   or empty for unknown.
-- `DOTFILES_CAN_SUDO`: whether the user has sudo permissions on
-  this machine; only set on Linux.
 
 In env and alias files, and in setup.bash, the functions in
 ../core/package-scripts/common-funcs.sh are available. In setup.bash
