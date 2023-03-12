@@ -2,6 +2,7 @@
 function setup_common() {
     THIS_DIR="$(cd "$(dirname "${BATS_TEST_FILENAME}")" && pwd)"
     TMP_DIR="$(mktemp -d)"
+    mkdir -p "${TMP_DIR}/.dotfiles.d"
 
     TEST_PACKAGE_ROOT="${TMP_DIR}/packages"
     mkdir -p "${TEST_PACKAGE_ROOT}/foo"
@@ -10,7 +11,7 @@ function setup_common() {
     echo "if [ -n \"\${ZSH_VERSION}\" ]; then export TEST_PACKAGE_BASH_ALIASES='zsh'; else export TEST_PACKAGE_BASH_ALIASES=\"\$(basename \"\${0}\")\"; fi" >"${TEST_PACKAGE_ROOT}/foo/aliases.bash"
     echo "if [ -n \"\${ZSH_VERSION}\" ]; then export TEST_PACKAGE_ZSH_ALIASES='zsh'; else export TEST_PACKAGE_ZSH_ALIASES=\"\$(basename \"\${0}\")\"; fi" >"${TEST_PACKAGE_ROOT}/foo/aliases.zsh"
 
-    TEST_LOCAL_ENV_FILE="${TMP_DIR}/.dotfiles-variables.sh"
+    TEST_LOCAL_ENV_FILE="${TMP_DIR}/.dotfiles.d/local-variables.sh"
     {
         echo "if [ -n \"\${ZSH_VERSION}\" ]; then export TEST_LOCAL_ENV='zsh'; else export TEST_LOCAL_ENV=\"\$(basename \"\${0}\")\"; fi"
         echo "appendpackageroot /foo"
@@ -19,20 +20,20 @@ function setup_common() {
         echo "export DOTFILES_PACKAGE_ROOTS='${TEST_PACKAGE_ROOT}'"
     } >"${TEST_LOCAL_ENV_FILE}"
 
-    TEST_LOCAL_GENERIC_ALIASES_FILE="${TMP_DIR}/.dotfiles-aliases.sh"
+    TEST_LOCAL_GENERIC_ALIASES_FILE="${TMP_DIR}/.dotfiles.d/local-aliases.sh"
     echo "if [ -n \"\${ZSH_VERSION}\" ]; then export TEST_LOCAL_GENERIC_ALIASES='zsh'; else export TEST_LOCAL_GENERIC_ALIASES=\"\$(basename \"\${0}\")\"; fi" >"${TEST_LOCAL_GENERIC_ALIASES_FILE}"
 
-    TEST_LOCAL_BASH_ALIASES_FILE="${TMP_DIR}/.dotfiles-aliases.bash"
+    TEST_LOCAL_BASH_ALIASES_FILE="${TMP_DIR}/.dotfiles.d/local-aliases.bash"
     echo "if [ -n \"\${ZSH_VERSION}\" ]; then export TEST_LOCAL_BASH_ALIASES='zsh'; else export TEST_LOCAL_BASH_ALIASES=\"\$(basename \"\${0}\")\"; fi" >"${TEST_LOCAL_BASH_ALIASES_FILE}"
 
-    TEST_LOCAL_ZSH_ALIASES_FILE="${TMP_DIR}/.dotfiles-aliases.zsh"
+    TEST_LOCAL_ZSH_ALIASES_FILE="${TMP_DIR}/.dotfiles.d/local-aliases.zsh"
     echo "if [ -n \"\${ZSH_VERSION}\" ]; then export TEST_LOCAL_ZSH_ALIASES='zsh'; else export TEST_LOCAL_ZSH_ALIASES=\"\$(basename \"\${0}\")\"; fi" >"${TEST_LOCAL_ZSH_ALIASES_FILE}"
 
-    TEST_NEEDS_LOGOUT="${TMP_DIR}/.dotfiles-needs-logout"
-    TEST_PACKAGE_MESSAGES="${TMP_DIR}/.dotfiles-package-messages"
-    TEST_PACKAGE_PROBLEMS="${TMP_DIR}/.dotfiles-package-problems"
-    TEST_NEXT_LOGIN="${TMP_DIR}/.dotfiles-next-login.bash"
-    TEST_NEXT_INIT="${TMP_DIR}/.dotfiles-next-init.bash"
+    TEST_NEEDS_LOGOUT="${TMP_DIR}/.dotfiles.d/needs-logout"
+    TEST_PACKAGE_MESSAGES="${TMP_DIR}/.dotfiles.d/package-messages"
+    TEST_PACKAGE_PROBLEMS="${TMP_DIR}/.dotfiles.d/package-problems"
+    TEST_NEXT_LOGIN="${TMP_DIR}/.dotfiles.d/next-login.bash"
+    TEST_NEXT_INIT="${TMP_DIR}/.dotfiles.d/next-init.bash"
 }
 
 function teardown_common() {
@@ -93,7 +94,7 @@ function assert_num_matching_lines() {
 
 function assert_path() {
     assert_line --regexp "^PATH=.*$(readlink -f "${THIS_DIR}/../..")/core/bin.*\$"
-    assert_line --regexp "^PATH=.*$(readlink -f "${TMP_DIR}")/\\.bin.*\$"
+    assert_line --regexp "^PATH=.*$(readlink -f "${TMP_DIR}")/\\.dotfiles\\.d/local-bin.*\$"
 }
 
 function assert_package_roots() {

@@ -29,25 +29,25 @@ export DOTFILES_LOCAL_DIR="${HOME}/.dotfiles.d"
 mkdir -p "${DOTFILES_LOCAL_DIR}"
 
 export DOTFILES_PROCESSED_DIR="${DOTFILES_LOCAL_DIR}/processed"
-export DOTFILES_LOCAL_VARIABLES="${HOME}/.dotfiles-variables.sh"
-export DOTFILES_LOCAL_ALIASES="${HOME}/.dotfiles-aliases"
-export DOTFILES_LOCAL_EMACS="${HOME}/.dotfiles-emacs.el"
-export DOTFILES_LOCAL_BIN="${HOME}/.bin"
+export DOTFILES_LOCAL_VARIABLES="${DOTFILES_LOCAL_DIR}/local-variables.sh"
+export DOTFILES_LOCAL_ALIASES="${DOTFILES_LOCAL_DIR}/local-aliases"
+export DOTFILES_LOCAL_EMACS="${DOTFILES_LOCAL_DIR}/local-emacs.el"
+export DOTFILES_LOCAL_BIN="${DOTFILES_LOCAL_DIR}/local-bin"
 
-export DOTFILES_NEXT_LOGIN="${HOME}/.dotfiles-next-login.bash"
-export DOTFILES_NEXT_INIT="${HOME}/.dotfiles-next-init.bash"
-export DOTFILES_NEEDS_LOGOUT="${HOME}/.dotfiles-needs-logout"
+export DOTFILES_NEXT_LOGIN="${DOTFILES_LOCAL_DIR}/next-login.bash"
+export DOTFILES_NEXT_INIT="${DOTFILES_LOCAL_DIR}/next-init.bash"
+export DOTFILES_NEEDS_LOGOUT="${DOTFILES_LOCAL_DIR}/needs-logout"
 
 if [ -e "${DOTFILES_NEEDS_LOGOUT}" ]; then
     rm -f "${DOTFILES_NEEDS_LOGOUT}"
 fi
 
 export DOTFILES_PACKAGE_SCRIPTS="${DOTFILES_CORE_DIR}/package-scripts"
-export DOTFILES_PACKAGE_INSTALL_DIR="${HOME}/.dotfiles-packages"
+export DOTFILES_PACKAGE_INSTALL_DIR="${DOTFILES_LOCAL_DIR}/packages"
 export DOTFILES_PACKAGE_IGNORE_FILE="${DOTFILES_PACKAGE_INSTALL_DIR}/ignored.txt"
-export DOTFILES_PACKAGE_MUTEX="${HOME}/.dotfiles-package-mutex"
-export DOTFILES_PACKAGE_MESSAGES_FILE="${HOME}/.dotfiles-package-messages"
-export DOTFILES_PACKAGE_PROBLEMS_FILE="${HOME}/.dotfiles-package-problems"
+export DOTFILES_PACKAGE_MUTEX="${DOTFILES_LOCAL_DIR}/package-mutex"
+export DOTFILES_PACKAGE_MESSAGES_FILE="${DOTFILES_LOCAL_DIR}/package-messages"
+export DOTFILES_PACKAGE_PROBLEMS_FILE="${DOTFILES_LOCAL_DIR}/package-problems"
 
 export DOTFILES_PRIVATE_DIR="${DOTFILES_DIR}/private"
 export DOTFILES_PRIVATE_REPO=''
