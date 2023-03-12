@@ -19,17 +19,16 @@ if [ "${TERM}" = 'dumb' ]; then
 fi
 
 function check-init-file() {
-    local REPO_FILE="${DOTFILES_STUBS}/${1}"
+    local REPO_FILE="${DOTFILES_TEMPLATES}/${1}"
     local PROCESSED_FILE="${DOTFILES_PROCESSED_DIR}/${2}"
     local INSTALLED_FILE="${HOME}/${2}"
     local MSG
     MSG="\e[33mYour $(basename "${INSTALLED_FILE}") doesn't look right - maybe something has tampered with it, or you need to run install.sh again.\e[0m"
 
-    if [ ! -e "${PROCESSED_FILE}" ]; then
-        echo -e "${MSG}"
-    elif [ "${REPO_FILE}" -nt "${PROCESSED_FILE}" ]; then # '-nt' is 'newer than'
-        echo -e "${MSG}"
-    elif ! cmp "${PROCESSED_FILE}" "${INSTALLED_FILE}" &>/dev/null; then
+    if [ ! -e "${PROCESSED_FILE}" ] ||
+        [ ! -e "${REPO_FILE}" ] ||
+        [ "${REPO_FILE}" -nt "${PROCESSED_FILE}" ] || # '-nt' is 'newer than'
+        ! cmp "${PROCESSED_FILE}" "${INSTALLED_FILE}" &>/dev/null; then
         echo -e "${MSG}"
     fi
 }
