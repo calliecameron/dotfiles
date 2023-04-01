@@ -383,3 +383,39 @@ run_script() {
     run_script "${BIN_DIR}/dotfiles-is-graphical"
     assert_failure
 }
+
+@test 'dotfiles-package-ignored usage' {
+    run_script "${BIN_DIR}/dotfiles-package-ignored"
+    assert_failure
+    assert_line --partial 'Usage:'
+}
+
+@test 'dotfiles-package-ignored no file' {
+    run_script "DOTFILES_PACKAGE_IGNORE_FILE=${TMP_DIR}/a" "${BIN_DIR}/dotfiles-package-ignored" 'foo'
+    assert_failure
+    refute_line --partial 'Usage:'
+}
+
+@test 'dotfiles-package-ignored empty file' {
+    local IGNORE="${TMP_DIR}/a"
+    touch "${IGNORE}"
+    run_script "DOTFILES_PACKAGE_IGNORE_FILE=${IGNORE}" "${BIN_DIR}/dotfiles-package-ignored" 'foo'
+    assert_failure
+    refute_line --partial 'Usage:'
+}
+
+@test 'dotfiles-package-ignored success' {
+    local IGNORE="${TMP_DIR}/a"
+    printf "foo\nbar\nbaz\n" >"${IGNORE}"
+    run_script "DOTFILES_PACKAGE_IGNORE_FILE=${IGNORE}" "${BIN_DIR}/dotfiles-package-ignored" 'foo'
+    assert_success
+    refute_line --partial 'Usage:'
+}
+
+@test 'dotfiles-package-ignored failure' {
+    local IGNORE="${TMP_DIR}/a"
+    printf "foo\nbar\nbaz\n" >"${IGNORE}"
+    run_script "DOTFILES_PACKAGE_IGNORE_FILE=${IGNORE}" "${BIN_DIR}/dotfiles-package-ignored" 'quux'
+    assert_failure
+    refute_line --partial 'Usage:'
+}

@@ -30,7 +30,7 @@ loadpackageenv() {
 
     if [ -d "${PACKAGE_CONF_DIR}" ] &&
            ! dotfiles-in-list "${DOTFILES_PACKAGES_LOADED_ENV}" "${PACKAGE_NAME}" &&
-           ! ignored "${PACKAGE_NAME}"; then
+           ! dotfiles-package-ignored "${PACKAGE_NAME}"; then
         if [ -e "${PACKAGE_INSTALLED_FILE}" ] || [ ! -e "${PACKAGE_CONF_DIR}/setup.bash" ]; then
 
             if [ -d "${PACKAGE_CONF_DIR}/bin" ]; then

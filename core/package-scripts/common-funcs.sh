@@ -135,21 +135,9 @@ complainunset() {
     fi
 }
 
-ignored() {
-    if [ -e "${DOTFILES_PACKAGE_IGNORE_FILE}" ]; then
-        if grep "^${1}\$" "${DOTFILES_PACKAGE_IGNORE_FILE}" >/dev/null 2>/dev/null; then
-            return 0
-        else
-            return 1
-        fi
-    else
-        return 1
-    fi
-}
-
 ignore() {
     while [ ! -z "${1}" ]; do
-        if ! ignored "${1}"; then
+        if ! dotfiles-package-ignored "${1}"; then
             mkdir -p "${DOTFILES_PACKAGE_INSTALL_DIR}" &&
             echo "${1}" >>"${DOTFILES_PACKAGE_IGNORE_FILE}" || return 1
         fi
@@ -159,5 +147,5 @@ ignore() {
 }
 
 commonfuncscleanup() {
-    unset -f packagerootloop addpath message problem homelink homebinlink complainunset ignored ignore commonfuncscleanup
+    unset -f packagerootloop addpath message problem homelink homebinlink complainunset ignore commonfuncscleanup
 }

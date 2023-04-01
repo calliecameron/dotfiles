@@ -31,14 +31,3 @@ function package-installed() {
     fi
     test -e "${DOTFILES_PACKAGE_INSTALL_DIR}/${NAME}.installed"
 }
-
-function package-ignored() {
-    local NAME
-    if [ -n "${1}" ]; then
-        NAME="${1}"
-    else
-        NAME="${PACKAGE_NAME}"
-    fi
-
-    ignored "${NAME}"
-}

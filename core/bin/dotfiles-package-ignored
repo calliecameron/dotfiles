@@ -1,0 +1,17 @@
+#!/bin/bash
+
+set -eu
+
+function usage() {
+    echo "Usage: $(basename "${0}") package_name"
+    exit 1
+}
+
+test -z "${1:-}" && usage
+PACKAGE="${1}"
+
+if [ -f "${DOTFILES_PACKAGE_IGNORE_FILE}" ] &&
+    grep "^${PACKAGE}\$" "${DOTFILES_PACKAGE_IGNORE_FILE}" &>/dev/null; then
+    exit 0
+fi
+exit 1

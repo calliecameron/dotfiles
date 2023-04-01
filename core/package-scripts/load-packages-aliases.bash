@@ -42,7 +42,7 @@ function load-packages-aliases() {
 
                         if [ -d "${PACKAGE_CONF_DIR}" ] &&
                                ! dotfiles-in-list "${DOTFILES_PACKAGES_LOADED_ALIASES}" "${PACKAGE_NAME}" &&
-                               ! ignored "${PACKAGE_NAME}"; then
+                               ! dotfiles-package-ignored "${PACKAGE_NAME}"; then
                             if [ -e "${PACKAGE_INSTALLED_FILE}" ] || [ ! -e "${PACKAGE_CONF_DIR}/setup.bash" ]; then
 
                                 # Newly-installed packages won't have been enved at login time
