@@ -1,5 +1,5 @@
 function _install() {
-    dotfiles-linux-variant main && package-installed dev-tools
+    dotfiles-linux-variant main && dotfiles-package-installed dev-tools
 }
 
 function _install() {

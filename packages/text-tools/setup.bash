@@ -1,5 +1,5 @@
 function _can-install() {
-    dotfiles-linux-variant main && dotfiles-can-sudo && package-installed python
+    dotfiles-linux-variant main && dotfiles-can-sudo && dotfiles-package-installed python
 }
 
 function _install() {

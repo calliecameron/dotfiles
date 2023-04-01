@@ -2,12 +2,12 @@ function _can-install() {
     dotfiles-linux-variant main &&
     dotfiles-graphical &&
     dotfiles-can-sudo &&
-    package-installed python &&
-    package-installed dev-tools &&
-    package-installed web-dev-tools &&
-    package-installed text-tools &&
-    package-installed go &&
-    package-installed bazel
+    dotfiles-package-installed python &&
+    dotfiles-package-installed dev-tools &&
+    dotfiles-package-installed web-dev-tools &&
+    dotfiles-package-installed text-tools &&
+    dotfiles-package-installed go &&
+    dotfiles-package-installed bazel
 }
 
 function _install() {

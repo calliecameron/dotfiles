@@ -1,8 +1,8 @@
 function _can-install() {
     dotfiles-linux-variant main &&
     dotfiles-graphical &&
-    package-installed iptables &&
-    package-installed emacs &&
+    dotfiles-package-installed iptables &&
+    dotfiles-package-installed emacs &&
     type port &>/dev/null
 }
 

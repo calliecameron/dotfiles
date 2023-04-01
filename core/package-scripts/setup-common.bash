@@ -21,13 +21,3 @@ function package-cleanup() {
     unset -f _install _update _can-install
     unset OFFER_GIT_SSH USE_GIT_SSH
 }
-
-function package-installed() {
-    local NAME
-    if [ -n "${1}" ]; then
-        NAME="${1}"
-    else
-        NAME="${PACKAGE_NAME}"
-    fi
-    test -e "${DOTFILES_PACKAGE_INSTALL_DIR}/${NAME}.installed"
-}

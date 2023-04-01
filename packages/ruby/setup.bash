@@ -1,5 +1,5 @@
 function _install() {
-    dotfiles-can-sudo && package-installed dev-tools
+    dotfiles-can-sudo && dotfiles-package-installed dev-tools
 }
 
 function _install() {

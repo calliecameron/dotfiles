@@ -1,5 +1,5 @@
 function _can-install() {
-    package-installed emacs &&
+    dotfiles-package-installed emacs &&
     type emacs &>/dev/null
 }
 

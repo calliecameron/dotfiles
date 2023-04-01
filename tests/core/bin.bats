@@ -493,3 +493,22 @@ run_script() {
     assert [ "$(wc -l <"${IGNORE_FILE}")" = '3' ]
     assert [ "$(cat "${IGNORE_FILE}")" = "$(printf 'foo\nbar\nbaz')" ]
 }
+
+@test 'dotfiles-package-installed usage' {
+    run_script "${BIN_DIR}/dotfiles-package-installed"
+    assert_failure
+    assert_line --partial 'Usage:'
+}
+
+@test 'dotfiles-package-installed success' {
+    touch "${TMP_DIR}/foo.installed"
+    run_script "DOTFILES_PACKAGE_INSTALL_DIR=${TMP_DIR}" "${BIN_DIR}/dotfiles-package-installed" 'foo'
+    assert_success
+    refute_line --partial 'Usage:'
+}
+
+@test 'dotfiles-package-installed failure' {
+    run_script "DOTFILES_PACKAGE_INSTALL_DIR=${TMP_DIR}" "${BIN_DIR}/dotfiles-package-installed" 'foo'
+    assert_failure
+    refute_line --partial 'Usage:'
+}
