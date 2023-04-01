@@ -41,7 +41,7 @@ function load-packages-aliases() {
                         PACKAGE_INSTALLED_FILE="${DOTFILES_PACKAGE_INSTALL_DIR}/${PACKAGE_NAME}.installed"
 
                         if [ -d "${PACKAGE_CONF_DIR}" ] &&
-                               ! sh "${DOTFILES_PACKAGE_SCRIPTS}/inlist.sh" "${DOTFILES_PACKAGES_LOADED_ALIASES}" "${PACKAGE_NAME}" &&
+                               ! dotfiles-in-list "${DOTFILES_PACKAGES_LOADED_ALIASES}" "${PACKAGE_NAME}" &&
                                ! ignored "${PACKAGE_NAME}"; then
                             if [ -e "${PACKAGE_INSTALLED_FILE}" ] || [ ! -e "${PACKAGE_CONF_DIR}/setup.bash" ]; then
 

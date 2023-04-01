@@ -306,3 +306,45 @@ run_script() {
     run_script "${BIN_DIR}/dotfiles-yn-n" 'foo' <<<'foo'
     assert_failure
 }
+
+@test 'dotfiles-in-list no args' {
+    run_script "${BIN_DIR}/dotfiles-in-list"
+    assert_failure
+    assert_line --partial 'Usage:'
+}
+
+@test 'dotfiles-in-list one arg' {
+    run_script "${BIN_DIR}/dotfiles-in-list" 'foo'
+    assert_failure
+    assert_line --partial 'Usage:'
+}
+
+@test 'dotfiles-in-list empty list' {
+    run_script "${BIN_DIR}/dotfiles-in-list" '' 'foo'
+    assert_failure
+    refute_line --partial 'Usage:'
+}
+
+@test 'dotfiles-in-list simple list present' {
+    run_script "${BIN_DIR}/dotfiles-in-list" 'foo' 'foo'
+    assert_success
+    refute_line --partial 'Usage:'
+}
+
+@test 'dotfiles-in-list simple list absent' {
+    run_script "${BIN_DIR}/dotfiles-in-list" 'foo' 'bar'
+    assert_failure
+    refute_line --partial 'Usage:'
+}
+
+@test 'dotfiles-in-list complex list present' {
+    run_script "${BIN_DIR}/dotfiles-in-list" 'foo:bar:baz' 'bar'
+    assert_success
+    refute_line --partial 'Usage:'
+}
+
+@test 'dotfiles-in-list complex list absent' {
+    run_script "${BIN_DIR}/dotfiles-in-list" 'foo:bar:baz' 'quux'
+    assert_failure
+    refute_line --partial 'Usage:'
+}

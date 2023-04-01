@@ -1,6 +1,14 @@
-#!/bin/sh
+#!/bin/bash
 # Check if an item is in a colon delimited list (PATH-style)
-# Args: list item
+
+set -eu
+
+function usage() {
+    echo "Usage: $(basename "${0}") colon_delimited_list item"
+    exit 1
+}
+
+test -z "${2:-}" && usage
 
 LIST="${1}"
 ITEM="${2}"
