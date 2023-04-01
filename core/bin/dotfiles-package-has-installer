@@ -1,0 +1,13 @@
+#!/bin/bash
+
+set -eu
+
+function usage() {
+    echo "Usage: $(basename "${0}") package_name_or_source_path"
+    exit 1
+}
+
+test -z "${1:-}" && usage
+PACKAGE_PATH="$(dotfiles-package-source-path "${1}")"
+
+test -e "${PACKAGE_PATH}/install"

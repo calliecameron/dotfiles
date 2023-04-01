@@ -536,3 +536,53 @@ run_script() {
     refute_output
     refute_line --partial 'Usage:'
 }
+
+@test 'dotfiles-package-source-path path' {
+    run_script "${BIN_DIR}/dotfiles-package-source-path" 'foo/bar'
+    assert_success
+    assert_line "foo/bar"
+    refute_line --partial 'Usage:'
+}
+
+@test 'dotfiles-package-has-installer usage' {
+    run_script "${BIN_DIR}/dotfiles-package-has-installer"
+    assert_failure
+    assert_line --partial 'Usage:'
+}
+
+@test 'dotfiles-package-has-installer nonexistent package' {
+    mkdir -p "${TMP_DIR}/a"
+    run_script "PATH=${BIN_DIR}:${PATH}" "DOTFILES_PACKAGE_ROOTS=${TMP_DIR}/a" "${BIN_DIR}/dotfiles-package-has-installer" 'foo'
+    assert_failure
+    refute_line --partial 'Usage:'
+}
+
+@test 'dotfiles-package-has-installer success' {
+    mkdir -p "${TMP_DIR}/a/foo"
+    touch "${TMP_DIR}/a/foo/install"
+    run_script "PATH=${BIN_DIR}:${PATH}" "DOTFILES_PACKAGE_ROOTS=${TMP_DIR}/a" "${BIN_DIR}/dotfiles-package-has-installer" 'foo'
+    assert_success
+    refute_line --partial 'Usage:'
+}
+
+@test 'dotfiles-package-has-installer failure' {
+    mkdir -p "${TMP_DIR}/a/foo"
+    run_script "PATH=${BIN_DIR}:${PATH}" "DOTFILES_PACKAGE_ROOTS=${TMP_DIR}/a" "${BIN_DIR}/dotfiles-package-has-installer" 'foo'
+    assert_failure
+    refute_line --partial 'Usage:'
+}
+
+@test 'dotfiles-package-has-installer path success' {
+    mkdir -p "${TMP_DIR}/a/foo"
+    touch "${TMP_DIR}/a/foo/install"
+    run_script "PATH=${BIN_DIR}:${PATH}" "${BIN_DIR}/dotfiles-package-has-installer" "${TMP_DIR}/a/foo"
+    assert_success
+    refute_line --partial 'Usage:'
+}
+
+@test 'dotfiles-package-has-installer path failure' {
+    mkdir -p "${TMP_DIR}/a/foo"
+    run_script "PATH=${BIN_DIR}:${PATH}" "${BIN_DIR}/dotfiles-package-has-installer" "${TMP_DIR}/a/foo"
+    assert_failure
+    refute_line --partial 'Usage:'
+}

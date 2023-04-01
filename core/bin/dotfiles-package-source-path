@@ -3,12 +3,17 @@
 set -eu
 
 function usage() {
-    echo "Usage: $(basename "${0}") package_name"
+    echo "Usage: $(basename "${0}") package_name_or_source_path"
     exit 1
 }
 
 test -z "${1:-}" && usage
 PACKAGE="${1}"
+
+if [[ "${PACKAGE}" == *'/'* ]]; then
+    echo "${PACKAGE}"
+    exit 0
+fi
 
 IFS=':'
 for package_root in ${DOTFILES_PACKAGE_ROOTS}; do
