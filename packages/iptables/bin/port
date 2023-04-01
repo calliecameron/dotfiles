@@ -1,7 +1,6 @@
 #!/bin/bash
 # Manipulate ports
 
-source "${DOTFILES_BASH_COMMON}" || exit 1
 COMMANDS='is-valid|is-open|open|close|opens-at-boot|open-at-boot|dont-open-at-boot'
 DEFAULT_PROTOCOL='tcp'
 

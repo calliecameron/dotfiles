@@ -1,7 +1,5 @@
 # Functions available to setup.bash scripts, and others used by the installation and update scripts.
 
-source "${DOTFILES_BASH_COMMON}" || exit 1
-
 # shellcheck disable=SC2034
 UPDATE_FILE="${DOTFILES_PACKAGE_INSTALL_DIR}/last-update.txt"
 # shellcheck disable=SC2034

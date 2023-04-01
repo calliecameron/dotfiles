@@ -2,7 +2,7 @@
 
 sudo apt-get -y install vlc &&
 
-source "${DOTFILES_BASH_COMMON}" &&
+THIS_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)" &&
 source "${THIS_DIR}/env.sh" &&
 
 VLCRC="${HOME}/.config/vlc/vlcrc" &&

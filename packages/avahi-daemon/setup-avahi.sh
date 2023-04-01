@@ -1,7 +1,5 @@
 #!/bin/bash
 
-source "${DOTFILES_BASH_COMMON}" || exit 1
-
 sudo aa-enforce /etc/apparmor.d/usr.sbin.avahi-daemon &&
 sudo systemctl restart avahi-daemon.service || exit 1
 

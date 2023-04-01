@@ -1,7 +1,7 @@
 #!/bin/bash
 # Make zoneedit run when the network goes up
 
-source "${DOTFILES_BASH_COMMON}" &&
+THIS_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)" &&
 source "${THIS_DIR}/env.sh" || exit 1
 
 SCRIPT_SRC="${THIS_DIR}/zoneedit-at-net-up" &&
