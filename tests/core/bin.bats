@@ -586,3 +586,93 @@ run_script() {
     assert_failure
     refute_line --partial 'Usage:'
 }
+
+@test 'dotfiles-package-can-install usage' {
+    run_script "${BIN_DIR}/dotfiles-package-can-install"
+    assert_failure
+    assert_line --partial 'Usage:'
+}
+
+@test 'dotfiles-package-can-install nonexistent package' {
+    mkdir -p "${TMP_DIR}/a"
+    run_script "PATH=${BIN_DIR}:${PATH}" "DOTFILES_PACKAGE_ROOTS=${TMP_DIR}/a" "${BIN_DIR}/dotfiles-package-can-install" 'foo'
+    assert_failure
+    refute_line --partial 'Usage:'
+}
+
+@test 'dotfiles-package-can-install package without installer' {
+    mkdir -p "${TMP_DIR}/a/foo"
+    run_script "PATH=${BIN_DIR}:${PATH}" "DOTFILES_PACKAGE_ROOTS=${TMP_DIR}/a" "${BIN_DIR}/dotfiles-package-can-install" 'foo'
+    assert_failure
+    refute_line --partial 'Usage:'
+}
+
+@test 'dotfiles-package-can-install package with installer, no requirements' {
+    mkdir -p "${TMP_DIR}/a/foo"
+    touch "${TMP_DIR}/a/foo/install"
+    run_script "PATH=${BIN_DIR}:${PATH}" "DOTFILES_PACKAGE_ROOTS=${TMP_DIR}/a" "${BIN_DIR}/dotfiles-package-can-install" 'foo'
+    assert_success
+    refute_line --partial 'Usage:'
+}
+
+@test 'dotfiles-package-can-install requirements met' {
+    mkdir -p "${TMP_DIR}/a/foo"
+    touch "${TMP_DIR}/a/foo/install"
+    printf '#!/bin/bash\ntrue\n' >"${TMP_DIR}/a/foo/can-install"
+    chmod u+x "${TMP_DIR}/a/foo/can-install"
+    run_script "PATH=${BIN_DIR}:${PATH}" "DOTFILES_PACKAGE_ROOTS=${TMP_DIR}/a" "${BIN_DIR}/dotfiles-package-can-install" 'foo'
+    assert_success
+    refute_line --partial 'Usage:'
+}
+
+@test 'dotfiles-package-can-install requirements unmet' {
+    mkdir -p "${TMP_DIR}/a/foo"
+    touch "${TMP_DIR}/a/foo/install"
+    printf '#!/bin/bash\nfalse\n' >"${TMP_DIR}/a/foo/can-install"
+    chmod u+x "${TMP_DIR}/a/foo/can-install"
+    run_script "PATH=${BIN_DIR}:${PATH}" "DOTFILES_PACKAGE_ROOTS=${TMP_DIR}/a" "${BIN_DIR}/dotfiles-package-can-install" 'foo'
+    assert_failure
+    refute_line --partial 'Usage:'
+}
+
+@test 'dotfiles-package-can-install nonexistent path' {
+    mkdir -p "${TMP_DIR}/a"
+    run_script "PATH=${BIN_DIR}:${PATH}" "${BIN_DIR}/dotfiles-package-can-install" "${TMP_DIR}/a/foo"
+    assert_failure
+    refute_line --partial 'Usage:'
+}
+
+@test 'dotfiles-package-can-install path without installer' {
+    mkdir -p "${TMP_DIR}/a/foo"
+    run_script "PATH=${BIN_DIR}:${PATH}" "${BIN_DIR}/dotfiles-package-can-install" "${TMP_DIR}/a/foo"
+    assert_failure
+    refute_line --partial 'Usage:'
+}
+
+@test 'dotfiles-package-can-install path with installer, no requirements' {
+    mkdir -p "${TMP_DIR}/a/foo"
+    touch "${TMP_DIR}/a/foo/install"
+    run_script "PATH=${BIN_DIR}:${PATH}" "${BIN_DIR}/dotfiles-package-can-install" "${TMP_DIR}/a/foo"
+    assert_success
+    refute_line --partial 'Usage:'
+}
+
+@test 'dotfiles-package-can-install path requirements met' {
+    mkdir -p "${TMP_DIR}/a/foo"
+    touch "${TMP_DIR}/a/foo/install"
+    printf '#!/bin/bash\ntrue\n' >"${TMP_DIR}/a/foo/can-install"
+    chmod u+x "${TMP_DIR}/a/foo/can-install"
+    run_script "PATH=${BIN_DIR}:${PATH}" "${BIN_DIR}/dotfiles-package-can-install" "${TMP_DIR}/a/foo"
+    assert_success
+    refute_line --partial 'Usage:'
+}
+
+@test 'dotfiles-package-can-install path requirements unmet' {
+    mkdir -p "${TMP_DIR}/a/foo"
+    touch "${TMP_DIR}/a/foo/install"
+    printf '#!/bin/bash\nfalse\n' >"${TMP_DIR}/a/foo/can-install"
+    chmod u+x "${TMP_DIR}/a/foo/can-install"
+    run_script "PATH=${BIN_DIR}:${PATH}" "${BIN_DIR}/dotfiles-package-can-install" "${TMP_DIR}/a/foo"
+    assert_failure
+    refute_line --partial 'Usage:'
+}
