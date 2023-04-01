@@ -19,5 +19,4 @@ function package-setup-vars() {
 
 function package-cleanup() {
     unset -f _install _update _can-install
-    unset OFFER_GIT_SSH USE_GIT_SSH
 }

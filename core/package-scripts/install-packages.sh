@@ -49,12 +49,6 @@ function install-package-root() {
                         # shellcheck disable=SC2015
                         cd "${DOTFILES_PACKAGE_INSTALL_DIR}" || fail "Could not find main package installation directory; quitting."
 
-                        if [ ! -z "${OFFER_GIT_SSH}" ]; then
-                            if dotfiles-yn-y "Use SSH for git clone?"; then
-                                # shellcheck disable=SC2034
-                                USE_GIT_SSH='true'
-                            fi
-                        fi
                         _install &&
                         touch "${PACKAGE_INSTALLED_FILE}" &&
                         # shellcheck disable=SC2015

@@ -1,15 +1,12 @@
+# Packages
+
 For each package, create a folder here with the same name as the
 package, containing any of the following files:
 
 - `setup.bash`: if the package requires installing anything (i.e. it
   isn't just shell functions), this file should contain the bash
   function `_install`, and optionally `_update` and `_can-install` if
-  any dependencies are required. If the package clones a git
-  repository, and can optionally use SSH, the variable `OFFER_GIT_SSH`
-  should be set, and the installation script will ask the user whether
-  to clone using SSH. The result is stored in `USE_GIT_SSH`, which
-  will be available to `_install`, and will be non-empty if SSH
-  cloning is desired. `_install` is called with the working directory
+  any dependencies are required. `_install` is called with the working directory
   set to `DOTFILES_PACKAGE_INSTALL_DIR`. `_update` is called with
   the working directory set to `PACKAGE_INSTALL_DIR` if it exists,
   else `PACKAGE_CONF_DIR`.
@@ -23,6 +20,7 @@ package, containing any of the following files:
   `this-package-conf-dir`.
 
 The folder can also contain any of the following subdirectories:
+
 - `bin`: will be prepended to the PATH and exported, before `env.sh`
   is sourced.
 - `python`: will be prepended to PYTHONPATH and exported, before
@@ -39,6 +37,7 @@ The folder can also contain any of the following subdirectories:
 The folder name is the name of the package. All files are optional.
 
 In shell files, the following environment variables are available:
+
 - `PACKAGE_NAME`: the package's name, which is the name of the folder
   containing it.
 - `PACKAGE_CONF_DIR`: the full path of the package's configuration
@@ -55,6 +54,7 @@ only, the functions in ../core/package-scripts/setup-common.bash and
 ../core/common.bash are also available.
 
 In the Emacs file, the following variables are available:
+
 - `this-package-name`: the package's name, which is the name of the
   folder containing it.
 - `this-package-conf-dir`: the full path of the package's
