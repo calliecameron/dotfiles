@@ -17,7 +17,7 @@ if [ -e "${DOTFILES_PACKAGE_INSTALL_DIR}" ]; then
         TARGET='2419200' || exit 1 # Seconds in four weeks
 
         if [ "${DIFF}" -ge "${TARGET}" ]; then
-            if yn-y "It's been a while since packages were checked for updates. Check now?"; then
+            if dotfiles-yn-y "It's been a while since packages were checked for updates. Check now?"; then
                 UPDATE='1'
             fi
         fi

@@ -17,7 +17,7 @@ if ! grep 'fs.inotify.max_user_watches' /etc/sysctl.conf &>/dev/null; then
     echo 'fs.inotify.max_user_watches=204800' | sudo tee -a /etc/sysctl.conf >/dev/null || exit 1
 fi
 
-if yn-n "Open firewall port for Syncthing (TCP 22000 and UDP 21027)?"; then
+if dotfiles-yn-n "Open firewall port for Syncthing (TCP 22000 and UDP 21027)?"; then
     port open-at-boot 22000 tcp &&
     port open-at-boot 21027 udp &&
     port open 22000 tcp &&

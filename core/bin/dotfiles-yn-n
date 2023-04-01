@@ -1,0 +1,8 @@
+#!/bin/bash
+# N is the default
+
+read -p "${1} [y/N] " -r
+if [[ $REPLY =~ ^[Yy]$ ]]; then
+    exit 0
+fi
+exit 1

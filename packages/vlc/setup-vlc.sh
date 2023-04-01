@@ -30,7 +30,7 @@ else
     check 'playlist-enqueue=0' 'playlist-enqueue=1' || exit 1
 fi
 
-if yn-n "Open firewall port for VLC remote control (TCP port ${DOTFILES_VLC_PORT})?"; then
+if dotfiles-yn-n "Open firewall port for VLC remote control (TCP port ${DOTFILES_VLC_PORT})?"; then
     port open-at-boot "${DOTFILES_VLC_PORT}" tcp &&
     port open "${DOTFILES_VLC_PORT}" tcp || exit 1
 else

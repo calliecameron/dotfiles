@@ -246,3 +246,63 @@ run_script() {
     refute_line --partial 'Usage:'
     assert_line "$(echo -e "\e[34mfoo bar baz\e[0m")"
 }
+
+@test 'dotfiles-yn-y nothing' {
+    run_script "${BIN_DIR}/dotfiles-yn-y" 'foo' <<<''
+    assert_success
+}
+
+@test 'dotfiles-yn-y y' {
+    run_script "${BIN_DIR}/dotfiles-yn-y" 'foo' <<<'y'
+    assert_success
+}
+
+@test 'dotfiles-yn-y Y' {
+    run_script "${BIN_DIR}/dotfiles-yn-y" 'foo' <<<'Y'
+    assert_success
+}
+
+@test 'dotfiles-yn-y n' {
+    run_script "${BIN_DIR}/dotfiles-yn-y" 'foo' <<<'n'
+    assert_failure
+}
+
+@test 'dotfiles-yn-y N' {
+    run_script "${BIN_DIR}/dotfiles-yn-y" 'foo' <<<'N'
+    assert_failure
+}
+
+@test 'dotfiles-yn-y other' {
+    run_script "${BIN_DIR}/dotfiles-yn-y" 'foo' <<<'foo'
+    assert_success
+}
+
+@test 'dotfiles-yn-n nothing' {
+    run_script "${BIN_DIR}/dotfiles-yn-n" 'foo' <<<''
+    assert_failure
+}
+
+@test 'dotfiles-yn-n y' {
+    run_script "${BIN_DIR}/dotfiles-yn-n" 'foo' <<<'y'
+    assert_success
+}
+
+@test 'dotfiles-yn-n Y' {
+    run_script "${BIN_DIR}/dotfiles-yn-n" 'foo' <<<'Y'
+    assert_success
+}
+
+@test 'dotfiles-yn-n n' {
+    run_script "${BIN_DIR}/dotfiles-yn-n" 'foo' <<<'n'
+    assert_failure
+}
+
+@test 'dotfiles-yn-n N' {
+    run_script "${BIN_DIR}/dotfiles-yn-n" 'foo' <<<'N'
+    assert_failure
+}
+
+@test 'dotfiles-yn-n other' {
+    run_script "${BIN_DIR}/dotfiles-yn-n" 'foo' <<<'foo'
+    assert_failure
+}

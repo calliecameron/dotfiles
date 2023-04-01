@@ -6,28 +6,6 @@
 # shellcheck disable=SC2034
 THIS_DIR="$(cd "$(dirname "${BASH_SOURCE[1]}")" && pwd)"
 
-function yn-y() {
-    # Y is the default
-    local REPLY
-    read -p "${1} [Y/n] " -r
-    if [[ $REPLY =~ ^[Nn]$ ]]; then
-        return 1
-    else
-        return 0
-    fi
-}
-
-function yn-n() {
-    # N is the default
-    local REPLY
-    read -p "${1} [y/N] " -r
-    if [[ $REPLY =~ ^[Yy]$ ]]; then
-        return 0
-    else
-        return 1
-    fi
-}
-
 function valid-protocol() {
     if [ "${1}" = 'tcp' ] || [ "${1}" = 'udp' ]; then
         return 0

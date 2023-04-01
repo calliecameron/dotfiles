@@ -4,7 +4,7 @@ source "${DOTFILES_BASH_COMMON}" &&
 
 sudo apt-get -y install nemo-dropbox || exit 1
 
-if yn-n "Open firewall port for Dropbox LAN sync (TCP port 17500)?"; then
+if dotfiles-yn-n "Open firewall port for Dropbox LAN sync (TCP port 17500)?"; then
     port open-at-boot 17500 tcp &&
     port open 17500 tcp || exit 1
 else

@@ -13,7 +13,7 @@ function fail() {
 }
 
 if [ ! -z "${DOTFILES_PRIVATE_REPO}" ] && [ ! -d "${DOTFILES_PRIVATE_DIR}" ]; then
-    if yn-y 'A private repo has been specified; clone it?'; then
+    if dotfiles-yn-y 'A private repo has been specified; clone it?'; then
         if git clone "${DOTFILES_PRIVATE_REPO}" "${DOTFILES_PRIVATE_DIR}"; then
             if [ ! -z "${DOTFILES_PRIVATE_BRANCH}" ]; then
                 cd "${DOTFILES_PRIVATE_DIR}" &&
@@ -44,13 +44,13 @@ function install-package-root() {
                 source "${PACKAGE_SETUP_FILE}" || fail "Could not load package setup file for '${PACKAGE_NAME}'; quitting."
 
                 if ! type _can-install &>/dev/null || _can-install; then
-                    if yn-y "Package '${PACKAGE_NAME}' is missing. Install it?"; then
+                    if dotfiles-yn-y "Package '${PACKAGE_NAME}' is missing. Install it?"; then
                         mkdir -p "${DOTFILES_PACKAGE_INSTALL_DIR}" &&
                         # shellcheck disable=SC2015
                         cd "${DOTFILES_PACKAGE_INSTALL_DIR}" || fail "Could not find main package installation directory; quitting."
 
                         if [ ! -z "${OFFER_GIT_SSH}" ]; then
-                            if yn-y "Use SSH for git clone?"; then
+                            if dotfiles-yn-y "Use SSH for git clone?"; then
                                 # shellcheck disable=SC2034
                                 USE_GIT_SSH='true'
                             fi
@@ -60,7 +60,7 @@ function install-package-root() {
                         # shellcheck disable=SC2015
                         touch "${DOTFILES_NEEDS_LOGOUT}" || fail "Package '${PACKAGE_NAME}' failed to install; quitting."
                     else
-                        if yn-n "Remember decision?"; then
+                        if dotfiles-yn-n "Remember decision?"; then
                             ignore "${PACKAGE_NAME}" || fail 'Could not ignore package.'
                         fi
                     fi
