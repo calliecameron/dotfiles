@@ -1,6 +1,6 @@
 function _can-install() {
     # Depends on antigen for npm
-    linux-variant main && package-installed antigen
+    dotfiles-linux-variant main && package-installed antigen
 }
 
 function _install() {

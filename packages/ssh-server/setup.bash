@@ -1,6 +1,6 @@
 function _can-install() {
-    linux-variant main &&
-    can-sudo &&
+    dotfiles-linux-variant main &&
+    dotfiles-can-sudo &&
     package-installed iptables &&
     type port &>/dev/null
 }

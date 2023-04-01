@@ -1,0 +1,3 @@
+#!/bin/bash
+
+sudo -l | grep '(ALL : ALL) ALL' &>/dev/null

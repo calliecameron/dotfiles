@@ -348,3 +348,38 @@ run_script() {
     assert_failure
     refute_line --partial 'Usage:'
 }
+
+@test 'dotfiles-linux-variant none' {
+    run_script "${BIN_DIR}/dotfiles-linux-variant" 'foo' 'bar'
+    assert_failure
+}
+
+@test 'dotfiles-linux-variant success' {
+    run_script 'DOTFILES_LINUX_VARIANT=foo' "${BIN_DIR}/dotfiles-linux-variant" 'foo' 'bar'
+    assert_success
+}
+
+@test 'dotfiles-linux-variant failure' {
+    run_script 'DOTFILES_LINUX_VARIANT=baz' "${BIN_DIR}/dotfiles-linux-variant" 'foo' 'bar'
+    assert_failure
+}
+
+@test 'dotfiles-known-linux-variant success' {
+    run_script 'DOTFILES_LINUX_VARIANT=foo' "${BIN_DIR}/dotfiles-known-linux-variant"
+    assert_success
+}
+
+@test 'dotfiles-known-linux-variant failure' {
+    run_script "${BIN_DIR}/dotfiles-known-linux-variant"
+    assert_failure
+}
+
+@test 'dotfiles-is-graphical success' {
+    run_script 'DISPLAY=foo' "${BIN_DIR}/dotfiles-is-graphical"
+    assert_success
+}
+
+@test 'dotfiles-is-graphical failure' {
+    run_script "${BIN_DIR}/dotfiles-is-graphical"
+    assert_failure
+}

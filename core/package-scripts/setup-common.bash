@@ -42,25 +42,3 @@ function package-ignored() {
 
     ignored "${NAME}"
 }
-
-function linux-variant() {
-    while (($#)); do
-        if [ "${DOTFILES_LINUX_VARIANT}" = "${1}" ]; then
-            return 0
-        fi
-        shift
-    done
-    return 1
-}
-
-function known-linux-variant() {
-    test ! -z "${DOTFILES_LINUX_VARIANT}"
-}
-
-function can-sudo() {
-    sudo -l | grep '(ALL : ALL) ALL' &>/dev/null
-}
-
-function graphical() {
-    test ! -z "${DISPLAY}"
-}

@@ -1,5 +1,5 @@
 function _can-install() {
-    graphical && can-sudo
+    dotfiles-graphical && dotfiles-can-sudo
 }
 
 function _install() {

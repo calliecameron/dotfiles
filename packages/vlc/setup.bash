@@ -1,6 +1,6 @@
 function _can-install() {
-    linux-variant main &&
-    graphical &&
+    dotfiles-linux-variant main &&
+    dotfiles-graphical &&
     package-installed iptables &&
     package-installed emacs &&
     type port &>/dev/null

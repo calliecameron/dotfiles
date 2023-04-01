@@ -1,5 +1,5 @@
 function _can-install() {
-    known-linux-variant && [ -e '/bin/zsh' ]
+    dotfiles-known-linux-variant && [ -e '/bin/zsh' ]
 }
 
 function _install() {

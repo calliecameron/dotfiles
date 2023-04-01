@@ -1,7 +1,7 @@
 function _can-install() {
-    linux-variant main &&
-    graphical &&
-    can-sudo &&
+    dotfiles-linux-variant main &&
+    dotfiles-graphical &&
+    dotfiles-can-sudo &&
     package-installed python &&
     package-installed dev-tools &&
     package-installed web-dev-tools &&

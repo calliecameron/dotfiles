@@ -1,5 +1,5 @@
 function _can-install() {
-    known-linux-variant && can-sudo
+    dotfiles-known-linux-variant && dotfiles-can-sudo
 }
 
 function _install() {
@@ -9,7 +9,7 @@ function _install() {
     sudo apt-get upgrade &&
     sudo apt-get dist-upgrade || return 1
 
-    if linux-variant main; then
+    if dotfiles-linux-variant main; then
         "${PACKAGE_CONF_DIR}/packages-main.sh" || return 1
     else
         dotfiles-echo-red "Unknown Linux variant - how did we even get here?"

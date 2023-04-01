@@ -1,5 +1,5 @@
 function _install() {
-    can-sudo
+    dotfiles-can-sudo
 }
 
 function _install() {

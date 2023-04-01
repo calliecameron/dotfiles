@@ -1,5 +1,5 @@
 function _can-install() {
-    known-linux-variant && can-sudo
+    dotfiles-known-linux-variant && dotfiles-can-sudo
 }
 
 function _install() {
