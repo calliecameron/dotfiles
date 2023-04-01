@@ -70,7 +70,7 @@ fi
 [ -n "${DOTFILES_PROFILING}" ] && printf 'packages ' && date --rfc-3339=ns
 
 if [ -n "${DOTFILES_STARTED_SSH_AGENT}" ]; then
-    alias ssh='ssh-auto-add'
+    alias ssh='dotfiles-ssh-auto-add'
 fi
 
 # Use the ~/.dotfiles-aliases.{sh|bash|zsh} files for stuff that should not be

@@ -55,5 +55,5 @@ if [ ! -z "${DOTFILES_GITHUB_USERNAME}" ]; then
 fi
 
 if [ ! -z "${DOTFILES_STARTED_SSH_AGENT}" ]; then
-    export GIT_SSH='ssh-auto-add'
+    export GIT_SSH='dotfiles-ssh-auto-add'
 fi
