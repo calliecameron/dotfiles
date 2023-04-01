@@ -61,7 +61,7 @@ function install-package-root() {
                         touch "${DOTFILES_NEEDS_LOGOUT}" || fail "Package '${PACKAGE_NAME}' failed to install; quitting."
                     else
                         if dotfiles-yn-n "Remember decision?"; then
-                            ignore "${PACKAGE_NAME}" || fail 'Could not ignore package.'
+                            dotfiles-package-ignore "${PACKAGE_NAME}" || fail 'Could not ignore package.'
                         fi
                     fi
                 fi

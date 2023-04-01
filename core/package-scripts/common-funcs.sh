@@ -135,17 +135,6 @@ complainunset() {
     fi
 }
 
-ignore() {
-    while [ ! -z "${1}" ]; do
-        if ! dotfiles-package-ignored "${1}"; then
-            mkdir -p "${DOTFILES_PACKAGE_INSTALL_DIR}" &&
-            echo "${1}" >>"${DOTFILES_PACKAGE_IGNORE_FILE}" || return 1
-        fi
-        shift
-    done
-    return 0
-}
-
 commonfuncscleanup() {
-    unset -f packagerootloop addpath message problem homelink homebinlink complainunset ignore commonfuncscleanup
+    unset -f packagerootloop addpath message problem homelink homebinlink complainunset commonfuncscleanup
 }

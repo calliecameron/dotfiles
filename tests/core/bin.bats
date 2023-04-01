@@ -196,52 +196,52 @@ run_script() {
 }
 
 @test 'dotfiles-echo-red usage' {
-    run_script PATH="${BIN_DIR}:${PATH}" "${BIN_DIR}/dotfiles-echo-red"
+    run_script "PATH=${BIN_DIR}:${PATH}" "${BIN_DIR}/dotfiles-echo-red"
     assert_failure
     assert_line --partial 'Usage:'
 }
 
 @test 'dotfiles-echo-red success' {
-    run_script PATH="${BIN_DIR}:${PATH}" "${BIN_DIR}/dotfiles-echo-red" 'foo' 'bar baz'
+    run_script "PATH=${BIN_DIR}:${PATH}" "${BIN_DIR}/dotfiles-echo-red" 'foo' 'bar baz'
     assert_success
     refute_line --partial 'Usage:'
     assert_line "$(echo -e "\e[31mfoo bar baz\e[0m")"
 }
 
 @test 'dotfiles-echo-green usage' {
-    run_script PATH="${BIN_DIR}:${PATH}" "${BIN_DIR}/dotfiles-echo-green"
+    run_script "PATH=${BIN_DIR}:${PATH}" "${BIN_DIR}/dotfiles-echo-green"
     assert_failure
     assert_line --partial 'Usage:'
 }
 
 @test 'dotfiles-echo-green success' {
-    run_script PATH="${BIN_DIR}:${PATH}" "${BIN_DIR}/dotfiles-echo-green" 'foo' 'bar baz'
+    run_script "PATH=${BIN_DIR}:${PATH}" "${BIN_DIR}/dotfiles-echo-green" 'foo' 'bar baz'
     assert_success
     refute_line --partial 'Usage:'
     assert_line "$(echo -e "\e[32mfoo bar baz\e[0m")"
 }
 
 @test 'dotfiles-echo-yellow usage' {
-    run_script PATH="${BIN_DIR}:${PATH}" "${BIN_DIR}/dotfiles-echo-yellow"
+    run_script "PATH=${BIN_DIR}:${PATH}" "${BIN_DIR}/dotfiles-echo-yellow"
     assert_failure
     assert_line --partial 'Usage:'
 }
 
 @test 'dotfiles-echo-yellow success' {
-    run_script PATH="${BIN_DIR}:${PATH}" "${BIN_DIR}/dotfiles-echo-yellow" 'foo' 'bar baz'
+    run_script "PATH=${BIN_DIR}:${PATH}" "${BIN_DIR}/dotfiles-echo-yellow" 'foo' 'bar baz'
     assert_success
     refute_line --partial 'Usage:'
     assert_line "$(echo -e "\e[33mfoo bar baz\e[0m")"
 }
 
 @test 'dotfiles-echo-blue usage' {
-    run_script PATH="${BIN_DIR}:${PATH}" "${BIN_DIR}/dotfiles-echo-blue"
+    run_script "PATH=${BIN_DIR}:${PATH}" "${BIN_DIR}/dotfiles-echo-blue"
     assert_failure
     assert_line --partial 'Usage:'
 }
 
 @test 'dotfiles-echo-blue success' {
-    run_script PATH="${BIN_DIR}:${PATH}" "${BIN_DIR}/dotfiles-echo-blue" 'foo' 'bar baz'
+    run_script "PATH=${BIN_DIR}:${PATH}" "${BIN_DIR}/dotfiles-echo-blue" 'foo' 'bar baz'
     assert_success
     refute_line --partial 'Usage:'
     assert_line "$(echo -e "\e[34mfoo bar baz\e[0m")"
@@ -418,4 +418,44 @@ run_script() {
     run_script "DOTFILES_PACKAGE_IGNORE_FILE=${IGNORE}" "${BIN_DIR}/dotfiles-package-ignored" 'quux'
     assert_failure
     refute_line --partial 'Usage:'
+}
+
+@test 'dotfiles-package-ignore usage' {
+    run_script "PATH=${BIN_DIR}:${PATH}" "${BIN_DIR}/dotfiles-package-ignore"
+    assert_failure
+    assert_line --partial 'Usage:'
+}
+
+@test 'dotfiles-package-ignore no file' {
+    local IGNORE_DIR="${TMP_DIR}/a"
+    local IGNORE_FILE="${IGNORE_DIR}/a"
+    run_script "PATH=${BIN_DIR}:${PATH}" "DOTFILES_PACKAGE_INSTALL_DIR=${IGNORE_DIR}" "DOTFILES_PACKAGE_IGNORE_FILE=${IGNORE_FILE}" "${BIN_DIR}/dotfiles-package-ignore" 'foo'
+    assert_success
+    refute_line --partial 'Usage:'
+    assert [ "$(wc -l <"${IGNORE_FILE}")" = '1' ]
+    assert [ "$(cat "${IGNORE_FILE}")" = 'foo' ]
+}
+
+@test 'dotfiles-package-ignore new' {
+    local IGNORE_DIR="${TMP_DIR}/a"
+    local IGNORE_FILE="${IGNORE_DIR}/a"
+    mkdir -p "${IGNORE_DIR}"
+    echo 'foo' >"${IGNORE_FILE}"
+    run_script "PATH=${BIN_DIR}:${PATH}" "DOTFILES_PACKAGE_INSTALL_DIR=${IGNORE_DIR}" "DOTFILES_PACKAGE_IGNORE_FILE=${IGNORE_FILE}" "${BIN_DIR}/dotfiles-package-ignore" 'bar'
+    assert_success
+    refute_line --partial 'Usage:'
+    assert [ "$(wc -l <"${IGNORE_FILE}")" = '2' ]
+    assert [ "$(cat "${IGNORE_FILE}")" = "$(printf 'foo\nbar')" ]
+}
+
+@test 'dotfiles-package-ignore existing' {
+    local IGNORE_DIR="${TMP_DIR}/a"
+    local IGNORE_FILE="${IGNORE_DIR}/a"
+    mkdir -p "${IGNORE_DIR}"
+    echo 'foo' >"${IGNORE_FILE}"
+    run_script "PATH=${BIN_DIR}:${PATH}" "DOTFILES_PACKAGE_INSTALL_DIR=${IGNORE_DIR}" "DOTFILES_PACKAGE_IGNORE_FILE=${IGNORE_FILE}" "${BIN_DIR}/dotfiles-package-ignore" 'foo'
+    assert_success
+    refute_line --partial 'Usage:'
+    assert [ "$(wc -l <"${IGNORE_FILE}")" = '1' ]
+    assert [ "$(cat "${IGNORE_FILE}")" = 'foo' ]
 }
