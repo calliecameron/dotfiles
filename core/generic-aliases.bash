@@ -9,7 +9,7 @@ if [ -z "${DOTFILES_ENV_LOADED}" ]; then
 fi
 
 if [ -z "${DOTFILES_LINUX_VARIANT}" ]; then
-    echo -e '\e[31mUnknown Linux version.\e[0m'
+    dotfiles-echo-red 'Unknown Linux version.'
 fi
 
 if [ "${TERM}" = 'dumb' ]; then
@@ -23,13 +23,13 @@ function check-init-file() {
     local PROCESSED_FILE="${DOTFILES_PROCESSED_DIR}/${2}"
     local INSTALLED_FILE="${HOME}/${2}"
     local MSG
-    MSG="\e[33mYour $(basename "${INSTALLED_FILE}") doesn't look right - maybe something has tampered with it, or you need to run install.sh again.\e[0m"
+    MSG="Your $(basename "${INSTALLED_FILE}") doesn't look right - maybe something has tampered with it, or you need to run install.sh again."
 
     if [ ! -e "${PROCESSED_FILE}" ] ||
         [ ! -e "${REPO_FILE}" ] ||
         [ "${REPO_FILE}" -nt "${PROCESSED_FILE}" ] || # '-nt' is 'newer than'
         ! cmp "${PROCESSED_FILE}" "${INSTALLED_FILE}" &>/dev/null; then
-        echo -e "${MSG}"
+        dotfiles-echo-yellow "${MSG}"
     fi
 }
 
@@ -60,7 +60,7 @@ if [ -z "${DOTFILES_NO_PACKAGE_UPDATES}" ]; then
         [ -n "${DOTFILES_PROFILING}" ] && printf 'packages3 ' && date --rfc-3339=ns
         command rmdir "${DOTFILES_PACKAGE_MUTEX}"
     else
-        echo -e "\e[34mAnother shell is installing or updating packages; don't be surprised if things behave oddly in the meantime.\e[0m"
+        dotfiles-echo-blue "Another shell is installing or updating packages; don't be surprised if things behave oddly in the meantime."
     fi
 fi
 if [ -z "${DOTFILES_NO_ALIASES}" ]; then
@@ -107,7 +107,7 @@ if [ -e "${DOTFILES_PACKAGE_PROBLEMS_FILE}" ]; then
 fi
 
 if [ -e "${DOTFILES_NEEDS_LOGOUT}" ]; then
-    echo -e "\e[33mLog out and log in again to set everything up correctly.\e[0m"
+    dotfiles-echo-yellow "Log out and log in again to set everything up correctly."
 fi
 
 [ -n "${DOTFILES_PROFILING}" ] && printf 'generic ' && date --rfc-3339=ns

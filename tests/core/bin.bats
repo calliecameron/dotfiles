@@ -175,3 +175,74 @@ run_script() {
     assert_success
     refute_line --partial 'Usage:'
 }
+
+@test 'dotfiles-echo-colour no args' {
+    run_script "${BIN_DIR}/dotfiles-echo-colour"
+    assert_failure
+    assert_line --partial 'Usage:'
+}
+
+@test 'dotfiles-echo-colour one arg' {
+    run_script "${BIN_DIR}/dotfiles-echo-colour" '31'
+    assert_failure
+    assert_line --partial 'Usage:'
+}
+
+@test 'dotfiles-echo-colour success' {
+    run_script "${BIN_DIR}/dotfiles-echo-colour" '31' 'foo' 'bar baz'
+    assert_success
+    refute_line --partial 'Usage:'
+    assert_line "$(echo -e "\e[31mfoo bar baz\e[0m")"
+}
+
+@test 'dotfiles-echo-red usage' {
+    run_script PATH="${BIN_DIR}:${PATH}" "${BIN_DIR}/dotfiles-echo-red"
+    assert_failure
+    assert_line --partial 'Usage:'
+}
+
+@test 'dotfiles-echo-red success' {
+    run_script PATH="${BIN_DIR}:${PATH}" "${BIN_DIR}/dotfiles-echo-red" 'foo' 'bar baz'
+    assert_success
+    refute_line --partial 'Usage:'
+    assert_line "$(echo -e "\e[31mfoo bar baz\e[0m")"
+}
+
+@test 'dotfiles-echo-green usage' {
+    run_script PATH="${BIN_DIR}:${PATH}" "${BIN_DIR}/dotfiles-echo-green"
+    assert_failure
+    assert_line --partial 'Usage:'
+}
+
+@test 'dotfiles-echo-green success' {
+    run_script PATH="${BIN_DIR}:${PATH}" "${BIN_DIR}/dotfiles-echo-green" 'foo' 'bar baz'
+    assert_success
+    refute_line --partial 'Usage:'
+    assert_line "$(echo -e "\e[32mfoo bar baz\e[0m")"
+}
+
+@test 'dotfiles-echo-yellow usage' {
+    run_script PATH="${BIN_DIR}:${PATH}" "${BIN_DIR}/dotfiles-echo-yellow"
+    assert_failure
+    assert_line --partial 'Usage:'
+}
+
+@test 'dotfiles-echo-yellow success' {
+    run_script PATH="${BIN_DIR}:${PATH}" "${BIN_DIR}/dotfiles-echo-yellow" 'foo' 'bar baz'
+    assert_success
+    refute_line --partial 'Usage:'
+    assert_line "$(echo -e "\e[33mfoo bar baz\e[0m")"
+}
+
+@test 'dotfiles-echo-blue usage' {
+    run_script PATH="${BIN_DIR}:${PATH}" "${BIN_DIR}/dotfiles-echo-blue"
+    assert_failure
+    assert_line --partial 'Usage:'
+}
+
+@test 'dotfiles-echo-blue success' {
+    run_script PATH="${BIN_DIR}:${PATH}" "${BIN_DIR}/dotfiles-echo-blue" 'foo' 'bar baz'
+    assert_success
+    refute_line --partial 'Usage:'
+    assert_line "$(echo -e "\e[34mfoo bar baz\e[0m")"
+}

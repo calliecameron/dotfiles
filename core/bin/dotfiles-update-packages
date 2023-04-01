@@ -8,7 +8,7 @@ function cleanup() {
 }
 
 function fail() {
-    echo-red 'Updating packages failed.'
+    dotfiles-echo-red 'Updating packages failed.'
     cleanup
     exit 1
 }
@@ -20,10 +20,10 @@ if mkdir "${DOTFILES_PACKAGE_MUTEX}" &>/dev/null; then
         update-all-packages || fail
 
         if [ -e "${DOTFILES_NEEDS_LOGOUT}" ]; then
-            echo-yellow 'Log out and log in again to set everything up correctly.'
+            dotfiles-echo-yellow 'Log out and log in again to set everything up correctly.'
         fi
     fi
     cleanup
 else
-    echo-yellow 'Another shell is installing or updating packages; cannot update here.'
+    dotfiles-echo-yellow 'Another shell is installing or updating packages; cannot update here.'
 fi

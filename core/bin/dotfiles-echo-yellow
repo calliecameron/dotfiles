@@ -1,0 +1,11 @@
+#!/bin/bash
+
+set -eu
+
+function usage() {
+    echo "Usage: $(basename "${0}") msg..."
+    exit 1
+}
+
+test -z "${1:-}" && usage
+dotfiles-echo-colour '33' "${@}"

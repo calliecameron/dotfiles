@@ -1,0 +1,16 @@
+#!/bin/bash
+
+set -eu
+
+function usage() {
+    echo "Usage: $(basename "${0}") colour_code msg..."
+    exit 1
+}
+
+test -z "${1:-}" && usage
+test -z "${2:-}" && usage
+
+COLOUR="${1}"
+MSG="${*:2}"
+
+echo -e "\e[${COLOUR}m${MSG}\e[0m"

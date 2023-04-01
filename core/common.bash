@@ -6,26 +6,6 @@
 # shellcheck disable=SC2034
 THIS_DIR="$(cd "$(dirname "${BASH_SOURCE[1]}")" && pwd)"
 
-function echo-colour() {
-    echo -e "\e[${1}m${2}\e[0m"
-}
-
-function echo-red() {
-    echo-colour '31' "${1}"
-}
-
-function echo-green() {
-    echo-colour '32' "${1}"
-}
-
-function echo-yellow() {
-    echo-colour '33' "${1}"
-}
-
-function echo-blue() {
-    echo-colour '34' "${1}"
-}
-
 function yn-y() {
     # Y is the default
     local REPLY

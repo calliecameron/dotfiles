@@ -5,9 +5,9 @@ source "${DOTFILES_PACKAGE_SCRIPTS}/common-funcs.sh" || exit 1
 
 function fail() {
     if [ -z "${1}" ]; then
-        echo-red 'Installing packages failed.'
+        dotfiles-echo-red 'Installing packages failed.'
     else
-        echo-red "${1}"
+        dotfiles-echo-red "${1}"
     fi
     exit 1
 }

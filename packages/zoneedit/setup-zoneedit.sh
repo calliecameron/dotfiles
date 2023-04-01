@@ -36,4 +36,4 @@ do-config-file "${DOTFILES_ZONEEDIT_HOST}" &&
 do-config-file "${DOTFILES_ZONEEDIT_USERNAME}" &&
 do-config-file "${DOTFILES_ZONEEDIT_PASSWORD}" &&
 
-echo -e "\e[34mZoneEdit settings can be configured with 'zoneedit-cron-config'\e[0m"
+dotfiles-echo-blue "ZoneEdit settings can be configured with 'zoneedit-cron-config'"

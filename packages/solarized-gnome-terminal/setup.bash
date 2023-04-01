@@ -4,7 +4,7 @@ function _can-install() {
 
 function _install() {
     if [ -z "${DOTFILES_GNOME_TERMINAL_PROFILE}" ]; then
-        echo-red "Set DOTFILES_GNOME_TERMINAL_PROFILE to the profile ID reported by Gnome Terminal to install."
+        dotfiles-echo-red "Set DOTFILES_GNOME_TERMINAL_PROFILE to the profile ID reported by Gnome Terminal to install."
         return 1
     fi
     git clone https://github.com/Anthony25/gnome-terminal-colors-solarized.git "${PACKAGE_INSTALL_DIR}" &&
@@ -13,7 +13,7 @@ function _install() {
 
 function _update() {
     if [ -z "${DOTFILES_GNOME_TERMINAL_PROFILE}" ]; then
-        echo-red "Set DOTFILES_GNOME_TERMINAL_PROFILE to the profile ID reported by Gnome Terminal to update."
+        dotfiles-echo-red "Set DOTFILES_GNOME_TERMINAL_PROFILE to the profile ID reported by Gnome Terminal to update."
         return 1
     fi
     git pull &&

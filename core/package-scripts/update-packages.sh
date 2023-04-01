@@ -3,7 +3,7 @@
 source "${DOTFILES_PACKAGE_SCRIPTS}/update-package.bash" || exit 1
 
 function fail() {
-    echo-red 'Updating packages failed.'
+    dotfiles-echo-red 'Updating packages failed.'
     exit 1
 }
 
