@@ -1,16 +1,23 @@
 #!/bin/bash
-# Check if a git repository is clean. Directories that are not git
-# repos at all also count as clean.
+# Check if a git repository is clean. Directories that are not git repos at all
+# also count as clean.
 
 set -eu
 
-test -z "${1:-}" && exit 1
+function usage() {
+    echo "Usage: $(basename "${0}") repo_path"
+    exit 1
+}
+
+test -z "${1:-}" && usage
 type git &>/dev/null || exit 1
 
-if [ -d "${1}" ]; then
-    cd "${1}" || exit 1
+REPO="${1}"
 
-    if [ ! -d "${1}/.git" ]; then
+if [ -d "${REPO}" ]; then
+    cd "${REPO}"
+
+    if [ ! -d "${REPO}/.git" ]; then
         exit 0
     fi
 

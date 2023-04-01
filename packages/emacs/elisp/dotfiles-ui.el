@@ -55,7 +55,7 @@
                       . ((reusable-frames . visible)))))
 
 (defun dotfiles--repo-is-clean (dir)
-  (eq (call-process "repo-is-clean" nil nil nil dir) 0))
+  (eq (call-process "dotfiles-repo-is-clean" nil nil nil dir) 0))
 
 (defun dotfiles--repo-blocks-quit (arg)
   (let ((dir (if (consp arg) (car arg) arg))

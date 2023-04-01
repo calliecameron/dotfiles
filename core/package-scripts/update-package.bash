@@ -65,7 +65,7 @@ function update-all-packages() {
 
 function update-private-repo() {
     if [ -d "${DOTFILES_PRIVATE_DIR}" ]; then
-        if repo-is-clean "${DOTFILES_PRIVATE_DIR}"; then
+        if dotfiles-repo-is-clean "${DOTFILES_PRIVATE_DIR}"; then
             # shellcheck disable=SC2015
             cd "${DOTFILES_PRIVATE_DIR}" || return 1
             if ! git pull; then

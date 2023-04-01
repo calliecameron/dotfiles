@@ -81,3 +81,97 @@ run_script() {
     assert [ "$(grep 'foo bar' <"${TEST_NEXT_LOGIN}" | wc -l)" = '1' ]
     assert [ "$(grep 'foo baz' <"${TEST_NEXT_LOGIN}" | wc -l)" = '1' ]
 }
+
+@test 'dotfiles-repo-is-clean usage' {
+    run_script "${BIN_DIR}/dotfiles-repo-is-clean"
+    assert_failure
+    assert_line --partial 'Usage:'
+}
+
+@test 'dotfiles-repo-is-clean not a dir' {
+    local REPO="${TMP_DIR}/a"
+    touch "${REPO}"
+    run_script "${BIN_DIR}/dotfiles-repo-is-clean" "${REPO}"
+    assert_success
+    refute_line --partial 'Usage:'
+}
+
+@test 'dotfiles-repo-is-clean not a repo' {
+    local REPO="${TMP_DIR}/a"
+    mkdir -p "${REPO}"
+    run_script "${BIN_DIR}/dotfiles-repo-is-clean" "${REPO}"
+    assert_success
+    refute_line --partial 'Usage:'
+}
+
+@test 'dotfiles-repo-is-clean empty repo' {
+    local REPO="${TMP_DIR}/a"
+    mkdir -p "${REPO}"
+    (cd "${REPO}" && git init .)
+    run_script "${BIN_DIR}/dotfiles-repo-is-clean" "${REPO}"
+    assert_success
+    refute_line --partial 'Usage:'
+}
+
+@test 'dotfiles-repo-is-clean untracked file' {
+    local REPO="${TMP_DIR}/a"
+    mkdir -p "${REPO}"
+    (cd "${REPO}" && git init .)
+    touch "${REPO}/a"
+    run_script "${BIN_DIR}/dotfiles-repo-is-clean" "${REPO}"
+    assert_failure
+    refute_line --partial 'Usage:'
+}
+
+@test 'dotfiles-repo-is-clean clean no upstream' {
+    local REPO="${TMP_DIR}/a"
+    mkdir -p "${REPO}"
+    (cd "${REPO}" && git init .)
+    touch "${REPO}/a"
+    (cd "${REPO}" && git add a && git commit -m 'Foo')
+    run_script "${BIN_DIR}/dotfiles-repo-is-clean" "${REPO}"
+    assert_success
+    refute_line --partial 'Usage:'
+}
+
+@test 'dotfiles-repo-is-clean modified file' {
+    local REPO="${TMP_DIR}/a"
+    mkdir -p "${REPO}"
+    (cd "${REPO}" && git init .)
+    touch "${REPO}/a"
+    (cd "${REPO}" && git add a && git commit -m 'Foo')
+    echo 'a' >"${REPO}/a"
+    run_script "${BIN_DIR}/dotfiles-repo-is-clean" "${REPO}"
+    assert_failure
+    refute_line --partial 'Usage:'
+}
+
+@test 'dotfiles-repo-is-clean unpushed commit' {
+    local UPSTREAM="${TMP_DIR}/a"
+    local REPO="${TMP_DIR}/b"
+    mkdir -p "${UPSTREAM}"
+    (cd "${UPSTREAM}" && git init --bare .)
+    git clone "${UPSTREAM}" "${REPO}"
+    touch "${REPO}/a"
+    (cd "${REPO}" && git add a && git commit -m 'Foo' && git push)
+    echo 'a' >"${REPO}/a"
+    (cd "${REPO}" && git add a && git commit -m 'Bar')
+    run_script "${BIN_DIR}/dotfiles-repo-is-clean" "${REPO}"
+    assert_failure
+    refute_line --partial 'Usage:'
+}
+
+@test 'dotfiles-repo-is-clean pushed commit' {
+    local UPSTREAM="${TMP_DIR}/a"
+    local REPO="${TMP_DIR}/b"
+    mkdir -p "${UPSTREAM}"
+    (cd "${UPSTREAM}" && git init --bare .)
+    git clone "${UPSTREAM}" "${REPO}"
+    touch "${REPO}/a"
+    (cd "${REPO}" && git add a && git commit -m 'Foo' && git push)
+    echo 'a' >"${REPO}/a"
+    (cd "${REPO}" && git add a && git commit -m 'Bar' && git push)
+    run_script "${BIN_DIR}/dotfiles-repo-is-clean" "${REPO}"
+    assert_success
+    refute_line --partial 'Usage:'
+}
