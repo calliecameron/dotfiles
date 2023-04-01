@@ -1,0 +1,16 @@
+#!/bin/bash
+
+set -eu
+
+function usage() {
+    echo "Usage: $(basename "${0}") package_name"
+    exit 1
+}
+
+test -z "${1:-}" && usage
+PACKAGE="${1}"
+
+if dotfiles-package-ignored "${PACKAGE}"; then
+    sed -i "/^${PACKAGE}\$/d" "${DOTFILES_PACKAGE_IGNORE_FILE}"
+fi
+exit 0

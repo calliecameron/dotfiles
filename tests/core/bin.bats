@@ -459,3 +459,37 @@ run_script() {
     assert [ "$(wc -l <"${IGNORE_FILE}")" = '1' ]
     assert [ "$(cat "${IGNORE_FILE}")" = 'foo' ]
 }
+
+@test 'dotfiles-package-unignore usage' {
+    run_script "PATH=${BIN_DIR}:${PATH}" "${BIN_DIR}/dotfiles-package-unignore"
+    assert_failure
+    assert_line --partial 'Usage:'
+}
+
+@test 'dotfiles-package-unignore no file' {
+    local IGNORE_FILE="${TMP_DIR}/a"
+    run_script "PATH=${BIN_DIR}:${PATH}" "DOTFILES_PACKAGE_IGNORE_FILE=${IGNORE_FILE}" "${BIN_DIR}/dotfiles-package-unignore" 'foo'
+    assert_success
+    refute_line --partial 'Usage:'
+    assert [ ! -e "${IGNORE_FILE}" ]
+}
+
+@test 'dotfiles-package-unignore in file' {
+    local IGNORE_FILE="${TMP_DIR}/a"
+    printf 'foo\nbar\nbaz\n' >"${IGNORE_FILE}"
+    run_script "PATH=${BIN_DIR}:${PATH}" "DOTFILES_PACKAGE_IGNORE_FILE=${IGNORE_FILE}" "${BIN_DIR}/dotfiles-package-unignore" 'bar'
+    assert_success
+    refute_line --partial 'Usage:'
+    assert [ "$(wc -l <"${IGNORE_FILE}")" = '2' ]
+    assert [ "$(cat "${IGNORE_FILE}")" = "$(printf 'foo\nbaz')" ]
+}
+
+@test 'dotfiles-package-unignore not in file' {
+    local IGNORE_FILE="${TMP_DIR}/a"
+    printf 'foo\nbar\nbaz\n' >"${IGNORE_FILE}"
+    run_script "PATH=${BIN_DIR}:${PATH}" "DOTFILES_PACKAGE_IGNORE_FILE=${IGNORE_FILE}" "${BIN_DIR}/dotfiles-package-unignore" 'quux'
+    assert_success
+    refute_line --partial 'Usage:'
+    assert [ "$(wc -l <"${IGNORE_FILE}")" = '3' ]
+    assert [ "$(cat "${IGNORE_FILE}")" = "$(printf 'foo\nbar\nbaz')" ]
+}
