@@ -43,7 +43,7 @@ function setup_common() {
     TEST_NEXT_LOGIN="${TMP_DIR}/.dotfiles.d/next-login.bash"
     TEST_NEXT_INIT="${TMP_DIR}/.dotfiles.d/next-init.bash"
     TEST_PACKAGE_INSTALL_DIR="${TMP_DIR}/.dotfiles.d/packages"
-    TEST_PACKAGE_IGNORE_FILE="${TEST_PACKAGE_INSTALL_DIR}/ignored.txt"
+    TEST_PACKAGE_IGNORE_FILE="${TMP_DIR}/.dotfiles.d/package-ignored"
     TEST_PACKAGE_MUTEX="${TMP_DIR}/.dotfiles.d/package-mutex"
     TEST_PRIVATE_DIR="${TMP_DIR}/.dotfiles.d/private"
     TEST_PACKAGE_LAST_UPDATE_FILE="${TMP_DIR}/.dotfiles.d/package-last-update"
