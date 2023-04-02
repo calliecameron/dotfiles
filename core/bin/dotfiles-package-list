@@ -1,0 +1,111 @@
+#!/usr/bin/env python3
+
+from typing import List, Set
+import os
+import pathlib
+import subprocess
+
+
+def package_roots() -> List[pathlib.Path]:
+    return [
+        pathlib.Path(r) for r in os.getenv("DOTFILES_PACKAGE_ROOTS", "").split(":") if r
+    ]
+
+
+def packages(package_root: pathlib.Path) -> List[pathlib.Path]:
+    out = []
+    if package_root.is_dir():
+        for path in package_root.iterdir():
+            if path.is_dir():
+                out.append(path)
+    return out
+
+
+def package_ignored(package: pathlib.Path) -> bool:
+    return (
+        subprocess.run(
+            ["dotfiles-package-ignored", package.name], check=False
+        ).returncode
+        == 0
+    )
+
+
+def package_installed(package: pathlib.Path) -> bool:
+    return (
+        subprocess.run(
+            ["dotfiles-package-installed", package.name], check=False
+        ).returncode
+        == 0
+    )
+
+
+def package_has_installer(package: pathlib.Path) -> bool:
+    return (
+        subprocess.run(
+            ["dotfiles-package-has-installer", str(package)], check=False
+        ).returncode
+        == 0
+    )
+
+
+def package_can_install(package: pathlib.Path) -> bool:
+    return (
+        subprocess.run(
+            ["dotfiles-package-can-install", str(package)], check=False
+        ).returncode
+        == 0
+    )
+
+
+def print_set(heading: str, s: Set[pathlib.Path]) -> None:
+    if s:
+        print(heading)
+        for name in sorted([package.name for package in s]):
+            print("    " + name)
+        print()
+
+
+def main() -> None:
+    seen = set()
+    duplicates = set()
+    ignored = set()
+    installed = set()
+    can_install = set()
+    cant_install = set()
+    install_not_needed = set()
+
+    for package_root in package_roots():
+        for package in packages(package_root):
+            if package.name in seen:
+                duplicates.add(package.name)
+                continue
+
+            if package_ignored(package):
+                ignored.add(package)
+            elif package_installed(package):
+                installed.add(package)
+            elif not package_has_installer(package):
+                install_not_needed.add(package)
+            elif package_can_install(package):
+                can_install.add(package)
+            else:
+                cant_install.add(package)
+
+            seen.add(package.name)
+
+    if duplicates:
+        print(
+            "WARNING: duplicate package names found; only the first instance of each will be used: "
+            + ", ".join(sorted(duplicates))
+            + "\n"
+        )
+
+    print_set("Active without installing", install_not_needed)
+    print_set("Installed", installed)
+    print_set("Available to install", can_install)
+    print_set("Not available to install", cant_install)
+    print_set("Ignored", ignored)
+
+
+if __name__ == "__main__":
+    main()

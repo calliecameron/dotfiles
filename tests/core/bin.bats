@@ -676,3 +676,58 @@ run_script() {
     assert_failure
     refute_line --partial 'Usage:'
 }
+
+@test 'dotfiles-package-list' {
+    local INSTALL_DIR="${TMP_DIR}/install"
+    mkdir -p "${INSTALL_DIR}"
+    local IGNORE_FILE="${TMP_DIR}/ignore"
+
+    mkdir -p "${TMP_DIR}/a/foo"
+
+    mkdir -p "${TMP_DIR}/a/bar"
+    echo 'bar' >>"${IGNORE_FILE}"
+
+    mkdir -p "${TMP_DIR}/a/baz"
+    touch "${INSTALL_DIR}/baz.installed"
+
+    mkdir -p "${TMP_DIR}/b/quux"
+    touch "${TMP_DIR}/b/quux/install"
+
+    mkdir -p "${TMP_DIR}/b/blah"
+    touch "${TMP_DIR}/b/blah/install"
+    printf "#!/bin/bash\ntrue\n" >"${TMP_DIR}/b/blah/can-install"
+    chmod u+x "${TMP_DIR}/b/blah/can-install"
+
+    mkdir -p "${TMP_DIR}/b/yay"
+    touch "${TMP_DIR}/b/yay/install"
+    printf "#!/bin/bash\nfalse\n" >"${TMP_DIR}/b/yay/can-install"
+    chmod u+x "${TMP_DIR}/b/yay/can-install"
+
+    mkdir -p "${TMP_DIR}/b/stuff"
+    touch "${TMP_DIR}/b/stuff/install"
+    echo 'stuff' >>"${IGNORE_FILE}"
+    touch "${INSTALL_DIR}/stuff.installed"
+
+    mkdir -p "${TMP_DIR}/b/foo"
+
+    run_script "PATH=${BIN_DIR}:${PATH}" "DOTFILES_PACKAGE_INSTALL_DIR=${INSTALL_DIR}" "DOTFILES_PACKAGE_IGNORE_FILE=${IGNORE_FILE}" "DOTFILES_PACKAGE_ROOTS=${TMP_DIR}/a::${TMP_DIR}/b:${TMP_DIR}/c" "${BIN_DIR}/dotfiles-package-list"
+    assert_success
+    assert_output "WARNING: duplicate package names found; only the first instance of each will be used: foo
+
+Active without installing
+    foo
+
+Installed
+    baz
+
+Available to install
+    blah
+    quux
+
+Not available to install
+    yay
+
+Ignored
+    bar
+    stuff"
+}
