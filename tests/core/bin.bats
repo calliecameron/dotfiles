@@ -1019,7 +1019,7 @@ Active without installing
 Installed
     baz
 
-Available to install
+Available to install (with 'dotfiles-package-install')
     blah
     quux
 
