@@ -1,0 +1,36 @@
+#!/bin/bash
+# Ensure command in the first argument (must be on the PATH) is symlinked in
+# ~/.bin (which always has the highest priority on the PATH) with the names
+# given as the remaining arguments.
+
+set -eu
+
+function usage() {
+    echo "Usage: $(basename "${0}") command link..."
+    exit 1
+}
+
+test -z "${1:-}" && usage
+COMMAND="${1}"
+test -z "${2:-}" && usage
+shift
+
+if command -v "${COMMAND}" >/dev/null; then
+    FULL_COMMAND="$(readlink -f "$(command -v "${COMMAND}")")"
+    if ! mkdir -p "${DOTFILES_LOCAL_BIN}"; then
+        dotfiles-log-package-problem "Cannot create '${DOTFILES_LOCAL_BIN}'"
+        exit 1
+    fi
+
+    while [ -n "${1:-}" ]; do
+        TARGET="${DOTFILES_LOCAL_BIN}/${1}"
+        if { [ -h "${TARGET}" ] && [ "$(readlink -f "${TARGET}")" != "${FULL_COMMAND}" ]; } ||
+            { [ ! -h "${TARGET}" ] && [ -e "${TARGET}" ]; }; then
+            dotfiles-log-package-problem "'${COMMAND}' link '${TARGET}' exists but is not a link to '${COMMAND}'."
+        elif [ ! -e "${TARGET}" ] && ! ln -s "${FULL_COMMAND}" "${TARGET}"; then
+            dotfiles-log-package-problem "Cannot create link '${TARGET}' to '${COMMAND}'."
+        fi
+        shift
+    done
+fi
+exit 0
