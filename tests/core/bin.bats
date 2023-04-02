@@ -1424,3 +1424,157 @@ echo "TEST_BAR_CWD=\$\(pwd\)"
     assert [ ! -e "${TMP_DIR}/install/foo" ]
     assert [ ! -e "${TMP_DIR}/install/foo.installed" ]
 }
+
+@test 'dotfiles-package-update clean' {
+    local INSTALL_DIR="${TMP_DIR}/install"
+    mkdir -p "${INSTALL_DIR}"
+    local IGNORE_FILE="${TMP_DIR}/ignore"
+    local LAST_UPDATE_FILE="${TMP_DIR}/last-update"
+    local ALREADY_UPDATED_FILE="${TMP_DIR}/already-updated"
+
+    mkdir -p "${TMP_DIR}/a/foo"
+    printf "#!/bin/bash\ntrue\n" >"${TMP_DIR}/a/foo/install"
+    chmod u+x "${TMP_DIR}/a/foo/install"
+    mkdir -p "${TMP_DIR}/install/foo"
+    touch "${TMP_DIR}/install/foo.installed"
+
+    mkdir -p "${TMP_DIR}/a/bar"
+    printf "#!/bin/bash\ntrue\n" >"${TMP_DIR}/a/bar/install"
+    chmod u+x "${TMP_DIR}/a/bar/install"
+    mkdir -p "${TMP_DIR}/install/bar"
+    touch "${TMP_DIR}/install/bar.installed"
+    echo 'bar' >"${TMP_DIR}/ignore"
+
+    mkdir -p "${TMP_DIR}/a/baz"
+    printf "#!/bin/bash\ntrue\n" >"${TMP_DIR}/a/baz/install"
+    chmod u+x "${TMP_DIR}/a/baz/install"
+    printf "#!/bin/bash\ntrue\n" >"${TMP_DIR}/a/baz/can-install"
+    chmod u+x "${TMP_DIR}/a/baz/can-install"
+    mkdir -p "${TMP_DIR}/install/baz"
+    touch "${TMP_DIR}/install/baz.installed"
+
+    mkdir -p "${TMP_DIR}/a/quux"
+    printf "#!/bin/bash\ntrue\n" >"${TMP_DIR}/a/quux/install"
+    chmod u+x "${TMP_DIR}/a/quux/install"
+    printf "#!/bin/bash\nfalse\n" >"${TMP_DIR}/a/quux/can-install"
+    chmod u+x "${TMP_DIR}/a/quux/can-install"
+    mkdir -p "${TMP_DIR}/install/quux"
+    touch "${TMP_DIR}/install/quux.installed"
+
+    mkdir -p "${TMP_DIR}/a/blah"
+
+    run_script \
+        "PATH=${BIN_DIR}:${PATH}" \
+        "DOTFILES_PACKAGE_SCRIPTS=${PACKAGE_SCRIPTS_DIR}" \
+        "DOTFILES_PACKAGE_INSTALL_DIR=${INSTALL_DIR}" \
+        "DOTFILES_PACKAGE_IGNORE_FILE=${IGNORE_FILE}" \
+        "DOTFILES_PACKAGES_LOADED_ENV=" \
+        "DOTFILES_PACKAGE_MUTEX=${TMP_DIR}/mutex" \
+        "DOTFILES_PACKAGE_ROOTS=${TMP_DIR}/a" \
+        "DOTFILES_NEEDS_LOGOUT=${TMP_DIR}/logout" \
+        "DOTFILES_PACKAGE_LAST_UPDATE_FILE=${LAST_UPDATE_FILE}" \
+        "DOTFILES_PACKAGE_ALREADY_UPDATED_FILE=${ALREADY_UPDATED_FILE}" \
+        "${BIN_DIR}/dotfiles-package-update"
+
+    assert_success
+    refute_line --partial 'Usage:'
+    assert [ ! -e "${TMP_DIR}/mutex" ]
+    assert [ -f "${TMP_DIR}/logout" ]
+    assert [ -f "${LAST_UPDATE_FILE}" ]
+    assert [ ! -e "${ALREADY_UPDATED_FILE}" ]
+
+    assert_line 'Reinstalled package foo'
+    refute_line 'Reinstalled package bar'
+    assert_line 'Reinstalled package baz'
+    refute_line 'Reinstalled package quux'
+    refute_line 'Installed package blah'
+    refute_line 'Reinstalled package blah'
+}
+
+@test 'dotfiles-package-update continue' {
+    local INSTALL_DIR="${TMP_DIR}/install"
+    mkdir -p "${INSTALL_DIR}"
+    local IGNORE_FILE="${TMP_DIR}/ignore"
+    local LAST_UPDATE_FILE="${TMP_DIR}/last-update"
+    local ALREADY_UPDATED_FILE="${TMP_DIR}/already-updated"
+
+    mkdir -p "${TMP_DIR}/a/foo"
+    printf "#!/bin/bash\ntrue\n" >"${TMP_DIR}/a/foo/install"
+    chmod u+x "${TMP_DIR}/a/foo/install"
+    mkdir -p "${TMP_DIR}/install/foo"
+    touch "${TMP_DIR}/install/foo.installed"
+    echo 'foo' >"${ALREADY_UPDATED_FILE}"
+
+    mkdir -p "${TMP_DIR}/a/bar"
+    printf "#!/bin/bash\ntrue\n" >"${TMP_DIR}/a/bar/install"
+    chmod u+x "${TMP_DIR}/a/bar/install"
+    mkdir -p "${TMP_DIR}/install/bar"
+    touch "${TMP_DIR}/install/bar.installed"
+
+    run_script \
+        "PATH=${BIN_DIR}:${PATH}" \
+        "DOTFILES_PACKAGE_SCRIPTS=${PACKAGE_SCRIPTS_DIR}" \
+        "DOTFILES_PACKAGE_INSTALL_DIR=${INSTALL_DIR}" \
+        "DOTFILES_PACKAGE_IGNORE_FILE=${IGNORE_FILE}" \
+        "DOTFILES_PACKAGES_LOADED_ENV=" \
+        "DOTFILES_PACKAGE_MUTEX=${TMP_DIR}/mutex" \
+        "DOTFILES_PACKAGE_ROOTS=${TMP_DIR}/a" \
+        "DOTFILES_NEEDS_LOGOUT=${TMP_DIR}/logout" \
+        "DOTFILES_PACKAGE_LAST_UPDATE_FILE=${LAST_UPDATE_FILE}" \
+        "DOTFILES_PACKAGE_ALREADY_UPDATED_FILE=${ALREADY_UPDATED_FILE}" \
+        "${BIN_DIR}/dotfiles-package-update"
+
+    assert_success
+    refute_line --partial 'Usage:'
+    assert [ ! -e "${TMP_DIR}/mutex" ]
+    assert [ -f "${TMP_DIR}/logout" ]
+    assert [ -f "${LAST_UPDATE_FILE}" ]
+    assert [ ! -e "${ALREADY_UPDATED_FILE}" ]
+
+    refute_line 'Reinstalled package foo'
+    assert_line 'Reinstalled package bar'
+}
+
+@test 'dotfiles-package-update failure' {
+    local INSTALL_DIR="${TMP_DIR}/install"
+    mkdir -p "${INSTALL_DIR}"
+    local IGNORE_FILE="${TMP_DIR}/ignore"
+    local LAST_UPDATE_FILE="${TMP_DIR}/last-update"
+    local ALREADY_UPDATED_FILE="${TMP_DIR}/already-updated"
+
+    mkdir -p "${TMP_DIR}/a/foo"
+    printf "#!/bin/bash\ntrue\n" >"${TMP_DIR}/a/foo/install"
+    chmod u+x "${TMP_DIR}/a/foo/install"
+    mkdir -p "${TMP_DIR}/install/foo"
+    touch "${TMP_DIR}/install/foo.installed"
+
+    mkdir -p "${TMP_DIR}/a/bar"
+    printf "#!/bin/bash\nfalse\n" >"${TMP_DIR}/a/bar/install"
+    chmod u+x "${TMP_DIR}/a/bar/install"
+    mkdir -p "${TMP_DIR}/install/bar"
+    touch "${TMP_DIR}/install/bar.installed"
+
+    run_script \
+        "PATH=${BIN_DIR}:${PATH}" \
+        "DOTFILES_PACKAGE_SCRIPTS=${PACKAGE_SCRIPTS_DIR}" \
+        "DOTFILES_PACKAGE_INSTALL_DIR=${INSTALL_DIR}" \
+        "DOTFILES_PACKAGE_IGNORE_FILE=${IGNORE_FILE}" \
+        "DOTFILES_PACKAGES_LOADED_ENV=" \
+        "DOTFILES_PACKAGE_MUTEX=${TMP_DIR}/mutex" \
+        "DOTFILES_PACKAGE_ROOTS=${TMP_DIR}/a" \
+        "DOTFILES_NEEDS_LOGOUT=${TMP_DIR}/logout" \
+        "DOTFILES_PACKAGE_LAST_UPDATE_FILE=${LAST_UPDATE_FILE}" \
+        "DOTFILES_PACKAGE_ALREADY_UPDATED_FILE=${ALREADY_UPDATED_FILE}" \
+        "${BIN_DIR}/dotfiles-package-update"
+
+    assert_failure
+    refute_line --partial 'Usage:'
+    assert [ ! -e "${TMP_DIR}/mutex" ]
+    assert [ ! -e "${TMP_DIR}/logout" ]
+    assert [ ! -e "${LAST_UPDATE_FILE}" ]
+    assert [ -f "${ALREADY_UPDATED_FILE}" ]
+
+    assert_line --partial 'Updating packages failed.'
+    refute_line 'Reinstalled package foo'
+    refute_line 'Reinstalled package bar'
+}

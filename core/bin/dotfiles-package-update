@@ -1,0 +1,35 @@
+#!/bin/bash
+
+set -eu
+
+source "${DOTFILES_PACKAGE_SCRIPTS}/common-funcs.sh"
+
+dotfiles-package-lock
+trap dotfiles-package-unlock EXIT
+
+function update-package() {
+    local PACKAGE_ROOT="${1}"
+    local PACKAGE_NAME="${2}"
+    local PACKAGE_SOURCE_DIR="${PACKAGE_ROOT}/${PACKAGE_NAME}"
+
+    if grep "^${PACKAGE_NAME}\$" "${DOTFILES_PACKAGE_ALREADY_UPDATED_FILE}" &>/dev/null; then
+        return 0
+    fi
+
+    if ! dotfiles-package-ignored "${PACKAGE_NAME}" &&
+        dotfiles-package-installed "${PACKAGE_NAME}" &&
+        dotfiles-package-can-install "${PACKAGE_SOURCE_DIR}"; then
+        if ! DOTFILES_PACKAGE_NO_LOCK='t' dotfiles-package-install "${PACKAGE_ROOT}/${PACKAGE_NAME}"; then
+            dotfiles-echo-red "Updating packages failed."
+            exit 1
+        fi
+        echo "${PACKAGE_NAME}" >>"${DOTFILES_PACKAGE_ALREADY_UPDATED_FILE}"
+    fi
+}
+
+touch "${DOTFILES_PACKAGE_ALREADY_UPDATED_FILE}"
+
+packageloop 'Update' update-package
+
+date '+%s' >"${DOTFILES_PACKAGE_LAST_UPDATE_FILE}"
+rm "${DOTFILES_PACKAGE_ALREADY_UPDATED_FILE}"

@@ -9,12 +9,12 @@ packageloop() {
     FUNC="${2}"
     ORIGINAL_IFS="${IFS}"
     IFS=':'
-    test ! -z "${ZSH_VERSION}" && setopt sh_word_split
+    test ! -z "${ZSH_VERSION:-}" && setopt sh_word_split
 
     for PACKAGE_ROOT in ${DOTFILES_PACKAGE_ROOTS}; do
         if [ -n "${PACKAGE_ROOT}" ] && [ -d "${PACKAGE_ROOT}" ]; then
             IFS="${ORIGINAL_IFS}"
-            test ! -z "${ZSH_VERSION}" && unsetopt sh_word_split
+            test ! -z "${ZSH_VERSION:-}" && unsetopt sh_word_split
 
             if ! TEMPFILE="$(mktemp)"; then
                 dotfiles-log-package-problem "${MSG}, ${PACKAGE_ROOT}: unable to create temporary file."
@@ -35,12 +35,12 @@ packageloop() {
 
             command rm "${TEMPFILE}"
 
-            test ! -z "${ZSH_VERSION}" && setopt sh_word_split
+            test ! -z "${ZSH_VERSION:-}" && setopt sh_word_split
             IFS=':'
         fi
     done
 
-    test ! -z "${ZSH_VERSION}" && unsetopt sh_word_split
+    test ! -z "${ZSH_VERSION:-}" && unsetopt sh_word_split
     IFS="${ORIGINAL_IFS}"
     return 0
 }
