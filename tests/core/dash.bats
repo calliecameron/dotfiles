@@ -58,6 +58,7 @@ function assert_ran() {
     assert_nemo_scripts
     assert_not_zsh_completions
     assert_not_packages_available
+    assert_last_update_file
 }
 
 @test 'run simple' {
@@ -148,4 +149,13 @@ function assert_ran() {
     assert_ran
     assert [ ! -e "${TEST_NEXT_LOGIN}" ]
     assert_line 'TEST_NEXT_LOGIN'
+}
+
+@test 'last-update-file existing' {
+    local DATE="$(date --date=yesterday '+%s')"
+    echo "${DATE}" >"${TEST_PACKAGE_LAST_UPDATE_FILE}"
+    run_dash -l
+    assert_success
+    assert_ran
+    assert [ "$(cat "${TEST_PACKAGE_LAST_UPDATE_FILE}")" = "${DATE}" ]
 }

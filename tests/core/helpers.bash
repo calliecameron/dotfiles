@@ -46,6 +46,7 @@ function setup_common() {
     TEST_PACKAGE_IGNORE_FILE="${TEST_PACKAGE_INSTALL_DIR}/ignored.txt"
     TEST_PACKAGE_MUTEX="${TMP_DIR}/.dotfiles.d/package-mutex"
     TEST_PRIVATE_DIR="${TMP_DIR}/.dotfiles.d/private"
+    TEST_PACKAGE_LAST_UPDATE_FILE="${TMP_DIR}/.dotfiles.d/package-last-update"
 
     mkdir -p "${TEST_PACKAGE_INSTALL_DIR}"
     mkdir -p "${TMP_DIR}/.local/share/nemo/scripts"
@@ -243,6 +244,14 @@ function assert_not_packages_available() {
     refute_line --partial 'Packages are available to install'
 }
 
+function assert_last_update_file() {
+    assert [ -f "${TEST_PACKAGE_LAST_UPDATE_FILE}" ]
+}
+
+function assert_not_last_update_file() {
+    assert [ ! -e "${TEST_PACKAGE_LAST_UPDATE_FILE}" ]
+}
+
 function assert_package_type_run_by() {
     local ROOT="${1}"
     local NAME="${2}"
@@ -374,4 +383,5 @@ function assert_nothing_ran() {
     assert_not_nemo_scripts
     assert_not_zsh_completions
     assert_not_packages_available
+    assert_not_last_update_file
 }

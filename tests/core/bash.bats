@@ -58,6 +58,7 @@ function assert_ran() {
     assert_nemo_scripts
     assert_not_zsh_completions
     assert_packages_available
+    assert_last_update_file
 }
 
 function assert_ran_env_only() {
@@ -104,6 +105,7 @@ function assert_ran_env_only() {
     assert_nemo_scripts
     assert_not_zsh_completions
     assert_not_packages_available
+    assert_last_update_file
 }
 
 @test 'run simple' {
@@ -295,4 +297,13 @@ function assert_ran_env_only() {
     assert_ran 'bash'
     refute_line --partial 'A private repo is specified'
     assert [ -d "${TEST_PRIVATE_DIR}" ]
+}
+
+@test 'last-update-file existing' {
+    local DATE="$(date --date=yesterday '+%s')"
+    echo "${DATE}" >"${TEST_PACKAGE_LAST_UPDATE_FILE}"
+    run_bash -l -i
+    assert_success
+    assert_ran 'bash'
+    assert [ "$(cat "${TEST_PACKAGE_LAST_UPDATE_FILE}")" = "${DATE}" ]
 }
