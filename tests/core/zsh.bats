@@ -306,3 +306,19 @@ function assert_ran_env_only() {
     assert_ran 'zsh'
     assert [ "$(cat "${TEST_PACKAGE_LAST_UPDATE_FILE}")" = "${DATE}" ]
 }
+
+@test 'check-for-updates no updates' {
+    run_zsh -l -i
+    assert_success
+    assert_ran 'zsh'
+    refute_line --partial "It's been a while since packages were checked for updates"
+}
+
+@test 'check-for-updates updates' {
+    local DATE="$(date '--date=last year' '+%s')"
+    echo "${DATE}" >"${TEST_PACKAGE_LAST_UPDATE_FILE}"
+    run_zsh -l -i
+    assert_success
+    assert_ran 'zsh'
+    assert_line --partial "It's been a while since packages were checked for updates"
+}

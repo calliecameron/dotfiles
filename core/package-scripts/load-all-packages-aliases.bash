@@ -56,13 +56,33 @@ function load-package-aliases() {
     fi
 }
 
+function check-for-available() {
+    if [ -n "${PACKAGES_AVAILABLE}" ]; then
+        dotfiles-echo-blue "Packages are available to install; run 'dotfiles-package-list'."
+    fi
+}
+
+function check-for-updates() {
+    if [ -f "${DOTFILES_PACKAGE_LAST_UPDATE_FILE}" ]; then
+        local LAST_UPDATE
+        LAST_UPDATE="$(cat "${DOTFILES_PACKAGE_LAST_UPDATE_FILE}")"
+        local NOW
+        NOW="$(date '+%s')"
+        local DIFF=$((NOW - LAST_UPDATE))
+        local TARGET='2419200' # Seconds in four weeks
+
+        if [ "${DIFF}" -ge "${TARGET}" ]; then
+            dotfiles-echo-blue "It's been a while since packages were checked for updates; run 'dotfiles-package-update'."
+        fi
+    fi
+}
+
 packageloop 'Aliases' load-package-aliases
 
-if [ -n "${PACKAGES_AVAILABLE}" ]; then
-    dotfiles-echo-blue "Packages are available to install; run 'dotfiles-package-list'."
-fi
+check-for-available
+check-for-updates
 
 unset -v PACKAGES_AVAILABLE
-unset -f load-aliases load-package-aliases
+unset -f load-aliases load-package-aliases check-for-available check-for-updates
 commonfuncscleanup
 loadpackageenvcleanup
