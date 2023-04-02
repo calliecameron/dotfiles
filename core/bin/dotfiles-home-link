@@ -1,0 +1,52 @@
+#!/bin/bash
+# Ensure the first argument is symlinked in the home directory, or at another
+# location if specified by a second argument.
+
+set -eu
+
+function usage() {
+    echo "Usage: $(basename "${0}") file [link]"
+    exit 1
+}
+
+test -z "${1:-}" && usage
+SRC="${1}"
+
+if [ ! -e "${SRC}" ]; then
+    exit 0
+fi
+
+if [ -n "${2:-}" ]; then
+    DST="${2}"
+    if ! mkdir -p "$(dirname "${DST}")"; then
+        dotfiles-log-package-problem "Creating symlink directory '$(dirname "${DST}")' failed."
+        exit 1
+    fi
+elif [ -d "${SRC}" ]; then
+    DST="${HOME}/$(basename "${SRC}")"
+else
+    DST="${HOME}/.$(basename "${SRC}")"
+fi
+
+PROBLEM=''
+if [ -h "${DST}" ]; then
+    if [ "$(readlink -f "${DST}")" != "${SRC}" ]; then
+        PROBLEM='t'
+    fi
+elif [ -e "${DST}" ]; then
+    PROBLEM='t'
+fi
+
+if [ -n "${PROBLEM}" ]; then
+    dotfiles-log-package-problem "'${DST}' exists, but is not a symlink to shared file '${SRC}'; fix it manually."
+    exit 1
+fi
+
+if [ ! -h "${DST}" ]; then
+    if ! ln -s "${SRC}" "${DST}"; then
+        dotfiles-log-package-problem "Symlinking '${SRC}' to '${DST}' failed."
+        exit 1
+    fi
+fi
+
+exit 0

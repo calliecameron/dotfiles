@@ -457,6 +457,160 @@ run_script() {
     assert [ "$(cat "${TMP_DIR}/a")" = "$(printf 'foo\nfoo bar baz')" ]
 }
 
+@test 'dotfiles-home-link usage' {
+    run_script "${BIN_DIR}/dotfiles-home-link"
+    assert_failure
+    assert_line --partial 'Usage:'
+}
+
+@test 'dotfiles-home-link nonexistent source' {
+    run_script "PATH=${BIN_DIR}:${PATH}" "DOTFILES_PACKAGE_PROBLEMS_FILE=${TMP_DIR}/problems" "${BIN_DIR}/dotfiles-home-link" "${TMP_DIR}/a"
+    assert_success
+    refute_line --partial 'Usage:'
+    assert [ ! -e "${TMP_DIR}/.a" ]
+    assert [ ! -e "${TMP_DIR}/problems" ]
+}
+
+@test 'dotfiles-home-link one arg file nonexistent' {
+    mkdir -p "${TMP_DIR}/src"
+    touch "${TMP_DIR}/src/a"
+    run_script "PATH=${BIN_DIR}:${PATH}" "DOTFILES_PACKAGE_PROBLEMS_FILE=${TMP_DIR}/problems" "${BIN_DIR}/dotfiles-home-link" "${TMP_DIR}/src/a"
+    assert_success
+    refute_line --partial 'Usage:'
+    assert [ -h "${TMP_DIR}/.a" ]
+    assert [ "$(readlink -f "${TMP_DIR}/.a")" = "${TMP_DIR}/src/a" ]
+    assert [ ! -e "${TMP_DIR}/problems" ]
+}
+
+@test 'dotfiles-home-link one arg file correct symlink' {
+    mkdir -p "${TMP_DIR}/src"
+    touch "${TMP_DIR}/src/a"
+    ln -s "${TMP_DIR}/src/a" "${TMP_DIR}/.a"
+    run_script "PATH=${BIN_DIR}:${PATH}" "DOTFILES_PACKAGE_PROBLEMS_FILE=${TMP_DIR}/problems" "${BIN_DIR}/dotfiles-home-link" "${TMP_DIR}/src/a"
+    assert_success
+    refute_line --partial 'Usage:'
+    assert [ -h "${TMP_DIR}/.a" ]
+    assert [ "$(readlink -f "${TMP_DIR}/.a")" = "${TMP_DIR}/src/a" ]
+    assert [ ! -e "${TMP_DIR}/problems" ]
+}
+
+@test 'dotfiles-home-link one arg file existing file' {
+    mkdir -p "${TMP_DIR}/src"
+    touch "${TMP_DIR}/src/a"
+    touch "${TMP_DIR}/.a"
+    run_script "PATH=${BIN_DIR}:${PATH}" "DOTFILES_PACKAGE_PROBLEMS_FILE=${TMP_DIR}/problems" "${BIN_DIR}/dotfiles-home-link" "${TMP_DIR}/src/a"
+    assert_failure
+    refute_line --partial 'Usage:'
+    assert [ -f "${TMP_DIR}/.a" ]
+    assert [ "$(wc -l <"${TMP_DIR}/problems")" = '1' ]
+}
+
+@test 'dotfiles-home-link one arg file incorrect symlink' {
+    mkdir -p "${TMP_DIR}/src"
+    touch "${TMP_DIR}/src/a"
+    touch "${TMP_DIR}/src/b"
+    ln -s "${TMP_DIR}/src/b" "${TMP_DIR}/.a"
+    run_script "PATH=${BIN_DIR}:${PATH}" "DOTFILES_PACKAGE_PROBLEMS_FILE=${TMP_DIR}/problems" "${BIN_DIR}/dotfiles-home-link" "${TMP_DIR}/src/a"
+    assert_failure
+    refute_line --partial 'Usage:'
+    assert [ -h "${TMP_DIR}/.a" ]
+    assert [ "$(readlink -f "${TMP_DIR}/.a")" = "${TMP_DIR}/src/b" ]
+    assert [ "$(wc -l <"${TMP_DIR}/problems")" = '1' ]
+}
+
+@test 'dotfiles-home-link one arg dir nonexistent' {
+    mkdir -p "${TMP_DIR}/src/a"
+    run_script "PATH=${BIN_DIR}:${PATH}" "DOTFILES_PACKAGE_PROBLEMS_FILE=${TMP_DIR}/problems" "${BIN_DIR}/dotfiles-home-link" "${TMP_DIR}/src/a"
+    assert_success
+    refute_line --partial 'Usage:'
+    assert [ -h "${TMP_DIR}/a" ]
+    assert [ "$(readlink -f "${TMP_DIR}/a")" = "${TMP_DIR}/src/a" ]
+    assert [ ! -e "${TMP_DIR}/problems" ]
+}
+
+@test 'dotfiles-home-link one arg dir correct symlink' {
+    mkdir -p "${TMP_DIR}/src/a"
+    ln -s "${TMP_DIR}/src/a" "${TMP_DIR}/a"
+    run_script "PATH=${BIN_DIR}:${PATH}" "DOTFILES_PACKAGE_PROBLEMS_FILE=${TMP_DIR}/problems" "${BIN_DIR}/dotfiles-home-link" "${TMP_DIR}/src/a"
+    assert_success
+    refute_line --partial 'Usage:'
+    assert [ -h "${TMP_DIR}/a" ]
+    assert [ "$(readlink -f "${TMP_DIR}/a")" = "${TMP_DIR}/src/a" ]
+    assert [ ! -e "${TMP_DIR}/problems" ]
+}
+
+@test 'dotfiles-home-link one arg dir existing dir' {
+    mkdir -p "${TMP_DIR}/src/a"
+    mkdir -p "${TMP_DIR}/a"
+    run_script "PATH=${BIN_DIR}:${PATH}" "DOTFILES_PACKAGE_PROBLEMS_FILE=${TMP_DIR}/problems" "${BIN_DIR}/dotfiles-home-link" "${TMP_DIR}/src/a"
+    assert_failure
+    refute_line --partial 'Usage:'
+    assert [ -d "${TMP_DIR}/a" ]
+    assert [ "$(wc -l <"${TMP_DIR}/problems")" = '1' ]
+}
+
+@test 'dotfiles-home-link one arg dir incorrect symlink' {
+    mkdir -p "${TMP_DIR}/src/a"
+    mkdir -p "${TMP_DIR}/src/b"
+    ln -s "${TMP_DIR}/src/b" "${TMP_DIR}/a"
+    run_script "PATH=${BIN_DIR}:${PATH}" "DOTFILES_PACKAGE_PROBLEMS_FILE=${TMP_DIR}/problems" "${BIN_DIR}/dotfiles-home-link" "${TMP_DIR}/src/a"
+    assert_failure
+    refute_line --partial 'Usage:'
+    assert [ -h "${TMP_DIR}/a" ]
+    assert [ "$(readlink -f "${TMP_DIR}/a")" = "${TMP_DIR}/src/b" ]
+    assert [ "$(wc -l <"${TMP_DIR}/problems")" = '1' ]
+}
+
+@test 'dotfiles-home-link two args nonexistent' {
+    mkdir -p "${TMP_DIR}/src"
+    touch "${TMP_DIR}/src/a"
+    run_script "PATH=${BIN_DIR}:${PATH}" "DOTFILES_PACKAGE_PROBLEMS_FILE=${TMP_DIR}/problems" "${BIN_DIR}/dotfiles-home-link" "${TMP_DIR}/src/a" "${TMP_DIR}/b/a"
+    assert_success
+    refute_line --partial 'Usage:'
+    assert [ -h "${TMP_DIR}/b/a" ]
+    assert [ "$(readlink -f "${TMP_DIR}/b/a")" = "${TMP_DIR}/src/a" ]
+    assert [ ! -e "${TMP_DIR}/problems" ]
+}
+
+@test 'dotfiles-home-link two args correct symlink' {
+    mkdir -p "${TMP_DIR}/src"
+    touch "${TMP_DIR}/src/a"
+    mkdir "${TMP_DIR}/b"
+    ln -s "${TMP_DIR}/src/a" "${TMP_DIR}/b/a"
+    run_script "PATH=${BIN_DIR}:${PATH}" "DOTFILES_PACKAGE_PROBLEMS_FILE=${TMP_DIR}/problems" "${BIN_DIR}/dotfiles-home-link" "${TMP_DIR}/src/a" "${TMP_DIR}/b/a"
+    assert_success
+    refute_line --partial 'Usage:'
+    assert [ -h "${TMP_DIR}/b/a" ]
+    assert [ "$(readlink -f "${TMP_DIR}/b/a")" = "${TMP_DIR}/src/a" ]
+    assert [ ! -e "${TMP_DIR}/problems" ]
+}
+
+@test 'dotfiles-home-link two args existing file' {
+    mkdir -p "${TMP_DIR}/src"
+    touch "${TMP_DIR}/src/a"
+    mkdir -p "${TMP_DIR}/b"
+    touch "${TMP_DIR}/b/a"
+    run_script "PATH=${BIN_DIR}:${PATH}" "DOTFILES_PACKAGE_PROBLEMS_FILE=${TMP_DIR}/problems" "${BIN_DIR}/dotfiles-home-link" "${TMP_DIR}/src/a" "${TMP_DIR}/b/a"
+    assert_failure
+    refute_line --partial 'Usage:'
+    assert [ -f "${TMP_DIR}/b/a" ]
+    assert [ "$(wc -l <"${TMP_DIR}/problems")" = '1' ]
+}
+
+@test 'dotfiles-home-link two args incorrect symlink' {
+    mkdir -p "${TMP_DIR}/src"
+    touch "${TMP_DIR}/src/a"
+    touch "${TMP_DIR}/src/b"
+    mkdir -p "${TMP_DIR}/b"
+    ln -s "${TMP_DIR}/src/b" "${TMP_DIR}/b/a"
+    run_script "PATH=${BIN_DIR}:${PATH}" "DOTFILES_PACKAGE_PROBLEMS_FILE=${TMP_DIR}/problems" "${BIN_DIR}/dotfiles-home-link" "${TMP_DIR}/src/a" "${TMP_DIR}/b/a"
+    assert_failure
+    refute_line --partial 'Usage:'
+    assert [ -h "${TMP_DIR}/b/a" ]
+    assert [ "$(readlink -f "${TMP_DIR}/b/a")" = "${TMP_DIR}/src/b" ]
+    assert [ "$(wc -l <"${TMP_DIR}/problems")" = '1' ]
+}
+
 @test 'dotfiles-package-ignored usage' {
     run_script "${BIN_DIR}/dotfiles-package-ignored"
     assert_failure

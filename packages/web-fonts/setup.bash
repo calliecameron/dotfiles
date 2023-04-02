@@ -10,11 +10,11 @@ function _install() {
     git clone 'https://github.com/primer/octicons.git' "${PACKAGE_INSTALL_DIR}/octicons" &&
     git clone 'https://github.com/Keyamoon/IcoMoon-Free.git' "${PACKAGE_INSTALL_DIR}/icomoon" &&
 
-    homelink "${PACKAGE_INSTALL_DIR}/font-awesome/fonts/fontawesome-webfont.ttf" "${HOME}/.fonts/web-fonts/fontawesome-webfont.ttf" &&
-    homelink "${PACKAGE_INSTALL_DIR}/devicon/fonts/devicon.ttf" "${HOME}/.fonts/web-fonts/devicon.ttf" &&
-    homelink "${PACKAGE_INSTALL_DIR}/font-mfizz/dist/font-mfizz.ttf" "${HOME}/.fonts/web-fonts/font-mfizz.ttf" &&
-    homelink "${PACKAGE_INSTALL_DIR}/octicons/build/font/octicons.ttf" "${HOME}/.fonts/web-fonts/octicons.ttf" &&
-    homelink "${PACKAGE_INSTALL_DIR}/icomoon/Font/IcoMoon-Free.ttf" "${HOME}/.fonts/web-fonts/IcoMoon-Free.ttf" &&
+    dotfiles-home-link "${PACKAGE_INSTALL_DIR}/font-awesome/fonts/fontawesome-webfont.ttf" "${HOME}/.fonts/web-fonts/fontawesome-webfont.ttf" &&
+    dotfiles-home-link "${PACKAGE_INSTALL_DIR}/devicon/fonts/devicon.ttf" "${HOME}/.fonts/web-fonts/devicon.ttf" &&
+    dotfiles-home-link "${PACKAGE_INSTALL_DIR}/font-mfizz/dist/font-mfizz.ttf" "${HOME}/.fonts/web-fonts/font-mfizz.ttf" &&
+    dotfiles-home-link "${PACKAGE_INSTALL_DIR}/octicons/build/font/octicons.ttf" "${HOME}/.fonts/web-fonts/octicons.ttf" &&
+    dotfiles-home-link "${PACKAGE_INSTALL_DIR}/icomoon/Font/IcoMoon-Free.ttf" "${HOME}/.fonts/web-fonts/IcoMoon-Free.ttf" &&
 
     fc-cache
 }

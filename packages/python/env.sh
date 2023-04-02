@@ -1,5 +1,5 @@
 if which pygmentize >/dev/null; then
-    homelink "${PACKAGE_SOURCE_DIR}/lessfilter"
+    dotfiles-home-link "${PACKAGE_SOURCE_DIR}/lessfilter"
 fi
 
 # This is where pip --user installs binaries
@@ -9,4 +9,4 @@ export WORKON_HOME="${HOME}/.virtualenvs"
 mkdir -p "${WORKON_HOME}"
 # shellcheck disable=SC2155
 export VIRTUALENVWRAPPER_PYTHON="$(readlink -f "$(which python3)")"
-homelink "${PACKAGE_SOURCE_DIR}/postmkvirtualenv" "${WORKON_HOME}/postmkvirtualenv"
+dotfiles-home-link "${PACKAGE_SOURCE_DIR}/postmkvirtualenv" "${WORKON_HOME}/postmkvirtualenv"

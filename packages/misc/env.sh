@@ -1,1 +1,1 @@
-homelink "${PACKAGE_SOURCE_DIR}/inputrc"
+dotfiles-home-link "${PACKAGE_SOURCE_DIR}/inputrc"

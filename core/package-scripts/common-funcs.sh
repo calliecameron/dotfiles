@@ -26,50 +26,6 @@ packagerootloop() {
     return 0
 }
 
-homelink() {
-    # Ensure the first argument is symlinked in the home directory, or
-    # at another location if specified by a second argument.
-
-    # shellcheck disable=SC2039
-    local SRC DST PROBLEM
-    SRC="${1}"
-    if [ ! -z "${SRC}" ] && [ -e "${SRC}" ]; then
-        if [ ! -z "${2}" ]; then
-            DST="${2}"
-            if ! mkdir -p "$(dirname "${DST}")"; then
-                dotfiles-log-package-problem "Creating symlink directory '$(dirname "${DST}")' failed."
-                return 1
-            fi
-        else
-            if [ -d "${SRC}" ]; then
-                DST="${HOME}/$(basename "${SRC}")"
-            else
-                DST="${HOME}/.$(basename "${SRC}")"
-            fi
-        fi
-
-        PROBLEM=''
-        if [ -h "${DST}" ]; then
-            if [ "$(readlink -f "${DST}")" != "${SRC}" ]; then
-                PROBLEM='t'
-            fi
-        elif [ -e "${DST}" ]; then
-            PROBLEM='t'
-        fi
-
-        if [ ! -z "${PROBLEM}" ]; then
-            dotfiles-log-package-problem "'${DST}' exists, but is not a symlink to shared file '${SRC}'; fix it manually."
-            return 1
-        elif [ ! -h "${DST}" ]; then
-            if ! ln -s "${SRC}" "${DST}"; then
-                dotfiles-log-package-problem "Symlinking '${SRC}' to '${DST}' failed."
-                return 1
-            fi
-        fi
-    fi
-    return 0
-}
-
 homebinlink() {
     # Ensure command in the first argument (must be on the PATH) is
     # symlinked in ~/.bin (which always has the highest priority on
@@ -118,5 +74,5 @@ complainunset() {
 }
 
 commonfuncscleanup() {
-    unset -f packagerootloop homelink homebinlink complainunset commonfuncscleanup
+    unset -f packagerootloop homebinlink complainunset commonfuncscleanup
 }
