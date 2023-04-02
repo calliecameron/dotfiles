@@ -31,8 +31,6 @@ The folder can also contain any of the following subdirectories:
   is sourced.
 - `nemo-scripts` contains files that will be symlinked into Nemo's
   scripts directory, so they show up on the right-click menu.
-- `ipython-startup` contains files that will be symlinked into
-  IPython's startup directory.
 
 The folder name is the name of the package. All files are optional.
 

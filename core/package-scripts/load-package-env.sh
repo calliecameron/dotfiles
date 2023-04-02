@@ -22,8 +22,7 @@ loadpackageenv() {
                 export PYTHONPATH="${PACKAGE_CONF_DIR}/python:${PYTHONPATH}"
             fi
 
-            dotfiles-symlink-dir-contents "${PACKAGE_CONF_DIR}/nemo-scripts" "${HOME}/.local/share/nemo/scripts" &&
-            dotfiles-symlink-dir-contents "${PACKAGE_CONF_DIR}/ipython-startup" "${HOME}/.ipython/profile_default/startup" || return 1
+            dotfiles-symlink-dir-contents "${PACKAGE_CONF_DIR}/nemo-scripts" "${HOME}/.local/share/nemo/scripts" || return 1
 
             if [ -e "${PACKAGE_CONF_DIR}/env.sh" ]; then
                 ORIGINAL_WD="${PWD}"
