@@ -23,8 +23,6 @@ The folder can also contain any of the following subdirectories:
 
 - `bin`: will be prepended to the PATH and exported, before `env.sh`
   is sourced.
-- `python`: will be prepended to PYTHONPATH and exported, before
-  `env.sh` is sourced.
 - `zsh-completions`: will be prepended to the zsh completions path
   before `aliases.zsh` is sourced.
 - `elisp`: will be prepended to the Emacs load path before `emacs.el`

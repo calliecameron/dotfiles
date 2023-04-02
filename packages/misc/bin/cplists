@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 # Copy each file in a list to another directory, with the given names
 
-from dotfiles.common import file_to_list
 import os.path
 import shutil
 import sys
@@ -13,6 +12,16 @@ def usage():
     print("    line, into 'destdir' with the corresponding name from")
     print("    'destnames'. The two lists must be the same size.")
     sys.exit(1)
+
+
+def file_to_list(filename, test=lambda s: s != ""):
+    l = []
+    with open(filename) as f:
+        for line in f:
+            s = line.strip("\n")
+            if test(s):
+                l.append(s)
+    return l
 
 
 def file_test(f):

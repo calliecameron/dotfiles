@@ -18,10 +18,6 @@ loadpackageenv() {
                 export PATH="${PACKAGE_CONF_DIR}/bin:${PATH}"
             fi
 
-            if [ -d "${PACKAGE_CONF_DIR}/python" ]; then
-                export PYTHONPATH="${PACKAGE_CONF_DIR}/python:${PYTHONPATH}"
-            fi
-
             dotfiles-symlink-dir-contents "${PACKAGE_CONF_DIR}/nemo-scripts" "${HOME}/.local/share/nemo/scripts" || return 1
 
             if [ -e "${PACKAGE_CONF_DIR}/env.sh" ]; then
