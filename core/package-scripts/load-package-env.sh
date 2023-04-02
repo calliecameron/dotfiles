@@ -15,7 +15,7 @@ loadpackageenv() {
         if [ -e "${PACKAGE_INSTALLED_FILE}" ] || [ ! -e "${PACKAGE_CONF_DIR}/setup.bash" ]; then
 
             if [ -d "${PACKAGE_CONF_DIR}/bin" ]; then
-                addpath "${PACKAGE_CONF_DIR}/bin"
+                export PATH="${PACKAGE_CONF_DIR}/bin:${PATH}"
             fi
 
             if [ -d "${PACKAGE_CONF_DIR}/python" ]; then

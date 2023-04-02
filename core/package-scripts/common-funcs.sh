@@ -26,10 +26,6 @@ packagerootloop() {
     return 0
 }
 
-addpath() {
-    export PATH="${1}:${PATH}"
-}
-
 message() {
     # Display a message in blue the next time an interactive shell is
     # started (use instead of echo, which won't be seen in env
@@ -136,5 +132,5 @@ complainunset() {
 }
 
 commonfuncscleanup() {
-    unset -f packagerootloop addpath message problem homelink homebinlink complainunset commonfuncscleanup
+    unset -f packagerootloop message problem homelink homebinlink complainunset commonfuncscleanup
 }
