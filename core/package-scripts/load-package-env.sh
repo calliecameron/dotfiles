@@ -1,24 +1,5 @@
 # This must work in plain old sh
 
-symlinkdircontents() {
-    # shellcheck disable=SC2039
-    local SOURCE_DIR TARGET_DIR TEMPFILE line
-    SOURCE_DIR="${1}"
-    TARGET_DIR="${2}"
-
-    if [ -d "${SOURCE_DIR}" ] && [ -d "${TARGET_DIR}" ]; then
-        TEMPFILE="$(mktemp)" &&
-        ls -1 "${SOURCE_DIR}" > "${TEMPFILE}" || return 1
-        while read -r line; do
-            if [ ! -e "${TARGET_DIR}/${line}" ]; then
-                ln -s "${SOURCE_DIR}/${line}" "${TARGET_DIR}/${line}" || return 1
-            fi
-        done < "${TEMPFILE}"
-        rm "${TEMPFILE}" || return 1
-    fi
-    return 0
-}
-
 loadpackageenv() {
     # shellcheck disable=SC2039
     local PACKAGE_NAME PACKAGE_CONF_DIR PACKAGE_INSTALL_DIR PACKAGE_INSTALLED_FILE ORIGINAL_WD
@@ -41,8 +22,8 @@ loadpackageenv() {
                 export PYTHONPATH="${PACKAGE_CONF_DIR}/python:${PYTHONPATH}"
             fi
 
-            symlinkdircontents "${PACKAGE_CONF_DIR}/nemo-scripts" "${HOME}/.local/share/nemo/scripts" &&
-            symlinkdircontents "${PACKAGE_CONF_DIR}/ipython-startup" "${HOME}/.ipython/profile_default/startup" || return 1
+            dotfiles-symlink-dir-contents "${PACKAGE_CONF_DIR}/nemo-scripts" "${HOME}/.local/share/nemo/scripts" &&
+            dotfiles-symlink-dir-contents "${PACKAGE_CONF_DIR}/ipython-startup" "${HOME}/.ipython/profile_default/startup" || return 1
 
             if [ -e "${PACKAGE_CONF_DIR}/env.sh" ]; then
                 ORIGINAL_WD="${PWD}"
@@ -58,5 +39,5 @@ loadpackageenv() {
 }
 
 loadpackageenvcleanup() {
-    unset -f symlinkdircontents loadpackageenv loadpackageenvcleanup
+    unset -f loadpackageenv loadpackageenvcleanup
 }

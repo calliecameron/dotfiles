@@ -384,6 +384,53 @@ run_script() {
     assert_failure
 }
 
+@test 'dotfiles-symlink-dir-contents no args' {
+    run_script "${BIN_DIR}/dotfiles-symlink-dir-contents"
+    assert_failure
+    assert_line --partial 'Usage:'
+}
+
+@test 'dotfiles-symlink-dir-contents one args' {
+    run_script "${BIN_DIR}/dotfiles-symlink-dir-contents" 'a'
+    assert_failure
+    assert_line --partial 'Usage:'
+}
+
+@test 'dotfiles-symlink-dir-contents nonexistent link dir' {
+    mkdir -p "${TMP_DIR}/a"
+    touch "${TMP_DIR}/a/foo"
+    run_script "${BIN_DIR}/dotfiles-symlink-dir-contents" "${TMP_DIR}/a" "${TMP_DIR}/b"
+    assert_success
+    refute_line --partial 'Usage:'
+    assert [ ! -d "${TMP_DIR}/b" ]
+}
+
+@test 'dotfiles-symlink-dir-contents nonexistent file dir' {
+    mkdir -p "${TMP_DIR}/b"
+    run_script "${BIN_DIR}/dotfiles-symlink-dir-contents" "${TMP_DIR}/a" "${TMP_DIR}/b"
+    assert_success
+    refute_line --partial 'Usage:'
+    assert [ "$(ls -1 "${TMP_DIR}/b" | wc -l)" = '0' ]
+}
+
+@test 'dotfiles-symlink-dir-contents success' {
+    mkdir -p "${TMP_DIR}/a"
+    touch "${TMP_DIR}/a/foo"
+    touch "${TMP_DIR}/a/bar"
+    touch "${TMP_DIR}/a/baz"
+    mkdir -p "${TMP_DIR}/b"
+    touch "${TMP_DIR}/b/bar"
+    run_script "${BIN_DIR}/dotfiles-symlink-dir-contents" "${TMP_DIR}/a" "${TMP_DIR}/b"
+    assert_success
+    refute_line --partial 'Usage:'
+    assert [ -h "${TMP_DIR}/b/foo" ]
+    assert [ "$(readlink -f "${TMP_DIR}/b/foo")" = "${TMP_DIR}/a/foo" ]
+    assert [ -f "${TMP_DIR}/b/bar" ]
+    assert [ -h "${TMP_DIR}/b/baz" ]
+    assert [ "$(readlink -f "${TMP_DIR}/b/baz")" = "${TMP_DIR}/a/baz" ]
+    assert [ "$(ls -1 "${TMP_DIR}/b" | wc -l)" = '3' ]
+}
+
 @test 'dotfiles-package-ignored usage' {
     run_script "${BIN_DIR}/dotfiles-package-ignored"
     assert_failure
