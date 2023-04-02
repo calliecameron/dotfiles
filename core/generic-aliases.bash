@@ -50,6 +50,10 @@ unset -f check-init-file
 # Default dircolors; loaded here so packages can override them if desired
 [ -x /usr/bin/dircolors ] && eval "$(dircolors -b)"
 
+if [ -d "${DOTFILES_PACKAGE_MUTEX}" ]; then
+    dotfiles-echo-blue "Another script is installing or updating packages; don't be surprised if things behave oddly in the meantime."
+fi
+
 # Load packages
 [ -n "${DOTFILES_PROFILING}" ] && printf 'packages ' && date --rfc-3339=ns
 if [ -z "${DOTFILES_NO_PACKAGE_UPDATES}" ]; then

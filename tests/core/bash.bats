@@ -250,3 +250,20 @@ function assert_ran_env_only() {
     assert_line --partial "Your .zlogin doesn't look right - maybe something has tampered with it"
     refute_line --partial "Your .profile doesn't look right - maybe something has tampered with it"
 }
+
+@test 'package-mutex nonexistent' {
+    run_bash -l -i
+    assert_success
+    assert_ran 'bash'
+    refute_line --partial 'Another script is installing or updating packages'
+    assert [ ! -e "${TEST_PACKAGE_MUTEX}" ]
+}
+
+@test 'package-mutex existing' {
+    mkdir -p "${TEST_PACKAGE_MUTEX}"
+    run_bash -l -i
+    assert_success
+    assert_ran 'bash'
+    assert_line --partial 'Another script is installing or updating packages'
+    assert [ -d "${TEST_PACKAGE_MUTEX}" ]
+}

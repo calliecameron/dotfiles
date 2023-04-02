@@ -44,6 +44,7 @@ function setup_common() {
     TEST_NEXT_INIT="${TMP_DIR}/.dotfiles.d/next-init.bash"
     TEST_PACKAGE_INSTALL_DIR="${TMP_DIR}/.dotfiles.d/packages"
     TEST_PACKAGE_IGNORE_FILE="${TEST_PACKAGE_INSTALL_DIR}/ignored.txt"
+    TEST_PACKAGE_MUTEX="${TMP_DIR}/.dotfiles.d/package-mutex"
 
     mkdir -p "${TEST_PACKAGE_INSTALL_DIR}"
     mkdir -p "${TMP_DIR}/.local/share/nemo/scripts"
