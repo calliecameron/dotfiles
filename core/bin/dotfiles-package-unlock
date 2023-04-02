@@ -1,0 +1,13 @@
+#!/bin/bash
+
+set -eu
+
+if [ -n "${DOTFILES_PACKAGE_NO_LOCK:-}" ]; then
+    exit 0
+fi
+
+if ! rmdir "${DOTFILES_PACKAGE_MUTEX}"; then
+    dotfiles-echo-yellow "Failed to release package lock."
+fi
+
+exit 0

@@ -1,0 +1,14 @@
+#!/bin/bash
+
+set -eu
+
+if [ -n "${DOTFILES_PACKAGE_NO_LOCK:-}" ]; then
+    exit 0
+fi
+
+if ! mkdir "${DOTFILES_PACKAGE_MUTEX}" &>/dev/null; then
+    dotfiles-echo-red "Another script is installing packages; can't install now."
+    exit 1
+fi
+
+exit 0

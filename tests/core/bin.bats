@@ -1029,3 +1029,43 @@ Ignored
     bar
     stuff"
 }
+
+@test 'dotfiles-package-lock not locked' {
+    run_script "PATH=${BIN_DIR}:${PATH}" "DOTFILES_PACKAGE_MUTEX=${TMP_DIR}/a" "${BIN_DIR}/dotfiles-package-lock"
+    assert_success
+    assert [ -d "${TMP_DIR}/a" ]
+}
+
+@test 'dotfiles-package-lock locked' {
+    mkdir -p "${TMP_DIR}/a"
+    run_script "PATH=${BIN_DIR}:${PATH}" "DOTFILES_PACKAGE_MUTEX=${TMP_DIR}/a" "${BIN_DIR}/dotfiles-package-lock"
+    assert_failure
+    assert [ -d "${TMP_DIR}/a" ]
+}
+
+@test 'dotfiles-package-lock locked, no lock' {
+    mkdir -p "${TMP_DIR}/a"
+    run_script "PATH=${BIN_DIR}:${PATH}" "DOTFILES_PACKAGE_MUTEX=${TMP_DIR}/a" "DOTFILES_PACKAGE_NO_LOCK=t" "${BIN_DIR}/dotfiles-package-lock"
+    assert_success
+    assert [ -d "${TMP_DIR}/a" ]
+}
+
+@test 'dotfiles-package-unlock not locked' {
+    run_script "PATH=${BIN_DIR}:${PATH}" "DOTFILES_PACKAGE_MUTEX=${TMP_DIR}/a" "${BIN_DIR}/dotfiles-package-unlock"
+    assert_success
+    assert [ ! -e "${TMP_DIR}/a" ]
+}
+
+@test 'dotfiles-package-unlock locked' {
+    mkdir -p "${TMP_DIR}/a"
+    run_script "PATH=${BIN_DIR}:${PATH}" "DOTFILES_PACKAGE_MUTEX=${TMP_DIR}/a" "${BIN_DIR}/dotfiles-package-unlock"
+    assert_success
+    assert [ ! -e "${TMP_DIR}/a" ]
+}
+
+@test 'dotfiles-package-unlock locked, no lock' {
+    mkdir -p "${TMP_DIR}/a"
+    run_script "PATH=${BIN_DIR}:${PATH}" "DOTFILES_PACKAGE_MUTEX=${TMP_DIR}/a" "DOTFILES_PACKAGE_NO_LOCK=t" "${BIN_DIR}/dotfiles-package-unlock"
+    assert_success
+    assert [ -d "${TMP_DIR}/a" ]
+}
