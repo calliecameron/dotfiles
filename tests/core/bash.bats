@@ -57,6 +57,7 @@ function assert_ran() {
     assert_package_roots
     assert_nemo_scripts
     assert_not_zsh_completions
+    assert_packages_available
 }
 
 function assert_ran_env_only() {
@@ -102,6 +103,7 @@ function assert_ran_env_only() {
     assert_package_roots
     assert_nemo_scripts
     assert_not_zsh_completions
+    assert_not_packages_available
 }
 
 @test 'run simple' {

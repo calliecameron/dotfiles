@@ -235,6 +235,14 @@ function assert_not_stub_run() {
     refute_line --partial 'DOTFILES_DIR'
 }
 
+function assert_packages_available() {
+    assert_line --partial 'Packages are available to install'
+}
+
+function assert_not_packages_available() {
+    refute_line --partial 'Packages are available to install'
+}
+
 function assert_package_type_run_by() {
     local ROOT="${1}"
     local NAME="${2}"
@@ -365,4 +373,5 @@ function assert_nothing_ran() {
     assert_not_package_roots
     assert_not_nemo_scripts
     assert_not_zsh_completions
+    assert_not_packages_available
 }

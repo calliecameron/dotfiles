@@ -37,22 +37,32 @@ function load-package-aliases() {
 
     if [ -d "${PACKAGE_SOURCE_DIR}" ] &&
         ! dotfiles-in-list "${DOTFILES_PACKAGES_LOADED_ALIASES}" "${PACKAGE_NAME}" &&
-        ! dotfiles-package-ignored "${PACKAGE_NAME}" &&
-        (dotfiles-package-installed "${PACKAGE_NAME}" ||
+        ! dotfiles-package-ignored "${PACKAGE_NAME}"; then
+
+        if (dotfiles-package-installed "${PACKAGE_NAME}" ||
             ! dotfiles-package-has-installer "${PACKAGE_SOURCE_DIR}"); then
-        # Depending on invocation, the package might not have been enved yet
-        if loadpackageenv "${PACKAGE_ROOT}" "${PACKAGE_NAME}" &&
-            load-aliases "${PACKAGE_ROOT}" "${PACKAGE_NAME}" 'sh' &&
-            load-aliases "${PACKAGE_ROOT}" "${PACKAGE_NAME}" "${DOTFILES_SHELL}"; then
-            DOTFILES_PACKAGES_LOADED_ALIASES="${DOTFILES_PACKAGES_LOADED_ALIASES}:${PACKAGE_NAME}"
-        else
-            dotfiles-log-package-problem "Failed to load aliases for package '${PACKAGE_NAME}'."
+            # Depending on invocation, the package might not have been enved yet
+            if loadpackageenv "${PACKAGE_ROOT}" "${PACKAGE_NAME}" &&
+                load-aliases "${PACKAGE_ROOT}" "${PACKAGE_NAME}" 'sh' &&
+                load-aliases "${PACKAGE_ROOT}" "${PACKAGE_NAME}" "${DOTFILES_SHELL}"; then
+                DOTFILES_PACKAGES_LOADED_ALIASES="${DOTFILES_PACKAGES_LOADED_ALIASES}:${PACKAGE_NAME}"
+            else
+                dotfiles-log-package-problem "Failed to load aliases for package '${PACKAGE_NAME}'."
+            fi
+        elif (! dotfiles-package-installed "${PACKAGE_NAME}" &&
+            dotfiles-package-can-install "${PACKAGE_SOURCE_DIR}"); then
+            PACKAGES_AVAILABLE='t'
         fi
     fi
 }
 
 packageloop 'Aliases' load-package-aliases
 
+if [ -n "${PACKAGES_AVAILABLE}" ]; then
+    dotfiles-echo-blue "Packages are available to install; run 'dotfiles-package-list'."
+fi
+
+unset -v PACKAGES_AVAILABLE
 unset -f load-aliases load-package-aliases
 commonfuncscleanup
 loadpackageenvcleanup
