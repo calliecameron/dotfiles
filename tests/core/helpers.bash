@@ -45,6 +45,7 @@ function setup_common() {
     TEST_PACKAGE_INSTALL_DIR="${TMP_DIR}/.dotfiles.d/packages"
     TEST_PACKAGE_IGNORE_FILE="${TEST_PACKAGE_INSTALL_DIR}/ignored.txt"
     TEST_PACKAGE_MUTEX="${TMP_DIR}/.dotfiles.d/package-mutex"
+    TEST_PRIVATE_DIR="${TMP_DIR}/.dotfiles.d/private"
 
     mkdir -p "${TEST_PACKAGE_INSTALL_DIR}"
     mkdir -p "${TMP_DIR}/.local/share/nemo/scripts"
@@ -199,7 +200,7 @@ function assert_not_path() {
 }
 
 function assert_package_roots() {
-    assert_line "TEST_PACKAGE_ROOTS=/bar:$(readlink -f "${THIS_DIR}/../..")/private/packages-pre:$(readlink -f "${THIS_DIR}/../..")/packages:$(readlink -f "${THIS_DIR}/../..")/private/packages:/foo"
+    assert_line "TEST_PACKAGE_ROOTS=/bar:$(readlink -f "${TMP_DIR}")/.dotfiles.d/private/packages-pre:$(readlink -f "${THIS_DIR}/../..")/packages:$(readlink -f "${TMP_DIR}")/.dotfiles.d/private/packages:/foo"
 }
 
 function assert_not_package_roots() {

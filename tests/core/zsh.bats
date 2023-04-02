@@ -267,3 +267,30 @@ function assert_ran_env_only() {
     assert_line --partial 'Another script is installing or updating packages'
     assert [ -d "${TEST_PACKAGE_MUTEX}" ]
 }
+
+@test 'private-repo undefined' {
+    run_zsh -l -i
+    assert_success
+    assert_ran 'zsh'
+    refute_line --partial 'A private repo is specified'
+    assert [ ! -e "${TEST_PRIVATE_DIR}" ]
+}
+
+@test 'private-repo nonexistent' {
+    echo 'export DOTFILES_PRIVATE_REPO=foo' >>"${TEST_LOCAL_ENV_FILE}"
+    run_zsh -l -i
+    assert_success
+    assert_ran 'zsh'
+    assert_line --partial 'A private repo is specified'
+    assert [ ! -e "${TEST_PRIVATE_DIR}" ]
+}
+
+@test 'private-repo existing' {
+    echo 'export DOTFILES_PRIVATE_REPO=foo' >>"${TEST_LOCAL_ENV_FILE}"
+    mkdir -p "${TEST_PRIVATE_DIR}"
+    run_zsh -l -i
+    assert_success
+    assert_ran 'zsh'
+    refute_line --partial 'A private repo is specified'
+    assert [ -d "${TEST_PRIVATE_DIR}" ]
+}
