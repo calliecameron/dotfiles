@@ -56,25 +56,8 @@ function update-package-root() {
 }
 
 function update-all-packages() {
-    update-private-repo &&
     touch "${UPDATED_ALREADY_FILE}" &&
     packagerootloop update-package-root &&
     date '+%s' > "${UPDATE_FILE}" &&
     rm "${UPDATED_ALREADY_FILE}"
-}
-
-function update-private-repo() {
-    if [ -d "${DOTFILES_PRIVATE_DIR}" ]; then
-        if dotfiles-repo-is-clean "${DOTFILES_PRIVATE_DIR}"; then
-            # shellcheck disable=SC2015
-            cd "${DOTFILES_PRIVATE_DIR}" || return 1
-            if ! git pull; then
-                dotfiles-echo-red 'Failed to update private repo.'
-                return 1
-            fi
-        else
-            dotfiles-echo-yellow 'Private repo has uncommitted changes; not updating it.'
-        fi
-    fi
-    return 0
 }

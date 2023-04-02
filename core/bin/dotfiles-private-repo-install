@@ -1,0 +1,35 @@
+#!/bin/bash
+
+set -eu
+
+function fail() {
+    dotfiles-echo-red "${@}"
+    exit 1
+}
+
+dotfiles-package-lock
+trap dotfiles-package-unlock EXIT
+
+if [ -d "${DOTFILES_PRIVATE_DIR}" ]; then
+    if ! dotfiles-repo-is-clean "${DOTFILES_PRIVATE_DIR}"; then
+        fail 'Private repo has uncommitted changes; not updating it.'
+    fi
+
+    cd "${DOTFILES_PRIVATE_DIR}"
+    if ! git pull; then
+        fail 'Failed to update private repo.'
+    fi
+elif [ -n "${DOTFILES_PRIVATE_REPO}" ]; then
+    if ! git clone "${DOTFILES_PRIVATE_REPO}" "${DOTFILES_PRIVATE_DIR}"; then
+        fail 'Could not clone private repo.'
+    fi
+
+    if [ -n "${DOTFILES_PRIVATE_BRANCH}" ]; then
+        cd "${DOTFILES_PRIVATE_DIR}"
+        if ! git checkout "${DOTFILES_PRIVATE_BRANCH}"; then
+            fail 'Could not check out private branch.'
+        fi
+    fi
+fi
+
+exit 0

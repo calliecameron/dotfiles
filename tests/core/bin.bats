@@ -1069,3 +1069,65 @@ Ignored
     assert_success
     assert [ -d "${TMP_DIR}/a" ]
 }
+
+@test 'dotfiles-private-repo-install nothing' {
+    run_script "PATH=${BIN_DIR}:${PATH}" "DOTFILES_PACKAGE_MUTEX=${TMP_DIR}/mutex" "DOTFILES_PRIVATE_DIR=${TMP_DIR}/private" "DOTFILES_PRIVATE_REPO=" "${BIN_DIR}/dotfiles-private-repo-install"
+    assert_success
+    assert [ ! -e "${TMP_DIR}/mutex" ]
+    assert [ ! -e "${TMP_DIR}/private" ]
+}
+
+@test 'dotfiles-private-repo-install clone, default branch' {
+    mkdir -p "${TMP_DIR}/repo"
+    touch "${TMP_DIR}/repo/a"
+    (cd "${TMP_DIR}/repo" && git init . && git add a && git commit -m 'Foo')
+    run_script "PATH=${BIN_DIR}:${PATH}" "DOTFILES_PACKAGE_MUTEX=${TMP_DIR}/mutex" "DOTFILES_PRIVATE_DIR=${TMP_DIR}/private" "DOTFILES_PRIVATE_REPO=${TMP_DIR}/repo" "DOTFILES_PRIVATE_BRANCH=" "${BIN_DIR}/dotfiles-private-repo-install"
+    assert_success
+    assert [ ! -e "${TMP_DIR}/mutex" ]
+    assert [ -d "${TMP_DIR}/private" ]
+    assert [ -f "${TMP_DIR}/private/a" ]
+    (cd "${TMP_DIR}/private" && assert [ "$(git branch --show-current)" = 'master' ])
+}
+
+@test 'dotfiles-private-repo-install clone, other branch' {
+    mkdir -p "${TMP_DIR}/repo"
+    touch "${TMP_DIR}/repo/a"
+    (cd "${TMP_DIR}/repo" && git init . && git add a && git commit -m 'Foo' && git checkout -b dev)
+    run_script "PATH=${BIN_DIR}:${PATH}" "DOTFILES_PACKAGE_MUTEX=${TMP_DIR}/mutex" "DOTFILES_PRIVATE_DIR=${TMP_DIR}/private" "DOTFILES_PRIVATE_REPO=${TMP_DIR}/repo" "DOTFILES_PRIVATE_BRANCH=dev" "${BIN_DIR}/dotfiles-private-repo-install"
+    assert_success
+    assert [ ! -e "${TMP_DIR}/mutex" ]
+    assert [ -d "${TMP_DIR}/private" ]
+    assert [ -f "${TMP_DIR}/private/a" ]
+    (cd "${TMP_DIR}/private" && assert [ "$(git branch --show-current)" = 'dev' ])
+}
+
+@test 'dotfiles-private-repo-install pull, clean' {
+    mkdir -p "${TMP_DIR}/repo"
+    touch "${TMP_DIR}/repo/a"
+    (cd "${TMP_DIR}/repo" && git init . && git add a && git commit -m 'Foo')
+    git clone "${TMP_DIR}/repo" "${TMP_DIR}/private"
+    echo 'foo' >"${TMP_DIR}/repo/a"
+    (cd "${TMP_DIR}/repo" && git add a && git commit -m 'Bar')
+    run_script "PATH=${BIN_DIR}:${PATH}" "DOTFILES_PACKAGE_MUTEX=${TMP_DIR}/mutex" "DOTFILES_PRIVATE_DIR=${TMP_DIR}/private" "DOTFILES_PRIVATE_REPO=${TMP_DIR}/repo" "DOTFILES_PRIVATE_BRANCH=" "${BIN_DIR}/dotfiles-private-repo-install"
+    assert_success
+    assert [ ! -e "${TMP_DIR}/mutex" ]
+    assert [ -d "${TMP_DIR}/private" ]
+    assert [ -f "${TMP_DIR}/private/a" ]
+    assert [ "$(cat "${TMP_DIR}/private/a")" = 'foo' ]
+    (cd "${TMP_DIR}/private" && assert [ "$(git branch --show-current)" = 'master' ])
+}
+
+@test 'dotfiles-private-repo-install pull, dirty' {
+    mkdir -p "${TMP_DIR}/repo"
+    touch "${TMP_DIR}/repo/a"
+    (cd "${TMP_DIR}/repo" && git init . && git add a && git commit -m 'Foo')
+    git clone "${TMP_DIR}/repo" "${TMP_DIR}/private"
+    echo 'foo' >"${TMP_DIR}/private/a"
+    run_script "PATH=${BIN_DIR}:${PATH}" "DOTFILES_PACKAGE_MUTEX=${TMP_DIR}/mutex" "DOTFILES_PRIVATE_DIR=${TMP_DIR}/private" "DOTFILES_PRIVATE_REPO=${TMP_DIR}/repo" "DOTFILES_PRIVATE_BRANCH=" "${BIN_DIR}/dotfiles-private-repo-install"
+    assert_failure
+    assert [ ! -e "${TMP_DIR}/mutex" ]
+    assert [ -d "${TMP_DIR}/private" ]
+    assert [ -f "${TMP_DIR}/private/a" ]
+    assert [ "$(cat "${TMP_DIR}/private/a")" = 'foo' ]
+    (cd "${TMP_DIR}/private" && assert [ "$(git branch --show-current)" = 'master' ])
+}

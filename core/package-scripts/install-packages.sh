@@ -12,20 +12,6 @@ function fail() {
     exit 1
 }
 
-if [ ! -z "${DOTFILES_PRIVATE_REPO}" ] && [ ! -d "${DOTFILES_PRIVATE_DIR}" ]; then
-    if dotfiles-yn-y 'A private repo has been specified; clone it?'; then
-        if git clone "${DOTFILES_PRIVATE_REPO}" "${DOTFILES_PRIVATE_DIR}"; then
-            if [ ! -z "${DOTFILES_PRIVATE_BRANCH}" ]; then
-                cd "${DOTFILES_PRIVATE_DIR}" &&
-                # shellcheck disable=SC2015
-                git checkout "${DOTFILES_PRIVATE_BRANCH}" || fail 'Could not check out private branch'
-            fi
-        else
-            fail 'Could not clone private repo.'
-        fi
-    fi
-fi
-
 function install-package-root() {
     test -z "${1}" && fail 'Could not install packages: no configuration root specified.'
     PACKAGE_ROOT="${1}"
