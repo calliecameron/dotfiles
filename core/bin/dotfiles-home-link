@@ -28,16 +28,8 @@ else
     DST="${HOME}/.$(basename "${SRC}")"
 fi
 
-PROBLEM=''
-if [ -h "${DST}" ]; then
-    if [ "$(readlink -f "${DST}")" != "${SRC}" ]; then
-        PROBLEM='t'
-    fi
-elif [ -e "${DST}" ]; then
-    PROBLEM='t'
-fi
-
-if [ -n "${PROBLEM}" ]; then
+if { [ -h "${DST}" ] && [ "$(readlink -f "${DST}")" != "${SRC}" ]; } ||
+    { [ ! -h "${DST}" ] && [ -e "${DST}" ]; }; then
     dotfiles-log-package-problem "'${DST}' exists, but is not a symlink to shared file '${SRC}'; fix it manually."
     exit 1
 fi
