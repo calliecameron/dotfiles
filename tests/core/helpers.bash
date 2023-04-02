@@ -133,23 +133,21 @@ function teardown_common() {
 }
 
 function run_dash() {
-    run env -i -C "${TMP_DIR}" HOME="${TMP_DIR}" TERM='xterm-256color' DOTFILES_NO_PACKAGE_UPDATES='t' dash "${@}" -c 'env | LC_ALL=C sort' 3>&-
+    run env -i -C "${TMP_DIR}" HOME="${TMP_DIR}" TERM='xterm-256color' dash "${@}" -c 'env | LC_ALL=C sort' 3>&-
 }
 
 function run_bash() {
-    # TODO get rid of DOTFILES_NO_PACKAGE_UPDATES
-    run env -i -C "${TMP_DIR}" HOME="${TMP_DIR}" TERM='xterm-256color' DOTFILES_NO_PACKAGE_UPDATES='t' bash "${@}" -c 'env | LC_ALL=C sort' 3>&-
+    run env -i -C "${TMP_DIR}" HOME="${TMP_DIR}" TERM='xterm-256color' bash "${@}" -c 'env | LC_ALL=C sort' 3>&-
 }
 
 function run_zsh() {
-    # TODO get rid of DOTFILES_NO_PACKAGE_UPDATES
-    run env -i -C "${TMP_DIR}" HOME="${TMP_DIR}" TERM='xterm-256color' DOTFILES_NO_PACKAGE_UPDATES='t' zsh "${@}" -c 'env | LC_ALL=C sort' 3>&-
+    run env -i -C "${TMP_DIR}" HOME="${TMP_DIR}" TERM='xterm-256color' zsh "${@}" -c 'env | LC_ALL=C sort' 3>&-
 }
 
 function _after_login() {
     (
         # shellcheck source=/dev/null
-        source <(env -i -C "${TMP_DIR}" HOME="${TMP_DIR}" TERM='xterm-256color' DOTFILES_NO_PACKAGE_UPDATES='t' dash -l -c 'env -0' | xargs -0 bash -c 'printf "export %q\n" "$@"' -- | LC_ALL=C sort)
+        source <(env -i -C "${TMP_DIR}" HOME="${TMP_DIR}" TERM='xterm-256color' dash -l -c 'env -0' | xargs -0 bash -c 'printf "export %q\n" "$@"' -- | LC_ALL=C sort)
         bash -c "${1}"
         "${@:2}"
     )

@@ -60,17 +60,6 @@ fi
 
 # Load packages
 [ -n "${DOTFILES_PROFILING}" ] && printf 'packages ' && date --rfc-3339=ns
-if [ -z "${DOTFILES_NO_PACKAGE_UPDATES}" ]; then
-    if command mkdir "${DOTFILES_PACKAGE_MUTEX}" &>/dev/null; then
-        "${DOTFILES_PACKAGE_SCRIPTS}/install-packages.sh"
-        [ -n "${DOTFILES_PROFILING}" ] && printf 'packages2 ' && date --rfc-3339=ns
-        "${DOTFILES_PACKAGE_SCRIPTS}/update-packages.sh"
-        [ -n "${DOTFILES_PROFILING}" ] && printf 'packages3 ' && date --rfc-3339=ns
-        command rmdir "${DOTFILES_PACKAGE_MUTEX}"
-    else
-        dotfiles-echo-blue "Another shell is installing or updating packages; don't be surprised if things behave oddly in the meantime."
-    fi
-fi
 if [ -z "${DOTFILES_NO_ALIASES}" ]; then
     # shellcheck source=/dev/null
     source "${DOTFILES_PACKAGE_SCRIPTS}/load-all-packages-aliases.bash"
