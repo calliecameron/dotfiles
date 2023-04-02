@@ -16,21 +16,21 @@ loadpackagesenv() {
                 if ls -1 "${PACKAGE_CONF_ROOT}" > "${TEMPFILE}"; then
 
                     while read -r line; do
-                        loadpackageenv "${line}" || problem "Could not load environment for package '${line}'."
+                        loadpackageenv "${line}" || dotfiles-log-package-problem "Could not load environment for package '${line}'."
                     done < "${TEMPFILE}"
 
                 else
-                    problem 'Could not load package environments; Unable to list packages.'
+                    dotfiles-log-package-problem 'Could not load package environments; Unable to list packages.'
                 fi
                 rm "${TEMPFILE}"
             else
-                problem 'Could not load package environments; unable to create temporary file.'
+                dotfiles-log-package-problem 'Could not load package environments; unable to create temporary file.'
             fi
         fi
 
         unset PACKAGE_CONF_ROOT
     else
-        problem 'Package configuration root must be specified.'
+        dotfiles-log-package-problem 'Package configuration root must be specified.'
     fi
 }
 

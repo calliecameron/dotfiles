@@ -52,7 +52,7 @@ function load-packages-aliases() {
                                 doaliases "${DOTFILES_SHELL}" &&
 
                                 # shellcheck disable=SC2015
-                                DOTFILES_PACKAGES_LOADED_ALIASES="${DOTFILES_PACKAGES_LOADED_ALIASES}:${PACKAGE_NAME}" || problem "Failed to load aliases for package '${PACKAGE_NAME}'."
+                                DOTFILES_PACKAGES_LOADED_ALIASES="${DOTFILES_PACKAGES_LOADED_ALIASES}:${PACKAGE_NAME}" || dotfiles-log-package-problem "Failed to load aliases for package '${PACKAGE_NAME}'."
                             fi
                         fi
 
@@ -62,18 +62,18 @@ function load-packages-aliases() {
                         unset PACKAGE_INSTALLED_FILE
                     done 3<"${TEMPFILE}"
                 else
-                    problem 'Could not load package aliases; failed to list packages.'
+                    dotfiles-log-package-problem 'Could not load package aliases; failed to list packages.'
                 fi
 
                 command rm "${TEMPFILE}"
             else
-                problem 'Could not load package aliases; failed to create temporary file.'
+                dotfiles-log-package-problem 'Could not load package aliases; failed to create temporary file.'
             fi
         fi
 
         unset PACKAGE_CONF_ROOT
     else
-        problem 'Package configuration root must be specified.'
+        dotfiles-log-package-problem 'Package configuration root must be specified.'
     fi
 }
 

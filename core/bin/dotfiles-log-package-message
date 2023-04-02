@@ -1,0 +1,7 @@
+#!/bin/bash
+# Display a message in blue the next time an interactive shell is started (use
+# instead of echo, which won't be seen in env scripts).
+
+set -eu
+
+echo "${@}" >>"${DOTFILES_PACKAGE_MESSAGES_FILE}"

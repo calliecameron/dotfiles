@@ -26,20 +26,6 @@ packagerootloop() {
     return 0
 }
 
-message() {
-    # Display a message in blue the next time an interactive shell is
-    # started (use instead of echo, which won't be seen in env
-    # scripts).
-    echo "${@}" >> "${DOTFILES_PACKAGE_MESSAGES_FILE}"
-}
-
-problem() {
-    # Display a message in orange the next time an interactive shell
-    # is started (use instead of echo, which won't be seen in env
-    # scripts).
-    echo "${@}" >> "${DOTFILES_PACKAGE_PROBLEMS_FILE}"
-}
-
 homelink() {
     # Ensure the first argument is symlinked in the home directory, or
     # at another location if specified by a second argument.
@@ -51,7 +37,7 @@ homelink() {
         if [ ! -z "${2}" ]; then
             DST="${2}"
             if ! mkdir -p "$(dirname "${DST}")"; then
-                problem "Creating symlink directory '$(dirname "${DST}")' failed."
+                dotfiles-log-package-problem "Creating symlink directory '$(dirname "${DST}")' failed."
                 return 1
             fi
         else
@@ -72,11 +58,11 @@ homelink() {
         fi
 
         if [ ! -z "${PROBLEM}" ]; then
-            problem "'${DST}' exists, but is not a symlink to shared file '${SRC}'; fix it manually."
+            dotfiles-log-package-problem "'${DST}' exists, but is not a symlink to shared file '${SRC}'; fix it manually."
             return 1
         elif [ ! -h "${DST}" ]; then
             if ! ln -s "${SRC}" "${DST}"; then
-                problem "Symlinking '${SRC}' to '${DST}' failed."
+                dotfiles-log-package-problem "Symlinking '${SRC}' to '${DST}' failed."
                 return 1
             fi
         fi
@@ -98,7 +84,7 @@ homebinlink() {
     if which "${COMMAND}" >/dev/null; then
         FULL_COMMAND="$(which "${COMMAND}")"
         if ! mkdir -p "${DOTFILES_LOCAL_BIN}"; then
-            problem "Cannot create '${DOTFILES_LOCAL_BIN}'"
+            dotfiles-log-package-problem "Cannot create '${DOTFILES_LOCAL_BIN}'"
             return 1
         fi
 
@@ -106,10 +92,10 @@ homebinlink() {
             LINKNAME="${1}"
             if [ -e "${DOTFILES_LOCAL_BIN}/${LINKNAME}" ]; then
                 if [ ! -h "${DOTFILES_LOCAL_BIN}/${LINKNAME}" ]; then
-                    problem "'${COMMAND}' link '${DOTFILES_LOCAL_BIN}/${LINKNAME}' exists but is not a link to '${COMMAND}'."
+                    dotfiles-log-package-problem "'${COMMAND}' link '${DOTFILES_LOCAL_BIN}/${LINKNAME}' exists but is not a link to '${COMMAND}'."
                 fi
             else
-                ln -s "${FULL_COMMAND}" "${DOTFILES_LOCAL_BIN}/${LINKNAME}" || problem "Cannot create link '${DOTFILES_LOCAL_BIN}/${LINKNAME}' to '${COMMAND}'."
+                ln -s "${FULL_COMMAND}" "${DOTFILES_LOCAL_BIN}/${LINKNAME}" || dotfiles-log-package-problem "Cannot create link '${DOTFILES_LOCAL_BIN}/${LINKNAME}' to '${COMMAND}'."
             fi
 
             shift
@@ -127,10 +113,10 @@ complainunset() {
     local VAL
     eval VAL="\${${1}}"
     if [ -z "${VAL}" ]; then
-        problem "${2} not set; use ${1} to set it in ${DOTFILES_LOCAL_VARIABLES}."
+        dotfiles-log-package-problem "${2} not set; use ${1} to set it in ${DOTFILES_LOCAL_VARIABLES}."
     fi
 }
 
 commonfuncscleanup() {
-    unset -f packagerootloop message problem homelink homebinlink complainunset commonfuncscleanup
+    unset -f packagerootloop homelink homebinlink complainunset commonfuncscleanup
 }

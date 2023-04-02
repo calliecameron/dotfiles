@@ -431,6 +431,32 @@ run_script() {
     assert [ "$(ls -1 "${TMP_DIR}/b" | wc -l)" = '3' ]
 }
 
+@test 'dotfiles-log-package-message empty' {
+    run_script "DOTFILES_PACKAGE_MESSAGES_FILE=${TMP_DIR}/a" "${BIN_DIR}/dotfiles-log-package-message" 'foo' 'bar baz'
+    assert_success
+    assert [ "$(cat "${TMP_DIR}/a")" = 'foo bar baz' ]
+}
+
+@test 'dotfiles-log-package-message existing' {
+    echo 'foo' >"${TMP_DIR}/a"
+    run_script "DOTFILES_PACKAGE_MESSAGES_FILE=${TMP_DIR}/a" "${BIN_DIR}/dotfiles-log-package-message" 'foo' 'bar baz'
+    assert_success
+    assert [ "$(cat "${TMP_DIR}/a")" = "$(printf 'foo\nfoo bar baz')" ]
+}
+
+@test 'dotfiles-log-package-problem empty' {
+    run_script "DOTFILES_PACKAGE_PROBLEMS_FILE=${TMP_DIR}/a" "${BIN_DIR}/dotfiles-log-package-problem" 'foo' 'bar baz'
+    assert_success
+    assert [ "$(cat "${TMP_DIR}/a")" = 'foo bar baz' ]
+}
+
+@test 'dotfiles-log-package-problem existing' {
+    echo 'foo' >"${TMP_DIR}/a"
+    run_script "DOTFILES_PACKAGE_PROBLEMS_FILE=${TMP_DIR}/a" "${BIN_DIR}/dotfiles-log-package-problem" 'foo' 'bar baz'
+    assert_success
+    assert [ "$(cat "${TMP_DIR}/a")" = "$(printf 'foo\nfoo bar baz')" ]
+}
+
 @test 'dotfiles-package-ignored usage' {
     run_script "${BIN_DIR}/dotfiles-package-ignored"
     assert_failure

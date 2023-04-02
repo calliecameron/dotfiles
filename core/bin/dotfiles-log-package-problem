@@ -1,0 +1,7 @@
+#!/bin/bash
+# Display a message in orange the next time an interactive shellis started (use
+# instead of echo, which won't be seen in env scripts).
+
+set -eu
+
+echo "${@}" >>"${DOTFILES_PACKAGE_PROBLEMS_FILE}"
