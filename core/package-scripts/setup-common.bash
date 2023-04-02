@@ -8,7 +8,7 @@ UPDATED_ALREADY_FILE="${DOTFILES_PACKAGE_INSTALL_DIR}/updated-already.txt"
 function package-setup-vars() {
     # Arg: the name of the package
     PACKAGE_NAME="${1}"
-    PACKAGE_SOURCE_DIR="${PACKAGE_CONF_ROOT}/${PACKAGE_NAME}"
+    PACKAGE_SOURCE_DIR="${PACKAGE_ROOT}/${PACKAGE_NAME}"
     # shellcheck disable=SC2034
     PACKAGE_INSTALL_DIR="${DOTFILES_PACKAGE_INSTALL_DIR}/${PACKAGE_NAME}"
     # shellcheck disable=SC2034

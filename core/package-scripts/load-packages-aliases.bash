@@ -26,16 +26,16 @@ function doaliases() {
 
 function load-packages-aliases() {
     if [ ! -z "${1}" ]; then
-        PACKAGE_CONF_ROOT="${1}"
+        PACKAGE_ROOT="${1}"
 
-        if [ -d "${PACKAGE_CONF_ROOT}" ]; then
+        if [ -d "${PACKAGE_ROOT}" ]; then
             local TEMPFILE
             if TEMPFILE="$(mktemp)"; then
-                if command ls -1 "${PACKAGE_CONF_ROOT}" > "${TEMPFILE}"; then
+                if command ls -1 "${PACKAGE_ROOT}" > "${TEMPFILE}"; then
 
                     while read -r line <&3; do
                         PACKAGE_NAME="${line}"
-                        PACKAGE_SOURCE_DIR="${PACKAGE_CONF_ROOT}/${PACKAGE_NAME}"
+                        PACKAGE_SOURCE_DIR="${PACKAGE_ROOT}/${PACKAGE_NAME}"
                         # shellcheck disable=SC2034
                         PACKAGE_INSTALL_DIR="${DOTFILES_PACKAGE_INSTALL_DIR}/${PACKAGE_NAME}"
                         PACKAGE_INSTALLED_FILE="${DOTFILES_PACKAGE_INSTALL_DIR}/${PACKAGE_NAME}.installed"
@@ -71,7 +71,7 @@ function load-packages-aliases() {
             fi
         fi
 
-        unset PACKAGE_CONF_ROOT
+        unset PACKAGE_ROOT
     else
         dotfiles-log-package-problem 'Package configuration root must be specified.'
     fi

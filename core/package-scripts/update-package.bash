@@ -45,10 +45,10 @@ function update-package() {
 }
 
 function update-package-root() {
-    PACKAGE_CONF_ROOT="${1}"
+    PACKAGE_ROOT="${1}"
 
-    if [ -d "${PACKAGE_CONF_ROOT}" ]; then
-        exec 3< <(ls -1 "${PACKAGE_CONF_ROOT}") || return 1
+    if [ -d "${PACKAGE_ROOT}" ]; then
+        exec 3< <(ls -1 "${PACKAGE_ROOT}") || return 1
         while read -r -u 3 line; do
             update-package "${line}" || return 1
         done

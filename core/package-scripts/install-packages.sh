@@ -28,11 +28,11 @@ fi
 
 function install-package-root() {
     test -z "${1}" && fail 'Could not install packages: no configuration root specified.'
-    PACKAGE_CONF_ROOT="${1}"
+    PACKAGE_ROOT="${1}"
 
-    if [ -d "${PACKAGE_CONF_ROOT}" ]; then
+    if [ -d "${PACKAGE_ROOT}" ]; then
         TEMPFILE="$(mktemp)" &&
-        ls -1 "${PACKAGE_CONF_ROOT}" > "${TEMPFILE}" &&
+        ls -1 "${PACKAGE_ROOT}" > "${TEMPFILE}" &&
 
         # shellcheck disable=SC2015
         exec 3< "${TEMPFILE}" || fail

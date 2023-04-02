@@ -8,12 +8,12 @@ loadpackagesenv() {
     local TEMPFILE
 
     if [ ! -z "${1}" ]; then
-        PACKAGE_CONF_ROOT="${1}"
+        PACKAGE_ROOT="${1}"
 
-        if [ -d "${PACKAGE_CONF_ROOT}" ]; then
+        if [ -d "${PACKAGE_ROOT}" ]; then
 
             if TEMPFILE="$(mktemp -p "${HOME}")"; then
-                if ls -1 "${PACKAGE_CONF_ROOT}" > "${TEMPFILE}"; then
+                if ls -1 "${PACKAGE_ROOT}" > "${TEMPFILE}"; then
 
                     while read -r line; do
                         loadpackageenv "${line}" || dotfiles-log-package-problem "Could not load environment for package '${line}'."
@@ -28,7 +28,7 @@ loadpackagesenv() {
             fi
         fi
 
-        unset PACKAGE_CONF_ROOT
+        unset PACKAGE_ROOT
     else
         dotfiles-log-package-problem 'Package configuration root must be specified.'
     fi
