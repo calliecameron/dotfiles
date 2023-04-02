@@ -1,0 +1,82 @@
+#!/bin/bash
+
+set -eu
+
+function usage() {
+    echo "Usage: $(basename "${0}") package_name_or_source_path..."
+    exit 1
+}
+
+function fail() {
+    dotfiles-echo-red "${@}"
+    exit 1
+}
+
+test -z "${1:-}" && usage
+
+source "${DOTFILES_PACKAGE_SCRIPTS}/load-package-env.sh"
+
+dotfiles-package-lock
+trap dotfiles-package-unlock EXIT
+
+while [ -n "${1:-}" ]; do
+    PACKAGE_SOURCE_DIR="$(dotfiles-package-source-path "${1}")"
+    PACKAGE_ROOT="$(dirname "${PACKAGE_SOURCE_DIR}")"
+    PACKAGE_NAME="$(basename "${PACKAGE_SOURCE_DIR}")"
+    PACKAGE_INSTALL_DIR="${DOTFILES_PACKAGE_INSTALL_DIR}/${PACKAGE_NAME}"
+    PACKAGE_INSTALLED_FILE="${DOTFILES_PACKAGE_INSTALL_DIR}/${PACKAGE_NAME}.installed"
+
+    if dotfiles-package-ignored "${PACKAGE_NAME}"; then
+        fail "Cannot install ignored package: ${PACKAGE_NAME}"
+    fi
+
+    if ! dotfiles-package-can-install "${PACKAGE_SOURCE_DIR}"; then
+        fail "Installation requirements not met for package: ${PACKAGE_NAME}"
+    fi
+
+    OPERATION='Install'
+    if [ -e "${PACKAGE_INSTALLED_FILE}" ]; then
+        OPERATION='Reinstall'
+    fi
+
+    echo "${OPERATION}ing package ${PACKAGE_NAME}..."
+
+    if ! mkdir -p "${PACKAGE_INSTALL_DIR}"; then
+        fail "Couldn't create install dir for package: ${PACKAGE_NAME}"
+    fi
+
+    if ! cd "${PACKAGE_INSTALL_DIR}"; then
+        fail "Couldn't cd into install dir for package: ${PACKAGE_NAME}"
+    fi
+
+    # shellcheck disable=SC2097,SC2098
+    if ! PACKAGE_ROOT="${PACKAGE_ROOT}" \
+        PACKAGE_NAME="${PACKAGE_NAME}" \
+        PACKAGE_SOURCE_DIR="${PACKAGE_SOURCE_DIR}" \
+        PACKAGE_INSTALL_DIR="${PACKAGE_INSTALL_DIR}" \
+        "${PACKAGE_SOURCE_DIR}/install"; then
+        fail "Failed to install package: ${PACKAGE_NAME}"
+    fi
+
+    if ! touch "${PACKAGE_INSTALLED_FILE}"; then
+        fail "Failed to mark package as installed: ${PACKAGE_NAME}"
+    fi
+
+    if ! touch "${DOTFILES_NEEDS_LOGOUT}"; then
+        fail "Failed to mark logout needed for package: ${PACKAGE_NAME}"
+    fi
+
+    if ! loadpackageenv "${PACKAGE_ROOT}" "${PACKAGE_NAME}"; then
+        fail "Couldn't load env for package: ${PACKAGE_NAME}"
+    fi
+
+    echo "${OPERATION}ed package ${PACKAGE_NAME}"
+
+    shift
+done
+
+if [ -e "${DOTFILES_NEEDS_LOGOUT}" ]; then
+    dotfiles-echo-yellow 'Log out and log in again to set everything up correctly.'
+fi
+
+exit 0

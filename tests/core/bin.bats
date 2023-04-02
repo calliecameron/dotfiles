@@ -3,6 +3,7 @@
 setup() {
     THIS_DIR="$(cd "$(dirname "${BATS_TEST_FILENAME}")" && pwd)"
     BIN_DIR="${THIS_DIR}/../../core/bin"
+    PACKAGE_SCRIPTS_DIR="${THIS_DIR}/../../core/package-scripts"
 
     TMP_DIR="$(mktemp -d)"
     TEST_NEXT_INIT="${TMP_DIR}/next-init"
@@ -1130,4 +1131,296 @@ Ignored
     assert [ -f "${TMP_DIR}/private/a" ]
     assert [ "$(cat "${TMP_DIR}/private/a")" = 'foo' ]
     (cd "${TMP_DIR}/private" && assert [ "$(git branch --show-current)" = 'master' ])
+}
+
+@test 'dotfiles-package-install usage' {
+    run_script "${BIN_DIR}/dotfiles-package-install"
+    assert_failure
+    assert_line --partial 'Usage:'
+}
+
+@test 'dotfiles-package-install needs lock' {
+    local INSTALL_DIR="${TMP_DIR}/install"
+    mkdir -p "${INSTALL_DIR}"
+    local IGNORE_FILE="${TMP_DIR}/ignore"
+    mkdir -p "${TMP_DIR}/mutex"
+
+    mkdir -p "${TMP_DIR}/a/foo"
+    printf "#!/bin/bash\necho 'FOO INSTALLED'\n" >"${TMP_DIR}/a/foo/install"
+    chmod u+x "${TMP_DIR}/a/foo/install"
+
+    run_script \
+        "PATH=${BIN_DIR}:${PATH}" \
+        "DOTFILES_PACKAGE_SCRIPTS=${PACKAGE_SCRIPTS_DIR}" \
+        "DOTFILES_PACKAGE_INSTALL_DIR=${INSTALL_DIR}" \
+        "DOTFILES_PACKAGE_IGNORE_FILE=${IGNORE_FILE}" \
+        "DOTFILES_PACKAGES_LOADED_ENV=" \
+        "DOTFILES_PACKAGE_MUTEX=${TMP_DIR}/mutex" \
+        "DOTFILES_PACKAGE_ROOTS=${TMP_DIR}/a" \
+        "DOTFILES_NEEDS_LOGOUT=${TMP_DIR}/logout" \
+        "${BIN_DIR}/dotfiles-package-install" 'foo'
+
+    assert_failure
+    refute_line --partial 'Usage:'
+    assert [ -d "${TMP_DIR}/mutex" ]
+    assert [ ! -e "${TMP_DIR}/logout" ]
+
+    refute_line 'FOO INSTALLED'
+    assert [ ! -e "${TMP_DIR}/install/foo" ]
+    assert [ ! -e "${TMP_DIR}/install/foo.installed" ]
+}
+
+@test 'dotfiles-package-install install' {
+    local INSTALL_DIR="${TMP_DIR}/install"
+    mkdir -p "${INSTALL_DIR}"
+    local IGNORE_FILE="${TMP_DIR}/ignore"
+
+    mkdir -p "${TMP_DIR}/a/foo"
+    printf "echo 'FOO ENV'\n" >"${TMP_DIR}/a/foo/env.sh"
+    echo "#!/bin/bash
+echo "TEST_FOO_ROOT=\${PACKAGE_ROOT}"
+echo "TEST_FOO_NAME=\${PACKAGE_NAME}"
+echo "TEST_FOO_SOURCE_DIR=\${PACKAGE_SOURCE_DIR}"
+echo "TEST_FOO_INSTALL_DIR=\${PACKAGE_INSTALL_DIR}"
+echo "TEST_FOO_CWD=\$\(pwd\)"
+" >"${TMP_DIR}/a/foo/install"
+    chmod u+x "${TMP_DIR}/a/foo/install"
+
+    mkdir -p "${TMP_DIR}/a/bar"
+    echo "#!/bin/bash
+echo "TEST_BAR_ROOT=\${PACKAGE_ROOT}"
+echo "TEST_BAR_NAME=\${PACKAGE_NAME}"
+echo "TEST_BAR_SOURCE_DIR=\${PACKAGE_SOURCE_DIR}"
+echo "TEST_BAR_INSTALL_DIR=\${PACKAGE_INSTALL_DIR}"
+echo "TEST_BAR_CWD=\$\(pwd\)"
+" >"${TMP_DIR}/a/bar/install"
+    chmod u+x "${TMP_DIR}/a/bar/install"
+    printf "#!/bin/bash\necho 'BAR CAN INSTALL'\n" >"${TMP_DIR}/a/bar/can-install"
+    chmod u+x "${TMP_DIR}/a/bar/can-install"
+
+    run_script \
+        "PATH=${BIN_DIR}:${PATH}" \
+        "DOTFILES_PACKAGE_SCRIPTS=${PACKAGE_SCRIPTS_DIR}" \
+        "DOTFILES_PACKAGE_INSTALL_DIR=${INSTALL_DIR}" \
+        "DOTFILES_PACKAGE_IGNORE_FILE=${IGNORE_FILE}" \
+        "DOTFILES_PACKAGES_LOADED_ENV=" \
+        "DOTFILES_PACKAGE_MUTEX=${TMP_DIR}/mutex" \
+        "DOTFILES_PACKAGE_ROOTS=${TMP_DIR}/a" \
+        "DOTFILES_NEEDS_LOGOUT=${TMP_DIR}/logout" \
+        "${BIN_DIR}/dotfiles-package-install" 'foo' 'bar'
+
+    assert_success
+    refute_line --partial 'Usage:'
+    assert [ ! -e "${TMP_DIR}/mutex" ]
+    assert [ -f "${TMP_DIR}/logout" ]
+
+    assert_line "TEST_FOO_ROOT=${TMP_DIR}/a"
+    assert_line "TEST_FOO_NAME=foo"
+    assert_line "TEST_FOO_SOURCE_DIR=${TMP_DIR}/a/foo"
+    assert_line "TEST_FOO_INSTALL_DIR=${INSTALL_DIR}/foo"
+    assert_line "TEST_FOO_CWD=${INSTALL_DIR}/foo"
+    assert_line 'FOO ENV'
+    assert_line 'Installed package foo'
+    assert [ -d "${TMP_DIR}/install/foo" ]
+    assert [ -f "${TMP_DIR}/install/foo.installed" ]
+
+    assert_line 'BAR CAN INSTALL'
+    assert_line "TEST_BAR_ROOT=${TMP_DIR}/a"
+    assert_line "TEST_BAR_NAME=bar"
+    assert_line "TEST_BAR_SOURCE_DIR=${TMP_DIR}/a/bar"
+    assert_line "TEST_BAR_INSTALL_DIR=${INSTALL_DIR}/bar"
+    assert_line "TEST_BAR_CWD=${INSTALL_DIR}/bar"
+    assert_line 'Installed package bar'
+    assert [ -d "${TMP_DIR}/install/bar" ]
+    assert [ -f "${TMP_DIR}/install/bar.installed" ]
+}
+
+@test 'dotfiles-package-install reinstall' {
+    local INSTALL_DIR="${TMP_DIR}/install"
+    mkdir -p "${INSTALL_DIR}"
+    local IGNORE_FILE="${TMP_DIR}/ignore"
+
+    mkdir -p "${TMP_DIR}/a/foo"
+    printf "echo 'FOO ENV'\n" >"${TMP_DIR}/a/foo/env.sh"
+    echo "#!/bin/bash
+echo "TEST_FOO_ROOT=\${PACKAGE_ROOT}"
+echo "TEST_FOO_NAME=\${PACKAGE_NAME}"
+echo "TEST_FOO_SOURCE_DIR=\${PACKAGE_SOURCE_DIR}"
+echo "TEST_FOO_INSTALL_DIR=\${PACKAGE_INSTALL_DIR}"
+echo "TEST_FOO_CWD=\$\(pwd\)"
+" >"${TMP_DIR}/a/foo/install"
+    chmod u+x "${TMP_DIR}/a/foo/install"
+    mkdir -p "${INSTALL_DIR}/foo"
+    touch "${INSTALL_DIR}/foo.installed"
+
+    mkdir -p "${TMP_DIR}/a/bar"
+    echo "#!/bin/bash
+echo "TEST_BAR_ROOT=\${PACKAGE_ROOT}"
+echo "TEST_BAR_NAME=\${PACKAGE_NAME}"
+echo "TEST_BAR_SOURCE_DIR=\${PACKAGE_SOURCE_DIR}"
+echo "TEST_BAR_INSTALL_DIR=\${PACKAGE_INSTALL_DIR}"
+echo "TEST_BAR_CWD=\$\(pwd\)"
+" >"${TMP_DIR}/a/bar/install"
+    chmod u+x "${TMP_DIR}/a/bar/install"
+    printf "#!/bin/bash\necho 'BAR CAN INSTALL'\n" >"${TMP_DIR}/a/bar/can-install"
+    chmod u+x "${TMP_DIR}/a/bar/can-install"
+    mkdir -p "${INSTALL_DIR}/bar"
+    touch "${INSTALL_DIR}/bar.installed"
+
+    run_script \
+        "PATH=${BIN_DIR}:${PATH}" \
+        "DOTFILES_PACKAGE_SCRIPTS=${PACKAGE_SCRIPTS_DIR}" \
+        "DOTFILES_PACKAGE_INSTALL_DIR=${INSTALL_DIR}" \
+        "DOTFILES_PACKAGE_IGNORE_FILE=${IGNORE_FILE}" \
+        "DOTFILES_PACKAGES_LOADED_ENV=" \
+        "DOTFILES_PACKAGE_MUTEX=${TMP_DIR}/mutex" \
+        "DOTFILES_PACKAGE_ROOTS=${TMP_DIR}/a" \
+        "DOTFILES_NEEDS_LOGOUT=${TMP_DIR}/logout" \
+        "${BIN_DIR}/dotfiles-package-install" 'foo' 'bar'
+
+    assert_success
+    refute_line --partial 'Usage:'
+    assert [ ! -e "${TMP_DIR}/mutex" ]
+    assert [ -f "${TMP_DIR}/logout" ]
+
+    assert_line "TEST_FOO_ROOT=${TMP_DIR}/a"
+    assert_line "TEST_FOO_NAME=foo"
+    assert_line "TEST_FOO_SOURCE_DIR=${TMP_DIR}/a/foo"
+    assert_line "TEST_FOO_INSTALL_DIR=${INSTALL_DIR}/foo"
+    assert_line "TEST_FOO_CWD=${INSTALL_DIR}/foo"
+    assert_line 'FOO ENV'
+    assert_line 'Reinstalled package foo'
+    assert [ -d "${TMP_DIR}/install/foo" ]
+    assert [ -f "${TMP_DIR}/install/foo.installed" ]
+
+    assert_line 'BAR CAN INSTALL'
+    assert_line "TEST_BAR_ROOT=${TMP_DIR}/a"
+    assert_line "TEST_BAR_NAME=bar"
+    assert_line "TEST_BAR_SOURCE_DIR=${TMP_DIR}/a/bar"
+    assert_line "TEST_BAR_INSTALL_DIR=${INSTALL_DIR}/bar"
+    assert_line "TEST_BAR_CWD=${INSTALL_DIR}/bar"
+    assert_line 'Reinstalled package bar'
+    assert [ -d "${TMP_DIR}/install/bar" ]
+    assert [ -f "${TMP_DIR}/install/bar.installed" ]
+}
+
+@test 'dotfiles-package-install nonexistent' {
+    local INSTALL_DIR="${TMP_DIR}/install"
+    mkdir -p "${INSTALL_DIR}"
+    local IGNORE_FILE="${TMP_DIR}/ignore"
+
+    mkdir -p "${TMP_DIR}/a"
+
+    run_script \
+        "PATH=${BIN_DIR}:${PATH}" \
+        "DOTFILES_PACKAGE_SCRIPTS=${PACKAGE_SCRIPTS_DIR}" \
+        "DOTFILES_PACKAGE_INSTALL_DIR=${INSTALL_DIR}" \
+        "DOTFILES_PACKAGE_IGNORE_FILE=${IGNORE_FILE}" \
+        "DOTFILES_PACKAGES_LOADED_ENV=" \
+        "DOTFILES_PACKAGE_MUTEX=${TMP_DIR}/mutex" \
+        "DOTFILES_PACKAGE_ROOTS=${TMP_DIR}/a" \
+        "DOTFILES_NEEDS_LOGOUT=${TMP_DIR}/logout" \
+        "${BIN_DIR}/dotfiles-package-install" 'foo'
+
+    assert_failure
+    refute_line --partial 'Usage:'
+    assert [ ! -e "${TMP_DIR}/mutex" ]
+    assert [ ! -e "${TMP_DIR}/logout" ]
+}
+
+@test 'dotfiles-package-install ignored' {
+    local INSTALL_DIR="${TMP_DIR}/install"
+    mkdir -p "${INSTALL_DIR}"
+    local IGNORE_FILE="${TMP_DIR}/ignore"
+
+    mkdir -p "${TMP_DIR}/a/foo"
+    printf "echo 'FOO ENV'\n" >"${TMP_DIR}/a/foo/env.sh"
+    printf "#!/bin/bash\necho 'FOO INSTALLED'\n" >"${TMP_DIR}/a/foo/install"
+    chmod u+x "${TMP_DIR}/a/foo/install"
+    echo 'foo' >"${IGNORE_FILE}"
+
+    run_script \
+        "PATH=${BIN_DIR}:${PATH}" \
+        "DOTFILES_PACKAGE_SCRIPTS=${PACKAGE_SCRIPTS_DIR}" \
+        "DOTFILES_PACKAGE_INSTALL_DIR=${INSTALL_DIR}" \
+        "DOTFILES_PACKAGE_IGNORE_FILE=${IGNORE_FILE}" \
+        "DOTFILES_PACKAGES_LOADED_ENV=" \
+        "DOTFILES_PACKAGE_MUTEX=${TMP_DIR}/mutex" \
+        "DOTFILES_PACKAGE_ROOTS=${TMP_DIR}/a" \
+        "DOTFILES_NEEDS_LOGOUT=${TMP_DIR}/logout" \
+        "${BIN_DIR}/dotfiles-package-install" 'foo'
+
+    assert_failure
+    refute_line --partial 'Usage:'
+    assert [ ! -e "${TMP_DIR}/mutex" ]
+    assert [ ! -e "${TMP_DIR}/logout" ]
+
+    refute_line 'FOO INSTALLED'
+    refute_line 'FOO ENV'
+    assert [ ! -e "${TMP_DIR}/install/foo" ]
+    assert [ ! -e "${TMP_DIR}/install/foo.installed" ]
+}
+
+@test 'dotfiles-package-install no installer' {
+    local INSTALL_DIR="${TMP_DIR}/install"
+    mkdir -p "${INSTALL_DIR}"
+    local IGNORE_FILE="${TMP_DIR}/ignore"
+
+    mkdir -p "${TMP_DIR}/a/foo"
+    printf "echo 'FOO ENV'\n" >"${TMP_DIR}/a/foo/env.sh"
+
+    run_script \
+        "PATH=${BIN_DIR}:${PATH}" \
+        "DOTFILES_PACKAGE_SCRIPTS=${PACKAGE_SCRIPTS_DIR}" \
+        "DOTFILES_PACKAGE_INSTALL_DIR=${INSTALL_DIR}" \
+        "DOTFILES_PACKAGE_IGNORE_FILE=${IGNORE_FILE}" \
+        "DOTFILES_PACKAGES_LOADED_ENV=" \
+        "DOTFILES_PACKAGE_MUTEX=${TMP_DIR}/mutex" \
+        "DOTFILES_PACKAGE_ROOTS=${TMP_DIR}/a" \
+        "DOTFILES_NEEDS_LOGOUT=${TMP_DIR}/logout" \
+        "${BIN_DIR}/dotfiles-package-install" 'foo'
+
+    assert_failure
+    refute_line --partial 'Usage:'
+    assert [ ! -e "${TMP_DIR}/mutex" ]
+    assert [ ! -e "${TMP_DIR}/logout" ]
+
+    refute_line 'FOO ENV'
+    assert [ ! -e "${TMP_DIR}/install/foo" ]
+    assert [ ! -e "${TMP_DIR}/install/foo.installed" ]
+}
+
+@test 'dotfiles-package-install requirements unmet' {
+    local INSTALL_DIR="${TMP_DIR}/install"
+    mkdir -p "${INSTALL_DIR}"
+    local IGNORE_FILE="${TMP_DIR}/ignore"
+
+    mkdir -p "${TMP_DIR}/a/foo"
+    printf "echo 'FOO ENV'\n" >"${TMP_DIR}/a/foo/env.sh"
+    printf "#!/bin/bash\necho 'FOO INSTALLED'\n" >"${TMP_DIR}/a/foo/install"
+    chmod u+x "${TMP_DIR}/a/foo/install"
+    printf "#!/bin/bash\necho 'FOO CAN INSTALL'\nfalse\n" >"${TMP_DIR}/a/foo/can-install"
+    chmod u+x "${TMP_DIR}/a/foo/can-install"
+
+    run_script \
+        "PATH=${BIN_DIR}:${PATH}" \
+        "DOTFILES_PACKAGE_SCRIPTS=${PACKAGE_SCRIPTS_DIR}" \
+        "DOTFILES_PACKAGE_INSTALL_DIR=${INSTALL_DIR}" \
+        "DOTFILES_PACKAGE_IGNORE_FILE=${IGNORE_FILE}" \
+        "DOTFILES_PACKAGES_LOADED_ENV=" \
+        "DOTFILES_PACKAGE_MUTEX=${TMP_DIR}/mutex" \
+        "DOTFILES_PACKAGE_ROOTS=${TMP_DIR}/a" \
+        "DOTFILES_NEEDS_LOGOUT=${TMP_DIR}/logout" \
+        "${BIN_DIR}/dotfiles-package-install" 'foo'
+
+    assert_failure
+    refute_line --partial 'Usage:'
+    assert [ ! -e "${TMP_DIR}/mutex" ]
+    assert [ ! -e "${TMP_DIR}/logout" ]
+
+    assert_line 'FOO CAN INSTALL'
+    refute_line 'FOO INSTALLED'
+    refute_line 'FOO ENV'
+    assert [ ! -e "${TMP_DIR}/install/foo" ]
+    assert [ ! -e "${TMP_DIR}/install/foo.installed" ]
 }
