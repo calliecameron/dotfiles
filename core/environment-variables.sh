@@ -1,9 +1,7 @@
 # shellcheck shell=sh
 #
 # Environment variables go here, so they are visible to GUI programs as well as
-# the shell. This file might not be executed by bash (at least on Ubuntu/Mint it
-# is executed by dash), so it better be POSIX correct (same goes for
-# ~/.dotfiles-variables.sh).
+# the shell. Must work in dash, bash and zsh.
 
 [ -n "${DOTFILES_PROFILING}" ] && printf 'env ' && date --rfc-3339=ns
 

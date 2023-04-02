@@ -1,4 +1,4 @@
-# Stuff in here should work for both bash and zsh.
+# Must work in bash and zsh
 
 [ -n "${DOTFILES_PROFILING}" ] && printf 'generic ' && date --rfc-3339=ns
 
