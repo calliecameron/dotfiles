@@ -985,6 +985,7 @@ run_script() {
     echo 'bar' >>"${IGNORE_FILE}"
 
     mkdir -p "${TMP_DIR}/a/baz"
+    touch "${TMP_DIR}/a/baz/install"
     touch "${INSTALL_DIR}/baz.installed"
 
     mkdir -p "${TMP_DIR}/b/quux"

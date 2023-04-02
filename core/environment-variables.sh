@@ -99,7 +99,7 @@ unset appendpackageroot prependpackageroot
 
 # Load packages
 # shellcheck source=/dev/null
-. "${DOTFILES_PACKAGE_SCRIPTS}/load-packages-env.sh"
+. "${DOTFILES_PACKAGE_SCRIPTS}/load-all-packages-env.sh"
 
 export PATH="${DOTFILES_LOCAL_BIN}:${PATH}"
 

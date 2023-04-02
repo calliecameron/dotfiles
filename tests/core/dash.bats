@@ -16,16 +16,47 @@ teardown() {
 
 function assert_ran() {
     assert_stub_ran
-    assert_package_env_run_by 'dash'
-    assert_not_package_generic_aliases_run
-    assert_not_package_bash_aliases_run
-    assert_not_package_zsh_aliases_run
+
+    assert_package_env_run_by "${TEST_PACKAGE_ROOT_1}" 'foo' 'dash'
+    assert_not_package_env_run 'bar'
+    assert_package_env_run_by "${TEST_PACKAGE_ROOT_1}" 'baz' 'dash'
+    assert_not_package_env_run 'quux'
+    assert_not_package_env_run 'blah'
+    assert_not_package_env_run 'yay'
+    assert_not_package_env_run 'stuff'
+
+    assert_not_package_generic_aliases_run 'foo'
+    assert_not_package_generic_aliases_run 'bar'
+    assert_not_package_generic_aliases_run 'baz'
+    assert_not_package_generic_aliases_run 'quux'
+    assert_not_package_generic_aliases_run 'blah'
+    assert_not_package_generic_aliases_run 'yay'
+    assert_not_package_generic_aliases_run 'stuff'
+
+    assert_not_package_bash_aliases_run 'foo'
+    assert_not_package_bash_aliases_run 'bar'
+    assert_not_package_bash_aliases_run 'baz'
+    assert_not_package_bash_aliases_run 'quux'
+    assert_not_package_bash_aliases_run 'blah'
+    assert_not_package_bash_aliases_run 'yay'
+    assert_not_package_bash_aliases_run 'stuff'
+
+    assert_not_package_zsh_aliases_run 'foo'
+    assert_not_package_zsh_aliases_run 'bar'
+    assert_not_package_zsh_aliases_run 'baz'
+    assert_not_package_zsh_aliases_run 'quux'
+    assert_not_package_zsh_aliases_run 'blah'
+    assert_not_package_zsh_aliases_run 'yay'
+    assert_not_package_zsh_aliases_run 'stuff'
+
     assert_local_env_run_by 'dash'
     assert_not_local_generic_aliases_run
     assert_not_local_bash_aliases_run
     assert_not_local_zsh_aliases_run
     assert_path
     assert_package_roots
+    assert_nemo_scripts
+    assert_not_zsh_completions
 }
 
 @test 'run simple' {

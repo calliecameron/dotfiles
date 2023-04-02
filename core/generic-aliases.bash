@@ -65,7 +65,7 @@ if [ -z "${DOTFILES_NO_PACKAGE_UPDATES}" ]; then
 fi
 if [ -z "${DOTFILES_NO_ALIASES}" ]; then
     # shellcheck source=/dev/null
-    source "${DOTFILES_PACKAGE_SCRIPTS}/load-packages-aliases.bash"
+    source "${DOTFILES_PACKAGE_SCRIPTS}/load-all-packages-aliases.bash"
 fi
 [ -n "${DOTFILES_PROFILING}" ] && printf 'packages ' && date --rfc-3339=ns
 
