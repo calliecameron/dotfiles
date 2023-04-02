@@ -522,7 +522,7 @@ run_script() {
 @test 'dotfiles-package-source-path found' {
     mkdir -p "${TMP_DIR}/a"
     mkdir -p "${TMP_DIR}/b/foo"
-    run_script "DOTFILES_PACKAGE_ROOTS=:${TMP_DIR}/a::${TMP_DIR}/b" "${BIN_DIR}/dotfiles-package-source-path" 'foo'
+    run_script "DOTFILES_PACKAGE_ROOTS=:${TMP_DIR}/a::${TMP_DIR}/b:${TMP_DIR}/c" "${BIN_DIR}/dotfiles-package-source-path" 'foo'
     assert_success
     assert_line "${TMP_DIR}/b/foo"
     refute_line --partial 'Usage:'
@@ -531,7 +531,7 @@ run_script() {
 @test 'dotfiles-package-source-path not found' {
     mkdir -p "${TMP_DIR}/a"
     mkdir -p "${TMP_DIR}/b/foo"
-    run_script "DOTFILES_PACKAGE_ROOTS=:${TMP_DIR}/a::${TMP_DIR}/b" "${BIN_DIR}/dotfiles-package-source-path" 'bar'
+    run_script "DOTFILES_PACKAGE_ROOTS=:${TMP_DIR}/a::${TMP_DIR}/b::${TMP_DIR}/c" "${BIN_DIR}/dotfiles-package-source-path" 'bar'
     assert_failure
     refute_output
     refute_line --partial 'Usage:'

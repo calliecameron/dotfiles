@@ -17,7 +17,7 @@ fi
 
 IFS=':'
 for package_root in ${DOTFILES_PACKAGE_ROOTS}; do
-    if [ -n "${package_root}" ]; then
+    if [ -n "${package_root}" ] && [ -d "${package_root}" ]; then
         PACKAGE_PATH="${package_root}/${PACKAGE}"
         if [ -d "${PACKAGE_PATH}" ]; then
             echo "${PACKAGE_PATH}"
