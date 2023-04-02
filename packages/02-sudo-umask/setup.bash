@@ -4,7 +4,7 @@ function _can-install() {
 
 function _install() {
     local TARGET='/etc/sudoers.d/umask'
-    sudo cp "${PACKAGE_CONF_DIR}/umask" "${TARGET}" &&
+    sudo cp "${PACKAGE_SOURCE_DIR}/umask" "${TARGET}" &&
     sudo chown root:root "${TARGET}" &&
     sudo chmod ug=r "${TARGET}" &&
     sudo chmod o-rwx "${TARGET}"

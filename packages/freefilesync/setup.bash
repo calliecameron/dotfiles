@@ -12,5 +12,5 @@ function _install() {
     cd FreeFileSync &&
     chmod a-x CHANGELOG LICENSE RealTimeSync Resources.zip 'User Manual.pdf' cacert.pem ding.wav gong.wav harp.wav styles.gtk_rc Bin/FreeFileSync_i686 Bin/RealTimeSync_i686 Bin/RealTimeSync_x86_64 &&
     mkdir -p "${PACKAGE_INSTALL_DIR}/bin" &&
-    cp "${PACKAGE_CONF_DIR}/freefilesync" "${PACKAGE_INSTALL_DIR}/bin"
+    cp "${PACKAGE_SOURCE_DIR}/freefilesync" "${PACKAGE_INSTALL_DIR}/bin"
 }

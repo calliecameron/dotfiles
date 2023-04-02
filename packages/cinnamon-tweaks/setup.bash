@@ -5,7 +5,7 @@ function _can-install() {
 }
 
 function _install() {
-    "${PACKAGE_CONF_DIR}/setup-cinnamon.sh"
+    "${PACKAGE_SOURCE_DIR}/setup-cinnamon.sh"
 }
 
 function _update() {

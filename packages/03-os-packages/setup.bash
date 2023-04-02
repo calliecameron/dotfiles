@@ -10,7 +10,7 @@ function _install() {
     sudo apt-get dist-upgrade || return 1
 
     if dotfiles-linux-variant main; then
-        "${PACKAGE_CONF_DIR}/packages-main.sh" || return 1
+        "${PACKAGE_SOURCE_DIR}/packages-main.sh" || return 1
     else
         dotfiles-echo-red "Unknown Linux variant - how did we even get here?"
         return 1

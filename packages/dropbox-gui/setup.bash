@@ -7,5 +7,5 @@ function _can-install() {
 }
 
 function _install() {
-    "${PACKAGE_CONF_DIR}/setup-dropbox-gui.sh"
+    "${PACKAGE_SOURCE_DIR}/setup-dropbox-gui.sh"
 }

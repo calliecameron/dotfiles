@@ -18,12 +18,12 @@ function _install() {
     chmod u+x make-list &&
     ./make-list -d &&
     mkdir -p "${PACKAGE_INSTALL_DIR}/bin" &&
-    cp "${PACKAGE_CONF_DIR}/mlcad" "${PACKAGE_INSTALL_DIR}/bin/mlcad" &&
-    cp "${PACKAGE_CONF_DIR}/mlcad-hidpi" "${PACKAGE_INSTALL_DIR}/bin/mlcad-hidpi" &&
-    sed "s|@@@@@1@@@@@|${PACKAGE_CONF_DIR}/logo.png|g" < "${PACKAGE_CONF_DIR}/mlcad-desktop-template" > "${PACKAGE_CONF_DIR}/mlcad.desktop" &&
-    chmod u+x "${PACKAGE_CONF_DIR}/mlcad.desktop" &&
-    xdg-desktop-menu install --novendor "${PACKAGE_CONF_DIR}/mlcad.desktop" &&
-    xdg-desktop-icon install --novendor "${PACKAGE_CONF_DIR}/mlcad.desktop"
+    cp "${PACKAGE_SOURCE_DIR}/mlcad" "${PACKAGE_INSTALL_DIR}/bin/mlcad" &&
+    cp "${PACKAGE_SOURCE_DIR}/mlcad-hidpi" "${PACKAGE_INSTALL_DIR}/bin/mlcad-hidpi" &&
+    sed "s|@@@@@1@@@@@|${PACKAGE_SOURCE_DIR}/logo.png|g" < "${PACKAGE_SOURCE_DIR}/mlcad-desktop-template" > "${PACKAGE_SOURCE_DIR}/mlcad.desktop" &&
+    chmod u+x "${PACKAGE_SOURCE_DIR}/mlcad.desktop" &&
+    xdg-desktop-menu install --novendor "${PACKAGE_SOURCE_DIR}/mlcad.desktop" &&
+    xdg-desktop-icon install --novendor "${PACKAGE_SOURCE_DIR}/mlcad.desktop"
 }
 
 function _update() {

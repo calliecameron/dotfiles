@@ -8,14 +8,14 @@ function doaliases() {
     # Arg: shell
     test ! -z "${DOTFILES_PROFILING}" && printf "package %s %s " "${PACKAGE_NAME}" "${1}" && date --rfc-3339=ns
 
-    if [ "${1}" = 'zsh' ] && [ -d "${PACKAGE_CONF_DIR}/zsh-completions" ]; then
-        fpath=("${PACKAGE_CONF_DIR}/zsh-completions" $fpath)
+    if [ "${1}" = 'zsh' ] && [ -d "${PACKAGE_SOURCE_DIR}/zsh-completions" ]; then
+        fpath=("${PACKAGE_SOURCE_DIR}/zsh-completions" $fpath)
     fi
 
-    local FILE="${PACKAGE_CONF_DIR}/aliases.${1}"
+    local FILE="${PACKAGE_SOURCE_DIR}/aliases.${1}"
     if [ -e "${FILE}" ]; then
         local ORIGINAL_WD="${PWD}"
-        cd "${PACKAGE_CONF_DIR}" || return 1
+        cd "${PACKAGE_SOURCE_DIR}" || return 1
         source "${FILE}"
         cd "${ORIGINAL_WD}" || return 1
     fi
@@ -35,15 +35,15 @@ function load-packages-aliases() {
 
                     while read -r line <&3; do
                         PACKAGE_NAME="${line}"
-                        PACKAGE_CONF_DIR="${PACKAGE_CONF_ROOT}/${PACKAGE_NAME}"
+                        PACKAGE_SOURCE_DIR="${PACKAGE_CONF_ROOT}/${PACKAGE_NAME}"
                         # shellcheck disable=SC2034
                         PACKAGE_INSTALL_DIR="${DOTFILES_PACKAGE_INSTALL_DIR}/${PACKAGE_NAME}"
                         PACKAGE_INSTALLED_FILE="${DOTFILES_PACKAGE_INSTALL_DIR}/${PACKAGE_NAME}.installed"
 
-                        if [ -d "${PACKAGE_CONF_DIR}" ] &&
+                        if [ -d "${PACKAGE_SOURCE_DIR}" ] &&
                                ! dotfiles-in-list "${DOTFILES_PACKAGES_LOADED_ALIASES}" "${PACKAGE_NAME}" &&
                                ! dotfiles-package-ignored "${PACKAGE_NAME}"; then
-                            if [ -e "${PACKAGE_INSTALLED_FILE}" ] || [ ! -e "${PACKAGE_CONF_DIR}/setup.bash" ]; then
+                            if [ -e "${PACKAGE_INSTALLED_FILE}" ] || [ ! -e "${PACKAGE_SOURCE_DIR}/setup.bash" ]; then
 
                                 # Newly-installed packages won't have been enved at login time
                                 loadpackageenv "${PACKAGE_NAME}" &&
@@ -57,7 +57,7 @@ function load-packages-aliases() {
                         fi
 
                         unset PACKAGE_NAME
-                        unset PACKAGE_CONF_DIR
+                        unset PACKAGE_SOURCE_DIR
                         unset PACKAGE_INSTALL_DIR
                         unset PACKAGE_INSTALLED_FILE
                     done 3<"${TEMPFILE}"

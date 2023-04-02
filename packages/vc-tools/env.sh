@@ -1,7 +1,7 @@
 export DOTFILES_HG_USERNAME="${HOME}/.dotfiles-hg-username"
 export DOTFILES_HG_LOCAL="${HOME}/.dotfiles-hg-local"
 
-homelink "${PACKAGE_CONF_DIR}/hgrc"
+homelink "${PACKAGE_SOURCE_DIR}/hgrc"
 
 # Git config complains if multiple copies try to run at once; protect it with a mutex
 MUTEX="${HOME}/.dotfiles-gitconfig-mutex"

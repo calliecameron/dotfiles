@@ -3,5 +3,5 @@ function _can-install() {
 }
 
 function _install() {
-    "${PACKAGE_CONF_DIR}/setup-zoneedit.sh"
+    "${PACKAGE_SOURCE_DIR}/setup-zoneedit.sh"
 }

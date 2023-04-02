@@ -40,7 +40,7 @@ function install-package-root() {
         while read -r -u 3 line; do
             package-setup-vars "${line}"
             if [ -e "${PACKAGE_SETUP_FILE}" ] && ! dotfiles-package-ignored "${PACKAGE_NAME}" && ! dotfiles-package-installed "${PACKAGE_NAME}"; then
-                cd "${PACKAGE_CONF_DIR}" || fail "Could not find configuration directory for '${PACKAGE_NAME}'; quitting."
+                cd "${PACKAGE_SOURCE_DIR}" || fail "Could not find configuration directory for '${PACKAGE_NAME}'; quitting."
                 source "${PACKAGE_SETUP_FILE}" || fail "Could not load package setup file for '${PACKAGE_NAME}'; quitting."
 
                 if ! type _can-install &>/dev/null || _can-install; then

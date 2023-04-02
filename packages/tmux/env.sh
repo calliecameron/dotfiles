@@ -1,1 +1,1 @@
-homelink "${PACKAGE_CONF_DIR}/tmux.conf"
+homelink "${PACKAGE_SOURCE_DIR}/tmux.conf"

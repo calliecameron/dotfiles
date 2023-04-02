@@ -1,1 +1,1 @@
-homelink "${PACKAGE_CONF_DIR}/inputrc"
+homelink "${PACKAGE_SOURCE_DIR}/inputrc"

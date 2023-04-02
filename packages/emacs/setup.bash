@@ -5,10 +5,10 @@ function _can-install() {
 function _install() {
     sudo apt-get -y install emacs emacs-el emacs-goodies-el &&
     mkdir "${PACKAGE_INSTALL_DIR}" &&
-    "${PACKAGE_CONF_DIR}/install-emacs-from-source.sh" "${PACKAGE_INSTALL_DIR}" &&
-    sed "s|@@@@@1@@@@@|${PACKAGE_CONF_DIR}|g" < "${PACKAGE_CONF_DIR}/emacs-daemon.desktop.template" > "${PACKAGE_CONF_DIR}/emacs-daemon.desktop" &&
-    xdg-desktop-menu install --novendor "${PACKAGE_CONF_DIR}/emacs-daemon.desktop" &&
-    xdg-desktop-icon install --novendor "${PACKAGE_CONF_DIR}/emacs-daemon.desktop" &&
+    "${PACKAGE_SOURCE_DIR}/install-emacs-from-source.sh" "${PACKAGE_INSTALL_DIR}" &&
+    sed "s|@@@@@1@@@@@|${PACKAGE_SOURCE_DIR}|g" < "${PACKAGE_SOURCE_DIR}/emacs-daemon.desktop.template" > "${PACKAGE_SOURCE_DIR}/emacs-daemon.desktop" &&
+    xdg-desktop-menu install --novendor "${PACKAGE_SOURCE_DIR}/emacs-daemon.desktop" &&
+    xdg-desktop-icon install --novendor "${PACKAGE_SOURCE_DIR}/emacs-daemon.desktop" &&
     xdg-mime default emacs-daemon.desktop \
                 text/english \
                 text/plain \
@@ -26,5 +26,5 @@ function _install() {
                 text/x-c \
                 text/x-c++ &&
     mkdir -p "${HOME}/.config/autostart" &&
-    cp "${PACKAGE_CONF_DIR}/emacs-daemon.desktop" "${HOME}/.config/autostart/emacs-daemon.desktop"
+    cp "${PACKAGE_SOURCE_DIR}/emacs-daemon.desktop" "${HOME}/.config/autostart/emacs-daemon.desktop"
 }

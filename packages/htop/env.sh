@@ -1,1 +1,1 @@
-homelink "${PACKAGE_CONF_DIR}/htoprc" "${HOME}/.config/htop/htoprc"
+homelink "${PACKAGE_SOURCE_DIR}/htoprc" "${HOME}/.config/htop/htoprc"

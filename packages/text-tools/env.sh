@@ -1,1 +1,1 @@
-homelink "${PACKAGE_CONF_DIR}/latexmkrc"
+homelink "${PACKAGE_SOURCE_DIR}/latexmkrc"

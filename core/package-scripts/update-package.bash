@@ -13,7 +13,7 @@ function update-package() {
 
     package-setup-vars "${1}"
     if [ -e "${PACKAGE_SETUP_FILE}" ] && ! dotfiles-package-ignored "${PACKAGE_NAME}" && dotfiles-package-installed "${PACKAGE_NAME}"; then
-        if ! cd "${PACKAGE_CONF_DIR}"; then
+        if ! cd "${PACKAGE_SOURCE_DIR}"; then
             dotfiles-echo-red "Could not enter configuration directory for '${PACKAGE_NAME}'."
             package-cleanup
             return 1

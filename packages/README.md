@@ -9,15 +9,15 @@ package, containing any of the following files:
   any dependencies are required. `_install` is called with the working directory
   set to `DOTFILES_PACKAGE_INSTALL_DIR`. `_update` is called with
   the working directory set to `PACKAGE_INSTALL_DIR` if it exists,
-  else `PACKAGE_CONF_DIR`.
+  else `PACKAGE_SOURCE_DIR`.
 - `env.sh`: sourceable by sh, loads environment variables; called with
-  working directory set to `PACKAGE_CONF_DIR`.
+  working directory set to `PACKAGE_SOURCE_DIR`.
 - `aliases.sh`: generic aliases, sourceable by either bash or zsh;
-  called with working directory set to `PACKAGE_CONF_DIR`.
+  called with working directory set to `PACKAGE_SOURCE_DIR`.
 - `aliases.{bash|zsh}`: shell-specific aliases; called with working
-  directory set to `PACKAGE_CONF_DIR`.
+  directory set to `PACKAGE_SOURCE_DIR`.
 - `emacs.el`: loaded by Emacs; called with working directory set to
-  `this-package-conf-dir`.
+  `this-package-source-dir`.
 
 The folder can also contain any of the following subdirectories:
 
@@ -36,7 +36,7 @@ In shell files, the following environment variables are available:
 
 - `PACKAGE_NAME`: the package's name, which is the name of the folder
   containing it.
-- `PACKAGE_CONF_DIR`: the full path of the package's configuration
+- `PACKAGE_SOURCE_DIR`: the full path of the package's configuration
   folder.
 - `PACKAGE_INSTALL_DIR`: the full path of where anything should be
   installed; clone repositories here, or if anything else needs to
@@ -53,7 +53,7 @@ In the Emacs file, the following variables are available:
 
 - `this-package-name`: the package's name, which is the name of the
   folder containing it.
-- `this-package-conf-dir`: the full path of the package's
+- `this-package-source-dir`: the full path of the package's
   configuration folder.
 - `this-package-install-dir`: the full path of where anything should
   be installed.

@@ -6,5 +6,5 @@ function _can-install() {
 }
 
 function _install() {
-    "${PACKAGE_CONF_DIR}/setup-ssh-server.sh"
+    "${PACKAGE_SOURCE_DIR}/setup-ssh-server.sh"
 }
