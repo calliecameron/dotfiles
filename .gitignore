@@ -1,4 +1,3 @@
 *~
 *.pyc
-/private/
 .mypy_cache/
