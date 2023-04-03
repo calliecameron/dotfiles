@@ -1235,6 +1235,7 @@ Ignored
     refute_line --partial 'Usage:'
     assert [ -d "${TMP_DIR}/mutex" ]
     assert [ ! -e "${TMP_DIR}/logout" ]
+    refute_line --partial 'Log out and log in again'
 
     refute_line 'FOO INSTALLED'
     assert [ ! -e "${TMP_DIR}/install/foo" ]
@@ -1284,6 +1285,7 @@ echo "TEST_BAR_CWD=\$\(pwd\)"
     refute_line --partial 'Usage:'
     assert [ ! -e "${TMP_DIR}/mutex" ]
     assert [ -f "${TMP_DIR}/logout" ]
+    assert_line --partial 'Log out and log in again'
 
     assert_line "TEST_FOO_ROOT=${TMP_DIR}/a"
     assert_line "TEST_FOO_NAME=foo"
@@ -1353,6 +1355,7 @@ echo "TEST_BAR_CWD=\$\(pwd\)"
     refute_line --partial 'Usage:'
     assert [ ! -e "${TMP_DIR}/mutex" ]
     assert [ -f "${TMP_DIR}/logout" ]
+    assert_line --partial 'Log out and log in again'
 
     assert_line "TEST_FOO_ROOT=${TMP_DIR}/a"
     assert_line "TEST_FOO_NAME=foo"
@@ -1397,6 +1400,7 @@ echo "TEST_BAR_CWD=\$\(pwd\)"
     refute_line --partial 'Usage:'
     assert [ ! -e "${TMP_DIR}/mutex" ]
     assert [ ! -e "${TMP_DIR}/logout" ]
+    refute_line --partial 'Log out and log in again'
 }
 
 @test 'dotfiles-package-install ignored' {
@@ -1425,6 +1429,7 @@ echo "TEST_BAR_CWD=\$\(pwd\)"
     refute_line --partial 'Usage:'
     assert [ ! -e "${TMP_DIR}/mutex" ]
     assert [ ! -e "${TMP_DIR}/logout" ]
+    refute_line --partial 'Log out and log in again'
 
     refute_line 'FOO INSTALLED'
     refute_line 'FOO ENV'
@@ -1455,6 +1460,7 @@ echo "TEST_BAR_CWD=\$\(pwd\)"
     refute_line --partial 'Usage:'
     assert [ ! -e "${TMP_DIR}/mutex" ]
     assert [ ! -e "${TMP_DIR}/logout" ]
+    refute_line --partial 'Log out and log in again'
 
     refute_line 'FOO ENV'
     assert [ ! -e "${TMP_DIR}/install/foo" ]
@@ -1488,6 +1494,7 @@ echo "TEST_BAR_CWD=\$\(pwd\)"
     refute_line --partial 'Usage:'
     assert [ ! -e "${TMP_DIR}/mutex" ]
     assert [ ! -e "${TMP_DIR}/logout" ]
+    refute_line --partial 'Log out and log in again'
 
     assert_line 'FOO CAN INSTALL'
     refute_line 'FOO INSTALLED'
