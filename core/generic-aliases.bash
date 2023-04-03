@@ -103,8 +103,6 @@ if [ -e "${DOTFILES_PACKAGE_PROBLEMS_FILE}" ]; then
     echo -en "\e[0m"
 fi
 
-if [ -e "${DOTFILES_NEEDS_LOGOUT}" ]; then
-    dotfiles-echo-yellow "Log out and log in again to set everything up correctly."
-fi
+dotfiles-logout-needed-check
 
 [ -n "${DOTFILES_PROFILING}" ] && printf 'generic ' && date --rfc-3339=ns
