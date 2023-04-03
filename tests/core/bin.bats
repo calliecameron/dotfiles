@@ -682,6 +682,42 @@ run_script() {
     assert [ "$(wc -l <"${TMP_DIR}/problems")" = '1' ]
 }
 
+@test 'dotfiles-logout-needed-set nonexistent' {
+    run_script "PATH=${BIN_DIR}:${PATH}" "DOTFILES_NEEDS_LOGOUT=${TMP_DIR}/logout" "${BIN_DIR}/dotfiles-logout-needed-set"
+    assert_success
+    assert [ -f "${TMP_DIR}/logout" ]
+}
+
+@test 'dotfiles-logout-needed-set existing' {
+    touch "${TMP_DIR}/logout"
+    run_script "PATH=${BIN_DIR}:${PATH}" "DOTFILES_NEEDS_LOGOUT=${TMP_DIR}/logout" "${BIN_DIR}/dotfiles-logout-needed-set"
+    assert_success
+    assert [ -f "${TMP_DIR}/logout" ]
+}
+
+@test 'dotfiles-logout-needed-check nonexistent' {
+    run_script "PATH=${BIN_DIR}:${PATH}" "DOTFILES_NEEDS_LOGOUT=${TMP_DIR}/logout" "${BIN_DIR}/dotfiles-logout-needed-check"
+    assert_success
+    assert [ ! -e "${TMP_DIR}/logout" ]
+    refute_line --partial 'Log out and log in again'
+}
+
+@test 'dotfiles-logout-needed-check existing' {
+    touch "${TMP_DIR}/logout"
+    run_script "PATH=${BIN_DIR}:${PATH}" "DOTFILES_NEEDS_LOGOUT=${TMP_DIR}/logout" "${BIN_DIR}/dotfiles-logout-needed-check"
+    assert_success
+    assert [ -f "${TMP_DIR}/logout" ]
+    assert_line --partial 'Log out and log in again'
+}
+
+@test 'dotfiles-logout-needed-check ignored' {
+    touch "${TMP_DIR}/logout"
+    run_script "PATH=${BIN_DIR}:${PATH}" "DOTFILES_NEEDS_LOGOUT=${TMP_DIR}/logout" "DOTFILES_NO_LOGOUT_NEEDED_CHECK=t" "${BIN_DIR}/dotfiles-logout-needed-check"
+    assert_success
+    assert [ -f "${TMP_DIR}/logout" ]
+    refute_line --partial 'Log out and log in again'
+}
+
 @test 'dotfiles-package-ignored usage' {
     run_script "${BIN_DIR}/dotfiles-package-ignored"
     assert_failure

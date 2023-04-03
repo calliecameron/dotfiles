@@ -1,0 +1,13 @@
+#!/bin/bash
+
+set -eu
+
+if [ -n "${DOTFILES_NO_LOGOUT_NEEDED_CHECK:-}" ]; then
+    exit 0
+fi
+
+if [ -e "${DOTFILES_NEEDS_LOGOUT}" ]; then
+    dotfiles-echo-yellow 'Log out and log in again to set everything up correctly.'
+fi
+
+exit 0

@@ -1,0 +1,10 @@
+#!/bin/bash
+
+set -eu
+
+if ! touch "${DOTFILES_NEEDS_LOGOUT}"; then
+    dotfiles-echo-red 'Failed to set logout needed'
+    exit 1
+fi
+
+exit 0
