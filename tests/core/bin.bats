@@ -21,6 +21,10 @@ run_script() {
     run env -i -C "${TMP_DIR}" HOME="${TMP_DIR}" "${@}"
 }
 
+assert_num_matching_lines() {
+    assert_equal "$(echo "${output}" | grep -E -c "${1}")" "${2}"
+}
+
 @test 'dotfiles-next-init usage' {
     run_script "${BIN_DIR}/dotfiles-next-init"
     assert_failure
@@ -1503,12 +1507,47 @@ echo "TEST_BAR_CWD=\$\(pwd\)"
     assert [ ! -e "${TMP_DIR}/install/foo.installed" ]
 }
 
+@test 'dotfiles-package-update needs lock' {
+    local INSTALL_DIR="${TMP_DIR}/install"
+    mkdir -p "${INSTALL_DIR}"
+    local IGNORE_FILE="${TMP_DIR}/ignore"
+    local LAST_UPDATE_FILE="${TMP_DIR}/last-update"
+    local ALREADY_UPDATED_FILE="${TMP_DIR}/already-updated"
+    local PRIVATE_DIR="${TMP_DIR}/private"
+    mkdir -p "${TMP_DIR}/mutex"
+
+    mkdir -p "${TMP_DIR}/a/foo"
+    printf "#!/bin/bash\ntrue\n" >"${TMP_DIR}/a/foo/install"
+    chmod u+x "${TMP_DIR}/a/foo/install"
+    mkdir -p "${TMP_DIR}/install/foo"
+    touch "${TMP_DIR}/install/foo.installed"
+
+    run_script \
+        "PATH=${BIN_DIR}:${PATH}" \
+        "DOTFILES_PACKAGE_MUTEX=${TMP_DIR}/mutex" \
+        "${BIN_DIR}/dotfiles-package-update"
+
+    assert_failure
+    assert [ -d "${TMP_DIR}/mutex" ]
+    assert [ ! -e "${TMP_DIR}/logout" ]
+    assert [ ! -e "${LAST_UPDATE_FILE}" ]
+    assert [ ! -e "${ALREADY_UPDATED_FILE}" ]
+
+    assert_line --partial 'Another script is installing'
+    refute_line 'Reinstalled package foo'
+}
+
 @test 'dotfiles-package-update clean' {
     local INSTALL_DIR="${TMP_DIR}/install"
     mkdir -p "${INSTALL_DIR}"
     local IGNORE_FILE="${TMP_DIR}/ignore"
     local LAST_UPDATE_FILE="${TMP_DIR}/last-update"
     local ALREADY_UPDATED_FILE="${TMP_DIR}/already-updated"
+    local PRIVATE_DIR="${TMP_DIR}/private"
+
+    mkdir -p "${TMP_DIR}/repo"
+    touch "${TMP_DIR}/repo/a"
+    (cd "${TMP_DIR}/repo" && git init . && git add a && git commit -m 'Foo')
 
     mkdir -p "${TMP_DIR}/a/foo"
     printf "#!/bin/bash\ntrue\n" >"${TMP_DIR}/a/foo/install"
@@ -1552,6 +1591,9 @@ echo "TEST_BAR_CWD=\$\(pwd\)"
         "DOTFILES_NEEDS_LOGOUT=${TMP_DIR}/logout" \
         "DOTFILES_PACKAGE_LAST_UPDATE_FILE=${LAST_UPDATE_FILE}" \
         "DOTFILES_PACKAGE_ALREADY_UPDATED_FILE=${ALREADY_UPDATED_FILE}" \
+        "DOTFILES_PRIVATE_DIR=${PRIVATE_DIR}" \
+        "DOTFILES_PRIVATE_REPO=${TMP_DIR}/repo" \
+        "DOTFILES_PRIVATE_BRANCH=" \
         "${BIN_DIR}/dotfiles-package-update"
 
     assert_success
@@ -1560,13 +1602,17 @@ echo "TEST_BAR_CWD=\$\(pwd\)"
     assert [ -f "${TMP_DIR}/logout" ]
     assert [ -f "${LAST_UPDATE_FILE}" ]
     assert [ ! -e "${ALREADY_UPDATED_FILE}" ]
+    assert [ -d "${TMP_DIR}/private" ]
+    assert [ -f "${TMP_DIR}/private/a" ]
 
+    assert_line 'Installed private repo'
     assert_line 'Reinstalled package foo'
     refute_line 'Reinstalled package bar'
     assert_line 'Reinstalled package baz'
     refute_line 'Reinstalled package quux'
     refute_line 'Installed package blah'
     refute_line 'Reinstalled package blah'
+    assert_num_matching_lines 'Log out and log in again' '1'
 }
 
 @test 'dotfiles-package-update continue' {
@@ -1575,6 +1621,12 @@ echo "TEST_BAR_CWD=\$\(pwd\)"
     local IGNORE_FILE="${TMP_DIR}/ignore"
     local LAST_UPDATE_FILE="${TMP_DIR}/last-update"
     local ALREADY_UPDATED_FILE="${TMP_DIR}/already-updated"
+    local PRIVATE_DIR="${TMP_DIR}/private"
+
+    mkdir -p "${TMP_DIR}/repo"
+    touch "${TMP_DIR}/repo/a"
+    (cd "${TMP_DIR}/repo" && git init . && git add a && git commit -m 'Foo')
+    git clone "${TMP_DIR}/repo" "${TMP_DIR}/private"
 
     mkdir -p "${TMP_DIR}/a/foo"
     printf "#!/bin/bash\ntrue\n" >"${TMP_DIR}/a/foo/install"
@@ -1600,6 +1652,9 @@ echo "TEST_BAR_CWD=\$\(pwd\)"
         "DOTFILES_NEEDS_LOGOUT=${TMP_DIR}/logout" \
         "DOTFILES_PACKAGE_LAST_UPDATE_FILE=${LAST_UPDATE_FILE}" \
         "DOTFILES_PACKAGE_ALREADY_UPDATED_FILE=${ALREADY_UPDATED_FILE}" \
+        "DOTFILES_PRIVATE_DIR=${PRIVATE_DIR}" \
+        "DOTFILES_PRIVATE_REPO=${TMP_DIR}/repo" \
+        "DOTFILES_PRIVATE_BRANCH=" \
         "${BIN_DIR}/dotfiles-package-update"
 
     assert_success
@@ -1608,9 +1663,13 @@ echo "TEST_BAR_CWD=\$\(pwd\)"
     assert [ -f "${TMP_DIR}/logout" ]
     assert [ -f "${LAST_UPDATE_FILE}" ]
     assert [ ! -e "${ALREADY_UPDATED_FILE}" ]
+    assert [ -d "${TMP_DIR}/private" ]
+    assert [ -f "${TMP_DIR}/private/a" ]
 
+    assert_line 'Updated private repo'
     refute_line 'Reinstalled package foo'
     assert_line 'Reinstalled package bar'
+    assert_num_matching_lines 'Log out and log in again' '1'
 }
 
 @test 'dotfiles-package-update failure' {
@@ -1619,6 +1678,7 @@ echo "TEST_BAR_CWD=\$\(pwd\)"
     local IGNORE_FILE="${TMP_DIR}/ignore"
     local LAST_UPDATE_FILE="${TMP_DIR}/last-update"
     local ALREADY_UPDATED_FILE="${TMP_DIR}/already-updated"
+    local PRIVATE_DIR="${TMP_DIR}/private"
 
     mkdir -p "${TMP_DIR}/a/foo"
     printf "#!/bin/bash\ntrue\n" >"${TMP_DIR}/a/foo/install"
@@ -1643,6 +1703,8 @@ echo "TEST_BAR_CWD=\$\(pwd\)"
         "DOTFILES_NEEDS_LOGOUT=${TMP_DIR}/logout" \
         "DOTFILES_PACKAGE_LAST_UPDATE_FILE=${LAST_UPDATE_FILE}" \
         "DOTFILES_PACKAGE_ALREADY_UPDATED_FILE=${ALREADY_UPDATED_FILE}" \
+        "DOTFILES_PRIVATE_DIR=${PRIVATE_DIR}" \
+        "DOTFILES_PRIVATE_REPO=" \
         "${BIN_DIR}/dotfiles-package-update"
 
     assert_failure
@@ -1651,8 +1713,10 @@ echo "TEST_BAR_CWD=\$\(pwd\)"
     assert [ ! -e "${TMP_DIR}/logout" ]
     assert [ ! -e "${LAST_UPDATE_FILE}" ]
     assert [ -f "${ALREADY_UPDATED_FILE}" ]
+    assert [ ! -e "${PRIVATE_DIR}" ]
 
     assert_line --partial 'Updating packages failed.'
     refute_line 'Reinstalled package foo'
     refute_line 'Reinstalled package bar'
+    refute_line --partial 'Log out and log in again'
 }

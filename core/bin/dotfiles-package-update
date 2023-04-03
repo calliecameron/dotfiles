@@ -2,10 +2,10 @@
 
 set -eu
 
-source "${DOTFILES_PACKAGE_SCRIPTS}/common-funcs.sh"
-
 dotfiles-package-lock
 trap dotfiles-package-unlock EXIT
+
+source "${DOTFILES_PACKAGE_SCRIPTS}/common-funcs.sh"
 
 function update-package() {
     local PACKAGE_ROOT="${1}"
@@ -19,7 +19,9 @@ function update-package() {
     if ! dotfiles-package-ignored "${PACKAGE_NAME}" &&
         dotfiles-package-installed "${PACKAGE_NAME}" &&
         dotfiles-package-can-install "${PACKAGE_SOURCE_DIR}"; then
-        if ! DOTFILES_NO_PACKAGE_LOCK='t' dotfiles-package-install "${PACKAGE_ROOT}/${PACKAGE_NAME}"; then
+        if ! DOTFILES_NO_PACKAGE_LOCK='t' \
+            DOTFILES_NO_LOGOUT_NEEDED_CHECK='t' \
+            dotfiles-package-install "${PACKAGE_ROOT}/${PACKAGE_NAME}"; then
             dotfiles-echo-red "Updating packages failed."
             exit 1
         fi
@@ -27,9 +29,13 @@ function update-package() {
     fi
 }
 
+DOTFILES_NO_PACKAGE_LOCK='t' DOTFILES_NO_LOGOUT_NEEDED_CHECK='t' dotfiles-private-repo-install
+
 touch "${DOTFILES_PACKAGE_ALREADY_UPDATED_FILE}"
 
 packageloop 'Update' update-package
 
 date '+%s' >"${DOTFILES_PACKAGE_LAST_UPDATE_FILE}"
 rm "${DOTFILES_PACKAGE_ALREADY_UPDATED_FILE}"
+
+dotfiles-logout-needed-check
