@@ -1107,66 +1107,101 @@ Ignored
     assert [ -d "${TMP_DIR}/a" ]
 }
 
+@test 'dotfiles-private-repo needs lock' {
+    local MUTEX="${TMP_DIR}/mutex"
+    mkdir -p "${MUTEX}"
+    local PRIVATE="${TMP_DIR}/private"
+    run_script "PATH=${BIN_DIR}:${PATH}" "DOTFILES_PACKAGE_MUTEX=${MUTEX}" "DOTFILES_PRIVATE_DIR=${PRIVATE}" "DOTFILES_PRIVATE_REPO=" "${BIN_DIR}/dotfiles-private-repo-install"
+    assert_failure
+    assert [ -d "${MUTEX}" ]
+    assert [ ! -e "${PRIVATE}" ]
+}
+
 @test 'dotfiles-private-repo-install nothing' {
-    run_script "PATH=${BIN_DIR}:${PATH}" "DOTFILES_PACKAGE_MUTEX=${TMP_DIR}/mutex" "DOTFILES_PRIVATE_DIR=${TMP_DIR}/private" "DOTFILES_PRIVATE_REPO=" "${BIN_DIR}/dotfiles-private-repo-install"
+    local MUTEX="${TMP_DIR}/mutex"
+    local PRIVATE="${TMP_DIR}/private"
+    local LOGOUT="${TMP_DIR}/logout"
+    run_script "PATH=${BIN_DIR}:${PATH}" "DOTFILES_PACKAGE_MUTEX=${MUTEX}" "DOTFILES_PRIVATE_DIR=${PRIVATE}" "DOTFILES_PRIVATE_REPO=" "DOTFILES_NEEDS_LOGOUT=${LOGOUT}" "${BIN_DIR}/dotfiles-private-repo-install"
     assert_success
-    assert [ ! -e "${TMP_DIR}/mutex" ]
-    assert [ ! -e "${TMP_DIR}/private" ]
+    assert [ ! -e "${MUTEX}" ]
+    assert [ ! -e "${PRIVATE}" ]
+    assert [ ! -e "${LOGOUT}" ]
+    refute_line --partial 'Log out and log in again'
 }
 
 @test 'dotfiles-private-repo-install clone, default branch' {
+    local MUTEX="${TMP_DIR}/mutex"
+    local PRIVATE="${TMP_DIR}/private"
+    local LOGOUT="${TMP_DIR}/logout"
     mkdir -p "${TMP_DIR}/repo"
     touch "${TMP_DIR}/repo/a"
     (cd "${TMP_DIR}/repo" && git init . && git add a && git commit -m 'Foo')
-    run_script "PATH=${BIN_DIR}:${PATH}" "DOTFILES_PACKAGE_MUTEX=${TMP_DIR}/mutex" "DOTFILES_PRIVATE_DIR=${TMP_DIR}/private" "DOTFILES_PRIVATE_REPO=${TMP_DIR}/repo" "DOTFILES_PRIVATE_BRANCH=" "${BIN_DIR}/dotfiles-private-repo-install"
+    run_script "PATH=${BIN_DIR}:${PATH}" "DOTFILES_PACKAGE_MUTEX=${MUTEX}" "DOTFILES_PRIVATE_DIR=${PRIVATE}" "DOTFILES_PRIVATE_REPO=${TMP_DIR}/repo" "DOTFILES_PRIVATE_BRANCH=" "DOTFILES_NEEDS_LOGOUT=${LOGOUT}" "${BIN_DIR}/dotfiles-private-repo-install"
     assert_success
-    assert [ ! -e "${TMP_DIR}/mutex" ]
-    assert [ -d "${TMP_DIR}/private" ]
-    assert [ -f "${TMP_DIR}/private/a" ]
-    (cd "${TMP_DIR}/private" && assert [ "$(git branch --show-current)" = 'master' ])
+    assert [ ! -e "${MUTEX}" ]
+    assert [ -d "${PRIVATE}" ]
+    assert [ -f "${PRIVATE}/a" ]
+    (cd "${PRIVATE}" && assert [ "$(git branch --show-current)" = 'master' ])
+    assert [ -f "${LOGOUT}" ]
+    assert_line --partial 'Log out and log in again'
 }
 
 @test 'dotfiles-private-repo-install clone, other branch' {
+    local MUTEX="${TMP_DIR}/mutex"
+    local PRIVATE="${TMP_DIR}/private"
+    local LOGOUT="${TMP_DIR}/logout"
     mkdir -p "${TMP_DIR}/repo"
     touch "${TMP_DIR}/repo/a"
     (cd "${TMP_DIR}/repo" && git init . && git add a && git commit -m 'Foo' && git checkout -b dev)
-    run_script "PATH=${BIN_DIR}:${PATH}" "DOTFILES_PACKAGE_MUTEX=${TMP_DIR}/mutex" "DOTFILES_PRIVATE_DIR=${TMP_DIR}/private" "DOTFILES_PRIVATE_REPO=${TMP_DIR}/repo" "DOTFILES_PRIVATE_BRANCH=dev" "${BIN_DIR}/dotfiles-private-repo-install"
+    run_script "PATH=${BIN_DIR}:${PATH}" "DOTFILES_PACKAGE_MUTEX=${MUTEX}" "DOTFILES_PRIVATE_DIR=${PRIVATE}" "DOTFILES_PRIVATE_REPO=${TMP_DIR}/repo" "DOTFILES_PRIVATE_BRANCH=dev" "DOTFILES_NEEDS_LOGOUT=${LOGOUT}" "${BIN_DIR}/dotfiles-private-repo-install"
     assert_success
-    assert [ ! -e "${TMP_DIR}/mutex" ]
-    assert [ -d "${TMP_DIR}/private" ]
-    assert [ -f "${TMP_DIR}/private/a" ]
-    (cd "${TMP_DIR}/private" && assert [ "$(git branch --show-current)" = 'dev' ])
+    assert [ ! -e "${MUTEX}" ]
+    assert [ -d "${PRIVATE}" ]
+    assert [ -f "${PRIVATE}/a" ]
+    (cd "${PRIVATE}" && assert [ "$(git branch --show-current)" = 'dev' ])
+    assert [ -f "${LOGOUT}" ]
+    assert_line --partial 'Log out and log in again'
 }
 
 @test 'dotfiles-private-repo-install pull, clean' {
+    local MUTEX="${TMP_DIR}/mutex"
+    local PRIVATE="${TMP_DIR}/private"
+    local LOGOUT="${TMP_DIR}/logout"
     mkdir -p "${TMP_DIR}/repo"
     touch "${TMP_DIR}/repo/a"
     (cd "${TMP_DIR}/repo" && git init . && git add a && git commit -m 'Foo')
-    git clone "${TMP_DIR}/repo" "${TMP_DIR}/private"
+    git clone "${TMP_DIR}/repo" "${PRIVATE}"
     echo 'foo' >"${TMP_DIR}/repo/a"
     (cd "${TMP_DIR}/repo" && git add a && git commit -m 'Bar')
-    run_script "PATH=${BIN_DIR}:${PATH}" "DOTFILES_PACKAGE_MUTEX=${TMP_DIR}/mutex" "DOTFILES_PRIVATE_DIR=${TMP_DIR}/private" "DOTFILES_PRIVATE_REPO=${TMP_DIR}/repo" "DOTFILES_PRIVATE_BRANCH=" "${BIN_DIR}/dotfiles-private-repo-install"
+    run_script "PATH=${BIN_DIR}:${PATH}" "DOTFILES_PACKAGE_MUTEX=${MUTEX}" "DOTFILES_PRIVATE_DIR=${PRIVATE}" "DOTFILES_PRIVATE_REPO=${TMP_DIR}/repo" "DOTFILES_PRIVATE_BRANCH=" "DOTFILES_NEEDS_LOGOUT=${LOGOUT}" "${BIN_DIR}/dotfiles-private-repo-install"
     assert_success
-    assert [ ! -e "${TMP_DIR}/mutex" ]
-    assert [ -d "${TMP_DIR}/private" ]
-    assert [ -f "${TMP_DIR}/private/a" ]
-    assert [ "$(cat "${TMP_DIR}/private/a")" = 'foo' ]
-    (cd "${TMP_DIR}/private" && assert [ "$(git branch --show-current)" = 'master' ])
+    assert [ ! -e "${MUTEX}" ]
+    assert [ -d "${PRIVATE}" ]
+    assert [ -f "${PRIVATE}/a" ]
+    assert [ "$(cat "${PRIVATE}/a")" = 'foo' ]
+    (cd "${PRIVATE}" && assert [ "$(git branch --show-current)" = 'master' ])
+    assert [ -f "${LOGOUT}" ]
+    assert_line --partial 'Log out and log in again'
 }
 
 @test 'dotfiles-private-repo-install pull, dirty' {
+    local MUTEX="${TMP_DIR}/mutex"
+    local PRIVATE="${TMP_DIR}/private"
+    local LOGOUT="${TMP_DIR}/logout"
     mkdir -p "${TMP_DIR}/repo"
     touch "${TMP_DIR}/repo/a"
     (cd "${TMP_DIR}/repo" && git init . && git add a && git commit -m 'Foo')
-    git clone "${TMP_DIR}/repo" "${TMP_DIR}/private"
-    echo 'foo' >"${TMP_DIR}/private/a"
-    run_script "PATH=${BIN_DIR}:${PATH}" "DOTFILES_PACKAGE_MUTEX=${TMP_DIR}/mutex" "DOTFILES_PRIVATE_DIR=${TMP_DIR}/private" "DOTFILES_PRIVATE_REPO=${TMP_DIR}/repo" "DOTFILES_PRIVATE_BRANCH=" "${BIN_DIR}/dotfiles-private-repo-install"
+    git clone "${TMP_DIR}/repo" "${PRIVATE}"
+    echo 'foo' >"${PRIVATE}/a"
+    run_script "PATH=${BIN_DIR}:${PATH}" "DOTFILES_PACKAGE_MUTEX=${MUTEX}" "DOTFILES_PRIVATE_DIR=${PRIVATE}" "DOTFILES_PRIVATE_REPO=${TMP_DIR}/repo" "DOTFILES_PRIVATE_BRANCH=" "DOTFILES_NEEDS_LOGOUT=${LOGOUT}" "${BIN_DIR}/dotfiles-private-repo-install"
     assert_failure
-    assert [ ! -e "${TMP_DIR}/mutex" ]
-    assert [ -d "${TMP_DIR}/private" ]
-    assert [ -f "${TMP_DIR}/private/a" ]
-    assert [ "$(cat "${TMP_DIR}/private/a")" = 'foo' ]
-    (cd "${TMP_DIR}/private" && assert [ "$(git branch --show-current)" = 'master' ])
+    assert [ ! -e "${MUTEX}" ]
+    assert [ -d "${PRIVATE}" ]
+    assert [ -f "${PRIVATE}/a" ]
+    assert [ "$(cat "${PRIVATE}/a")" = 'foo' ]
+    (cd "${PRIVATE}" && assert [ "$(git branch --show-current)" = 'master' ])
+    assert [ ! -e "${LOGOUT}" ]
+    refute_line --partial 'Log out and log in again'
 }
 
 @test 'dotfiles-package-install usage' {
