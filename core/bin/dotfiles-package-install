@@ -62,9 +62,7 @@ while [ -n "${1:-}" ]; do
         fail "Failed to mark package as installed: ${PACKAGE_NAME}"
     fi
 
-    if ! touch "${DOTFILES_NEEDS_LOGOUT}"; then
-        fail "Failed to mark logout needed for package: ${PACKAGE_NAME}"
-    fi
+    dotfiles-logout-needed-set
 
     if ! loadpackageenv "${PACKAGE_ROOT}" "${PACKAGE_NAME}"; then
         fail "Couldn't load env for package: ${PACKAGE_NAME}"
@@ -75,8 +73,6 @@ while [ -n "${1:-}" ]; do
     shift
 done
 
-if [ -e "${DOTFILES_NEEDS_LOGOUT}" ]; then
-    dotfiles-echo-yellow 'Log out and log in again to set everything up correctly.'
-fi
+dotfiles-logout-needed-check
 
 exit 0
