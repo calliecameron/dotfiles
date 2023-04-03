@@ -1,0 +1,8 @@
+[MESSAGES CONTROL]
+disable=invalid-name,
+        missing-docstring
+
+enable=unused-argument
+
+[FORMAT]
+max-line-length = 100

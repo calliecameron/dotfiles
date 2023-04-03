@@ -7,9 +7,7 @@ import subprocess
 
 
 def package_roots() -> List[pathlib.Path]:
-    return [
-        pathlib.Path(r) for r in os.getenv("DOTFILES_PACKAGE_ROOTS", "").split(":") if r
-    ]
+    return [pathlib.Path(r) for r in os.getenv("DOTFILES_PACKAGE_ROOTS", "").split(":") if r]
 
 
 def packages(package_root: pathlib.Path) -> List[pathlib.Path]:
@@ -22,38 +20,23 @@ def packages(package_root: pathlib.Path) -> List[pathlib.Path]:
 
 
 def package_ignored(package: pathlib.Path) -> bool:
-    return (
-        subprocess.run(
-            ["dotfiles-package-ignored", package.name], check=False
-        ).returncode
-        == 0
-    )
+    return subprocess.run(["dotfiles-package-ignored", package.name], check=False).returncode == 0
 
 
 def package_installed(package: pathlib.Path) -> bool:
-    return (
-        subprocess.run(
-            ["dotfiles-package-installed", package.name], check=False
-        ).returncode
-        == 0
-    )
+    return subprocess.run(["dotfiles-package-installed", package.name], check=False).returncode == 0
 
 
 def package_has_installer(package: pathlib.Path) -> bool:
     return (
-        subprocess.run(
-            ["dotfiles-package-has-installer", str(package)], check=False
-        ).returncode
+        subprocess.run(["dotfiles-package-has-installer", str(package)], check=False).returncode
         == 0
     )
 
 
 def package_can_install(package: pathlib.Path) -> bool:
     return (
-        subprocess.run(
-            ["dotfiles-package-can-install", str(package)], check=False
-        ).returncode
-        == 0
+        subprocess.run(["dotfiles-package-can-install", str(package)], check=False).returncode == 0
     )
 
 
