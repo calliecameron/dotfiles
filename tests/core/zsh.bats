@@ -299,7 +299,8 @@ function assert_ran_env_only() {
 }
 
 @test 'last-update-file existing' {
-    local DATE="$(date --date=yesterday '+%s')"
+    local DATE
+    DATE="$(date --date=yesterday '+%s')"
     echo "${DATE}" >"${TEST_PACKAGE_LAST_UPDATE_FILE}"
     run_zsh -l -i
     assert_success
@@ -315,7 +316,8 @@ function assert_ran_env_only() {
 }
 
 @test 'check-for-updates updates' {
-    local DATE="$(date '--date=last year' '+%s')"
+    local DATE
+    DATE="$(date '--date=last year' '+%s')"
     echo "${DATE}" >"${TEST_PACKAGE_LAST_UPDATE_FILE}"
     run_zsh -l -i
     assert_success

@@ -35,8 +35,8 @@ assert_num_matching_lines() {
     run_script "DOTFILES_NEXT_INIT=${TEST_NEXT_INIT}" "${BIN_DIR}/dotfiles-next-init" 'foo' 'bar'
     assert_success
     refute_line --partial 'Usage:'
-    assert [ "$(grep 'This file will be run' <"${TEST_NEXT_INIT}" | wc -l)" = '1' ]
-    assert [ "$(grep 'foo bar' <"${TEST_NEXT_INIT}" | wc -l)" = '1' ]
+    assert [ "$(grep -c 'This file will be run' <"${TEST_NEXT_INIT}")" = '1' ]
+    assert [ "$(grep -c 'foo bar' <"${TEST_NEXT_INIT}")" = '1' ]
 }
 
 @test 'dotfiles-next-init existing same command' {
@@ -44,7 +44,7 @@ assert_num_matching_lines() {
     run_script "DOTFILES_NEXT_INIT=${TEST_NEXT_INIT}" "${BIN_DIR}/dotfiles-next-init" 'foo' 'bar'
     assert_success
     refute_line --partial 'Usage:'
-    assert [ "$(grep 'foo bar' <"${TEST_NEXT_INIT}" | wc -l)" = '1' ]
+    assert [ "$(grep -c 'foo bar' <"${TEST_NEXT_INIT}")" = '1' ]
 }
 
 @test 'dotfiles-next-init existing different command' {
@@ -52,8 +52,8 @@ assert_num_matching_lines() {
     run_script "DOTFILES_NEXT_INIT=${TEST_NEXT_INIT}" "${BIN_DIR}/dotfiles-next-init" 'foo' 'baz'
     assert_success
     refute_line --partial 'Usage:'
-    assert [ "$(grep 'foo bar' <"${TEST_NEXT_INIT}" | wc -l)" = '1' ]
-    assert [ "$(grep 'foo baz' <"${TEST_NEXT_INIT}" | wc -l)" = '1' ]
+    assert [ "$(grep -c 'foo bar' <"${TEST_NEXT_INIT}")" = '1' ]
+    assert [ "$(grep -c 'foo baz' <"${TEST_NEXT_INIT}")" = '1' ]
 }
 
 @test 'dotfiles-next-login usage' {
@@ -66,8 +66,8 @@ assert_num_matching_lines() {
     run_script "DOTFILES_NEXT_LOGIN=${TEST_NEXT_LOGIN}" "${BIN_DIR}/dotfiles-next-login" 'foo' 'bar'
     assert_success
     refute_line --partial 'Usage:'
-    assert [ "$(grep 'This file will be run' <"${TEST_NEXT_LOGIN}" | wc -l)" = '1' ]
-    assert [ "$(grep 'foo bar' <"${TEST_NEXT_LOGIN}" | wc -l)" = '1' ]
+    assert [ "$(grep -c 'This file will be run' <"${TEST_NEXT_LOGIN}")" = '1' ]
+    assert [ "$(grep -c 'foo bar' <"${TEST_NEXT_LOGIN}")" = '1' ]
 }
 
 @test 'dotfiles-next-login existing same command' {
@@ -75,7 +75,7 @@ assert_num_matching_lines() {
     run_script "DOTFILES_NEXT_LOGIN=${TEST_NEXT_LOGIN}" "${BIN_DIR}/dotfiles-next-login" 'foo' 'bar'
     assert_success
     refute_line --partial 'Usage:'
-    assert [ "$(grep 'foo bar' <"${TEST_NEXT_LOGIN}" | wc -l)" = '1' ]
+    assert [ "$(grep -c 'foo bar' <"${TEST_NEXT_LOGIN}")" = '1' ]
 }
 
 @test 'dotfiles-next-login existing different command' {
@@ -83,8 +83,8 @@ assert_num_matching_lines() {
     run_script "DOTFILES_NEXT_LOGIN=${TEST_NEXT_LOGIN}" "${BIN_DIR}/dotfiles-next-login" 'foo' 'baz'
     assert_success
     refute_line --partial 'Usage:'
-    assert [ "$(grep 'foo bar' <"${TEST_NEXT_LOGIN}" | wc -l)" = '1' ]
-    assert [ "$(grep 'foo baz' <"${TEST_NEXT_LOGIN}" | wc -l)" = '1' ]
+    assert [ "$(grep -c 'foo bar' <"${TEST_NEXT_LOGIN}")" = '1' ]
+    assert [ "$(grep -c 'foo baz' <"${TEST_NEXT_LOGIN}")" = '1' ]
 }
 
 @test 'dotfiles-repo-is-clean usage' {
@@ -415,7 +415,7 @@ assert_num_matching_lines() {
     run_script "${BIN_DIR}/dotfiles-symlink-dir-contents" "${TMP_DIR}/a" "${TMP_DIR}/b"
     assert_success
     refute_line --partial 'Usage:'
-    assert [ "$(ls -1 "${TMP_DIR}/b" | wc -l)" = '0' ]
+    assert [ "$(find "${TMP_DIR}/b" -mindepth 1 | wc -l)" = '0' ]
 }
 
 @test 'dotfiles-symlink-dir-contents success' {
@@ -433,7 +433,7 @@ assert_num_matching_lines() {
     assert [ -f "${TMP_DIR}/b/bar" ]
     assert [ -h "${TMP_DIR}/b/baz" ]
     assert [ "$(readlink -f "${TMP_DIR}/b/baz")" = "${TMP_DIR}/a/baz" ]
-    assert [ "$(ls -1 "${TMP_DIR}/b" | wc -l)" = '3' ]
+    assert [ "$(find "${TMP_DIR}/b" -mindepth 1 | wc -l)" = '3' ]
 }
 
 @test 'dotfiles-log-package-message empty' {
@@ -1253,23 +1253,25 @@ Ignored
 
     mkdir -p "${TMP_DIR}/a/foo"
     printf "echo 'FOO ENV'\n" >"${TMP_DIR}/a/foo/env.sh"
-    echo "#!/bin/bash
+    cat >"${TMP_DIR}/a/foo/install" <<EOF
+#!/bin/bash
 echo "TEST_FOO_ROOT=\${PACKAGE_ROOT}"
 echo "TEST_FOO_NAME=\${PACKAGE_NAME}"
 echo "TEST_FOO_SOURCE_DIR=\${PACKAGE_SOURCE_DIR}"
 echo "TEST_FOO_INSTALL_DIR=\${PACKAGE_INSTALL_DIR}"
-echo "TEST_FOO_CWD=\$\(pwd\)"
-" >"${TMP_DIR}/a/foo/install"
+echo "TEST_FOO_CWD=\$(pwd)"
+EOF
     chmod u+x "${TMP_DIR}/a/foo/install"
 
     mkdir -p "${TMP_DIR}/a/bar"
-    echo "#!/bin/bash
+    cat >"${TMP_DIR}/a/bar/install" <<EOF
+#!/bin/bash
 echo "TEST_BAR_ROOT=\${PACKAGE_ROOT}"
 echo "TEST_BAR_NAME=\${PACKAGE_NAME}"
 echo "TEST_BAR_SOURCE_DIR=\${PACKAGE_SOURCE_DIR}"
 echo "TEST_BAR_INSTALL_DIR=\${PACKAGE_INSTALL_DIR}"
-echo "TEST_BAR_CWD=\$\(pwd\)"
-" >"${TMP_DIR}/a/bar/install"
+echo "TEST_BAR_CWD=\$(pwd)"
+EOF
     chmod u+x "${TMP_DIR}/a/bar/install"
     printf "#!/bin/bash\necho 'BAR CAN INSTALL'\n" >"${TMP_DIR}/a/bar/can-install"
     chmod u+x "${TMP_DIR}/a/bar/can-install"
@@ -1319,25 +1321,27 @@ echo "TEST_BAR_CWD=\$\(pwd\)"
 
     mkdir -p "${TMP_DIR}/a/foo"
     printf "echo 'FOO ENV'\n" >"${TMP_DIR}/a/foo/env.sh"
-    echo "#!/bin/bash
+    cat >"${TMP_DIR}/a/foo/install" <<EOF
+#!/bin/bash
 echo "TEST_FOO_ROOT=\${PACKAGE_ROOT}"
 echo "TEST_FOO_NAME=\${PACKAGE_NAME}"
 echo "TEST_FOO_SOURCE_DIR=\${PACKAGE_SOURCE_DIR}"
 echo "TEST_FOO_INSTALL_DIR=\${PACKAGE_INSTALL_DIR}"
-echo "TEST_FOO_CWD=\$\(pwd\)"
-" >"${TMP_DIR}/a/foo/install"
+echo "TEST_FOO_CWD=\$(pwd)"
+EOF
     chmod u+x "${TMP_DIR}/a/foo/install"
     mkdir -p "${INSTALL_DIR}/foo"
     touch "${INSTALL_DIR}/foo.installed"
 
     mkdir -p "${TMP_DIR}/a/bar"
-    echo "#!/bin/bash
+    cat >"${TMP_DIR}/a/bar/install" <<EOF
+#!/bin/bash
 echo "TEST_BAR_ROOT=\${PACKAGE_ROOT}"
 echo "TEST_BAR_NAME=\${PACKAGE_NAME}"
 echo "TEST_BAR_SOURCE_DIR=\${PACKAGE_SOURCE_DIR}"
 echo "TEST_BAR_INSTALL_DIR=\${PACKAGE_INSTALL_DIR}"
-echo "TEST_BAR_CWD=\$\(pwd\)"
-" >"${TMP_DIR}/a/bar/install"
+echo "TEST_BAR_CWD=\$(pwd)"
+EOF
     chmod u+x "${TMP_DIR}/a/bar/install"
     printf "#!/bin/bash\necho 'BAR CAN INSTALL'\n" >"${TMP_DIR}/a/bar/can-install"
     chmod u+x "${TMP_DIR}/a/bar/can-install"

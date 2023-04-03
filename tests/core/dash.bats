@@ -152,7 +152,8 @@ function assert_ran() {
 }
 
 @test 'last-update-file existing' {
-    local DATE="$(date --date=yesterday '+%s')"
+    local DATE
+    DATE="$(date --date=yesterday '+%s')"
     echo "${DATE}" >"${TEST_PACKAGE_LAST_UPDATE_FILE}"
     run_dash -l
     assert_success
