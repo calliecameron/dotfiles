@@ -19,7 +19,7 @@ function update-package() {
     if ! dotfiles-package-ignored "${PACKAGE_NAME}" &&
         dotfiles-package-installed "${PACKAGE_NAME}" &&
         dotfiles-package-can-install "${PACKAGE_SOURCE_DIR}"; then
-        if ! DOTFILES_PACKAGE_NO_LOCK='t' dotfiles-package-install "${PACKAGE_ROOT}/${PACKAGE_NAME}"; then
+        if ! DOTFILES_NO_PACKAGE_LOCK='t' dotfiles-package-install "${PACKAGE_ROOT}/${PACKAGE_NAME}"; then
             dotfiles-echo-red "Updating packages failed."
             exit 1
         fi

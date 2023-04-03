@@ -1046,7 +1046,7 @@ Ignored
 
 @test 'dotfiles-package-lock locked, no lock' {
     mkdir -p "${TMP_DIR}/a"
-    run_script "PATH=${BIN_DIR}:${PATH}" "DOTFILES_PACKAGE_MUTEX=${TMP_DIR}/a" "DOTFILES_PACKAGE_NO_LOCK=t" "${BIN_DIR}/dotfiles-package-lock"
+    run_script "PATH=${BIN_DIR}:${PATH}" "DOTFILES_PACKAGE_MUTEX=${TMP_DIR}/a" "DOTFILES_NO_PACKAGE_LOCK=t" "${BIN_DIR}/dotfiles-package-lock"
     assert_success
     assert [ -d "${TMP_DIR}/a" ]
 }
@@ -1066,7 +1066,7 @@ Ignored
 
 @test 'dotfiles-package-unlock locked, no lock' {
     mkdir -p "${TMP_DIR}/a"
-    run_script "PATH=${BIN_DIR}:${PATH}" "DOTFILES_PACKAGE_MUTEX=${TMP_DIR}/a" "DOTFILES_PACKAGE_NO_LOCK=t" "${BIN_DIR}/dotfiles-package-unlock"
+    run_script "PATH=${BIN_DIR}:${PATH}" "DOTFILES_PACKAGE_MUTEX=${TMP_DIR}/a" "DOTFILES_NO_PACKAGE_LOCK=t" "${BIN_DIR}/dotfiles-package-unlock"
     assert_success
     assert [ -d "${TMP_DIR}/a" ]
 }
