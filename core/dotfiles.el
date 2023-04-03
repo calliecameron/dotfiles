@@ -1,6 +1,6 @@
 ;;; dotfiles.el --- Main dotfiles file.        -*- lexical-binding: t; -*-
 
-;; Copyright (C) 2021  Callie Cameron
+;; Copyright (C) 2023  Callie Cameron
 
 ;; Author: Callie Cameron <cjcameron7@gmail.com>
 
@@ -111,7 +111,6 @@
    dotfiles-local-emacs
    dotfiles-package-scripts
    dotfiles-package-install-dir
-   dotfiles-package-ignore-file
    dotfiles-private-dir
    dotfiles-package-roots))
 

@@ -6,8 +6,6 @@ setup() {
     load 'helpers.bash'
 
     setup_common
-    INSTALL="${THIS_DIR}/../../install.sh"
-    HOME="${TMP_DIR}" "${INSTALL}" >/dev/null
 }
 
 teardown() {
@@ -49,10 +47,19 @@ function assert_ran() {
     assert_not_package_zsh_aliases_run 'yay'
     assert_not_package_zsh_aliases_run 'stuff'
 
+    assert_not_package_emacs_run 'foo'
+    assert_not_package_emacs_run 'bar'
+    assert_not_package_emacs_run 'baz'
+    assert_not_package_emacs_run 'quux'
+    assert_not_package_emacs_run 'blah'
+    assert_not_package_emacs_run 'yay'
+    assert_not_package_emacs_run 'stuff'
+
     assert_local_env_run_by "${1}"
     assert_local_generic_aliases_run_by 'bash'
     assert_local_bash_aliases_run_by 'bash'
     assert_not_local_zsh_aliases_run
+    assert_not_local_emacs_run
     assert_path
     assert_package_roots
     assert_nemo_scripts
@@ -96,10 +103,19 @@ function assert_ran_env_only() {
     assert_not_package_zsh_aliases_run 'yay'
     assert_not_package_zsh_aliases_run 'stuff'
 
+    assert_not_package_emacs_run 'foo'
+    assert_not_package_emacs_run 'bar'
+    assert_not_package_emacs_run 'baz'
+    assert_not_package_emacs_run 'quux'
+    assert_not_package_emacs_run 'blah'
+    assert_not_package_emacs_run 'yay'
+    assert_not_package_emacs_run 'stuff'
+
     assert_local_env_run_by "${1}"
     assert_not_local_generic_aliases_run
     assert_not_local_bash_aliases_run
     assert_not_local_zsh_aliases_run
+    assert_not_local_emacs_run
     assert_path
     assert_package_roots
     assert_nemo_scripts

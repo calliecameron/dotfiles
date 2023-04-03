@@ -1,22 +1,35 @@
 # shellcheck disable=SC2034
 
-function init_load_file() {
+function init_shell_load_file() {
     local PACKAGE_NAME="${1}"
     local TYPE="${2}"
 
-    echo "
-if [ -n \"\${ZSH_VERSION}\" ]; then
+    cat <<EOF
+if [ -n "\${ZSH_VERSION}" ]; then
     export TEST_PACKAGE_${PACKAGE_NAME}_${TYPE}='zsh'
 else
-    export TEST_PACKAGE_${PACKAGE_NAME}_${TYPE}=\"\$(basename \"\${0}\")\"
+    export TEST_PACKAGE_${PACKAGE_NAME}_${TYPE}="\$(basename "\${0}")"
 fi
 
-export TEST_PACKAGE_${PACKAGE_NAME}_${TYPE}_ROOT=\"\${PACKAGE_ROOT}\"
-export TEST_PACKAGE_${PACKAGE_NAME}_${TYPE}_NAME=\"\${PACKAGE_NAME}\"
-export TEST_PACKAGE_${PACKAGE_NAME}_${TYPE}_SOURCE_DIR=\"\${PACKAGE_SOURCE_DIR}\"
-export TEST_PACKAGE_${PACKAGE_NAME}_${TYPE}_INSTALL_DIR=\"\${PACKAGE_INSTALL_DIR}\"
-export TEST_PACKAGE_${PACKAGE_NAME}_${TYPE}_CWD=\"\$(pwd)\"
-"
+export TEST_PACKAGE_${PACKAGE_NAME}_${TYPE}_ROOT="\${PACKAGE_ROOT}"
+export TEST_PACKAGE_${PACKAGE_NAME}_${TYPE}_NAME="\${PACKAGE_NAME}"
+export TEST_PACKAGE_${PACKAGE_NAME}_${TYPE}_SOURCE_DIR="\${PACKAGE_SOURCE_DIR}"
+export TEST_PACKAGE_${PACKAGE_NAME}_${TYPE}_INSTALL_DIR="\${PACKAGE_INSTALL_DIR}"
+export TEST_PACKAGE_${PACKAGE_NAME}_${TYPE}_CWD="\$(pwd)"
+EOF
+}
+
+function init_emacs_load_file() {
+    local PACKAGE_NAME="${1}"
+
+    cat <<EOF
+(message "TEST_PACKAGE_${PACKAGE_NAME}_EMACS=emacs")
+(message "TEST_PACKAGE_${PACKAGE_NAME}_EMACS_ROOT=%s" this-package-root)
+(message "TEST_PACKAGE_${PACKAGE_NAME}_EMACS_NAME=%s" this-package-name)
+(message "TEST_PACKAGE_${PACKAGE_NAME}_EMACS_SOURCE_DIR=%s" this-package-source-dir)
+(message "TEST_PACKAGE_${PACKAGE_NAME}_EMACS_INSTALL_DIR=%s" this-package-install-dir)
+(message "TEST_PACKAGE_${PACKAGE_NAME}_EMACS_CWD=%s" (s-chop-suffix "/" default-directory))
+EOF
 }
 
 function init_package() {
@@ -26,14 +39,16 @@ function init_package() {
 
     mkdir -p "${PACKAGE_SOURCE_DIR}"
 
-    init_load_file "${PACKAGE_NAME}" 'ENV' >"${PACKAGE_SOURCE_DIR}/env.sh"
-    init_load_file "${PACKAGE_NAME}" 'GENERIC_ALIASES' >"${PACKAGE_SOURCE_DIR}/aliases.sh"
-    init_load_file "${PACKAGE_NAME}" 'BASH_ALIASES' >"${PACKAGE_SOURCE_DIR}/aliases.bash"
-    init_load_file "${PACKAGE_NAME}" 'ZSH_ALIASES' >"${PACKAGE_SOURCE_DIR}/aliases.zsh"
+    init_shell_load_file "${PACKAGE_NAME}" 'ENV' >"${PACKAGE_SOURCE_DIR}/env.sh"
+    init_shell_load_file "${PACKAGE_NAME}" 'GENERIC_ALIASES' >"${PACKAGE_SOURCE_DIR}/aliases.sh"
+    init_shell_load_file "${PACKAGE_NAME}" 'BASH_ALIASES' >"${PACKAGE_SOURCE_DIR}/aliases.bash"
+    init_shell_load_file "${PACKAGE_NAME}" 'ZSH_ALIASES' >"${PACKAGE_SOURCE_DIR}/aliases.zsh"
+    init_emacs_load_file "${PACKAGE_NAME}" >"${PACKAGE_SOURCE_DIR}/emacs.el"
 }
 
 function setup_common() {
     THIS_DIR="$(cd "$(dirname "${BATS_TEST_FILENAME}")" && pwd)"
+    CORE_DIR="$(readlink -f "${THIS_DIR}/../../core")"
     TMP_DIR="$(mktemp -d)"
     mkdir -p "${TMP_DIR}/.dotfiles.d"
 
@@ -57,6 +72,7 @@ function setup_common() {
     # foo: active without installation
     init_package "${TEST_PACKAGE_ROOT_1}" 'foo'
     mkdir -p "${TEST_PACKAGE_ROOT_1}/foo/bin"
+    mkdir -p "${TEST_PACKAGE_ROOT_1}/foo/elisp"
     mkdir -p "${TEST_PACKAGE_ROOT_1}/foo/nemo-scripts"
     touch "${TEST_PACKAGE_ROOT_1}/foo/nemo-scripts/a"
     mkdir -p "${TEST_PACKAGE_ROOT_1}/foo/zsh-completions"
@@ -71,6 +87,7 @@ function setup_common() {
     # baz: installed
     init_package "${TEST_PACKAGE_ROOT_1}" 'baz'
     mkdir -p "${TEST_PACKAGE_ROOT_1}/baz/bin"
+    mkdir -p "${TEST_PACKAGE_ROOT_1}/baz/elisp"
     touch "${TEST_PACKAGE_ROOT_1}/baz/install"
     mkdir -p "${TEST_PACKAGE_INSTALL_DIR}/baz"
     touch "${TEST_PACKAGE_INSTALL_DIR}/baz.installed"
@@ -94,6 +111,7 @@ function setup_common() {
     # stuff: installed and ignored
     init_package "${TEST_PACKAGE_ROOT_2}" 'stuff'
     mkdir -p "${TEST_PACKAGE_ROOT_2}/stuff/bin"
+    mkdir -p "${TEST_PACKAGE_ROOT_2}/stuff/elisp"
     touch "${TEST_PACKAGE_ROOT_2}/stuff/install"
     mkdir -p "${TEST_PACKAGE_INSTALL_DIR}/stuff"
     touch "${TEST_PACKAGE_INSTALL_DIR}/stuff.installed"
@@ -103,29 +121,59 @@ function setup_common() {
     init_package "${TEST_PACKAGE_ROOT_2}" 'foo'
 
     TEST_LOCAL_ENV_FILE="${TMP_DIR}/.dotfiles.d/local-variables.sh"
-    {
-        echo "if [ -n \"\${ZSH_VERSION}\" ]; then export TEST_LOCAL_ENV='zsh'; else export TEST_LOCAL_ENV=\"\$(basename \"\${0}\")\"; fi"
-        echo "appendpackageroot /foo"
-        echo "prependpackageroot /bar"
-        echo "export TEST_PACKAGE_ROOTS=\"\${DOTFILES_PACKAGE_ROOTS}\""
-        echo "export DOTFILES_PACKAGE_ROOTS='${TEST_PACKAGE_ROOT_1}:${TEST_PACKAGE_ROOT_2}:${TMP_DIR}/packages3'"
-    } >"${TEST_LOCAL_ENV_FILE}"
+    cat >"${TEST_LOCAL_ENV_FILE}" <<EOF
+if [ -n "\${ZSH_VERSION}" ]; then
+    export TEST_LOCAL_ENV='zsh'
+else
+    export TEST_LOCAL_ENV="\$(basename "\${0}")"
+fi
+appendpackageroot /foo
+prependpackageroot /bar
+export TEST_PACKAGE_ROOTS="\${DOTFILES_PACKAGE_ROOTS}"
+export DOTFILES_PACKAGE_ROOTS='${TEST_PACKAGE_ROOT_1}:${TEST_PACKAGE_ROOT_2}:${TMP_DIR}/packages3'
+EOF
 
     TEST_LOCAL_GENERIC_ALIASES_FILE="${TMP_DIR}/.dotfiles.d/local-aliases.sh"
-    echo "if [ -n \"\${ZSH_VERSION}\" ]; then export TEST_LOCAL_GENERIC_ALIASES='zsh'; else export TEST_LOCAL_GENERIC_ALIASES=\"\$(basename \"\${0}\")\"; fi" >"${TEST_LOCAL_GENERIC_ALIASES_FILE}"
+    cat >"${TEST_LOCAL_GENERIC_ALIASES_FILE}" <<EOF
+if [ -n "\${ZSH_VERSION}" ]; then
+    export TEST_LOCAL_GENERIC_ALIASES='zsh'
+else
+    export TEST_LOCAL_GENERIC_ALIASES="\$(basename "\${0}")"
+fi
+EOF
 
     TEST_LOCAL_BASH_ALIASES_FILE="${TMP_DIR}/.dotfiles.d/local-aliases.bash"
-    echo "if [ -n \"\${ZSH_VERSION}\" ]; then export TEST_LOCAL_BASH_ALIASES='zsh'; else export TEST_LOCAL_BASH_ALIASES=\"\$(basename \"\${0}\")\"; fi" >"${TEST_LOCAL_BASH_ALIASES_FILE}"
+    cat >"${TEST_LOCAL_BASH_ALIASES_FILE}" <<EOF
+if [ -n "\${ZSH_VERSION}" ]; then
+    export TEST_LOCAL_BASH_ALIASES='zsh'
+else
+    export TEST_LOCAL_BASH_ALIASES="\$(basename "\${0}")"
+fi
+EOF
 
     TEST_LOCAL_ZSH_ALIASES_FILE="${TMP_DIR}/.dotfiles.d/local-aliases.zsh"
-    echo "
-if [ -n \"\${ZSH_VERSION}\" ]; then
+    cat >"${TEST_LOCAL_ZSH_ALIASES_FILE}" <<EOF
+if [ -n "\${ZSH_VERSION}" ]; then
     export TEST_LOCAL_ZSH_ALIASES='zsh'
-    export TEST_FPATH=\"\${fpath}\"
+    export TEST_FPATH="\${fpath}"
 else
-    export TEST_LOCAL_ZSH_ALIASES=\"\$(basename \"\${0}\")\"
+    export TEST_LOCAL_ZSH_ALIASES="\$(basename "\${0}")"
 fi
-" >"${TEST_LOCAL_ZSH_ALIASES_FILE}"
+EOF
+
+    TEST_LOCAL_EMACS_FILE="${TMP_DIR}/.dotfiles.d/local-emacs.el"
+    cat >"${TEST_LOCAL_EMACS_FILE}" <<EOF
+(message "TEST_LOCAL_EMACS=emacs")
+EOF
+
+    mkdir -p "${TMP_DIR}/.emacs.d"
+    TEST_EMACS_CUSTOM_FILE="${TMP_DIR}/.emacs.d/emacs-custom.el"
+    cat >"${TEST_EMACS_CUSTOM_FILE}" <<EOF
+(message "TEST_EMACS_LOAD_PATH=%s" load-path)
+EOF
+
+    INSTALL="${THIS_DIR}/../../install.sh"
+    HOME="${TMP_DIR}" "${INSTALL}" >/dev/null
 }
 
 function teardown_common() {
@@ -195,6 +243,12 @@ function assert_not_path() {
     refute_line --regexp "^PATH=.*$(readlink -f "${TEST_PACKAGE_ROOT_1}")/foo/bin.*\$"
     refute_line --regexp "^PATH=.*$(readlink -f "${TEST_PACKAGE_ROOT_1}")/baz/bin.*\$"
     refute_line --regexp "^PATH=.*$(readlink -f "${TEST_PACKAGE_ROOT_2}")/stuff/bin.*\$"
+}
+
+function assert_emacs_load_path() {
+    assert_line --regexp "^TEST_EMACS_LOAD_PATH=.*$(readlink -f "${TEST_PACKAGE_ROOT_1}")/foo/elisp.*\$"
+    assert_line --regexp "^TEST_EMACS_LOAD_PATH=.*$(readlink -f "${TEST_PACKAGE_ROOT_1}")/baz/elisp.*\$"
+    refute_line --regexp "^TEST_EMACS_LOAD_PATH=.*$(readlink -f "${TEST_PACKAGE_ROOT_2}")/stuff/elisp.*\$"
 }
 
 function assert_package_roots() {
@@ -300,6 +354,14 @@ function assert_not_package_zsh_aliases_run() {
     refute_line --partial "TEST_PACKAGE_${1}_ZSH_ALIASES"
 }
 
+function assert_package_emacs_run() {
+    assert_package_type_run_by "${1}" "${2}" 'EMACS' 'emacs'
+}
+
+function assert_not_package_emacs_run() {
+    refute_line --partial "TEST_PACKAGE_${1}_EMACS"
+}
+
 function assert_local_env_run_by() {
     assert_line "TEST_LOCAL_ENV=${1}"
     assert_num_matching_lines '^TEST_LOCAL_ENV=' '1'
@@ -334,6 +396,15 @@ function assert_local_zsh_aliases_run_by() {
 
 function assert_not_local_zsh_aliases_run() {
     refute_line --partial 'TEST_LOCAL_ZSH_ALIASES'
+}
+
+function assert_local_emacs_run() {
+    assert_line "TEST_LOCAL_EMACS=emacs"
+    assert_num_matching_lines '^TEST_LOCAL_EMACS=' '1'
+}
+
+function assert_not_local_emacs_run() {
+    refute_line --partial 'TEST_LOCAL_EMACS'
 }
 
 function assert_nothing_ran() {
@@ -371,10 +442,19 @@ function assert_nothing_ran() {
     assert_not_package_zsh_aliases_run 'yay'
     assert_not_package_zsh_aliases_run 'stuff'
 
+    assert_not_package_emacs_run 'foo'
+    assert_not_package_emacs_run 'bar'
+    assert_not_package_emacs_run 'baz'
+    assert_not_package_emacs_run 'quux'
+    assert_not_package_emacs_run 'blah'
+    assert_not_package_emacs_run 'yay'
+    assert_not_package_emacs_run 'stuff'
+
     assert_not_local_env_run
     assert_not_local_generic_aliases_run
     assert_not_local_bash_aliases_run
     assert_not_local_zsh_aliases_run
+    assert_not_local_emacs_run
     assert_not_path
     assert_not_package_roots
     assert_not_nemo_scripts
