@@ -1,3 +1,5 @@
+# shellcheck shell=sh
+
 dotfiles-home-link "${WINROOT}" "${HOME}/WinRoot"
 dotfiles-home-link "${WINHOME}" "${HOME}/WinHome"
 dotfiles-home-link "${WINDOWNLOADS}" "${HOME}/WinDownloads"
