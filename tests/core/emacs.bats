@@ -7,7 +7,7 @@ setup() {
 
     setup_common
 
-    TEST_EMACS="$(which emacs)"
+    TEST_EMACS="$(command -v emacs)"
 }
 
 teardown() {
