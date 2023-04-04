@@ -7,7 +7,7 @@ lint:
 	tests/find-shell-files.sh | xargs -d '\n' shfmt -l -d -i 4
 	tests/find-bats-files.sh | xargs -d '\n' shellcheck
 	tests/find-bats-files.sh | xargs -d '\n' shfmt -l -d -i 4 -ln bats
-	tests/find-python-files.sh | xargs -d '\n' pylint
+	tests/find-python-files.sh | xargs -d '\n' pylint --score n
 	tests/find-python-files.sh | xargs -d '\n' flake8
 	tests/find-python-files.sh | xargs -d '\n' black --check
 	tests/find-python-files.sh | xargs -d '\n' mypy --strict
