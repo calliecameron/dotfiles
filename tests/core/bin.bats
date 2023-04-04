@@ -767,11 +767,11 @@ assert_num_matching_lines() {
 @test 'dotfiles-package-ignore no file' {
     local IGNORE_DIR="${TMP_DIR}/a"
     local IGNORE_FILE="${IGNORE_DIR}/a"
-    run_script "PATH=${BIN_DIR}:${PATH}" "DOTFILES_PACKAGE_INSTALL_DIR=${IGNORE_DIR}" "DOTFILES_PACKAGE_IGNORE_FILE=${IGNORE_FILE}" "${BIN_DIR}/dotfiles-package-ignore" 'foo'
+    run_script "PATH=${BIN_DIR}:${PATH}" "DOTFILES_PACKAGE_INSTALL_DIR=${IGNORE_DIR}" "DOTFILES_PACKAGE_IGNORE_FILE=${IGNORE_FILE}" "${BIN_DIR}/dotfiles-package-ignore" 'foo' 'bar'
     assert_success
     refute_line --partial 'Usage:'
-    assert [ "$(wc -l <"${IGNORE_FILE}")" = '1' ]
-    assert [ "$(cat "${IGNORE_FILE}")" = 'foo' ]
+    assert [ "$(wc -l <"${IGNORE_FILE}")" = '2' ]
+    assert [ "$(cat "${IGNORE_FILE}")" = "$(printf "foo\nbar")" ]
 }
 
 @test 'dotfiles-package-ignore new' {
@@ -779,11 +779,11 @@ assert_num_matching_lines() {
     local IGNORE_FILE="${IGNORE_DIR}/a"
     mkdir -p "${IGNORE_DIR}"
     echo 'foo' >"${IGNORE_FILE}"
-    run_script "PATH=${BIN_DIR}:${PATH}" "DOTFILES_PACKAGE_INSTALL_DIR=${IGNORE_DIR}" "DOTFILES_PACKAGE_IGNORE_FILE=${IGNORE_FILE}" "${BIN_DIR}/dotfiles-package-ignore" 'bar'
+    run_script "PATH=${BIN_DIR}:${PATH}" "DOTFILES_PACKAGE_INSTALL_DIR=${IGNORE_DIR}" "DOTFILES_PACKAGE_IGNORE_FILE=${IGNORE_FILE}" "${BIN_DIR}/dotfiles-package-ignore" 'bar' 'baz'
     assert_success
     refute_line --partial 'Usage:'
-    assert [ "$(wc -l <"${IGNORE_FILE}")" = '2' ]
-    assert [ "$(cat "${IGNORE_FILE}")" = "$(printf 'foo\nbar')" ]
+    assert [ "$(wc -l <"${IGNORE_FILE}")" = '3' ]
+    assert [ "$(cat "${IGNORE_FILE}")" = "$(printf 'foo\nbar\nbaz')" ]
 }
 
 @test 'dotfiles-package-ignore existing' {
@@ -791,11 +791,11 @@ assert_num_matching_lines() {
     local IGNORE_FILE="${IGNORE_DIR}/a"
     mkdir -p "${IGNORE_DIR}"
     echo 'foo' >"${IGNORE_FILE}"
-    run_script "PATH=${BIN_DIR}:${PATH}" "DOTFILES_PACKAGE_INSTALL_DIR=${IGNORE_DIR}" "DOTFILES_PACKAGE_IGNORE_FILE=${IGNORE_FILE}" "${BIN_DIR}/dotfiles-package-ignore" 'foo'
+    run_script "PATH=${BIN_DIR}:${PATH}" "DOTFILES_PACKAGE_INSTALL_DIR=${IGNORE_DIR}" "DOTFILES_PACKAGE_IGNORE_FILE=${IGNORE_FILE}" "${BIN_DIR}/dotfiles-package-ignore" 'foo' 'bar'
     assert_success
     refute_line --partial 'Usage:'
-    assert [ "$(wc -l <"${IGNORE_FILE}")" = '1' ]
-    assert [ "$(cat "${IGNORE_FILE}")" = 'foo' ]
+    assert [ "$(wc -l <"${IGNORE_FILE}")" = '2' ]
+    assert [ "$(cat "${IGNORE_FILE}")" = "$(printf "foo\nbar")" ]
 }
 
 @test 'dotfiles-package-unignore usage' {
@@ -806,7 +806,7 @@ assert_num_matching_lines() {
 
 @test 'dotfiles-package-unignore no file' {
     local IGNORE_FILE="${TMP_DIR}/a"
-    run_script "PATH=${BIN_DIR}:${PATH}" "DOTFILES_PACKAGE_IGNORE_FILE=${IGNORE_FILE}" "${BIN_DIR}/dotfiles-package-unignore" 'foo'
+    run_script "PATH=${BIN_DIR}:${PATH}" "DOTFILES_PACKAGE_IGNORE_FILE=${IGNORE_FILE}" "${BIN_DIR}/dotfiles-package-unignore" 'foo' 'bar'
     assert_success
     refute_line --partial 'Usage:'
     assert [ ! -e "${IGNORE_FILE}" ]
@@ -815,17 +815,17 @@ assert_num_matching_lines() {
 @test 'dotfiles-package-unignore in file' {
     local IGNORE_FILE="${TMP_DIR}/a"
     printf 'foo\nbar\nbaz\n' >"${IGNORE_FILE}"
-    run_script "PATH=${BIN_DIR}:${PATH}" "DOTFILES_PACKAGE_IGNORE_FILE=${IGNORE_FILE}" "${BIN_DIR}/dotfiles-package-unignore" 'bar'
+    run_script "PATH=${BIN_DIR}:${PATH}" "DOTFILES_PACKAGE_IGNORE_FILE=${IGNORE_FILE}" "${BIN_DIR}/dotfiles-package-unignore" 'foo' 'bar'
     assert_success
     refute_line --partial 'Usage:'
-    assert [ "$(wc -l <"${IGNORE_FILE}")" = '2' ]
-    assert [ "$(cat "${IGNORE_FILE}")" = "$(printf 'foo\nbaz')" ]
+    assert [ "$(wc -l <"${IGNORE_FILE}")" = '1' ]
+    assert [ "$(cat "${IGNORE_FILE}")" = 'baz' ]
 }
 
 @test 'dotfiles-package-unignore not in file' {
     local IGNORE_FILE="${TMP_DIR}/a"
     printf 'foo\nbar\nbaz\n' >"${IGNORE_FILE}"
-    run_script "PATH=${BIN_DIR}:${PATH}" "DOTFILES_PACKAGE_IGNORE_FILE=${IGNORE_FILE}" "${BIN_DIR}/dotfiles-package-unignore" 'quux'
+    run_script "PATH=${BIN_DIR}:${PATH}" "DOTFILES_PACKAGE_IGNORE_FILE=${IGNORE_FILE}" "${BIN_DIR}/dotfiles-package-unignore" 'quux' 'yay'
     assert_success
     refute_line --partial 'Usage:'
     assert [ "$(wc -l <"${IGNORE_FILE}")" = '3' ]
@@ -1059,14 +1059,14 @@ Active without installing
 Installed
     baz
 
-Available to install (with 'dotfiles-package-install')
+Available to install ('dotfiles-package-install' to install)
     blah
     quux
 
 Not available to install
     yay
 
-Ignored
+Ignored ('dotfiles-package-unignore' to unignore)
     bar
     stuff"
 }

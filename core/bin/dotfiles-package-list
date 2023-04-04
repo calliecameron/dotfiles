@@ -85,9 +85,9 @@ def main() -> None:
 
     print_set("Active without installing", install_not_needed)
     print_set("Installed", installed)
-    print_set("Available to install (with 'dotfiles-package-install')", can_install)
+    print_set("Available to install ('dotfiles-package-install' to install)", can_install)
     print_set("Not available to install", cant_install)
-    print_set("Ignored", ignored)
+    print_set("Ignored ('dotfiles-package-unignore' to unignore)", ignored)
 
 
 if __name__ == "__main__":
