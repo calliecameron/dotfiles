@@ -23,7 +23,7 @@ run_emacs() {
 
     assert_success
 
-    # TODO assert_package_emacs_run "${TEST_PACKAGE_ROOT_1}" 'foo'
+    assert_package_emacs_run "${TEST_PACKAGE_ROOT_1}" 'foo'
     assert_not_package_emacs_run 'bar'
     assert_package_emacs_run "${TEST_PACKAGE_ROOT_1}" 'baz'
     assert_not_package_emacs_run 'quux'
