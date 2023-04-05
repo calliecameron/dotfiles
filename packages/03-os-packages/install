@@ -9,7 +9,7 @@ sudo apt-get upgrade
 sudo apt-get dist-upgrade
 
 sudo apt-get -y install curl git mercurial nano ncurses-term netcat-openbsd \
-    screen silversearcher-ag tree zsh zsh-doc
+    screen silversearcher-ag tmux tree zsh zsh-doc
 
 if dotfiles-linux-variant main; then
     # Mint 21
