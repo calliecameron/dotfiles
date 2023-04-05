@@ -1,0 +1,5 @@
+#!/bin/bash
+
+set -eu
+
+dotfiles-known-linux-variant && dotfiles-can-sudo

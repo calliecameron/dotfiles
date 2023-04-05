@@ -1,0 +1,32 @@
+#!/bin/bash
+
+set -eu
+
+chmod go-rwx "${HOME}"
+
+sudo apt-get update
+sudo apt-get upgrade
+sudo apt-get dist-upgrade
+
+sudo apt-get -y install curl git mercurial nano ncurses-term netcat-openbsd \
+    screen tree zsh zsh-doc
+
+if dotfiles-linux-variant main; then
+    # Mint 21
+    sudo apt-get purge --auto-remove celluloid hexchat hexchat-common hypnotix \
+        pix rhythmbox samba-common samba-common-bin smbclient samba-libs \
+        thunderbird transmission-common transmission-gtk
+
+    sudo apt-get -y install apparmor-profiles apparmor-utils \
+        fonts-crosextra-caladea fonts-crosextra-carlito inotify-tools \
+        laptop-detect powertop sqlite3 ttf-ancient-fonts \
+        ttf-mscorefonts-installer ubuntu-restricted-extras xclip
+
+    sudo rm -f /etc/sudoers.d/0pwfeedback
+    fc-cache
+else
+    dotfiles-echo-red "Unknown Linux variant."
+    exit 1
+fi
+
+exit 0
