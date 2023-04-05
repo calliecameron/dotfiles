@@ -1,3 +1,5 @@
+# shellcheck shell=bash
+
 complainunset 'DOTFILES_VC_NAME' 'Version control name'
 complainunset 'DOTFILES_VC_EMAIL' 'Version control email'
 complainunset 'DOTFILES_BITBUCKET_USERNAME' 'Bitbucket username'
@@ -58,8 +60,8 @@ function repo-type() {
 
 function vc-alias-check() {
     case "$(repo-type)" in
-        'hg') setup-hg-aliases;;
-        *   ) setup-git-aliases;;
+    'hg') setup-hg-aliases ;;
+    *) setup-git-aliases ;;
     esac
 }
 
