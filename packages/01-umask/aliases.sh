@@ -1,5 +1,5 @@
 # shellcheck shell=sh
 
-if [ "$(umask)" != '077' ]; then
+if [ "$(umask)" != '077' ] && [ "$(umask)" != '0077' ]; then
     dotfiles-log-package-problem "Umask is incorrect (want 077, got $(umask)). 'dotfiles-package-install 02-system-umask' to fix."
 fi
