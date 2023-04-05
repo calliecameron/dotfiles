@@ -26,9 +26,9 @@ export DOTFILES_LOCAL_DIR="${HOME}/.dotfiles.d"
 mkdir -p "${DOTFILES_LOCAL_DIR}"
 
 export DOTFILES_PROCESSED_DIR="${DOTFILES_LOCAL_DIR}/processed"
-export DOTFILES_LOCAL_VARIABLES="${DOTFILES_LOCAL_DIR}/local-variables.sh"
-export DOTFILES_LOCAL_ALIASES="${DOTFILES_LOCAL_DIR}/local-aliases"
-export DOTFILES_LOCAL_EMACS="${DOTFILES_LOCAL_DIR}/local-emacs.el"
+export DOTFILES_LOCAL_VARIABLES="${HOME}/.dotfiles-variables.sh"
+export DOTFILES_LOCAL_ALIASES="${HOME}/.dotfiles-aliases"
+export DOTFILES_LOCAL_EMACS="${HOME}/.dotfiles-emacs.el"
 export DOTFILES_LOCAL_BIN="${DOTFILES_LOCAL_DIR}/local-bin"
 
 export DOTFILES_NEXT_LOGIN="${DOTFILES_LOCAL_DIR}/next-login.bash"

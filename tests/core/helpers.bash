@@ -120,7 +120,7 @@ function setup_common() {
     # foo in second root: shadowed
     init_package "${TEST_PACKAGE_ROOT_2}" 'foo'
 
-    TEST_LOCAL_ENV_FILE="${TMP_DIR}/.dotfiles.d/local-variables.sh"
+    TEST_LOCAL_ENV_FILE="${TMP_DIR}/.dotfiles-variables.sh"
     cat >"${TEST_LOCAL_ENV_FILE}" <<EOF
 if [ -n "\${ZSH_VERSION}" ]; then
     export TEST_LOCAL_ENV='zsh'
@@ -133,7 +133,7 @@ export TEST_PACKAGE_ROOTS="\${DOTFILES_PACKAGE_ROOTS}"
 export DOTFILES_PACKAGE_ROOTS='${TEST_PACKAGE_ROOT_1}:${TEST_PACKAGE_ROOT_2}:${TMP_DIR}/packages3'
 EOF
 
-    TEST_LOCAL_GENERIC_ALIASES_FILE="${TMP_DIR}/.dotfiles.d/local-aliases.sh"
+    TEST_LOCAL_GENERIC_ALIASES_FILE="${TMP_DIR}/.dotfiles-aliases.sh"
     cat >"${TEST_LOCAL_GENERIC_ALIASES_FILE}" <<EOF
 if [ -n "\${ZSH_VERSION}" ]; then
     export TEST_LOCAL_GENERIC_ALIASES='zsh'
@@ -142,7 +142,7 @@ else
 fi
 EOF
 
-    TEST_LOCAL_BASH_ALIASES_FILE="${TMP_DIR}/.dotfiles.d/local-aliases.bash"
+    TEST_LOCAL_BASH_ALIASES_FILE="${TMP_DIR}/.dotfiles-aliases.bash"
     cat >"${TEST_LOCAL_BASH_ALIASES_FILE}" <<EOF
 if [ -n "\${ZSH_VERSION}" ]; then
     export TEST_LOCAL_BASH_ALIASES='zsh'
@@ -151,7 +151,7 @@ else
 fi
 EOF
 
-    TEST_LOCAL_ZSH_ALIASES_FILE="${TMP_DIR}/.dotfiles.d/local-aliases.zsh"
+    TEST_LOCAL_ZSH_ALIASES_FILE="${TMP_DIR}/.dotfiles-aliases.zsh"
     cat >"${TEST_LOCAL_ZSH_ALIASES_FILE}" <<EOF
 if [ -n "\${ZSH_VERSION}" ]; then
     export TEST_LOCAL_ZSH_ALIASES='zsh'
@@ -161,7 +161,7 @@ else
 fi
 EOF
 
-    TEST_LOCAL_EMACS_FILE="${TMP_DIR}/.dotfiles.d/local-emacs.el"
+    TEST_LOCAL_EMACS_FILE="${TMP_DIR}/.dotfiles-emacs.el"
     cat >"${TEST_LOCAL_EMACS_FILE}" <<EOF
 (message "TEST_LOCAL_EMACS=emacs")
 EOF
