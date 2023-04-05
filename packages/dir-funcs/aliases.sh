@@ -30,7 +30,7 @@ function mv-cp-arg-parse() {
 
     if [ -z "${TARGET_DIR}" ] && [ -n "${2}" ]; then
         # Last arg is the target; just need to see if it is a dir or not
-        local LAST_ARG="${*: -1}"
+        local LAST_ARG=${*: -1}
         if [ -n "${HAS_DASH_BIG_T}" ]; then
             TARGET_DIR="$(readlink -f "$(dirname "$(readlink -f "${LAST_ARG}")")")"
         elif [ -d "${LAST_ARG}" ]; then
