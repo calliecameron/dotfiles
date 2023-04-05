@@ -1,13 +1,15 @@
 #!/bin/bash
 
+set -eu
+
 function usage() {
     echo "Usage: $(basename "${0}") files..."
     exit 1
 }
 
-test -z "${1}" && usage
+test -z "${1:-}" && usage
 
 TARGET="$(readlink -f "$(mktemp -d -p "${DOTFILES_RECYCLEBIN}" "$(date '+%Y_%m_%d_%H_%M_%S').XXXXXXXX")")"
-pwd >> "${TARGET}.info"
-echo 'rm' "${@}" >> "${TARGET}.info"
+pwd >>"${TARGET}.info"
+echo 'rm' "${@}" >>"${TARGET}.info"
 mv -t "${TARGET}" "${@}"
