@@ -8,21 +8,36 @@ function usage() {
 }
 
 test -z "${1:-}" && usage
-PACKAGE="${1}"
+NAME_OR_PATH="${1}"
 
-if [[ "${PACKAGE}" == *'/'* ]]; then
-    echo "${PACKAGE}"
+if [[ "${NAME_OR_PATH}" == *'/'* ]]; then
+    PACKAGE_ROOT="$(dirname "${NAME_OR_PATH}")"
+    PACKAGE_NAME="$(basename "${NAME_OR_PATH}")"
+    if ! dotfiles-package-root-valid "${PACKAGE_ROOT}" ||
+        ! dotfiles-package-name-valid "${PACKAGE_NAME}"; then
+        usage
+    fi
+    PACKAGE_ROOT="$(readlink -f "${PACKAGE_ROOT}")"
+    echo "${PACKAGE_ROOT}/${PACKAGE_NAME}"
     exit 0
 fi
 
+if ! dotfiles-package-name-valid "${NAME_OR_PATH}"; then
+    usage
+fi
+PACKAGE_NAME="${NAME_OR_PATH}"
+
 IFS=':'
-for package_root in ${DOTFILES_PACKAGE_ROOTS}; do
-    if [ -n "${package_root}" ] && [ -d "${package_root}" ]; then
-        PACKAGE_PATH="${package_root}/${PACKAGE}"
+for PACKAGE_ROOT in ${DOTFILES_PACKAGE_ROOTS}; do
+    if [ -n "${PACKAGE_ROOT}" ] &&
+        dotfiles-package-root-valid "${PACKAGE_ROOT}" &&
+        [ -d "${PACKAGE_ROOT}" ]; then
+        PACKAGE_PATH="${PACKAGE_ROOT}/${PACKAGE_NAME}"
         if [ -d "${PACKAGE_PATH}" ]; then
             echo "${PACKAGE_PATH}"
             exit 0
         fi
     fi
 done
+
 exit 1

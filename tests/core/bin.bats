@@ -937,13 +937,13 @@ assert_num_matching_lines() {
 }
 
 @test 'dotfiles-package-ignored invalid package' {
-    run_script "${BIN_DIR}/dotfiles-package-ignored" 'foo/bar'
+    run_script "PATH=${BIN_DIR}:${PATH}" "${BIN_DIR}/dotfiles-package-ignored" 'foo/bar'
     assert_failure
     assert_line --partial 'Usage:'
 }
 
 @test 'dotfiles-package-ignored no file' {
-    run_script "DOTFILES_PACKAGE_IGNORE_FILE=${TMP_DIR}/a" "${BIN_DIR}/dotfiles-package-ignored" 'foo'
+    run_script "PATH=${BIN_DIR}:${PATH}" "DOTFILES_PACKAGE_IGNORE_FILE=${TMP_DIR}/a" "${BIN_DIR}/dotfiles-package-ignored" 'foo'
     assert_failure
     refute_line --partial 'Usage:'
 }
@@ -951,7 +951,7 @@ assert_num_matching_lines() {
 @test 'dotfiles-package-ignored empty file' {
     local IGNORE="${TMP_DIR}/a"
     touch "${IGNORE}"
-    run_script "DOTFILES_PACKAGE_IGNORE_FILE=${IGNORE}" "${BIN_DIR}/dotfiles-package-ignored" 'foo'
+    run_script "PATH=${BIN_DIR}:${PATH}" "DOTFILES_PACKAGE_IGNORE_FILE=${IGNORE}" "${BIN_DIR}/dotfiles-package-ignored" 'foo'
     assert_failure
     refute_line --partial 'Usage:'
 }
@@ -959,7 +959,7 @@ assert_num_matching_lines() {
 @test 'dotfiles-package-ignored success' {
     local IGNORE="${TMP_DIR}/a"
     printf "foo\nbar\nbaz\n" >"${IGNORE}"
-    run_script "DOTFILES_PACKAGE_IGNORE_FILE=${IGNORE}" "${BIN_DIR}/dotfiles-package-ignored" 'foo'
+    run_script "PATH=${BIN_DIR}:${PATH}" "DOTFILES_PACKAGE_IGNORE_FILE=${IGNORE}" "${BIN_DIR}/dotfiles-package-ignored" 'foo'
     assert_success
     refute_line --partial 'Usage:'
 }
@@ -967,7 +967,7 @@ assert_num_matching_lines() {
 @test 'dotfiles-package-ignored failure' {
     local IGNORE="${TMP_DIR}/a"
     printf "foo\nbar\nbaz\n" >"${IGNORE}"
-    run_script "DOTFILES_PACKAGE_IGNORE_FILE=${IGNORE}" "${BIN_DIR}/dotfiles-package-ignored" 'quux'
+    run_script "PATH=${BIN_DIR}:${PATH}" "DOTFILES_PACKAGE_IGNORE_FILE=${IGNORE}" "${BIN_DIR}/dotfiles-package-ignored" 'quux'
     assert_failure
     refute_line --partial 'Usage:'
 }
@@ -1065,20 +1065,20 @@ assert_num_matching_lines() {
 }
 
 @test 'dotfiles-package-installed invalid package' {
-    run_script "${BIN_DIR}/dotfiles-package-installed" 'foo/bar'
+    run_script "PATH=${BIN_DIR}:${PATH}" "${BIN_DIR}/dotfiles-package-installed" 'foo/bar'
     assert_failure
     assert_line --partial 'Usage:'
 }
 
 @test 'dotfiles-package-installed success' {
     touch "${TMP_DIR}/foo.installed"
-    run_script "DOTFILES_PACKAGE_INSTALL_DIR=${TMP_DIR}" "${BIN_DIR}/dotfiles-package-installed" 'foo'
+    run_script "PATH=${BIN_DIR}:${PATH}" "DOTFILES_PACKAGE_INSTALL_DIR=${TMP_DIR}" "${BIN_DIR}/dotfiles-package-installed" 'foo'
     assert_success
     refute_line --partial 'Usage:'
 }
 
 @test 'dotfiles-package-installed failure' {
-    run_script "DOTFILES_PACKAGE_INSTALL_DIR=${TMP_DIR}" "${BIN_DIR}/dotfiles-package-installed" 'foo'
+    run_script "PATH=${BIN_DIR}:${PATH}" "DOTFILES_PACKAGE_INSTALL_DIR=${TMP_DIR}" "${BIN_DIR}/dotfiles-package-installed" 'foo'
     assert_failure
     refute_line --partial 'Usage:'
 }
@@ -1089,28 +1089,55 @@ assert_num_matching_lines() {
     assert_line --partial 'Usage:'
 }
 
-@test 'dotfiles-package-source-path found' {
+@test 'dotfiles-package-source-path name invalid' {
+    run_script "PATH=${BIN_DIR}:${PATH}" "DOTFILES_PACKAGE_ROOTS=:${TMP_DIR}/a::${TMP_DIR}/b::${TMP_DIR}/c" "${BIN_DIR}/dotfiles-package-source-path" 'foo bar'
+    assert_failure
+    assert_line --partial 'Usage:'
+}
+
+@test 'dotfiles-package-source-path name found' {
     mkdir -p "${TMP_DIR}/a"
     mkdir -p "${TMP_DIR}/b/foo"
-    run_script "DOTFILES_PACKAGE_ROOTS=:${TMP_DIR}/a::${TMP_DIR}/b:${TMP_DIR}/c" "${BIN_DIR}/dotfiles-package-source-path" 'foo'
+    run_script "PATH=${BIN_DIR}:${PATH}" "DOTFILES_PACKAGE_ROOTS=:${TMP_DIR}/a::${TMP_DIR}/b:${TMP_DIR}/c" "${BIN_DIR}/dotfiles-package-source-path" 'foo'
     assert_success
     assert_line "${TMP_DIR}/b/foo"
     refute_line --partial 'Usage:'
 }
 
-@test 'dotfiles-package-source-path not found' {
+@test 'dotfiles-package-source-path name not found' {
     mkdir -p "${TMP_DIR}/a"
     mkdir -p "${TMP_DIR}/b/foo"
-    run_script "DOTFILES_PACKAGE_ROOTS=:${TMP_DIR}/a::${TMP_DIR}/b::${TMP_DIR}/c" "${BIN_DIR}/dotfiles-package-source-path" 'bar'
+    run_script "PATH=${BIN_DIR}:${PATH}" "DOTFILES_PACKAGE_ROOTS=:${TMP_DIR}/a::${TMP_DIR}/b::${TMP_DIR}/c" "${BIN_DIR}/dotfiles-package-source-path" 'bar'
     assert_failure
     refute_output
     refute_line --partial 'Usage:'
 }
 
+@test 'dotfiles-package-source-path name skip invalid roots' {
+    mkdir -p "${TMP_DIR}/a"
+    mkdir -p "$(printf '%s/a\nb/foo' "${TMP_DIR}")"
+    run_script "PATH=${BIN_DIR}:${PATH}" "$(printf '%s' "DOTFILES_PACKAGE_ROOTS=:${TMP_DIR}/a::${TMP_DIR}/a\nb::${TMP_DIR}/c")" "${BIN_DIR}/dotfiles-package-source-path" 'foo'
+    assert_failure
+    refute_output
+    refute_line --partial 'Usage:'
+}
+
+@test 'dotfiles-package-source-path path invalid root' {
+    run_script "PATH=${BIN_DIR}:${PATH}" "${BIN_DIR}/dotfiles-package-source-path" 'foo/bar'
+    assert_failure
+    assert_line --partial 'Usage:'
+}
+
+@test 'dotfiles-package-source-path path invalid name' {
+    run_script "PATH=${BIN_DIR}:${PATH}" "${BIN_DIR}/dotfiles-package-source-path" '/foo/bar baz'
+    assert_failure
+    assert_line --partial 'Usage:'
+}
+
 @test 'dotfiles-package-source-path path' {
-    run_script "${BIN_DIR}/dotfiles-package-source-path" 'foo/bar'
+    run_script "PATH=${BIN_DIR}:${PATH}" "${BIN_DIR}/dotfiles-package-source-path" '/foo/bar'
     assert_success
-    assert_line "foo/bar"
+    assert_line "/foo/bar"
     refute_line --partial 'Usage:'
 }
 
@@ -1254,6 +1281,8 @@ assert_num_matching_lines() {
 
     mkdir -p "${TMP_DIR}/a/foo"
 
+    mkdir -p "${TMP_DIR}/a/foo bar"
+
     mkdir -p "${TMP_DIR}/a/bar"
     echo 'bar' >>"${IGNORE_FILE}"
 
@@ -1281,9 +1310,15 @@ assert_num_matching_lines() {
 
     mkdir -p "${TMP_DIR}/b/foo"
 
-    run_script "PATH=${BIN_DIR}:${PATH}" "DOTFILES_PACKAGE_INSTALL_DIR=${INSTALL_DIR}" "DOTFILES_PACKAGE_IGNORE_FILE=${IGNORE_FILE}" "DOTFILES_PACKAGE_ROOTS=${TMP_DIR}/a::${TMP_DIR}/b:${TMP_DIR}/c" "${BIN_DIR}/dotfiles-package-list"
+    mkdir -p "$(printf '%s/d\ne/other' "${TMP_DIR}")"
+
+    run_script "PATH=${BIN_DIR}:${PATH}" "DOTFILES_PACKAGE_INSTALL_DIR=${INSTALL_DIR}" "DOTFILES_PACKAGE_IGNORE_FILE=${IGNORE_FILE}" "$(printf 'DOTFILES_PACKAGE_ROOTS=%s/a::%s/b:%s/c:%s/d\ne' "${TMP_DIR}" "${TMP_DIR}" "${TMP_DIR}" "${TMP_DIR}")" "${BIN_DIR}/dotfiles-package-list"
     assert_success
-    assert_output "WARNING: duplicate package names found; only the first instance of each will be used: foo
+    assert_output "WARNING: invalid package roots found: ['${TMP_DIR}/d\\ne']
+
+WARNING: invalid package names found: ['foo bar']
+
+WARNING: duplicate package names found; only the first instance of each will be used: foo
 
 Active without installing
     foo

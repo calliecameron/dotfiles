@@ -1,22 +1,44 @@
 #!/usr/bin/env python3
 
-from typing import List, Set
+from typing import Dict, List, Set, Tuple
 import os
 import pathlib
 import subprocess
+from collections import defaultdict
+from dataclasses import dataclass
 
 
-def package_roots() -> List[pathlib.Path]:
-    return [pathlib.Path(r) for r in os.getenv("DOTFILES_PACKAGE_ROOTS", "").split(":") if r]
+def package_root_valid(root: str) -> bool:
+    return subprocess.run(["dotfiles-package-root-valid", root], check=False).returncode == 0
 
 
-def packages(package_root: pathlib.Path) -> List[pathlib.Path]:
+def package_name_valid(name: str) -> bool:
+    return subprocess.run(["dotfiles-package-name-valid", name], check=False).returncode == 0
+
+
+def package_roots() -> Tuple[List[pathlib.Path], Set[str]]:
     out = []
+    invalid = set()
+    for r in os.getenv("DOTFILES_PACKAGE_ROOTS", "").split(":"):
+        if r:
+            if package_root_valid(r):
+                out.append(pathlib.Path(r).resolve())
+            else:
+                invalid.add(r)
+    return out, invalid
+
+
+def packages_in_root(package_root: pathlib.Path) -> Tuple[List[pathlib.Path], Set[str]]:
+    out = []
+    invalid = set()
     if package_root.is_dir():
         for path in package_root.iterdir():
             if path.is_dir():
-                out.append(path)
-    return sorted(out)
+                if package_name_valid(path.name):
+                    out.append(path)
+                else:
+                    invalid.add(path.name)
+    return sorted(out), invalid
 
 
 def package_ignored(package: pathlib.Path) -> bool:
@@ -40,27 +62,38 @@ def package_can_install(package: pathlib.Path) -> bool:
     )
 
 
-def print_set(heading: str, s: Set[pathlib.Path]) -> None:
-    if s:
-        print(heading)
-        for name in sorted([package.name for package in s]):
-            print("    " + name)
-        print()
+@dataclass
+class Packages:
+    ignored: Set[pathlib.Path]
+    installed: Set[pathlib.Path]
+    can_install: Set[pathlib.Path]
+    cant_install: Set[pathlib.Path]
+    install_not_needed: Set[pathlib.Path]
+    duplicates: Dict[str, Set[pathlib.Path]]
+    invalid_roots: Set[str]
+    invalid_names: Set[str]
 
 
-def main() -> None:
+def status() -> Packages:
     seen = set()
-    duplicates = set()
+    duplicates = defaultdict(set)  # type: Dict[str, Set[pathlib.Path]]
     ignored = set()
     installed = set()
     can_install = set()
     cant_install = set()
     install_not_needed = set()
+    invalid_roots = set()
+    invalid_names = set()
 
-    for package_root in package_roots():
-        for package in packages(package_root):
+    roots, invalid = package_roots()
+    invalid_roots |= invalid
+
+    for root in roots:
+        packages, invalid = packages_in_root(root)
+        invalid_names |= invalid
+        for package in packages:
             if package.name in seen:
-                duplicates.add(package.name)
+                duplicates[package.name].add(package)
                 continue
 
             if package_ignored(package):
@@ -76,18 +109,47 @@ def main() -> None:
 
             seen.add(package.name)
 
-    if duplicates:
+    return Packages(
+        ignored,
+        installed,
+        can_install,
+        cant_install,
+        install_not_needed,
+        duplicates,
+        invalid_roots,
+        invalid_names,
+    )
+
+
+def print_set(heading: str, s: Set[pathlib.Path]) -> None:
+    if s:
+        print(heading)
+        for name in sorted([package.name for package in s]):
+            print("    " + name)
+        print()
+
+
+def main() -> None:
+    packages = status()
+
+    if packages.invalid_roots:
+        print("WARNING: invalid package roots found: " + str(sorted(packages.invalid_roots)) + "\n")
+
+    if packages.invalid_names:
+        print("WARNING: invalid package names found: " + str(sorted(packages.invalid_names)) + "\n")
+
+    if packages.duplicates:
         print(
             "WARNING: duplicate package names found; only the first instance of each will be used: "
-            + ", ".join(sorted(duplicates))
+            + ", ".join(sorted(packages.duplicates))
             + "\n"
         )
 
-    print_set("Active without installing", install_not_needed)
-    print_set("Installed", installed)
-    print_set("Available to install ('dotfiles-package-install' to install)", can_install)
-    print_set("Not available to install", cant_install)
-    print_set("Ignored ('dotfiles-package-unignore' to unignore)", ignored)
+    print_set("Active without installing", packages.install_not_needed)
+    print_set("Installed", packages.installed)
+    print_set("Available to install ('dotfiles-package-install' to install)", packages.can_install)
+    print_set("Not available to install", packages.cant_install)
+    print_set("Ignored ('dotfiles-package-unignore' to unignore)", packages.ignored)
 
 
 if __name__ == "__main__":

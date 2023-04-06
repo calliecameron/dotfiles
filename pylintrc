@@ -1,6 +1,7 @@
 [MESSAGES CONTROL]
 disable=invalid-name,
-        missing-docstring
+        missing-docstring,
+        too-many-instance-attributes
 
 enable=unused-argument
 
