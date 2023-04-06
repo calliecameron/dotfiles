@@ -858,6 +858,72 @@ assert_num_matching_lines() {
     (cd "${TMP_DIR}/bar" && assert [ "$(git branch --show-current)" = 'master' ])
 }
 
+@test 'dotfiles-package-root-valid usage' {
+    run_script "${BIN_DIR}/dotfiles-package-root-valid"
+    assert_failure
+    assert_line --partial 'Usage:'
+}
+
+@test 'dotfiles-package-root-valid good' {
+    run_script "${BIN_DIR}/dotfiles-package-root-valid" '/foo/bar'
+    assert_success
+    refute_line --partial 'Usage:'
+}
+
+@test 'dotfiles-package-root-valid bad relative' {
+    run_script "${BIN_DIR}/dotfiles-package-root-valid" 'foo/bar'
+    assert_failure
+    refute_line --partial 'Usage:'
+}
+
+@test 'dotfiles-package-root-valid bad colon' {
+    run_script "${BIN_DIR}/dotfiles-package-root-valid" '/foo:bar'
+    assert_failure
+    refute_line --partial 'Usage:'
+}
+
+@test 'dotfiles-package-root-valid bad newline' {
+    run_script "${BIN_DIR}/dotfiles-package-root-valid" "$(printf "/foo\nbar")"
+    assert_failure
+    refute_line --partial 'Usage:'
+}
+
+@test 'dotfiles-package-name-valid usage' {
+    run_script "${BIN_DIR}/dotfiles-package-name-valid"
+    assert_failure
+    assert_line --partial 'Usage:'
+}
+
+@test 'dotfiles-package-name-valid good' {
+    run_script "${BIN_DIR}/dotfiles-package-name-valid" 'foo'
+    assert_success
+    refute_line --partial 'Usage:'
+}
+
+@test 'dotfiles-package-name-valid bad slash' {
+    run_script "${BIN_DIR}/dotfiles-package-name-valid" 'foo/bar'
+    assert_failure
+    refute_line --partial 'Usage:'
+}
+
+@test 'dotfiles-package-name-valid bad space' {
+    run_script "${BIN_DIR}/dotfiles-package-name-valid" 'foo bar'
+    assert_failure
+    refute_line --partial 'Usage:'
+}
+
+@test 'dotfiles-package-name-valid bad colon' {
+    run_script "${BIN_DIR}/dotfiles-package-name-valid" 'foo:bar'
+    assert_failure
+    refute_line --partial 'Usage:'
+}
+
+@test 'dotfiles-package-name-valid bad newline' {
+    run_script "${BIN_DIR}/dotfiles-package-name-valid" "$(printf "foo\nbar")"
+    assert_failure
+    refute_line --partial 'Usage:'
+}
+
 @test 'dotfiles-package-ignored usage' {
     run_script "${BIN_DIR}/dotfiles-package-ignored"
     assert_failure
