@@ -16,7 +16,7 @@ def packages(package_root: pathlib.Path) -> List[pathlib.Path]:
         for path in package_root.iterdir():
             if path.is_dir():
                 out.append(path)
-    return out
+    return sorted(out)
 
 
 def package_ignored(package: pathlib.Path) -> bool:

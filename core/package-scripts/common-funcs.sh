@@ -21,7 +21,7 @@ packageloop() {
                 return 1
             fi
 
-            if ! command ls -1 "${PACKAGE_ROOT}" >"${TEMPFILE}"; then
+            if ! command ls -1 "${PACKAGE_ROOT}" | LC_ALL=C sort >"${TEMPFILE}"; then
                 dotfiles-log-package-problem "${MSG}, ${PACKAGE_ROOT}: failed to list packages."
                 command rm "${TEMPFILE}"
                 return 1
