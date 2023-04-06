@@ -1,3 +1,5 @@
 #!/bin/bash
 
+set -eu
+
 sudo -l | grep '(ALL : ALL) ALL' &>/dev/null

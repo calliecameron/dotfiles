@@ -1,7 +1,7 @@
 #!/bin/bash
 # Ensure command in the first argument (must be on the PATH) is symlinked in
-# ~/.bin (which always has the highest priority on the PATH) with the names
-# given as the remaining arguments.
+# DOTFILES_LOCAL_BIN (which always has the highest priority on the PATH) with
+# the names given as the remaining arguments.
 
 set -eu
 
