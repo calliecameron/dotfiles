@@ -1,0 +1,37 @@
+#!/bin/bash
+# Remember where the most recent cp or mv sent things, so we can follow them.
+
+set -eu
+
+TARGET_DIR=''
+NEXT_ARG_IS_TARGET=''
+HAS_DASH_BIG_T=''
+
+for arg in "${@}"; do
+    if [ -n "${NEXT_ARG_IS_TARGET}" ]; then
+        TARGET_DIR="$(readlink -f "${arg}")"
+        break
+    elif [ "${arg}" = '-t' ]; then
+        NEXT_ARG_IS_TARGET='t'
+    elif [ "${arg}" = '-T' ]; then
+        HAS_DASH_BIG_T='t'
+    fi
+done
+
+if [ -z "${TARGET_DIR}" ] && [ -n "${2:-}" ]; then
+    # Last arg is the target; just need to see if it is a dir or not
+    LAST_ARG=${*: -1}
+    if [ -n "${HAS_DASH_BIG_T}" ]; then
+        TARGET_DIR="$(dirname "$(readlink -f "${LAST_ARG}")")"
+    elif [ -d "${LAST_ARG}" ]; then
+        TARGET_DIR="$(readlink -f "${LAST_ARG}")"
+    else
+        TARGET_DIR="$(dirname "$(readlink -f "${LAST_ARG}")")"
+    fi
+fi
+
+if [ -n "${TARGET_DIR}" ]; then
+    echo "${TARGET_DIR}" >"${DOTFILES_MV_CP_FOLLOW}"
+fi
+
+exit 0

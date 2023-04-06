@@ -1,19 +1,13 @@
 #!/bin/bash
-# 'cdl' equivalent for nemo
 
-set -eu
+set -u
 
-LINENUM='1'
+TARGET_DIR="$(dotfiles-saved-path)"
+SHOW_EXIT=$?
 
-if [ ! -f "${DOTFILES_CDS_CDL}" ] ||
-    [ "${LINENUM}" -gt "$(wc -l <"${DOTFILES_CDS_CDL}")" ]; then
+if [ "${SHOW_EXIT}" != '0' ]; then
     zenity --warning --text='No path saved.'
-else
-    RESULT="$(sed -n "${LINENUM}p" "${DOTFILES_CDS_CDL}")"
-
-    if [ -z "${RESULT}" ]; then
-        zenity --warning --text='No path saved.'
-    else
-        xdg-open "${RESULT}"
-    fi
+    exit 0
 fi
+
+xdg-open "$(cat "${TARGET_DIR}")"

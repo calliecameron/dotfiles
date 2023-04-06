@@ -1,4 +1,4 @@
 # shellcheck shell=sh
 
-export DOTFILES_CDS_CDL="${DOTFILES_LOCAL_DIR}/cds-cdl"
-export DOTFILES_FOLLOW="${DOTFILES_LOCAL_DIR}/follow"
+export DOTFILES_SAVED_PATHS="${DOTFILES_LOCAL_DIR}/saved-paths"
+export DOTFILES_MV_CP_FOLLOW="${DOTFILES_LOCAL_DIR}/mv-cp-follow"

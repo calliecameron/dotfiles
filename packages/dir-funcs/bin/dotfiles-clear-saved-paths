@@ -1,0 +1,9 @@
+#!/bin/bash
+
+set -eu
+
+if [ -d "${DOTFILES_SAVED_PATHS}" ]; then
+    rm -r "${DOTFILES_SAVED_PATHS}"
+fi
+
+exit 0

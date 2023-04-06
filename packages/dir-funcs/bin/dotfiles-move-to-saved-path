@@ -1,0 +1,24 @@
+#!/bin/bash
+
+set -u
+
+function usage() {
+    echo "Usage: $(basename "${0}") slot files..."
+    exit 1
+}
+
+test -z "${1:-}" && usage
+test -z "${2:-}" && usage
+
+SLOT="${1}"
+[[ "${SLOT}" == *'/'* ]] && usage
+
+TARGET_DIR="$(dotfiles-saved-path "${SLOT}")"
+SHOW_EXIT=$?
+
+if [ "${SHOW_EXIT}" != '0' ]; then
+    echo 'No saved path.'
+    exit "${SHOW_EXIT}"
+fi
+
+mv -i -t "${TARGET_DIR}" "${@:2}"

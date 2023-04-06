@@ -1,0 +1,18 @@
+#!/bin/bash
+
+set -eu
+
+function usage() {
+    echo "Usage: $(basename "${0}") [slot=0]"
+    exit 1
+}
+
+SLOT='0'
+if [ -n "${1:-}" ]; then
+    SLOT="${1}"
+fi
+
+[[ "${SLOT}" == *'/'* ]] && usage
+
+mkdir -p "${DOTFILES_SAVED_PATHS}"
+pwd >"${DOTFILES_SAVED_PATHS}/${SLOT}"

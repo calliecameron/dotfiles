@@ -1,0 +1,6 @@
+#!/bin/bash
+
+set -eu
+
+dotfiles-mv-cp-save-target "${@}"
+cp "${@}"
