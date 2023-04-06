@@ -2,4 +2,5 @@
 
 set -eu
 
-dotfiles-known-linux-variant && [ -e '/bin/zsh' ]
+dotfiles-known-linux-variant
+[ -e '/bin/zsh' ]
