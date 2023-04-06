@@ -84,12 +84,20 @@ fi
 
 appendpackageroot() {
     # shellcheck disable=SC2317
-    export DOTFILES_PACKAGE_ROOTS="${DOTFILES_PACKAGE_ROOTS}:${1}"
+    if dotfiles-package-root-valid "${1}"; then
+        export DOTFILES_PACKAGE_ROOTS="${DOTFILES_PACKAGE_ROOTS}:${1}"
+    else
+        dotfiles-log-package-problem "Invalid package root: ${1}"
+    fi
 }
 
 prependpackageroot() {
     # shellcheck disable=SC2317
-    export DOTFILES_PACKAGE_ROOTS="${1}:${DOTFILES_PACKAGE_ROOTS}"
+    if dotfiles-package-root-valid "${1}"; then
+        export DOTFILES_PACKAGE_ROOTS="${1}:${DOTFILES_PACKAGE_ROOTS}"
+    else
+        dotfiles-log-package-problem "Invalid package root: ${1}"
+    fi
 }
 
 # Use the ~/.dotfiles-variables.sh file for stuff that should be visible to GUI

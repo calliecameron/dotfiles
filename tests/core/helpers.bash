@@ -35,15 +35,19 @@ EOF
 function init_package() {
     local PACKAGE_ROOT="${1}"
     local PACKAGE_NAME="${2}"
+    local VAR_PACKAGE_NAME="${PACKAGE_NAME}"
+    if [ -n "${3}" ]; then
+        VAR_PACKAGE_NAME="${3}"
+    fi
     local PACKAGE_SOURCE_DIR="${PACKAGE_ROOT}/${PACKAGE_NAME}"
 
     mkdir -p "${PACKAGE_SOURCE_DIR}"
 
-    init_shell_load_file "${PACKAGE_NAME}" 'ENV' >"${PACKAGE_SOURCE_DIR}/env.sh"
-    init_shell_load_file "${PACKAGE_NAME}" 'GENERIC_ALIASES' >"${PACKAGE_SOURCE_DIR}/aliases.sh"
-    init_shell_load_file "${PACKAGE_NAME}" 'BASH_ALIASES' >"${PACKAGE_SOURCE_DIR}/aliases.bash"
-    init_shell_load_file "${PACKAGE_NAME}" 'ZSH_ALIASES' >"${PACKAGE_SOURCE_DIR}/aliases.zsh"
-    init_emacs_load_file "${PACKAGE_NAME}" >"${PACKAGE_SOURCE_DIR}/emacs.el"
+    init_shell_load_file "${VAR_PACKAGE_NAME}" 'ENV' >"${PACKAGE_SOURCE_DIR}/env.sh"
+    init_shell_load_file "${VAR_PACKAGE_NAME}" 'GENERIC_ALIASES' >"${PACKAGE_SOURCE_DIR}/aliases.sh"
+    init_shell_load_file "${VAR_PACKAGE_NAME}" 'BASH_ALIASES' >"${PACKAGE_SOURCE_DIR}/aliases.bash"
+    init_shell_load_file "${VAR_PACKAGE_NAME}" 'ZSH_ALIASES' >"${PACKAGE_SOURCE_DIR}/aliases.zsh"
+    init_emacs_load_file "${VAR_PACKAGE_NAME}" >"${PACKAGE_SOURCE_DIR}/emacs.el"
 }
 
 function setup_common() {
@@ -120,6 +124,12 @@ function setup_common() {
     # foo in second root: shadowed
     init_package "${TEST_PACKAGE_ROOT_2}" 'foo'
 
+    # other in invalid root: ignored
+    init_package "$(printf "%s/packages\nbad" "${TMP_DIR}")" 'other'
+
+    # 'foo bar': ignored
+    init_package "${TEST_PACKAGE_ROOT_1}" 'foo bar' 'foo_bar'
+
     TEST_LOCAL_ENV_FILE="${TMP_DIR}/.dotfiles-variables.sh"
     cat >"${TEST_LOCAL_ENV_FILE}" <<EOF
 if [ -n "\${ZSH_VERSION}" ]; then
@@ -130,7 +140,7 @@ fi
 appendpackageroot /foo
 prependpackageroot /bar
 export TEST_PACKAGE_ROOTS="\${DOTFILES_PACKAGE_ROOTS}"
-export DOTFILES_PACKAGE_ROOTS='${TEST_PACKAGE_ROOT_1}:${TEST_PACKAGE_ROOT_2}:${TMP_DIR}/packages3'
+export DOTFILES_PACKAGE_ROOTS='${TEST_PACKAGE_ROOT_1}:${TEST_PACKAGE_ROOT_2}:${TMP_DIR}/packages3:$(printf '%s/packages\nbad' "${TMP_DIR}")'
 EOF
 
     TEST_LOCAL_GENERIC_ALIASES_FILE="${TMP_DIR}/.dotfiles-aliases.sh"
@@ -417,6 +427,8 @@ function assert_nothing_ran() {
     assert_not_package_env_run 'blah'
     assert_not_package_env_run 'yay'
     assert_not_package_env_run 'stuff'
+    assert_not_package_env_run 'other'
+    assert_not_package_env_run 'foo_bar'
 
     assert_not_package_generic_aliases_run 'foo'
     assert_not_package_generic_aliases_run 'bar'
@@ -425,6 +437,8 @@ function assert_nothing_ran() {
     assert_not_package_generic_aliases_run 'blah'
     assert_not_package_generic_aliases_run 'yay'
     assert_not_package_generic_aliases_run 'stuff'
+    assert_not_package_generic_aliases_run 'other'
+    assert_not_package_generic_aliases_run 'foo_bar'
 
     assert_not_package_bash_aliases_run 'foo'
     assert_not_package_bash_aliases_run 'bar'
@@ -433,6 +447,8 @@ function assert_nothing_ran() {
     assert_not_package_bash_aliases_run 'blah'
     assert_not_package_bash_aliases_run 'yay'
     assert_not_package_bash_aliases_run 'stuff'
+    assert_not_package_bash_aliases_run 'other'
+    assert_not_package_bash_aliases_run 'foo_bar'
 
     assert_not_package_zsh_aliases_run 'foo'
     assert_not_package_zsh_aliases_run 'bar'
@@ -441,6 +457,8 @@ function assert_nothing_ran() {
     assert_not_package_zsh_aliases_run 'blah'
     assert_not_package_zsh_aliases_run 'yay'
     assert_not_package_zsh_aliases_run 'stuff'
+    assert_not_package_zsh_aliases_run 'other'
+    assert_not_package_zsh_aliases_run 'foo_bar'
 
     assert_not_package_emacs_run 'foo'
     assert_not_package_emacs_run 'bar'
@@ -449,6 +467,8 @@ function assert_nothing_ran() {
     assert_not_package_emacs_run 'blah'
     assert_not_package_emacs_run 'yay'
     assert_not_package_emacs_run 'stuff'
+    assert_not_package_emacs_run 'other'
+    assert_not_package_emacs_run 'foo_bar'
 
     assert_not_local_env_run
     assert_not_local_generic_aliases_run

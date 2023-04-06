@@ -12,7 +12,9 @@ packageloop() {
     test ! -z "${ZSH_VERSION:-}" && setopt sh_word_split
 
     for PACKAGE_ROOT in ${DOTFILES_PACKAGE_ROOTS}; do
-        if [ -n "${PACKAGE_ROOT}" ] && [ -d "${PACKAGE_ROOT}" ]; then
+        if [ -n "${PACKAGE_ROOT}" ] && dotfiles-package-root-valid "${PACKAGE_ROOT}" &&
+            [ -d "${PACKAGE_ROOT}" ]; then
+            PACKAGE_ROOT="$(readlink -f "${PACKAGE_ROOT}")"
             IFS="${ORIGINAL_IFS}"
             test ! -z "${ZSH_VERSION:-}" && unsetopt sh_word_split
 
@@ -28,8 +30,10 @@ packageloop() {
             fi
 
             while read -r PACKAGE_NAME <&3; do
-                if ! "${FUNC}" "${PACKAGE_ROOT}" "${PACKAGE_NAME}"; then
-                    dotfiles-log-package-problem "${MSG}, ${PACKAGE_ROOT}, ${PACKAGE_NAME}: call failed."
+                if dotfiles-package-name-valid "${PACKAGE_NAME}"; then
+                    if ! "${FUNC}" "${PACKAGE_ROOT}" "${PACKAGE_NAME}"; then
+                        dotfiles-log-package-problem "${MSG}, ${PACKAGE_ROOT}, ${PACKAGE_NAME}: call failed."
+                    fi
                 fi
             done 3<"${TEMPFILE}"
 

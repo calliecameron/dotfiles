@@ -30,6 +30,8 @@ run_emacs() {
     assert_not_package_emacs_run 'blah'
     assert_not_package_emacs_run 'yay'
     assert_not_package_emacs_run 'stuff'
+    assert_not_package_emacs_run 'other'
+    assert_not_package_emacs_run 'foo_bar'
 
     assert_local_emacs_run
     assert_emacs_load_path

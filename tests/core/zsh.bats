@@ -22,6 +22,8 @@ function assert_ran() {
     assert_not_package_env_run 'blah'
     assert_not_package_env_run 'yay'
     assert_not_package_env_run 'stuff'
+    assert_not_package_env_run 'other'
+    assert_not_package_env_run 'foo_bar'
 
     assert_package_generic_aliases_run_by "${TEST_PACKAGE_ROOT_1}" 'foo' 'zsh'
     assert_not_package_generic_aliases_run 'bar'
@@ -30,6 +32,8 @@ function assert_ran() {
     assert_not_package_generic_aliases_run 'blah'
     assert_not_package_generic_aliases_run 'yay'
     assert_not_package_generic_aliases_run 'stuff'
+    assert_not_package_generic_aliases_run 'other'
+    assert_not_package_generic_aliases_run 'foo_bar'
 
     assert_not_package_bash_aliases_run 'foo'
     assert_not_package_bash_aliases_run 'bar'
@@ -38,6 +42,8 @@ function assert_ran() {
     assert_not_package_bash_aliases_run 'blah'
     assert_not_package_bash_aliases_run 'yay'
     assert_not_package_bash_aliases_run 'stuff'
+    assert_not_package_bash_aliases_run 'other'
+    assert_not_package_bash_aliases_run 'foo_bar'
 
     assert_package_zsh_aliases_run_by "${TEST_PACKAGE_ROOT_1}" 'foo' 'zsh'
     assert_not_package_zsh_aliases_run 'bar'
@@ -46,6 +52,8 @@ function assert_ran() {
     assert_not_package_zsh_aliases_run 'blah'
     assert_not_package_zsh_aliases_run 'yay'
     assert_not_package_zsh_aliases_run 'stuff'
+    assert_not_package_zsh_aliases_run 'other'
+    assert_not_package_zsh_aliases_run 'foo_bar'
 
     assert_not_package_emacs_run 'foo'
     assert_not_package_emacs_run 'bar'
@@ -54,6 +62,8 @@ function assert_ran() {
     assert_not_package_emacs_run 'blah'
     assert_not_package_emacs_run 'yay'
     assert_not_package_emacs_run 'stuff'
+    assert_not_package_emacs_run 'other'
+    assert_not_package_emacs_run 'foo_bar'
 
     assert_local_env_run_by "${1}"
     assert_local_generic_aliases_run_by 'zsh'
@@ -77,6 +87,8 @@ function assert_ran_env_only() {
     assert_not_package_env_run 'blah'
     assert_not_package_env_run 'yay'
     assert_not_package_env_run 'stuff'
+    assert_not_package_env_run 'other'
+    assert_not_package_env_run 'foo_bar'
 
     assert_not_package_generic_aliases_run 'foo'
     assert_not_package_generic_aliases_run 'bar'
@@ -85,6 +97,8 @@ function assert_ran_env_only() {
     assert_not_package_generic_aliases_run 'blah'
     assert_not_package_generic_aliases_run 'yay'
     assert_not_package_generic_aliases_run 'stuff'
+    assert_not_package_generic_aliases_run 'other'
+    assert_not_package_generic_aliases_run 'foo_bar'
 
     assert_not_package_bash_aliases_run 'foo'
     assert_not_package_bash_aliases_run 'bar'
@@ -93,6 +107,8 @@ function assert_ran_env_only() {
     assert_not_package_bash_aliases_run 'blah'
     assert_not_package_bash_aliases_run 'yay'
     assert_not_package_bash_aliases_run 'stuff'
+    assert_not_package_bash_aliases_run 'other'
+    assert_not_package_bash_aliases_run 'foo_bar'
 
     assert_not_package_zsh_aliases_run 'foo'
     assert_not_package_zsh_aliases_run 'bar'
@@ -101,6 +117,8 @@ function assert_ran_env_only() {
     assert_not_package_zsh_aliases_run 'blah'
     assert_not_package_zsh_aliases_run 'yay'
     assert_not_package_zsh_aliases_run 'stuff'
+    assert_not_package_zsh_aliases_run 'other'
+    assert_not_package_zsh_aliases_run 'foo_bar'
 
     assert_not_package_emacs_run 'foo'
     assert_not_package_emacs_run 'bar'
@@ -109,6 +127,8 @@ function assert_ran_env_only() {
     assert_not_package_emacs_run 'blah'
     assert_not_package_emacs_run 'yay'
     assert_not_package_emacs_run 'stuff'
+    assert_not_package_emacs_run 'other'
+    assert_not_package_emacs_run 'foo_bar'
 
     assert_local_env_run_by "${1}"
     assert_not_local_generic_aliases_run
