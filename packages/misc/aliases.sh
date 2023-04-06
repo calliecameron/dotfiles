@@ -40,6 +40,6 @@ alias m='make'
 alias cbc='xclip -i -selection clipboard'
 alias cbp='xclip -o -selection clipboard'
 
-if command -v notify-send; then
+if command -v notify-send &>/dev/null; then
     alias alert='notify-send --urgency=low -i "$([ $? = 0 ] && echo terminal || echo error)" "$(history|tail -n1|sed -e '\''s/^\s*[0-9]\+\s*//;s/[;&|]\s*alert$//'\'')"'
 fi
