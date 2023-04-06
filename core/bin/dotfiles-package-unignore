@@ -11,6 +11,9 @@ test -z "${1:-}" && usage
 
 while [ -n "${1:-}" ]; do
     PACKAGE="${1}"
+    if [[ "${PACKAGE}" == *'/'* ]]; then
+        usage
+    fi
     if dotfiles-package-ignored "${PACKAGE}"; then
         sed -i "/^${PACKAGE}\$/d" "${DOTFILES_PACKAGE_IGNORE_FILE}"
     fi

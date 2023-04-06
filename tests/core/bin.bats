@@ -728,6 +728,12 @@ assert_num_matching_lines() {
     assert_line --partial 'Usage:'
 }
 
+@test 'dotfiles-package-ignored invalid package' {
+    run_script "${BIN_DIR}/dotfiles-package-ignored" 'foo/bar'
+    assert_failure
+    assert_line --partial 'Usage:'
+}
+
 @test 'dotfiles-package-ignored no file' {
     run_script "DOTFILES_PACKAGE_IGNORE_FILE=${TMP_DIR}/a" "${BIN_DIR}/dotfiles-package-ignored" 'foo'
     assert_failure
@@ -760,6 +766,12 @@ assert_num_matching_lines() {
 
 @test 'dotfiles-package-ignore usage' {
     run_script "PATH=${BIN_DIR}:${PATH}" "${BIN_DIR}/dotfiles-package-ignore"
+    assert_failure
+    assert_line --partial 'Usage:'
+}
+
+@test 'dotfiles-package-ignore invalid package' {
+    run_script "PATH=${BIN_DIR}:${PATH}" "${BIN_DIR}/dotfiles-package-ignore" 'foo/bar'
     assert_failure
     assert_line --partial 'Usage:'
 }
@@ -804,6 +816,12 @@ assert_num_matching_lines() {
     assert_line --partial 'Usage:'
 }
 
+@test 'dotfiles-package-unignore invalid package' {
+    run_script "PATH=${BIN_DIR}:${PATH}" "${BIN_DIR}/dotfiles-package-unignore" 'foo/bar'
+    assert_failure
+    assert_line --partial 'Usage:'
+}
+
 @test 'dotfiles-package-unignore no file' {
     local IGNORE_FILE="${TMP_DIR}/a"
     run_script "PATH=${BIN_DIR}:${PATH}" "DOTFILES_PACKAGE_IGNORE_FILE=${IGNORE_FILE}" "${BIN_DIR}/dotfiles-package-unignore" 'foo' 'bar'
@@ -834,6 +852,12 @@ assert_num_matching_lines() {
 
 @test 'dotfiles-package-installed usage' {
     run_script "${BIN_DIR}/dotfiles-package-installed"
+    assert_failure
+    assert_line --partial 'Usage:'
+}
+
+@test 'dotfiles-package-installed invalid package' {
+    run_script "${BIN_DIR}/dotfiles-package-installed" 'foo/bar'
     assert_failure
     assert_line --partial 'Usage:'
 }
