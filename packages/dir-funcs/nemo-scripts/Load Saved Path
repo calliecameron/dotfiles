@@ -10,4 +10,4 @@ if [ "${SHOW_EXIT}" != '0' ]; then
     exit 0
 fi
 
-xdg-open "$(cat "${TARGET_DIR}")"
+xdg-open "${TARGET_DIR}"
