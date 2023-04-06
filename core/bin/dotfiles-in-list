@@ -12,6 +12,9 @@ test -z "${2:-}" && usage
 
 LIST="${1}"
 ITEM="${2}"
+
+[[ "${ITEM}" == *':'* ]] && usage
+
 IFS=':'
 
 for i in $LIST; do

@@ -324,6 +324,12 @@ assert_num_matching_lines() {
     assert_line --partial 'Usage:'
 }
 
+@test 'dotfiles-in-list colon in item' {
+    run_script "${BIN_DIR}/dotfiles-in-list" 'foo' 'foo:'
+    assert_failure
+    assert_line --partial 'Usage:'
+}
+
 @test 'dotfiles-in-list empty list' {
     run_script "${BIN_DIR}/dotfiles-in-list" '' 'foo'
     assert_failure
