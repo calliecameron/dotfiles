@@ -1,0 +1,8 @@
+#!/bin/bash
+
+set -eu
+
+dotfiles-linux-variant main
+dotfiles-can-sudo
+command -v laptop-detect &>/dev/null
+laptop-detect
