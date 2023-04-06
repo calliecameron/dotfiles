@@ -1757,7 +1757,7 @@ EOF
     assert [ -d "${TMP_DIR}/private" ]
     assert [ -f "${TMP_DIR}/private/a" ]
 
-    assert_line 'Installed private repo'
+    assert_line 'Cloned or updated private repo'
     assert_line 'Reinstalled package foo'
     refute_line 'Reinstalled package bar'
     assert_line 'Reinstalled package baz'
@@ -1818,7 +1818,7 @@ EOF
     assert [ -d "${TMP_DIR}/private" ]
     assert [ -f "${TMP_DIR}/private/a" ]
 
-    assert_line 'Updated private repo'
+    assert_line 'Cloned or updated private repo'
     refute_line 'Reinstalled package foo'
     assert_line 'Reinstalled package bar'
     assert_num_matching_lines 'Log out and log in again' '1'

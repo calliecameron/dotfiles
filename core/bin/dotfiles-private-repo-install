@@ -2,48 +2,22 @@
 
 set -eu
 
-function fail() {
-    dotfiles-echo-red "${@}"
-    exit 1
-}
-
 dotfiles-package-lock
 trap dotfiles-package-unlock EXIT
 
-if [ -d "${DOTFILES_PRIVATE_DIR}" ]; then
-    echo 'Updating private repo...'
-
-    if ! dotfiles-repo-is-clean "${DOTFILES_PRIVATE_DIR}"; then
-        fail 'Private repo has uncommitted changes; not updating it.'
-    fi
-
-    cd "${DOTFILES_PRIVATE_DIR}"
-    if ! git pull; then
-        fail 'Failed to update private repo.'
-    fi
-
-    dotfiles-logout-needed-set
-
-    echo 'Updated private repo'
-elif [ -n "${DOTFILES_PRIVATE_REPO}" ]; then
-    echo 'Installing private repo...'
-
-    if ! git clone "${DOTFILES_PRIVATE_REPO}" "${DOTFILES_PRIVATE_DIR}"; then
-        fail 'Could not clone private repo.'
-    fi
-
+if [ -n "${DOTFILES_PRIVATE_REPO}" ]; then
+    BRANCH='master'
     if [ -n "${DOTFILES_PRIVATE_BRANCH}" ]; then
-        cd "${DOTFILES_PRIVATE_DIR}"
-        if ! git checkout "${DOTFILES_PRIVATE_BRANCH}"; then
-            fail 'Could not check out private branch.'
-        fi
+        BRANCH="${DOTFILES_PRIVATE_BRANCH}"
     fi
-
+    echo 'Cloning or updating private repo...'
+    if ! dotfiles-clone-or-update-repo "${DOTFILES_PRIVATE_REPO}" "${DOTFILES_PRIVATE_DIR}" "${BRANCH}"; then
+        dotfiles-echo-red 'Failed to clone or update private repo.'
+        exit 1
+    fi
+    echo 'Cloned or updated private repo'
     dotfiles-logout-needed-set
-
-    echo 'Installed private repo'
+    dotfiles-logout-needed-check
 fi
-
-dotfiles-logout-needed-check
 
 exit 0
