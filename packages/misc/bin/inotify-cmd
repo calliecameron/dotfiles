@@ -1,14 +1,16 @@
 #!/bin/bash
 # Run a command every time a file is modified
 
+set -eu
+
 function usage() {
     echo "Usage: $(basename "${0}") file cmd [args...]"
     exit 1
 }
 
-test -z "${1}" && usage
+test -z "${1:-}" && usage
 test ! -f "${1}" && usage
-test -z "${2}" && usage
+test -z "${2:-}" && usage
 
 FILE="${1}"
 CMD="${2}"

@@ -1,11 +1,13 @@
 #!/bin/bash
 # Print a column of numbers
 
+set -eu
+
 function usage() {
     echo "Usage: $(basename "${0}") file"
     exit 1
 }
 
-test -z "${1}" && usage
+test -z "${1:-}" && usage
 
 awk "{print \$${1}}"

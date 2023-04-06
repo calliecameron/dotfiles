@@ -1,12 +1,14 @@
 #!/bin/bash
 # Prepend a 'z' to the given filenames
 
+set -u
+
 function usage() {
     echo "Usage: $(basename "${0}") files..."
     exit 1
 }
 
-test -z "${1}" && usage
+test -z "${1:-}" && usage
 
 function do-mvz() {
     local BASE DIR

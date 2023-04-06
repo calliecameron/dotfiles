@@ -1,11 +1,13 @@
 #!/bin/bash
-# Convert a hex number to decimal
+# Convert a decimal number to hex
+
+set -eu
 
 function usage() {
     echo "Usage: $(basename "${0}") number"
     exit 1
 }
 
-test -z "${1}" && usage
+test -z "${1:-}" && usage
 
-printf "%d\n" "0x${1}"
+printf "%x\n" "${1}"

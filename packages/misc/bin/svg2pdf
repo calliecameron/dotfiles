@@ -1,24 +1,21 @@
 #!/bin/bash
 
+set -eu
+
 function usage() {
     echo "Usage: $(basename "${0}") infile [outfile]"
     exit 1
 }
 
-test -z "${1}" && usage
+test -z "${1:-}" && usage
 INFILE="$(readlink -f "${1}")"
 
-if [ -n "${2}" ]; then
+if [ -n "${2:-}" ]; then
     OUTFILE="${2}"
 else
-    BASE="$(basename "${INFILE}" '.dia')"
+    BASE="$(basename "${INFILE}" '.svg')"
     DIRNAME="$(dirname "${INFILE}")"
     OUTFILE="${DIRNAME}/${BASE}.pdf"
 fi
 
-TMPFILE="$(mktemp)"
-dia -e "${TMPFILE}" -t eps "${INFILE}"
-
-ps2pdf -dEPSCrop "${TMPFILE}" "${OUTFILE}"
-
-rm "${TMPFILE}"
+inkscape --export-area-drawing "--export-pdf=${OUTFILE}" "${INFILE}"

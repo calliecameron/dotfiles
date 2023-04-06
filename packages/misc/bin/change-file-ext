@@ -1,0 +1,17 @@
+#!/bin/bash
+# Change all files in the current directory with the first extension to have the
+# second.
+
+set -u
+
+function usage() {
+    echo "Usage: $(basename "${0}") source_ext target_ext"
+    exit 1
+}
+
+test -z "${1:-}" && usage
+test -z "${2:-}" && usage
+
+for f in *."${1}"; do
+    mv "${f}" "$(basename "${f}" ".${1}").${2}"
+done

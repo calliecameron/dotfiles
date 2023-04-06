@@ -1,0 +1,47 @@
+#!/usr/bin/env python3
+# Move each file in a list to the corresponding file in another list
+
+import pathlib
+import shutil
+import sys
+
+
+def usage() -> None:
+    print("Usage: mvlists src_list_file dest_list_file")
+    sys.exit(1)
+
+
+def main() -> None:
+    if len(sys.argv) < 3:
+        usage()
+
+    src_file = pathlib.Path(sys.argv[1])
+    dest_file = pathlib.Path(sys.argv[2])
+
+    if not src_file.is_file() or not dest_file.is_file():
+        usage()
+
+    src = []
+    with src_file.open(encoding="utf-8") as f:
+        for line in f:
+            src.append(line.strip())
+
+    dest = []
+    with dest_file.open(encoding="utf-8") as f:
+        for line in f:
+            dest.append(line.strip())
+
+    if len(src) != len(dest):
+        print("List lengths differ.")
+        sys.exit(1)
+
+    for s, d in zip(src, dest):
+        if not s or not d:
+            print(f"Found empty line, skipping: src '{s}', dest '{d}")
+            continue
+        if pathlib.Path(s).exists():
+            shutil.move(s, d)
+
+
+if __name__ == "__main__":
+    main()

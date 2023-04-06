@@ -1,0 +1,57 @@
+#!/usr/bin/env python3
+# List the number and total size of each type of file in a directory tree
+
+from typing import Callable, Dict, List, Tuple  # noqa=F401
+import os
+import sys
+from collections import defaultdict
+
+
+def pretty_size(num: float) -> str:
+    for unit in ("B", "KiB", "MiB", "GiB", "TiB"):
+        if num < 1024.0:
+            return "%3.1f %s" % (num, unit)
+        num /= 1024.0
+    return "%3.1f %s" % (num, unit)
+
+
+def main() -> None:
+    top = "."
+
+    if len(sys.argv) > 1:
+        top = sys.argv[1]
+
+    if not os.path.isdir(top):
+        print(f"'{top}' is not a directory")
+        sys.exit(1)
+
+    special_cases = [
+        (lambda f: f.lower() == "makefile", "Makefile")
+    ]  # type: List[Tuple[Callable[[str], bool], str]]
+    out = defaultdict(lambda: (0, 0))  # type: Dict[str, Tuple[int, int]]
+
+    def add_file(ext: str, size: int) -> None:
+        count, total = out[ext]
+        out[ext] = (count + 1, total + size)
+
+    def get_ext(f: str) -> str:
+        for pred, ext in special_cases:
+            if pred(f):
+                return ext
+        if "." not in f:
+            return ""
+        return os.path.splitext(f)[1][1:]
+
+    for path, _, files in os.walk(top):
+        for f in files:
+            add_file(get_ext(f), os.path.getsize(os.path.join(path, f)))
+
+    for key in sorted(out):
+        count, total = out[key]
+        if not key:
+            key = "No extension"
+        print(f"{key}: {count} file(s), {pretty_size(total)}")
+
+
+if __name__ == "__main__":
+    main()

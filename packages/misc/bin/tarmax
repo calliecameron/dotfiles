@@ -1,15 +1,17 @@
 #!/bin/bash
 # Tar with maximum compression
 
+set -eu
+
 function usage() {
-    echo "Usage $(basename "${0}") infile [outfile]"
+    echo "Usage: $(basename "${0}") infile [outfile]"
     exit 1
 }
 
-test -z "${1}" && usage
+test -z "${1:-}" && usage
 INFILE="${1}"
 
-if [ -n "${2}" ]; then
+if [ -n "${2:-}" ]; then
     OUTFILE="${2}"
 else
     OUTFILE="${INFILE}.tar.xz"

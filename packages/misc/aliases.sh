@@ -1,3 +1,5 @@
+# shellcheck shell=bash
+
 # Make less more friendly for non-text input files, if lesspipe exists
 test -x /usr/bin/lesspipe && eval "$(SHELL=/bin/sh lesspipe)"
 
@@ -38,6 +40,6 @@ alias m='make'
 alias cbc='xclip -i -selection clipboard'
 alias cbp='xclip -o -selection clipboard'
 
-if [ "${DOTFILES_LINUX_VARIANT}" = 'main' ]; then
+if command -v notify-send; then
     alias alert='notify-send --urgency=low -i "$([ $? = 0 ] && echo terminal || echo error)" "$(history|tail -n1|sed -e '\''s/^\s*[0-9]\+\s*//;s/[;&|]\s*alert$//'\'')"'
 fi

@@ -1,6 +1,8 @@
 #!/bin/bash
 # Compress the current directory into a tar.gz archive
 
+set -eu
+
 FULLNAME="$(basename "$(pwd)")_$(id -un)@$(hostname)_$(date '+%Y_%m_%d_%H_%M_%S').tar.gz"
 
 echo 'Compressing...'

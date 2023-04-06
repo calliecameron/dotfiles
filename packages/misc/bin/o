@@ -1,0 +1,26 @@
+#!/bin/bash
+# Open given arguments
+
+set -eu
+
+function usage() {
+    echo "Usage: $(basename "${0}") paths_to_open..."
+    exit 1
+}
+
+function do-o() {
+    if [ -e "${1}" ]; then
+        xdg-open "${1}"
+    else
+        echo "${1} does not exist."
+    fi
+}
+
+if [ -z "${1:-}" ]; then
+    do-o .
+fi
+
+while (($#)); do
+    do-o "${1}"
+    shift
+done

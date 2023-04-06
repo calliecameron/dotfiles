@@ -11,7 +11,7 @@ setup() {
     bats_load_library 'bats-support'
     bats_load_library 'bats-assert'
 
-    cd "${TMP_DIR}"
+    cd "${TMP_DIR}" || exit 1
 }
 
 teardown() {

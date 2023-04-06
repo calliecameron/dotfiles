@@ -1,12 +1,14 @@
 #!/bin/bash
 # Copy files to names with a 'z' prepended
 
+set -u
+
 function usage() {
     echo "Usage: $(basename "${0}") files..."
     exit 1
 }
 
-test -z "${1}" && usage
+test -z "${1:-}" && usage
 
 function do-cpz() {
     local BASE DIR

@@ -1,0 +1,21 @@
+#!/bin/bash
+
+set -u
+
+function usage() {
+    echo "Usage: $(basename "${0}") list_file dest_dir"
+    exit 1
+}
+
+test -z "${1:-}" && usage
+test -z "${2:-}" && usage
+
+FILE="${1}"
+DIR="${2}"
+
+test ! -f "${FILE}" && usage
+test ! -d "${DIR}" && usage
+
+while read -r line; do
+    cp -t "${DIR}" "${line}"
+done <"${FILE}"
