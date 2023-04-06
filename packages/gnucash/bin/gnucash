@@ -1,0 +1,17 @@
+#!/bin/bash
+# Always run Gnucash in a fixed timezone; this is a workaround for
+# https://bugs.gnucash.org/show_bug.cgi?id=137017. Gnucash saves transaction
+# dates as timestamps at midnight on that date in the local timezone, and it
+# converts saved dates into human-readable dates for display using the local
+# timezone. If the timezone has changed between saving and displaying, this can
+# lead to the displayed dates being off-by-one from the date that was originally
+# entered.
+#
+# Using 'CEST-2' (UTC+2) here since all the existing transactions are in UTC,
+# UTC+1, or UTC+2; with UTC+2 they will all be displayed using the correct date
+# (and future transactions will always be UTC+2).
+
+if [ -n "${DOTFILES_ORIGINAL_GNUCASH}" ]; then
+    export TZ='CEST-2'
+    exec "${DOTFILES_ORIGINAL_GNUCASH}" "${@}"
+fi
