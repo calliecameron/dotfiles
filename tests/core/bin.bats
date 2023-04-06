@@ -831,6 +831,18 @@ assert_num_matching_lines() {
     (cd "${TMP_DIR}/bar" && assert [ "$(git branch --show-current)" = 'master' ])
 }
 
+@test 'dotfiles-clone-or-update-repo pull not a repo' {
+    mkdir -p "${TMP_DIR}/foo"
+    touch "${TMP_DIR}/foo/a"
+    (cd "${TMP_DIR}/foo" && git init . && git add a && git commit -m 'Foo')
+    mkdir -p "${TMP_DIR}/bar"
+    run_script "PATH=${BIN_DIR}:${PATH}" "${BIN_DIR}/dotfiles-clone-or-update-repo" "${TMP_DIR}/foo" "${TMP_DIR}/bar" 'master'
+    assert_failure
+    refute_line --partial 'Usage:'
+    assert [ -d "${TMP_DIR}/bar" ]
+    assert [ ! -e "${TMP_DIR}/bar/a" ]
+}
+
 @test 'dotfiles-clone-or-update-repo pull dirty' {
     mkdir -p "${TMP_DIR}/foo"
     touch "${TMP_DIR}/foo/a"

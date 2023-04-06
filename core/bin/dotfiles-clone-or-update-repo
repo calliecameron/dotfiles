@@ -22,6 +22,10 @@ BRANCH="${3}"
 if [ -d "${DIR}" ]; then
     echo 'Updating repo...'
 
+    if [ ! -d "${DIR}/.git" ]; then
+        fail 'Dir is not a repo.'
+    fi
+
     if ! dotfiles-repo-is-clean "${DIR}"; then
         fail 'Repo has uncommitted changes; not updating it.'
     fi
