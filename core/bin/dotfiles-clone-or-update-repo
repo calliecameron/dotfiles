@@ -1,0 +1,60 @@
+#!/bin/bash
+
+set -eu
+
+function usage() {
+    echo "Usage: $(basename "${0}") repo dir branch"
+    exit 1
+}
+
+function fail() {
+    echo "${@}"
+    exit 1
+}
+
+test -z "${1:-}" && usage
+REPO="${1}"
+test -z "${2:-}" && usage
+DIR="$(readlink -f "${2}")"
+test -z "${3:-}" && usage
+BRANCH="${3}"
+
+if [ -d "${DIR}" ]; then
+    echo 'Updating repo...'
+
+    if ! dotfiles-repo-is-clean "${DIR}"; then
+        fail 'Repo has uncommitted changes; not updating it.'
+    fi
+
+    cd "${DIR}"
+    if ! git fetch; then
+        fail 'Failed to update repo.'
+    fi
+
+    if ! git checkout "${BRANCH}"; then
+        fail "Could not check out branch '${BRANCH}'."
+    fi
+
+    if ! git pull; then
+        fail 'Could not update branch.'
+    fi
+
+    echo 'Updated repo'
+else
+    echo 'Cloning repo...'
+
+    if ! git clone "${REPO}" "${DIR}"; then
+        fail 'Could not clone repo.'
+    fi
+
+    cd "${DIR}"
+    if ! git checkout "${BRANCH}"; then
+        cd
+        rm -rf "${DIR}"
+        fail "Could not check out branch '${BRANCH}'."
+    fi
+
+    echo 'Cloned repo'
+fi
+
+exit 0

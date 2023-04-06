@@ -722,6 +722,130 @@ assert_num_matching_lines() {
     refute_line --partial 'Log out and log in again'
 }
 
+@test 'dotfiles-clone-or-update-repo no args' {
+    run_script "PATH=${BIN_DIR}:${PATH}" "${BIN_DIR}/dotfiles-clone-or-update-repo"
+    assert_failure
+    assert_line --partial 'Usage:'
+}
+
+@test 'dotfiles-clone-or-update-repo one arg' {
+    run_script "PATH=${BIN_DIR}:${PATH}" "${BIN_DIR}/dotfiles-clone-or-update-repo" 'foo'
+    assert_failure
+    assert_line --partial 'Usage:'
+}
+
+@test 'dotfiles-clone-or-update-repo two args' {
+    run_script "PATH=${BIN_DIR}:${PATH}" "${BIN_DIR}/dotfiles-clone-or-update-repo" 'foo' 'bar'
+    assert_failure
+    assert_line --partial 'Usage:'
+}
+
+@test 'dotfiles-clone-or-update-repo clone fails' {
+    mkdir -p "${TMP_DIR}/foo"
+    run_script "PATH=${BIN_DIR}:${PATH}" "${BIN_DIR}/dotfiles-clone-or-update-repo" "${TMP_DIR}/foo" "${TMP_DIR}/bar" 'master'
+    assert_failure
+    refute_line --partial 'Usage:'
+    assert [ ! -e "${TMP_DIR}/bar" ]
+}
+
+@test 'dotfiles-clone-or-update-repo clone default branch' {
+    mkdir -p "${TMP_DIR}/foo"
+    touch "${TMP_DIR}/foo/a"
+    (cd "${TMP_DIR}/foo" && git init . && git add a && git commit -m 'Foo')
+    run_script "PATH=${BIN_DIR}:${PATH}" "${BIN_DIR}/dotfiles-clone-or-update-repo" "${TMP_DIR}/foo" "${TMP_DIR}/bar" 'master'
+    assert_success
+    refute_line --partial 'Usage:'
+    assert [ -d "${TMP_DIR}/bar" ]
+    assert [ -f "${TMP_DIR}/bar/a" ]
+    (cd "${TMP_DIR}/bar" && assert [ "$(git branch --show-current)" = 'master' ])
+}
+
+@test 'dotfiles-clone-or-update-repo clone other branch' {
+    mkdir -p "${TMP_DIR}/foo"
+    touch "${TMP_DIR}/foo/a"
+    (cd "${TMP_DIR}/foo" && git init . && git add a && git commit -m 'Foo' && git checkout -b dev)
+    run_script "PATH=${BIN_DIR}:${PATH}" "${BIN_DIR}/dotfiles-clone-or-update-repo" "${TMP_DIR}/foo" "${TMP_DIR}/bar" 'dev'
+    assert_success
+    refute_line --partial 'Usage:'
+    assert [ -d "${TMP_DIR}/bar" ]
+    assert [ -f "${TMP_DIR}/bar/a" ]
+    (cd "${TMP_DIR}/bar" && assert [ "$(git branch --show-current)" = 'dev' ])
+}
+
+@test 'dotfiles-clone-or-update-repo clone bad branch' {
+    mkdir -p "${TMP_DIR}/foo"
+    touch "${TMP_DIR}/foo/a"
+    (cd "${TMP_DIR}/foo" && git init . && git add a && git commit -m 'Foo')
+    run_script "PATH=${BIN_DIR}:${PATH}" "${BIN_DIR}/dotfiles-clone-or-update-repo" "${TMP_DIR}/foo" "${TMP_DIR}/bar" 'dev'
+    assert_failure
+    refute_line --partial 'Usage:'
+    assert [ ! -e "${TMP_DIR}/bar" ]
+}
+
+@test 'dotfiles-clone-or-update-repo pull clean same branch' {
+    mkdir -p "${TMP_DIR}/foo"
+    touch "${TMP_DIR}/foo/a"
+    (cd "${TMP_DIR}/foo" && git init . && git add a && git commit -m 'Foo')
+    git clone "${TMP_DIR}/foo" "${TMP_DIR}/bar"
+    echo 'foo' >"${TMP_DIR}/foo/a"
+    (cd "${TMP_DIR}/foo" && git add a && git commit -m 'Bar')
+    run_script "PATH=${BIN_DIR}:${PATH}" "${BIN_DIR}/dotfiles-clone-or-update-repo" "${TMP_DIR}/foo" "${TMP_DIR}/bar" 'master'
+    assert_success
+    refute_line --partial 'Usage:'
+    assert [ -d "${TMP_DIR}/bar" ]
+    assert [ -f "${TMP_DIR}/bar/a" ]
+    assert [ "$(cat "${TMP_DIR}/bar/a")" = 'foo' ]
+    (cd "${TMP_DIR}/bar" && assert [ "$(git branch --show-current)" = 'master' ])
+}
+
+@test 'dotfiles-clone-or-update-repo pull clean other branch' {
+    mkdir -p "${TMP_DIR}/foo"
+    touch "${TMP_DIR}/foo/a"
+    (cd "${TMP_DIR}/foo" && git init . && git add a && git commit -m 'Foo')
+    git clone "${TMP_DIR}/foo" "${TMP_DIR}/bar"
+    (cd "${TMP_DIR}/foo" && git checkout -b dev)
+    echo 'foo' >"${TMP_DIR}/foo/a"
+    (cd "${TMP_DIR}/foo" && git add a && git commit -m 'Bar')
+    run_script "PATH=${BIN_DIR}:${PATH}" "${BIN_DIR}/dotfiles-clone-or-update-repo" "${TMP_DIR}/foo" "${TMP_DIR}/bar" 'dev'
+    assert_success
+    refute_line --partial 'Usage:'
+    assert [ -d "${TMP_DIR}/bar" ]
+    assert [ -f "${TMP_DIR}/bar/a" ]
+    assert [ "$(cat "${TMP_DIR}/bar/a")" = 'foo' ]
+    (cd "${TMP_DIR}/bar" && assert [ "$(git branch --show-current)" = 'dev' ])
+}
+
+@test 'dotfiles-clone-or-update-repo pull clean bad branch' {
+    mkdir -p "${TMP_DIR}/foo"
+    touch "${TMP_DIR}/foo/a"
+    (cd "${TMP_DIR}/foo" && git init . && git add a && git commit -m 'Foo')
+    git clone "${TMP_DIR}/foo" "${TMP_DIR}/bar"
+    echo 'foo' >"${TMP_DIR}/foo/a"
+    (cd "${TMP_DIR}/foo" && git add a && git commit -m 'Bar')
+    run_script "PATH=${BIN_DIR}:${PATH}" "${BIN_DIR}/dotfiles-clone-or-update-repo" "${TMP_DIR}/foo" "${TMP_DIR}/bar" 'dev'
+    assert_failure
+    refute_line --partial 'Usage:'
+    assert [ -d "${TMP_DIR}/bar" ]
+    assert [ -f "${TMP_DIR}/bar/a" ]
+    assert [ "$(cat "${TMP_DIR}/bar/a")" = '' ]
+    (cd "${TMP_DIR}/bar" && assert [ "$(git branch --show-current)" = 'master' ])
+}
+
+@test 'dotfiles-clone-or-update-repo pull dirty' {
+    mkdir -p "${TMP_DIR}/foo"
+    touch "${TMP_DIR}/foo/a"
+    (cd "${TMP_DIR}/foo" && git init . && git add a && git commit -m 'Foo')
+    git clone "${TMP_DIR}/foo" "${TMP_DIR}/bar"
+    echo 'foo' >"${TMP_DIR}/bar/a"
+    run_script "PATH=${BIN_DIR}:${PATH}" "${BIN_DIR}/dotfiles-clone-or-update-repo" "${TMP_DIR}/foo" "${TMP_DIR}/bar" 'master'
+    assert_failure
+    refute_line --partial 'Usage:'
+    assert [ -d "${TMP_DIR}/bar" ]
+    assert [ -f "${TMP_DIR}/bar/a" ]
+    assert [ "$(cat "${TMP_DIR}/bar/a")" = 'foo' ]
+    (cd "${TMP_DIR}/bar" && assert [ "$(git branch --show-current)" = 'master' ])
+}
+
 @test 'dotfiles-package-ignored usage' {
     run_script "${BIN_DIR}/dotfiles-package-ignored"
     assert_failure
