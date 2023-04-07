@@ -1,6 +1,0 @@
-#!/bin/bash
-
-set -eu
-
-dotfiles-linux-variant main
-dotfiles-package-installed dev-tools
