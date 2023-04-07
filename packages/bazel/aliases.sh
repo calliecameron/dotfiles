@@ -1,3 +1,5 @@
+# shellcheck shell=bash
+
 function bazel-workspace-root() {
     local DIR
     DIR="$(readlink -f .)"
@@ -27,7 +29,7 @@ function bazel-workspace-check() {
 
 function bazel-workspace-output() {
     if [ -n "${bo}" ]; then
-        cd "${bo}"
+        cd "${bo}" || return 1
     else
         echo 'Not in a bazel workspace'
         return 1
