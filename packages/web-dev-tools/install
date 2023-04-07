@@ -1,0 +1,15 @@
+#!/bin/bash
+
+set -eu
+
+sudo apt-get -y install tidy
+npm install -g csslint eslint jsonlint js-yaml
+
+if [ ! -f "${PACKAGE_INSTALL_DIR}/bin/geckodriver" ]; then
+    wget 'https://github.com/mozilla/geckodriver/releases/download/v0.33.0/geckodriver-v0.33.0-linux64.tar.gz'
+    echo '5f5e89bb31fe5f55f963f56ef7e55a5c8e9dc415d94b1ddc539171a327b8e6c4  geckodriver-v0.33.0-linux64.tar.gz' >checksum
+    sha256sum -c checksum
+    tar -xf geckodriver-v0.33.0-linux64.tar.gz
+    mkdir -p "${PACKAGE_INSTALL_DIR}/bin"
+    mv "${PACKAGE_INSTALL_DIR}/geckodriver" "${PACKAGE_INSTALL_DIR}/bin"
+fi
