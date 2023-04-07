@@ -1,0 +1,76 @@
+#!/usr/bin/env python3
+# Edit the cinnamon panel
+
+from typing import Any, Tuple
+import argparse
+import json
+import os.path
+
+PANEL_FILE = os.path.join(
+    os.path.expanduser("~"),
+    ".config",
+    "cinnamon",
+    "spices",
+    "panel-launchers@cinnamon.org",
+    "17.json",
+)
+
+
+def load_file() -> Tuple[Any, Any]:
+    with open(PANEL_FILE, encoding="utf-8") as f:
+        data = json.load(f)
+    return data, data["launcherList"]["value"]
+
+
+def save_file(data: Any) -> None:
+    with open(PANEL_FILE, "w", encoding="utf-8") as f:
+        json.dump(data, f)
+
+
+def add(args: Any) -> None:
+    data, target = load_file()
+    if args.app not in target:
+        target.append(args.app)
+        save_file(data)
+
+
+def remove(args: Any) -> None:
+    data, target = load_file()
+    if args.app in target:
+        target.remove(args.app)
+        save_file(data)
+
+
+def list_launchers(_: Any) -> None:
+    _, launchers = load_file()
+    for app in launchers:
+        print(app)
+
+
+def main() -> None:
+    parser = argparse.ArgumentParser(
+        description="Manipulate the contents of the Cinnamon launcher panel"
+    )
+    subparsers = parser.add_subparsers()
+
+    parser_add = subparsers.add_parser("add")
+    parser_add.add_argument("app", help="An installed .desktop file")
+    parser_add.set_defaults(func=add)
+
+    parser_remove = subparsers.add_parser("remove")
+    parser_remove.add_argument("app", help="An installed .desktop file")
+    parser_remove.set_defaults(func=remove)
+
+    parser_list = subparsers.add_parser("list")
+    parser_list.set_defaults(func=list_launchers)
+
+    args = parser.parse_args()
+    try:
+        func = args.func
+    except AttributeError:
+        parser.error("too few arguments")
+    func(args)
+
+
+if __name__ == "__main__":
+    main()

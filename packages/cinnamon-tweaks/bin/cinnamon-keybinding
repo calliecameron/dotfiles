@@ -1,0 +1,105 @@
+#!/usr/bin/env python3
+# Set a custom cinnamon keybinding
+
+from typing import cast, List, Tuple
+import sys
+import os.path
+import subprocess
+import ast
+
+GSETTINGS_SCHEMA = "org.cinnamon.desktop.keybindings"
+GSETTINGS_KEY = "custom-list"
+
+
+def usage() -> None:
+    print("Usage: " + os.path.basename(sys.argv[0]) + " name command key")
+    sys.exit(1)
+
+
+def get_keybindings_list() -> List[str]:
+    s = subprocess.check_output(
+        ["gsettings", "get", GSETTINGS_SCHEMA, GSETTINGS_KEY], encoding="utf-8"
+    ).strip()
+    if s == "@as []":
+        s = "[]"
+    return cast(List[str], ast.literal_eval(s))
+
+
+def set_keybindings_list(l: List[str]) -> None:
+    subprocess.call(["gsettings", "set", GSETTINGS_SCHEMA, GSETTINGS_KEY, str(l)])
+
+
+def dconf_keybinding_path(keybinding: str, attr: str) -> str:
+    return "/org/cinnamon/desktop/keybindings/custom-keybindings/%s/%s" % (keybinding, attr)
+
+
+def read_string(keybinding: str, attr: str) -> str:
+    return cast(
+        str,
+        ast.literal_eval(
+            subprocess.check_output(
+                ["dconf", "read", dconf_keybinding_path(keybinding, attr)], encoding="utf-8"
+            )
+        ),
+    )
+
+
+def write_string(keybinding: str, attr: str, s: str) -> None:
+    subprocess.call(["dconf", "write", dconf_keybinding_path(keybinding, attr), "'%s'" % s])
+
+
+def read_list(keybinding: str, attr: str) -> List[str]:
+    return cast(List[str], read_string(keybinding, attr))
+
+
+def write_single_element_list(keybinding: str, attr: str, s: str) -> None:
+    subprocess.call(["dconf", "write", dconf_keybinding_path(keybinding, attr), "['%s']" % s])
+
+
+def read_keybinding(keybinding: str) -> Tuple[str, str, List[str]]:
+    name = read_string(keybinding, "name")
+    command = read_string(keybinding, "command")
+    key = read_list(keybinding, "binding")
+    return (name, command, key)
+
+
+def main() -> None:
+    if len(sys.argv) < 4:
+        usage()
+
+    name = sys.argv[1]
+    command = sys.argv[2]
+    key = sys.argv[3]
+
+    all_keybindings = get_keybindings_list()
+    first_unused = 0
+
+    for keybinding in all_keybindings:
+        num = int(keybinding.lstrip("custom"))
+        if num == first_unused:
+            first_unused += 1
+
+        n, c, k = read_keybinding(keybinding)
+        if n == name and c == command and key in k:
+            # Exact match; nothing to do
+            return
+        if n == name:
+            # Partial match; update it
+            write_string(keybinding, "command", command)
+            write_single_element_list(keybinding, "binding", key)
+            return
+
+    # Not found; create a new binding
+    keybinding = "custom%d" % first_unused
+    write_string(keybinding, "name", name)
+    write_string(keybinding, "command", command)
+    write_single_element_list(keybinding, "binding", key)
+
+    if keybinding not in all_keybindings:
+        all_keybindings.append(keybinding)
+
+    set_keybindings_list(all_keybindings)
+
+
+if __name__ == "__main__":
+    main()
