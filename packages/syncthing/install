@@ -13,5 +13,5 @@ if ! grep 'fs.inotify.max_user_watches' /etc/sysctl.conf &>/dev/null; then
     echo 'fs.inotify.max_user_watches=204800' | sudo tee -a /etc/sysctl.conf >/dev/null
 fi
 
-ufw allow 22000/tcp
-ufw allow 21027/udp
+sudo ufw allow 22000/tcp
+sudo ufw allow 21027/udp
