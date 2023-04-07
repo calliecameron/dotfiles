@@ -520,7 +520,6 @@ If BUFFER is a string, it is the name of the buffer to find; if it is a predicat
   :bind
   (("C-\\" . helm-mini))
   :config
-  (require 'helm-config)
   (helm-mode 1)
   (helm-adaptive-mode 1)
   (helm-popup-tip-mode 1)
