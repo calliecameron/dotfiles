@@ -1,0 +1,10 @@
+#!/bin/bash
+
+set -eu
+
+sudo apt-get -y install ufw
+
+sudo ufw enable
+sudo ufw default deny incoming
+sudo ufw default deny routed
+sudo ufw default allow outgoing
