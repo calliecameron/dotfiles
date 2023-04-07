@@ -1,3 +1,5 @@
+# shellcheck shell=sh
+
 export DOTFILES_SSH_MOUNT_DIR="${HOME}/ssh-mounts"
 
 # Cleanup old sshfs directories

@@ -1,0 +1,4 @@
+# compdef sumnt
+# shellcheck disable=SC2148
+
+_arguments "1: :($(if [ -d "${DOTFILES_SSH_MOUNT_DIR}" ]; then \ls "${DOTFILES_SSH_MOUNT_DIR}"; fi))"

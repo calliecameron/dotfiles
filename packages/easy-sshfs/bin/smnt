@@ -1,25 +1,31 @@
 #!/bin/bash
 # Mount an SSH path easily
 
+set -eu
+
 function usage() {
     echo "Usage: $(basename "${0}") [user@]host [dir]"
     exit 1
 }
 
-test -z "${1}" && usage
+test -z "${1:-}" && usage
 
 HOST="${1}"
-DIR="${2}"
-# shellcheck disable=SC2001
-NICEDIR="$(echo "${DIR}" | sed 's|/|_|g')"
+DIR="${2:-}"
+
+NICEDIR="${DIR////_}"
 
 MOUNTPOINT="${DOTFILES_SSH_MOUNT_DIR}/${HOST}_${NICEDIR}"
 
 if [ -e "${MOUNTPOINT}" ]; then
     echo 'Already mounted'
     exit 0
-else
-    mkdir -p "${MOUNTPOINT}" &&
-    # shellcheck disable=SC2015
-    sshfs "${HOST}:${DIR}" "${MOUNTPOINT}" || rmdir "${MOUNTPOINT}"
 fi
+
+mkdir -p "${MOUNTPOINT}"
+
+if ! sshfs "${HOST}:${DIR}" "${MOUNTPOINT}"; then
+    rmdir "${MOUNTPOINT}"
+fi
+
+exit 0
