@@ -1,0 +1,19 @@
+# Use this file to configure the settings for dotfiles' notification emails.
+# Uncomment and set the following as desired.
+
+# root=<pi_server_email_target>
+# mailhub=<host>:<port>
+# rewritedomain=<fqdn>
+fromlineoverride=yes
+
+# To send mail via a gmail account, use the following settings:
+#
+# UseTLS=Yes
+# AuthUser=<username>
+# AuthPass=<password>
+#
+# The mail server should be smtp.gmail.com:465
+
+# UseTLS=Yes
+# AuthUser=
+# AuthPass=

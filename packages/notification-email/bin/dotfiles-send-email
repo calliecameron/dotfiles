@@ -1,0 +1,35 @@
+#!/bin/bash
+# Send a notification email to the default target address
+
+set -eu
+
+FROM="${DOTFILES_EMAIL_FROM:-}"
+TO="${DOTFILES_EMAIL_TO:-}"
+HOSTNAME="$(hostname)"
+
+function usage() {
+    echo "Usage: $(basename "${0}") subject body"
+    exit 1
+}
+
+test -z "${1:-}" && usage
+test -z "${2:-}" && usage
+
+function no-values() {
+    echo 'Default values are invalid'
+    exit 1
+}
+
+test -z "${FROM}" && no-values
+test -z "${TO}" && no-values
+test -z "${HOSTNAME}" && no-values
+
+ssmtp "${TO}" <<EOF
+From: ${HOSTNAME} <notification@${FROM}>
+To: ${TO}
+Subject: [${HOSTNAME}] ${1}
+Content-Type: text/plain; charset="UTF-8"
+
+${2}
+
+EOF
