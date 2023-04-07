@@ -1,0 +1,8 @@
+#!/bin/bash
+
+set -eu
+
+sudo aa-enforce /etc/apparmor.d/usr.sbin.avahi-daemon
+sudo systemctl restart avahi-daemon.service
+
+sudo ufw allow 5353/udp
