@@ -28,10 +28,6 @@ if type pip &>/dev/null; then
     eval "$(pip completion "--${DOTFILES_SHELL}")"
 fi
 
-if type activate.sh &>/dev/null; then
-    source activate.sh
-fi
-
 if [ -n "${VIRTUAL_ENV}" ] &&
     ! type deactivate &>/dev/null &&
     [ -f "${VIRTUAL_ENV}/bin/activate" ]; then
