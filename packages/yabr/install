@@ -1,0 +1,14 @@
+#!/bin/bash
+
+set -eu
+
+sudo apt-get -y install qtbase5-dev
+
+dotfiles-clone-or-update-repo 'https://github.com/calliecameron/yabr' \
+    "${PACKAGE_INSTALL_DIR}/yabr" 'master'
+
+cd "${PACKAGE_INSTALL_DIR}/yabr"
+qmake -qt=5
+make
+
+cp -t "${HOME}/Desktop" launchers/*.desktop

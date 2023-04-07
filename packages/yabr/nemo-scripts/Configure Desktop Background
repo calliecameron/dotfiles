@@ -1,4 +1,6 @@
 #!/bin/bash
 # Change background randomly
 
-yabr -o
+set -eu
+
+yabr-config
