@@ -1,6 +1,0 @@
-#!/bin/bash
-# Configure the boot and cron zoneedit settings
-
-sudoedit "${DOTFILES_ZONEEDIT_HOST}" &&
-sudoedit "${DOTFILES_ZONEEDIT_USERNAME}" &&
-sudoedit "${DOTFILES_ZONEEDIT_PASSWORD}"
