@@ -66,8 +66,6 @@ if [ -e "${DOTFILES_PACKAGE_PROBLEMS_FILE}" ]; then
     rm -f "${DOTFILES_PACKAGE_PROBLEMS_FILE}"
 fi
 
-export DOTFILES_ETC_DIR='/etc/dotfiles'
-
 export PATH="${DOTFILES_CORE_BIN}:${PATH}"
 
 export EDITOR='nano'
