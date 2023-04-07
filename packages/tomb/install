@@ -4,7 +4,7 @@ set -eu
 
 sudo apt-get -y install cryptsetup gnupg pinentry-gtk2 libgcrypt20-dev
 
-if [ ! -e "${PACKAGE_INSTALLD_DIR}/bin/tomb" ]; then
+if [ ! -e "${PACKAGE_INSTALL_DIR}/bin/tomb" ]; then
     mkdir -p "${PACKAGE_INSTALL_DIR}/bin"
     BUILD_DIR="$(mktemp -d)"
     cd "${BUILD_DIR}"
