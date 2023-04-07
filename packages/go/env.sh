@@ -1,4 +1,6 @@
-export DOTFILES_GVM_GO_VERSION='go1.17'
+# shellcheck shell=sh
+
+export DOTFILES_GVM_GO_VERSION='go1.20'
 
 if [ -f "${HOME}/.gvm/scripts/gvm" ]; then
     . "${HOME}/.gvm/scripts/gvm"
