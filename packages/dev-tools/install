@@ -7,3 +7,14 @@ sudo apt-get -y install bash-doc bison bison-doc build-essential ccache clang \
     make-doc man-db manpages-posix manpages-posix-dev shellcheck valgrind
 
 npm install -g bats bats-support bats-assert
+
+mkdir -p "${PACKAGE_INSTALL_DIR}/bin"
+
+if [ ! -f "${PACKAGE_INSTALL_DIR}/bin/shfmt" ]; then
+    wget -O shfmt 'https://github.com/mvdan/sh/releases/download/v3.6.0/shfmt_v3.6.0_linux_amd64'
+    echo '5741a02a641de7e56b8da170e71a97e58050d66a3cf485fb268d6a5a8bb74afb  shfmt' >checksum
+    sha256sum -c checksum
+    rm checksum
+    mv shfmt "${PACKAGE_INSTALL_DIR}/bin/shfmt"
+    chmod u+x "${PACKAGE_INSTALL_DIR}/bin/shfmt"
+fi
