@@ -1,4 +1,5 @@
 # shellcheck shell=bash
 
 # Autoenv
-source "$(npm root -g)/@hyperupcall/autoenv/activate.sh"
+DOTFILES_AUTOENV_SOURCE="$(npm root -g)/@hyperupcall/autoenv/activate.sh"
+export DOTFILES_AUTOENV_SOURCE

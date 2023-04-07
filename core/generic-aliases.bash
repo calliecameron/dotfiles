@@ -103,6 +103,10 @@ if [ -e "${DOTFILES_PACKAGE_PROBLEMS_FILE}" ]; then
     echo -en "\e[0m"
 fi
 
+if [ -n "${DOTFILES_AUTOENV_SOURCE}" ]; then
+    source "${DOTFILES_AUTOENV_SOURCE}"
+fi
+
 dotfiles-logout-needed-check
 
 [ -n "${DOTFILES_PROFILING}" ] && printf 'generic ' && date --rfc-3339=ns
