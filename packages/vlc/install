@@ -1,0 +1,41 @@
+#!/bin/bash
+
+set -eu
+
+sudo apt-get -y install vlc
+
+source "${PACKAGE_SOURCE_DIR}/env.sh"
+
+VLCRC="${HOME}/.config/vlc/vlcrc"
+mkdir -p "${HOME}/.config/vlc"
+
+function check() {
+    local SRC="${1}"
+    local DST="${2}"
+
+    if ! grep "^${DST}\$" "${VLCRC}" &>/dev/null; then
+        if grep "^${SRC}\$" "${VLCRC}" &>/dev/null; then
+            sed -i "s|${SRC}|${DST}|g" "${VLCRC}" || return 1
+        else
+            echo "${DST}" >>"${VLCRC}" || return 1
+        fi
+    fi
+    return 0
+}
+
+if [ ! -e "${VLCRC}" ]; then
+    echo 'one-instance=1' >>"${VLCRC}"
+    echo 'playlist-enqueue=1' >>"${VLCRC}"
+else
+    check 'one-instance=0' 'one-instance=1'
+    check 'playlist-enqueue=0' 'playlist-enqueue=1'
+fi
+
+xdg-desktop-menu install --novendor "${PACKAGE_SOURCE_DIR}/vlc.desktop"
+xdg-desktop-icon install --novendor "${PACKAGE_SOURCE_DIR}/vlc.desktop"
+xdg-mime default vlc.desktop application/vnd.adobe.flash.movie \
+    application/xspf+xml audio/mpeg audio/mp4 audio/x-mpegurl audio/x-vorbis+ogg audio/x-wav \
+    video/mpeg video/mp4 video/ogg video/quicktime video/x-msvideo \
+    video/x-matroska
+"${PACKAGE_SOURCE_DIR}/non-default-association.el" 'inode/directory' \
+    'vlc.desktop' "${HOME}/.config/mimeapps.list"
