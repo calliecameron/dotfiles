@@ -1,6 +1,6 @@
 function _can-install() {
     dotfiles-linux-variant main &&
-    dotfiles-graphical &&
+    dotfiles-is-graphical &&
     pgrep cinnamon &>/dev/null
 }
 

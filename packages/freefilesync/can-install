@@ -3,4 +3,4 @@
 set -eu
 
 dotfiles-linux-variant main
-dotfiles-graphical
+dotfiles-is-graphical

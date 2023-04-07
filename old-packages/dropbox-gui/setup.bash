@@ -1,7 +1,7 @@
 function _can-install() {
     dotfiles-linux-variant main &&
     dotfiles-can-sudo &&
-    dotfiles-graphical &&
+    dotfiles-is-graphical &&
     dotfiles-package-installed iptables &&
     type port &>/dev/null
 }

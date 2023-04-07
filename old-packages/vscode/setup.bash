@@ -1,6 +1,6 @@
 function _can-install() {
     dotfiles-linux-variant main &&
-    dotfiles-graphical &&
+    dotfiles-is-graphical &&
     dotfiles-can-sudo &&
     dotfiles-package-installed python &&
     dotfiles-package-installed dev-tools &&
