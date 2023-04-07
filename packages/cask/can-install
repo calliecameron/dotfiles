@@ -1,0 +1,6 @@
+#!/bin/bash
+
+set -eu
+
+dotfiles-package-installed emacs
+command -v emacs &>/dev/null
