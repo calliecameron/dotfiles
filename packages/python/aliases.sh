@@ -1,3 +1,5 @@
+# shellcheck shell=bash
+
 function python-wrapper() {
     if [ -z "${1}" ] && type ipython3 &>/dev/null; then
         ipython3 --no-confirm-exit
@@ -8,7 +10,7 @@ function python-wrapper() {
 
 alias py='python-wrapper'
 
-if which virtualenvwrapper.sh &>/dev/null; then
+if type virtualenvwrapper.sh &>/dev/null; then
     source virtualenvwrapper.sh
 
     function workon-wrapper() {
@@ -22,20 +24,19 @@ else
     }
 fi
 
-if which pip &>/dev/null; then
-    eval "$(pip completion --${DOTFILES_SHELL})"
+if type pip &>/dev/null; then
+    eval "$(pip completion "--${DOTFILES_SHELL}")"
 fi
 
-if which activate.sh &>/dev/null; then
+if type activate.sh &>/dev/null; then
     source activate.sh
 fi
 
-if [ ! -z "${VIRTUAL_ENV}" ] &&
-   ! type deactivate &>/dev/null &&
-   [ -f "${VIRTUAL_ENV}/bin/activate" ]; then
-    # We have probably been started from Emacs with a virtualenv
-    # set. To avoid confusion, activate the same virtualenv in this
-    # shell.
+if [ -n "${VIRTUAL_ENV}" ] &&
+    ! type deactivate &>/dev/null &&
+    [ -f "${VIRTUAL_ENV}/bin/activate" ]; then
+    # We have probably been started from Emacs with a virtualenv set. To avoid
+    # confusion, activate the same virtualenv in this shell.
     source "${VIRTUAL_ENV}/bin/activate"
 fi
 

@@ -1,0 +1,3 @@
+# shellcheck shell=sh
+
+pip install ipython jupyter snakeviz
