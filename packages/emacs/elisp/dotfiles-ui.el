@@ -1,6 +1,6 @@
 ;;; dotfiles-ui.el --- -*- lexical-binding: t -*- user interface settings
 
-;; Copyright (C) 2021  Callie Cameron
+;; Copyright (C) 2023  Callie Cameron
 
 ;; Author: Callie Cameron
 

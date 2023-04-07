@@ -1,6 +1,6 @@
 ;;; dotfiles-prog.el --- -*- lexical-binding: t -*- programming modes configuration
 
-;; Copyright (C) 2021  Callie Cameron
+;; Copyright (C) 2023  Callie Cameron
 
 ;; Author: Callie Cameron
 
