@@ -1,0 +1,8 @@
+#!/bin/bash
+
+set -eu
+
+sed "s|@@@@@1@@@@@|${PACKAGE_SOURCE_DIR}|g" <"${PACKAGE_SOURCE_DIR}/minecraft.desktop.template" >"${PACKAGE_SOURCE_DIR}/minecraft.desktop"
+
+xdg-desktop-menu install --novendor "${PACKAGE_SOURCE_DIR}/minecraft.desktop"
+xdg-desktop-icon install --novendor "${PACKAGE_SOURCE_DIR}/minecraft.desktop"

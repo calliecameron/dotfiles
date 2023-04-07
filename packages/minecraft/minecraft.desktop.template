@@ -1,0 +1,9 @@
+[Desktop Entry]
+Version=1.0
+Name=Minecraft
+Exec=minecraft
+TryExec=minecraft
+Icon=@@@@@1@@@@@/minecraft.png
+Type=Application
+Terminal=false
+Categories=Game;
