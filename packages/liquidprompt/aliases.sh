@@ -1,7 +1,7 @@
 # shellcheck shell=bash
 
 if [ -n "${BASH_VERSION}" ]; then
-    export LP_PS1_POSTFIX=" bash
+    export LP_PS1_POSTFIX="bash
 \$ "
 fi
 
