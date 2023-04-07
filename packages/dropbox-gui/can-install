@@ -1,0 +1,8 @@
+#!/bin/bash
+
+set -eu
+
+dotfiles-linux-variant main
+dotfiles-can-sudo
+dotfiles-is-graphical
+dotfiles-package-installed firewall
