@@ -2,8 +2,8 @@
 
 set -eu
 
-sudo apt-get -y install --install-recommends wine-installer \
-    gnome-exe-thumbnailer xserver-xephyr x11vnc xdotool vinagre
+sudo apt-get -y install --install-recommends wine-installer xserver-xephyr \
+    x11vnc xdotool vinagre
 
 wget -O complete.zip 'http://www.ldraw.org/library/updates/complete.zip'
 unzip complete.zip
