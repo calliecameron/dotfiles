@@ -1,11 +1,13 @@
 #!/bin/bash
 # Make MLCad usable on HiDIP screens
 
+set -eu
+
 SCALE=2
 X_RES="$(xrandr --current | grep '\*' | uniq | awk '{print $1}' | cut -d 'x' -f1)"
 Y_RES="$(xrandr --current | grep '\*' | uniq | awk '{print $1}' | cut -d 'x' -f2)"
-X_RES=$(( X_RES / SCALE ))
-Y_RES=$(( Y_RES / SCALE ))
+X_RES=$((X_RES / SCALE))
+Y_RES=$((Y_RES / SCALE))
 
 DISPLAY_FILE="$(mktemp)"
 exec 3>"${DISPLAY_FILE}"
