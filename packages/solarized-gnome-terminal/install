@@ -1,0 +1,13 @@
+#!/bin/bash
+
+set -eu
+
+if [ -z "${DOTFILES_GNOME_TERMINAL_PROFILE:-}" ]; then
+    dotfiles-echo-red "Set DOTFILES_GNOME_TERMINAL_PROFILE to the profile ID reported by Gnome Terminal to install."
+    exit 1
+fi
+
+dotfiles-clone-or-update-repo 'https://github.com/Anthony25/gnome-terminal-colors-solarized' \
+    "${PACKAGE_INSTALL_DIR}/solarized" 'master'
+"${PACKAGE_INSTALL_DIR}/solarized/install.sh" --scheme dark \
+    --profile "${DOTFILES_GNOME_TERMINAL_PROFILE}" --skip-dircolors

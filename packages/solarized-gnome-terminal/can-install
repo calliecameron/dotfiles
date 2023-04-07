@@ -1,0 +1,5 @@
+#!/bin/bash
+
+set -eu
+
+command -v gnome-terminal &>/dev/null
