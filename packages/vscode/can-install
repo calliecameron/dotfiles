@@ -1,0 +1,12 @@
+#!/bin/bash
+
+set -eu
+
+dotfiles-linux-variant main
+dotfiles-is-graphical
+dotfiles-can-sudo
+dotfiles-package-installed python
+dotfiles-package-installed dev-tools
+dotfiles-package-installed web-dev-tools
+dotfiles-package-installed text-tools
+dotfiles-package-installed bazel
