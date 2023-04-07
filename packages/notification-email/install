@@ -5,7 +5,7 @@ set -eu
 sudo apt-get -y install ssmtp
 
 if ! sudo grep dotfiles /etc/ssmtp/ssmtp.conf &>/dev/null; then
-    sudo cp "${PACKAGE_INSTALL_DIR}/ssmtp-conf-template" /etc/ssmtp/ssmtp.conf
+    sudo cp "${PACKAGE_SOURCE_DIR}/ssmtp-conf-template" /etc/ssmtp/ssmtp.conf
 fi
 
 sudo chown root:mail /etc/ssmtp/ssmtp.conf
