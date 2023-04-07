@@ -1,0 +1,6 @@
+#!/bin/bash
+
+set -eu
+
+dotfiles-clone-or-update-repo 'https://github.com/nojhan/liquidprompt' \
+    "${PACKAGE_INSTALL_DIR}/liquidprompt" 'stable'
