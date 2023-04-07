@@ -1,7 +1,7 @@
 # Use this file to configure the settings for dotfiles' notification emails.
 # Uncomment and set the following as desired.
 
-# root=<pi_server_email_target>
+# root=<dotfiles_email_to>
 # mailhub=<host>:<port>
 # rewritedomain=<fqdn>
 fromlineoverride=yes

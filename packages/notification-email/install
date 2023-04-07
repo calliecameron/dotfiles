@@ -11,4 +11,4 @@ fi
 sudo chown root:mail /etc/ssmtp/ssmtp.conf
 sudo chmod ug=r,o= /etc/ssmtp/ssmtp.conf
 
-dotfiles-log-package-message 'Configure email settings in /etc/ssmtp/ssmtp.conf'
+dotfiles-echo-blue 'Configure email settings in /etc/ssmtp/ssmtp.conf'
