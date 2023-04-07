@@ -1,0 +1,6 @@
+#!/bin/bash
+
+set -eu
+
+dotfiles-clone-or-update-repo 'https://github.com/seebi/dircolors-solarized' \
+    "${PACKAGE_INSTALL_DIR}/solarized" 'master'
