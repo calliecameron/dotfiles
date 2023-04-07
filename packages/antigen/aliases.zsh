@@ -1,6 +1,6 @@
 MY_LESS="${LESS}"
 
-source "${PACKAGE_INSTALL_DIR}/antigen.zsh"
+source "${PACKAGE_INSTALL_DIR}/antigen/antigen.zsh"
 antigen use oh-my-zsh
 antigen bundle command-not-found
 antigen bundle zsh-users/zsh-syntax-highlighting
