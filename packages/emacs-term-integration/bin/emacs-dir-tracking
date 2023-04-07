@@ -3,8 +3,8 @@
 function in-emacs-terminal() {
     if [[ "${TERM}" =~ 'eterm' ]]; then
         return 0
-    elif [ "${TERM}" = 'screen' ] && [ ! -z "${TMUX}" ] &&
-             [[ "$(tmux display-message -p '#{client_termname}')" =~ 'eterm' ]]; then
+    elif [ "${TERM}" = 'screen' ] && [ -n "${TMUX}" ] &&
+        [[ "$(tmux display-message -p '#{client_termname}')" =~ 'eterm' ]]; then
         return 0
     else
         return 1

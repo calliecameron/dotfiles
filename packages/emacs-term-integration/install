@@ -1,0 +1,7 @@
+#!/bin/bash
+
+set -eu
+
+# We keep a local copy of these for machines where Emacs isn't installed
+dotfiles-clone-or-update-repo 'https://github.com/calliecameron/term-cmd' "${PACKAGE_INSTALL_DIR}/term-cmd" 'master'
+dotfiles-clone-or-update-repo 'https://github.com/calliecameron/term-alert' "${PACKAGE_INSTALL_DIR}/term-alert" 'master'
