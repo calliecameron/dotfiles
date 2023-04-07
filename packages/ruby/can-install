@@ -1,0 +1,6 @@
+#!/bin/bash
+
+set -eu
+
+dotfiles-can-sudo
+dotfiles-package-installed dev-tools
