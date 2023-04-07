@@ -1,0 +1,13 @@
+#!/bin/bash
+
+set -eu
+
+sudo apt-get -y install openssh-server
+
+CONFIG='/etc/ssh/sshd_config'
+
+sed "s|@@@@@1@@@@@|$(id -un)|g" <"${PACKAGE_SOURCE_DIR}/sshd-config-template" | sudo tee "${CONFIG}" &>/dev/null
+sudo chown root:root "${CONFIG}"
+sudo chmod a=r "${CONFIG}"
+
+sudo ufw allow 22/tcp

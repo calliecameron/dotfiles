@@ -3,24 +3,25 @@ Port 22
 
 AllowUsers @@@@@1@@@@@
 
-ChallengeResponseAuthentication no
+KbdInteractiveAuthentication no
 RhostsRSAAuthentication no
 HostbasedAuthentication no
 KerberosAuthentication no
 PasswordAuthentication no
 RSAAuthentication no
+GSSAPIAuthentication no
 PubkeyAuthentication yes
 
 PermitRootLogin no
 StrictModes yes
 UsePAM yes
 UsePrivilegeSeparation yes
-X11Forwarding yes
+X11Forwarding no
 IgnoreRhosts yes
 PrintMotd no
+TCPKeepAlive no
 
 HostKey /etc/ssh/ssh_host_rsa_key
-HostKey /etc/ssh/ssh_host_dsa_key
 HostKey /etc/ssh/ssh_host_ecdsa_key
 HostKey /etc/ssh/ssh_host_ed25519_key
 
