@@ -1,0 +1,23 @@
+#!/bin/bash
+
+set -eu
+
+function usage() {
+    echo "Usage: $(basename "${0}") base_dir repos..."
+    exit 1
+}
+
+test -z "${1:-}" && usage
+test -z "${2:-}" && usage
+
+BASE_DIR="${1}"
+mkdir -p "${BASE_DIR}"
+
+shift
+
+while [ -n "${1:-}" ]; do
+    REPO="${1}"
+    DIR="${BASE_DIR}/$(basename "${REPO}" '.git')"
+    dotfiles-clone-or-update-repo "${REPO}" "${DIR}" 'master'
+    shift
+done

@@ -864,6 +864,81 @@ assert_num_matching_lines() {
     (cd "${TMP_DIR}/bar" && assert [ "$(git branch --show-current)" = 'master' ])
 }
 
+@test 'dotfiles-clone-or-update-repos no args' {
+    run_script "PATH=${BIN_DIR}:${PATH}" "${BIN_DIR}/dotfiles-clone-or-update-repos"
+    assert_failure
+    assert_line --partial 'Usage:'
+}
+
+@test 'dotfiles-clone-or-update-repos one arg' {
+    run_script "PATH=${BIN_DIR}:${PATH}" "${BIN_DIR}/dotfiles-clone-or-update-repos" 'foo'
+    assert_failure
+    assert_line --partial 'Usage:'
+}
+
+@test 'dotfiles-clone-or-update-repos clone' {
+    mkdir -p "${TMP_DIR}/foo"
+    echo 'foo' >"${TMP_DIR}/foo/a"
+    (cd "${TMP_DIR}/foo" && git init . && git add a && git commit -m 'Foo')
+    mkdir -p "${TMP_DIR}/bar.git"
+    echo 'bar' >"${TMP_DIR}/bar.git/b"
+    (cd "${TMP_DIR}/bar.git" && git init . && git add b && git commit -m 'Foo')
+    run_script "PATH=${BIN_DIR}:${PATH}" "${BIN_DIR}/dotfiles-clone-or-update-repos" "${TMP_DIR}/dir" "${TMP_DIR}/foo" "${TMP_DIR}/bar.git"
+    assert_success
+    refute_line --partial 'Usage:'
+    assert [ -d "${TMP_DIR}/dir/foo" ]
+    assert [ -f "${TMP_DIR}/dir/foo/a" ]
+    assert [ "$(cat "${TMP_DIR}/dir/foo/a")" = 'foo' ]
+    (cd "${TMP_DIR}/dir/foo" && assert [ "$(git branch --show-current)" = 'master' ])
+    assert [ -d "${TMP_DIR}/dir/bar" ]
+    assert [ -f "${TMP_DIR}/dir/bar/b" ]
+    assert [ "$(cat "${TMP_DIR}/dir/bar/b")" = 'bar' ]
+    (cd "${TMP_DIR}/dir/bar" && assert [ "$(git branch --show-current)" = 'master' ])
+}
+
+@test 'dotfiles-clone-or-update-repos update' {
+    mkdir -p "${TMP_DIR}/dir"
+
+    mkdir -p "${TMP_DIR}/foo"
+    echo 'foo' >"${TMP_DIR}/foo/a"
+    (cd "${TMP_DIR}/foo" && git init . && git add a && git commit -m 'Foo')
+    git clone "${TMP_DIR}/foo" "${TMP_DIR}/dir/foo"
+    echo 'baz' >"${TMP_DIR}/foo/a"
+    (cd "${TMP_DIR}/foo" && git add a && git commit -m 'Bar')
+
+    mkdir -p "${TMP_DIR}/bar"
+    echo 'bar' >"${TMP_DIR}/bar/b"
+    (cd "${TMP_DIR}/bar" && git init . && git add b && git commit -m 'Foo')
+    git clone "${TMP_DIR}/bar" "${TMP_DIR}/dir/bar"
+    echo 'quux' >"${TMP_DIR}/bar/b"
+    (cd "${TMP_DIR}/bar" && git add b && git commit -m 'Bar')
+
+    run_script "PATH=${BIN_DIR}:${PATH}" "${BIN_DIR}/dotfiles-clone-or-update-repos" "${TMP_DIR}/dir" "${TMP_DIR}/foo" "${TMP_DIR}/bar.git"
+    assert_success
+    refute_line --partial 'Usage:'
+    assert [ -d "${TMP_DIR}/dir/foo" ]
+    assert [ -f "${TMP_DIR}/dir/foo/a" ]
+    assert [ "$(cat "${TMP_DIR}/dir/foo/a")" = 'baz' ]
+    (cd "${TMP_DIR}/dir/foo" && assert [ "$(git branch --show-current)" = 'master' ])
+    assert [ -d "${TMP_DIR}/dir/bar" ]
+    assert [ -f "${TMP_DIR}/dir/bar/b" ]
+    assert [ "$(cat "${TMP_DIR}/dir/bar/b")" = 'quux' ]
+    (cd "${TMP_DIR}/dir/bar" && assert [ "$(git branch --show-current)" = 'master' ])
+}
+
+@test 'dotfiles-clone-or-update-repos failure' {
+    mkdir -p "${TMP_DIR}/foo"
+    echo 'foo' >"${TMP_DIR}/foo/a"
+    mkdir -p "${TMP_DIR}/bar.git"
+    echo 'bar' >"${TMP_DIR}/bar.git/b"
+    (cd "${TMP_DIR}/bar.git" && git init . && git add b && git commit -m 'Foo')
+    run_script "PATH=${BIN_DIR}:${PATH}" "${BIN_DIR}/dotfiles-clone-or-update-repos" "${TMP_DIR}/dir" "${TMP_DIR}/foo" "${TMP_DIR}/bar.git"
+    assert_failure
+    refute_line --partial 'Usage:'
+    assert [ ! -e "${TMP_DIR}/dir/foo" ]
+    assert [ ! -e "${TMP_DIR}/dir/bar" ]
+}
+
 @test 'dotfiles-package-root-valid usage' {
     run_script "${BIN_DIR}/dotfiles-package-root-valid"
     assert_failure
