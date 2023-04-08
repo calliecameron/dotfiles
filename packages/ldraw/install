@@ -6,11 +6,11 @@ sudo apt-get -y install --install-recommends wine-installer xserver-xephyr \
     x11vnc xdotool vinagre
 
 wget -O complete.zip 'http://www.ldraw.org/library/updates/complete.zip'
-unzip complete.zip
+unzip -o complete.zip
 
 cd ldraw
 
-if [ ! -f 'MLCad_V3.40' ]; then
+if [ ! -d 'MLCad_V3.40' ]; then
     wget -O mlcad.zip 'http://mlcad.lm-software.com/MLCad_V3.40.zip'
     echo '0a95e93dc59c059274255df7c1e30396d30472dfa2649f02f0657923abe282d8  mlcad.zip' >checksum
     sha256sum -c checksum
