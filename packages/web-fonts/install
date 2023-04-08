@@ -7,7 +7,9 @@ dotfiles-clone-or-update-repo 'https://github.com/konpa/devicon' "${PACKAGE_INST
 dotfiles-clone-or-update-repo 'https://github.com/fizzed/font-mfizz' "${PACKAGE_INSTALL_DIR}/font-mfizz" 'master'
 dotfiles-clone-or-update-repo 'https://github.com/Keyamoon/IcoMoon-Free' "${PACKAGE_INSTALL_DIR}/icomoon" 'master'
 
-dotfiles-home-link "${PACKAGE_INSTALL_DIR}/font-awesome/otfs" "${HOME}/.fonts/web-fonts/fontawesome"
+dotfiles-home-link "${PACKAGE_INSTALL_DIR}/font-awesome/otfs/Font Awesome 6 Brands-Regular-400.otf" "${HOME}/.fonts/web-fonts/fontawesome/Font Awesome 6 Brands-Regular-400.otf"
+dotfiles-home-link "${PACKAGE_INSTALL_DIR}/font-awesome/otfs/Font Awesome 6 Free-Regular-400.otf" "${HOME}/.fonts/web-fonts/fontawesome/Font Awesome 6 Free-Regular-400.otf"
+dotfiles-home-link "${PACKAGE_INSTALL_DIR}/font-awesome/otfs/Font Awesome 6 Free-Solid-900.otf" "${HOME}/.fonts/web-fonts/fontawesome/Font Awesome 6 Free-Solid-900.otf"
 dotfiles-home-link "${PACKAGE_INSTALL_DIR}/devicon/fonts/devicon.ttf" "${HOME}/.fonts/web-fonts/devicon.ttf"
 dotfiles-home-link "${PACKAGE_INSTALL_DIR}/font-mfizz/dist/font-mfizz.ttf" "${HOME}/.fonts/web-fonts/font-mfizz.ttf"
 dotfiles-home-link "${PACKAGE_INSTALL_DIR}/icomoon/Font/IcoMoon-Free.ttf" "${HOME}/.fonts/web-fonts/IcoMoon-Free.ttf"
