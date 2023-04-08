@@ -1384,12 +1384,16 @@ assert_num_matching_lines() {
 }
 
 @test 'dotfiles-package-list too many args' {
+    local INSTALL_DIR="${TMP_DIR}/install"
+    local IGNORE_FILE="${TMP_DIR}/ignore"
     run_script "PATH=${BIN_DIR}:${PATH}" "DOTFILES_PACKAGE_INSTALL_DIR=${INSTALL_DIR}" "DOTFILES_PACKAGE_IGNORE_FILE=${IGNORE_FILE}" "$(printf 'DOTFILES_PACKAGE_ROOTS=%s/a::%s/b:%s/c:%s/d\ne' "${TMP_DIR}" "${TMP_DIR}" "${TMP_DIR}" "${TMP_DIR}")" "${BIN_DIR}/dotfiles-package-list" 'a' 'b'
     assert_failure
     assert_line --partial 'Too many args'
 }
 
 @test 'dotfiles-package-list bad command' {
+    local INSTALL_DIR="${TMP_DIR}/install"
+    local IGNORE_FILE="${TMP_DIR}/ignore"
     run_script "PATH=${BIN_DIR}:${PATH}" "DOTFILES_PACKAGE_INSTALL_DIR=${INSTALL_DIR}" "DOTFILES_PACKAGE_IGNORE_FILE=${IGNORE_FILE}" "$(printf 'DOTFILES_PACKAGE_ROOTS=%s/a::%s/b:%s/c:%s/d\ne' "${TMP_DIR}" "${TMP_DIR}" "${TMP_DIR}" "${TMP_DIR}")" "${BIN_DIR}/dotfiles-package-list" 'a'
     assert_failure
     assert_line --partial 'Unknown command'
