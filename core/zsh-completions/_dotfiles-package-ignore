@@ -1,4 +1,0 @@
-# compdef dotfiles-package-ignore
-# shellcheck disable=SC2148
-
-_arguments "1: :($(dotfiles-package-list can-ignore))"

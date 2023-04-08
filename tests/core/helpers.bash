@@ -281,7 +281,6 @@ function assert_not_nemo_scripts() {
 }
 
 function assert_zsh_completions() {
-    assert_line --regexp "^TEST_FPATH=.*$(readlink -f "${CORE_DIR}")/zsh-completions.*\$"
     assert_line --regexp "^TEST_FPATH=.*$(readlink -f "${TEST_PACKAGE_ROOT_1}")/foo/zsh-completions.*\$"
     refute_line --regexp "^TEST_FPATH=.*$(readlink -f "${TEST_PACKAGE_ROOT_1}")/bar/zsh-completions.*\$"
 }

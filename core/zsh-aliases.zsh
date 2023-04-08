@@ -3,8 +3,6 @@
 
 [ -n "${DOTFILES_PROFILING}" ] && printf 'zsh ' && date --rfc-3339=ns
 
-fpath=("${DOTFILES_DIR}/core/zsh-completions" $fpath)
-
 export DOTFILES_SHELL='zsh'
 # Might not have loaded environment variables yet, so have to do this with the
 # full path
