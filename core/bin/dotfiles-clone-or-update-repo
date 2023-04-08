@@ -39,7 +39,7 @@ if [ -d "${DIR}" ]; then
         fail "Could not check out branch '${BRANCH}'."
     fi
 
-    if ! git pull; then
+    if git symbolic-ref -q HEAD >/dev/null && ! git pull; then
         fail 'Could not update branch.'
     fi
 

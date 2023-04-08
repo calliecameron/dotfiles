@@ -778,6 +778,22 @@ assert_num_matching_lines() {
     (cd "${TMP_DIR}/bar" && assert [ "$(git branch --show-current)" = 'dev' ])
 }
 
+@test 'dotfiles-clone-or-update-repo clone tag' {
+    mkdir -p "${TMP_DIR}/foo"
+    touch "${TMP_DIR}/foo/a"
+    (cd "${TMP_DIR}/foo" && git init . && git add a && git commit -m 'Foo' && git tag foo)
+    touch "${TMP_DIR}/foo/b"
+    (cd "${TMP_DIR}/foo" && git add b && git commit -m 'Bar')
+    run_script "PATH=${BIN_DIR}:${PATH}" "${BIN_DIR}/dotfiles-clone-or-update-repo" "${TMP_DIR}/foo" "${TMP_DIR}/bar" 'foo'
+    assert_success
+    refute_line --partial 'Usage:'
+    assert [ -d "${TMP_DIR}/bar" ]
+    assert [ -f "${TMP_DIR}/bar/a" ]
+    assert [ ! -e "${TMP_DIR}/bar/b" ]
+    (cd "${TMP_DIR}/bar" && assert [ "$(git branch --show-current)" = '' ])
+    (cd "${TMP_DIR}/bar" && assert [ "$(git tag --points-at)" = 'foo' ])
+}
+
 @test 'dotfiles-clone-or-update-repo clone bad branch' {
     mkdir -p "${TMP_DIR}/foo"
     touch "${TMP_DIR}/foo/a"
@@ -819,6 +835,24 @@ assert_num_matching_lines() {
     assert [ -f "${TMP_DIR}/bar/a" ]
     assert [ "$(cat "${TMP_DIR}/bar/a")" = 'foo' ]
     (cd "${TMP_DIR}/bar" && assert [ "$(git branch --show-current)" = 'dev' ])
+}
+
+@test 'dotfiles-clone-or-update-repo pull clean tag' {
+    mkdir -p "${TMP_DIR}/foo"
+    touch "${TMP_DIR}/foo/a"
+    (cd "${TMP_DIR}/foo" && git init . && git add a && git commit -m 'Foo' && git tag foo)
+    git clone "${TMP_DIR}/foo" "${TMP_DIR}/bar"
+    (cd "${TMP_DIR}/bar" && git checkout foo)
+    echo 'foo' >"${TMP_DIR}/foo/a"
+    (cd "${TMP_DIR}/foo" && git add a && git commit -m 'Bar')
+    run_script "PATH=${BIN_DIR}:${PATH}" "${BIN_DIR}/dotfiles-clone-or-update-repo" "${TMP_DIR}/foo" "${TMP_DIR}/bar" 'foo'
+    assert_success
+    refute_line --partial 'Usage:'
+    assert [ -d "${TMP_DIR}/bar" ]
+    assert [ -f "${TMP_DIR}/bar/a" ]
+    assert [ "$(cat "${TMP_DIR}/bar/a")" = '' ]
+    (cd "${TMP_DIR}/bar" && assert [ "$(git branch --show-current)" = '' ])
+    (cd "${TMP_DIR}/bar" && assert [ "$(git tag --points-at)" = 'foo' ])
 }
 
 @test 'dotfiles-clone-or-update-repo pull clean bad branch' {
