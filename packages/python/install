@@ -15,5 +15,5 @@ fi
 
 "${BASE_PIP}" install --user --upgrade pip setuptools wheel
 
-"${LOCAL_PIP_DIR}/pip3" install --user --upgrade gitpython ipython jupyter \
-    pygments virtualenv virtualenvwrapper
+"${LOCAL_PIP_DIR}/pip3" install --user --upgrade ipython notebook pygments \
+    virtualenv virtualenvwrapper
