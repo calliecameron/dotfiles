@@ -5,9 +5,8 @@ export NVM_DIR="${HOME}/.nvm"
 export NVM_LAZY_LOAD=true
 export NVM_COMPLETION=true
 
-if [ -f "${NVM_DIR}/nvm.sh" ]; then
-    . "${NVM_DIR}/nvm.sh" && nvm use node
+if [ -f "${NVM_DIR}/nvm.sh" ] && . "${NVM_DIR}/nvm.sh"; then
+    nvm use node
+    DOTFILES_NVM_LIB_PATH="$(readlink -f "$(dirname "$(nvm which current)")/../lib/node_modules")"
+    export DOTFILES_NVM_LIB_PATH
 fi
-
-DOTFILES_NVM_LIB_PATH="$(zsh -c "PACKAGE_INSTALL_DIR=\"${PACKAGE_INSTALL_DIR}\" && source \"${PACKAGE_SOURCE_DIR}/aliases.zsh\" && readlink -f \"\$(dirname \"$(nvm which current)\")/../lib/node_modules\"")"
-export DOTFILES_NVM_LIB_PATH
