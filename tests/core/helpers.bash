@@ -211,7 +211,7 @@ function _after_login() {
 }
 
 function run_after_login() {
-    run _after_login true "${@}" 3>&-
+    run _after_login true "${@}" </dev/null 3>&-
 }
 
 function run_bash_after_login() {
@@ -223,7 +223,7 @@ function run_zsh_after_login() {
 }
 
 function run_between_login_and_shell() {
-    run _after_login "${@}" 3>&-
+    run _after_login "${@}" </dev/null 3>&-
 }
 
 function run_between_login_and_bash() {
