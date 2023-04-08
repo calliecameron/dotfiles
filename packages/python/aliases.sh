@@ -12,16 +12,6 @@ alias py='python-wrapper'
 
 if type virtualenvwrapper.sh &>/dev/null; then
     source virtualenvwrapper.sh
-
-    function workon-wrapper() {
-        if [ "${VIRTUAL_ENV}" != "${WORKON_HOME}/${1}" ]; then
-            workon "${1}"
-        fi
-    }
-else
-    function workon-wrapper() {
-        true
-    }
 fi
 
 if type pip &>/dev/null; then
