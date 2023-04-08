@@ -103,7 +103,10 @@ if [ -e "${DOTFILES_PACKAGE_PROBLEMS_FILE}" ]; then
     echo -en "\e[0m"
 fi
 
-if [ -n "${DOTFILES_AUTOENV_SOURCE}" ]; then
+# Autoenv overwrites cd, so we have to load it last to avoid messing with
+# package loading.
+if [ -n "${DOTFILES_AUTOENV_SOURCE}" ] &&
+    [ -f "${DOTFILES_AUTOENV_SOURCE}" ]; then
     source "${DOTFILES_AUTOENV_SOURCE}"
 fi
 
