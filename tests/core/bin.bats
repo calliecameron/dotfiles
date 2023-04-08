@@ -1349,7 +1349,19 @@ assert_num_matching_lines() {
     refute_line --partial 'Usage:'
 }
 
-@test 'dotfiles-package-list' {
+@test 'dotfiles-package-list too many args' {
+    run_script "PATH=${BIN_DIR}:${PATH}" "DOTFILES_PACKAGE_INSTALL_DIR=${INSTALL_DIR}" "DOTFILES_PACKAGE_IGNORE_FILE=${IGNORE_FILE}" "$(printf 'DOTFILES_PACKAGE_ROOTS=%s/a::%s/b:%s/c:%s/d\ne' "${TMP_DIR}" "${TMP_DIR}" "${TMP_DIR}" "${TMP_DIR}")" "${BIN_DIR}/dotfiles-package-list" 'a' 'b'
+    assert_failure
+    assert_line --partial 'Too many args'
+}
+
+@test 'dotfiles-package-list bad command' {
+    run_script "PATH=${BIN_DIR}:${PATH}" "DOTFILES_PACKAGE_INSTALL_DIR=${INSTALL_DIR}" "DOTFILES_PACKAGE_IGNORE_FILE=${IGNORE_FILE}" "$(printf 'DOTFILES_PACKAGE_ROOTS=%s/a::%s/b:%s/c:%s/d\ne' "${TMP_DIR}" "${TMP_DIR}" "${TMP_DIR}" "${TMP_DIR}")" "${BIN_DIR}/dotfiles-package-list" 'a'
+    assert_failure
+    assert_line --partial 'Unknown command'
+}
+
+@test 'dotfiles-package-list status' {
     local INSTALL_DIR="${TMP_DIR}/install"
     mkdir -p "${INSTALL_DIR}"
     local IGNORE_FILE="${TMP_DIR}/ignore"
@@ -1411,6 +1423,140 @@ Not available to install
 Ignored ('dotfiles-package-unignore' to unignore)
     bar
     stuff"
+}
+
+@test 'dotfiles-package-list can-ignore' {
+    local INSTALL_DIR="${TMP_DIR}/install"
+    mkdir -p "${INSTALL_DIR}"
+    local IGNORE_FILE="${TMP_DIR}/ignore"
+
+    mkdir -p "${TMP_DIR}/a/foo"
+
+    mkdir -p "${TMP_DIR}/a/foo bar"
+
+    mkdir -p "${TMP_DIR}/a/bar"
+    echo 'bar' >>"${IGNORE_FILE}"
+
+    mkdir -p "${TMP_DIR}/a/baz"
+    touch "${TMP_DIR}/a/baz/install"
+    touch "${INSTALL_DIR}/baz.installed"
+
+    mkdir -p "${TMP_DIR}/b/quux"
+    touch "${TMP_DIR}/b/quux/install"
+
+    mkdir -p "${TMP_DIR}/b/blah"
+    touch "${TMP_DIR}/b/blah/install"
+    printf "#!/bin/bash\ntrue\n" >"${TMP_DIR}/b/blah/can-install"
+    chmod u+x "${TMP_DIR}/b/blah/can-install"
+
+    mkdir -p "${TMP_DIR}/b/yay"
+    touch "${TMP_DIR}/b/yay/install"
+    printf "#!/bin/bash\nfalse\n" >"${TMP_DIR}/b/yay/can-install"
+    chmod u+x "${TMP_DIR}/b/yay/can-install"
+
+    mkdir -p "${TMP_DIR}/b/stuff"
+    touch "${TMP_DIR}/b/stuff/install"
+    echo 'stuff' >>"${IGNORE_FILE}"
+    touch "${INSTALL_DIR}/stuff.installed"
+
+    mkdir -p "${TMP_DIR}/b/foo"
+
+    mkdir -p "$(printf '%s/d\ne/other' "${TMP_DIR}")"
+
+    run_script "PATH=${BIN_DIR}:${PATH}" "DOTFILES_PACKAGE_INSTALL_DIR=${INSTALL_DIR}" "DOTFILES_PACKAGE_IGNORE_FILE=${IGNORE_FILE}" "$(printf 'DOTFILES_PACKAGE_ROOTS=%s/a::%s/b:%s/c:%s/d\ne' "${TMP_DIR}" "${TMP_DIR}" "${TMP_DIR}" "${TMP_DIR}")" "${BIN_DIR}/dotfiles-package-list" 'can-ignore'
+    assert_success
+    assert_output "baz
+blah
+foo
+quux"
+}
+
+@test 'dotfiles-package-list can-unignore' {
+    local INSTALL_DIR="${TMP_DIR}/install"
+    mkdir -p "${INSTALL_DIR}"
+    local IGNORE_FILE="${TMP_DIR}/ignore"
+
+    mkdir -p "${TMP_DIR}/a/foo"
+
+    mkdir -p "${TMP_DIR}/a/foo bar"
+
+    mkdir -p "${TMP_DIR}/a/bar"
+    echo 'bar' >>"${IGNORE_FILE}"
+
+    mkdir -p "${TMP_DIR}/a/baz"
+    touch "${TMP_DIR}/a/baz/install"
+    touch "${INSTALL_DIR}/baz.installed"
+
+    mkdir -p "${TMP_DIR}/b/quux"
+    touch "${TMP_DIR}/b/quux/install"
+
+    mkdir -p "${TMP_DIR}/b/blah"
+    touch "${TMP_DIR}/b/blah/install"
+    printf "#!/bin/bash\ntrue\n" >"${TMP_DIR}/b/blah/can-install"
+    chmod u+x "${TMP_DIR}/b/blah/can-install"
+
+    mkdir -p "${TMP_DIR}/b/yay"
+    touch "${TMP_DIR}/b/yay/install"
+    printf "#!/bin/bash\nfalse\n" >"${TMP_DIR}/b/yay/can-install"
+    chmod u+x "${TMP_DIR}/b/yay/can-install"
+
+    mkdir -p "${TMP_DIR}/b/stuff"
+    touch "${TMP_DIR}/b/stuff/install"
+    echo 'stuff' >>"${IGNORE_FILE}"
+    touch "${INSTALL_DIR}/stuff.installed"
+
+    mkdir -p "${TMP_DIR}/b/foo"
+
+    mkdir -p "$(printf '%s/d\ne/other' "${TMP_DIR}")"
+
+    run_script "PATH=${BIN_DIR}:${PATH}" "DOTFILES_PACKAGE_INSTALL_DIR=${INSTALL_DIR}" "DOTFILES_PACKAGE_IGNORE_FILE=${IGNORE_FILE}" "$(printf 'DOTFILES_PACKAGE_ROOTS=%s/a::%s/b:%s/c:%s/d\ne' "${TMP_DIR}" "${TMP_DIR}" "${TMP_DIR}" "${TMP_DIR}")" "${BIN_DIR}/dotfiles-package-list" 'can-unignore'
+    assert_success
+    assert_output "bar
+stuff"
+}
+
+@test 'dotfiles-package-list can-install' {
+    local INSTALL_DIR="${TMP_DIR}/install"
+    mkdir -p "${INSTALL_DIR}"
+    local IGNORE_FILE="${TMP_DIR}/ignore"
+
+    mkdir -p "${TMP_DIR}/a/foo"
+
+    mkdir -p "${TMP_DIR}/a/foo bar"
+
+    mkdir -p "${TMP_DIR}/a/bar"
+    echo 'bar' >>"${IGNORE_FILE}"
+
+    mkdir -p "${TMP_DIR}/a/baz"
+    touch "${TMP_DIR}/a/baz/install"
+    touch "${INSTALL_DIR}/baz.installed"
+
+    mkdir -p "${TMP_DIR}/b/quux"
+    touch "${TMP_DIR}/b/quux/install"
+
+    mkdir -p "${TMP_DIR}/b/blah"
+    touch "${TMP_DIR}/b/blah/install"
+    printf "#!/bin/bash\ntrue\n" >"${TMP_DIR}/b/blah/can-install"
+    chmod u+x "${TMP_DIR}/b/blah/can-install"
+
+    mkdir -p "${TMP_DIR}/b/yay"
+    touch "${TMP_DIR}/b/yay/install"
+    printf "#!/bin/bash\nfalse\n" >"${TMP_DIR}/b/yay/can-install"
+    chmod u+x "${TMP_DIR}/b/yay/can-install"
+
+    mkdir -p "${TMP_DIR}/b/stuff"
+    touch "${TMP_DIR}/b/stuff/install"
+    echo 'stuff' >>"${IGNORE_FILE}"
+    touch "${INSTALL_DIR}/stuff.installed"
+
+    mkdir -p "${TMP_DIR}/b/foo"
+
+    mkdir -p "$(printf '%s/d\ne/other' "${TMP_DIR}")"
+
+    run_script "PATH=${BIN_DIR}:${PATH}" "DOTFILES_PACKAGE_INSTALL_DIR=${INSTALL_DIR}" "DOTFILES_PACKAGE_IGNORE_FILE=${IGNORE_FILE}" "$(printf 'DOTFILES_PACKAGE_ROOTS=%s/a::%s/b:%s/c:%s/d\ne' "${TMP_DIR}" "${TMP_DIR}" "${TMP_DIR}" "${TMP_DIR}")" "${BIN_DIR}/dotfiles-package-list" 'can-install'
+    assert_success
+    assert_output "blah
+quux"
 }
 
 @test 'dotfiles-package-lock not locked' {

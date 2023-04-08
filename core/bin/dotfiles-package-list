@@ -4,6 +4,7 @@ from typing import Dict, List, Set, Tuple
 import os
 import pathlib
 import subprocess
+import sys
 from collections import defaultdict
 from dataclasses import dataclass
 
@@ -129,7 +130,7 @@ def print_set(heading: str, s: Set[pathlib.Path]) -> None:
         print()
 
 
-def main() -> None:
+def print_status() -> None:
     packages = status()
 
     if packages.invalid_roots:
@@ -150,6 +151,45 @@ def main() -> None:
     print_set("Available to install ('dotfiles-package-install' to install)", packages.can_install)
     print_set("Not available to install", packages.cant_install)
     print_set("Ignored ('dotfiles-package-unignore' to unignore)", packages.ignored)
+
+
+def print_package_names(packages: Set[pathlib.Path]) -> None:
+    names = set()
+    for p in packages:
+        names.add(p.name)
+    for n in sorted(names):
+        print(n)
+
+
+def print_can_ignore() -> None:
+    packages = status()
+    print_package_names(packages.install_not_needed | packages.can_install | packages.installed)
+
+
+def print_can_unignore() -> None:
+    packages = status()
+    print_package_names(packages.ignored)
+
+
+def print_can_install() -> None:
+    packages = status()
+    print_package_names(packages.can_install)
+
+
+def main() -> None:
+    if len(sys.argv) > 2:
+        raise ValueError("Too many args")
+
+    if len(sys.argv) == 1:
+        print_status()
+    elif sys.argv[1] == "can-ignore":
+        print_can_ignore()
+    elif sys.argv[1] == "can-unignore":
+        print_can_unignore()
+    elif sys.argv[1] == "can-install":
+        print_can_install()
+    else:
+        raise ValueError("Unknown command: " + sys.argv[1])
 
 
 if __name__ == "__main__":
