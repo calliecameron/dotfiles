@@ -94,5 +94,6 @@
         80,
         100
     ],
-    "gitlens.advanced.fileHistoryFollowsRenames": true
+    "gitlens.advanced.fileHistoryFollowsRenames": true,
+    "python.formatting.provider": "black"
 }
