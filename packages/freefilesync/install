@@ -3,7 +3,7 @@
 set -eu
 
 if [ ! -f "${PACKAGE_INSTALL_DIR}/bin/freefilesync" ]; then
-    wget 'https://download944.mediafire.com/00lu51ywvxlgR9nVIbxdMWWb1rI1X_3lhi3qETci8L0WFXJ_uKz9WJiO3pxGVWs8JdarjFGuzhktOo5SMvdxZC0/gy66u6oa9ftddgs/FreeFileSync_10.9_Linux.tar.gz'
+    wget 'https://download944.mediafire.com/afkmb0lzz7yg9To2VE9x2ajkOpiP27j9RtIMfEPdx5Fx3QiWSof7G7C61lS3_Rg7pENDtGZYrkfTlBukhuapffXQvnGZhdlQJuq9DGifm8-7JAG3VY1gMCkRmYt_vOhzbwiMvf6QMX6VBXGrTQJOwdNs26VQwkcdUR1utEHf/gy66u6oa9ftddgs/FreeFileSync_10.9_Linux.tar.gz'
     echo 'b8326b87c5349b7798b6047e49b425580eef12aaefe57b3e2c0609dd1a39d540  FreeFileSync_10.9_Linux.tar.gz' >checksum
     sha256sum -c checksum
     tar -xf 'FreeFileSync_10.9_Linux.tar.gz'
