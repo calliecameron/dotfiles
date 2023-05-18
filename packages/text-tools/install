@@ -15,8 +15,6 @@ if ! command -v pandoc &>/dev/null; then
 fi
 
 # For markdown-makefile
-sudo apt-get install -y catdoc csvkit git gcc hunspell hunspell-en-gb libegl1 \
+sudo apt-get install -y catdoc git gcc hunspell hunspell-en-gb libegl1 \
     libopengl0 libxkbcommon0 poppler-utils python3-pip strip-nondeterminism \
     texlive-xetex unoconv
-
-pip install pdfminer
