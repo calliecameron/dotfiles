@@ -654,7 +654,7 @@ dotfiles-org-linkify-suffix) appended."
 
 (dotfiles-use-package solarized-theme
   :config
-  (defvar dotfiles-current-theme 'solarized-dark)
+  (defvar dotfiles-current-theme 'solarized-light)
   (defun dotfiles-toggle-theme ()
     "Toggle between light and dark themes."
     (interactive)
