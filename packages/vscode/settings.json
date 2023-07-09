@@ -95,5 +95,8 @@
         100
     ],
     "gitlens.advanced.fileHistoryFollowsRenames": true,
-    "python.formatting.provider": "black"
+    "python.formatting.provider": "black",
+    "[dockerfile]": {
+        "editor.defaultFormatter": "ms-azuretools.vscode-docker"
+    }
 }
