@@ -15,3 +15,5 @@ sudo systemctl stop docker.service
 dockerd-rootless-setuptool.sh install
 
 systemctl --user disable docker.service
+
+docker context use rootless
