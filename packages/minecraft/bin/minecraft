@@ -2,18 +2,25 @@
 
 set -eu
 
-DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+x11docker \
+    --rootless \
+    --xc \
+    --gpu \
+    --lang \
+    --network \
+    --pulseaudio \
+    --hostdisplay \
+    --name=minecraft-atlauncher \
+    --env HOME=/minecraft \
+    --share minecraft \
+    -- \
+    --tmpfs /tmp:exec \
+    -- \
+    minecraft-atlauncher &
 
-ARCHIVE="Minecraft.tar.gz"
-URL='https://launcher.mojang.com/download/Minecraft.tar.gz'
-INSTALL_DIR="$(readlink -f "${DIR}/../install-dir")"
+PID="${!}"
 
-if [ ! -d "${INSTALL_DIR}" ]; then
-    mkdir -p "${INSTALL_DIR}"
-    wget -O "${INSTALL_DIR}/${ARCHIVE}" "${URL}"
-    cd "${INSTALL_DIR}"
-    tar -xf "${ARCHIVE}"
-fi
+sleep 5
+docker cp "${HOME}/.config/pulse/cookie" "minecraft-atlauncher:/x11docker/pulseaudio.cookie"
 
-cd "${INSTALL_DIR}/minecraft-launcher"
-exec ./minecraft-launcher
+wait "${PID}"

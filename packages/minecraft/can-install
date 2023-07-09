@@ -4,4 +4,4 @@ set -eu
 
 dotfiles-linux-variant main
 dotfiles-is-graphical
-command -v java &>/dev/null
+dotfiles-package-installed docker

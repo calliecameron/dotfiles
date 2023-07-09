@@ -2,7 +2,11 @@
 
 set -eu
 
-sed "s|@@@@@1@@@@@|${PACKAGE_SOURCE_DIR}|g" <"${PACKAGE_SOURCE_DIR}/minecraft.desktop.template" >"${PACKAGE_SOURCE_DIR}/minecraft.desktop"
+cd "${PACKAGE_SOURCE_DIR}/docker"
+docker build -t minecraft-atlauncher --build-arg "UID=$(id -u)" --build-arg "GID=$(id -g)" .
 
-xdg-desktop-menu install --novendor "${PACKAGE_SOURCE_DIR}/minecraft.desktop"
-xdg-desktop-icon install --novendor "${PACKAGE_SOURCE_DIR}/minecraft.desktop"
+cp "${PACKAGE_SOURCE_DIR}/minecraft.png" "${PACKAGE_INSTALL_DIR}/minecraft.png"
+sed "s|@@@@@1@@@@@|${PACKAGE_INSTALL_DIR}|g" <"${PACKAGE_SOURCE_DIR}/minecraft.desktop.template" >"${PACKAGE_INSTALL_DIR}/minecraft.desktop"
+
+xdg-desktop-menu install --novendor "${PACKAGE_INSTALL_DIR}/minecraft.desktop"
+xdg-desktop-icon install --novendor "${PACKAGE_INSTALL_DIR}/minecraft.desktop"
