@@ -11,8 +11,8 @@ function dotfiles-cd-new() {
 }
 
 function dotfiles-follow() {
-    if [ -f "${DOTFILES_FOLLOW}" ]; then
-        cd "$(cat "${DOTFILES_FOLLOW}")" || return 1
+    if [ -f "${DOTFILES_MV_CP_FOLLOW}" ]; then
+        cd "$(cat "${DOTFILES_MV_CP_FOLLOW}")" || return 1
     fi
 }
 
