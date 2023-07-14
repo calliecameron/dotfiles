@@ -10,6 +10,7 @@ lint:
 	tests/find-python-files.sh | xargs -d '\n' pylint --score n
 	tests/find-python-files.sh | xargs -d '\n' flake8
 	tests/find-python-files.sh | xargs -d '\n' black --check
+	tests/find-python-files.sh | xargs -d '\n' isort --check
 	tests/find-python-files.sh | xargs -d '\n' mypy --strict
 
 .PHONY: test

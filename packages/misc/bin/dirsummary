@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 # List the number and total size of each type of file in a directory tree
 
-from typing import Callable, Dict, List, Tuple  # noqa=F401
 import os
 import sys
 from collections import defaultdict
+from typing import Callable, Dict, List, Tuple
 
 
 def pretty_size(num: float) -> str:
@@ -25,10 +25,10 @@ def main() -> None:
         print(f"'{top}' is not a directory")
         sys.exit(1)
 
-    special_cases = [
+    special_cases: List[Tuple[Callable[[str], bool], str]] = [
         (lambda f: f.lower() == "makefile", "Makefile")
-    ]  # type: List[Tuple[Callable[[str], bool], str]]
-    out = defaultdict(lambda: (0, 0))  # type: Dict[str, Tuple[int, int]]
+    ]
+    out: Dict[str, Tuple[int, int]] = defaultdict(lambda: (0, 0))
 
     def add_file(ext: str, size: int) -> None:
         count, total = out[ext]
