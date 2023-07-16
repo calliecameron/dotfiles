@@ -8,8 +8,10 @@ sudo apt-get update
 sudo apt-get upgrade
 sudo apt-get dist-upgrade
 
-sudo apt-get -y install curl fzf git mercurial nano ncurses-term \
+sudo apt-get -y install curl fd-find fzf git mercurial nano ncurses-term \
     netcat-openbsd screen silversearcher-ag tmux tree zsh zsh-doc
+
+dotfiles-home-bin-link fdfind fd
 
 if dotfiles-linux-variant main; then
     # Mint 21
