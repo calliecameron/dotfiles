@@ -8,6 +8,7 @@ antigen bundle vagrant
 antigen bundle zsh-users/zsh-completions
 antigen bundle lukechilds/zsh-nvm
 antigen bundle lukechilds/zsh-better-npm-completion
+antigen bundle fzf
 antigen apply
 
 # Don't mess with my LESS, oh-my-zsh!

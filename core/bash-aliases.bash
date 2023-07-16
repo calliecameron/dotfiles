@@ -12,6 +12,11 @@ fi
 
 [ -n "${DOTFILES_PROFILING}" ] && printf 'bash ' && date --rfc-3339=ns
 
+# This has to come first, otherwise it overrides completions set in packages
+if [ -f /etc/bash_completion ] && ! shopt -oq posix; then
+    source /etc/bash_completion
+fi
+
 export DOTFILES_SHELL='bash'
 # Might not have loaded environment variables yet, so have to do this with the
 # full path
@@ -24,10 +29,6 @@ HISTFILESIZE=2000
 
 shopt -s histappend
 shopt -s checkwinsize
-
-if [ -f /etc/bash_completion ] && ! shopt -oq posix; then
-    source /etc/bash_completion
-fi
 
 PS1='\u@\h:\w\n\$ '
 
