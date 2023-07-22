@@ -2,13 +2,17 @@ FROM debian:bookworm
 
 RUN apt-get update && \
     apt-get install -y \
+    ca-certificates-java && \
+    apt-get install -y \
     curl \
     firefox-esr \
+    less \
     libpulse0 \
     locales \
     lsb-release \
-    openjdk-17-jre \
     mesa-utils \
+    nano \
+    openjdk-17-jre \
     xdg-utils && \
     rm -rf /var/lib/apt/lists/*
 
@@ -23,5 +27,6 @@ RUN curl -o 'atlauncher-1.4.1.deb' -q 'https://download.nodecdn.net/containers/a
 ARG UID
 ARG GID
 RUN mkdir /minecraft && mkdir /minecraft/atlauncher && chown -R "$UID:$GID" /minecraft
+WORKDIR /minecraft
 
 CMD atlauncher --working-dir /minecraft/atlauncher
