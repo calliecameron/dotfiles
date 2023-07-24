@@ -20,8 +20,6 @@ else
     function ls() { command ls -CFv "${@}"; }
 fi
 
-alias gr='grep'
-alias rg='rgrep'
 alias df='df -h'
 alias du='du -h'
 alias free='free -h'
