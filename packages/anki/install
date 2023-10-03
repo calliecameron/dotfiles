@@ -1,0 +1,22 @@
+#!/bin/bash
+
+set -eu
+
+sudo apt-get -y install libxcb-cursor0 libxcb-xinerama0
+
+ANKI_VERSION='2.1.66'
+ANKI_DIST="anki-${ANKI_VERSION}-linux-qt6"
+
+if [ ! -e "${PACKAGE_INSTALL_DIR}/bin/anki" ]; then
+    mkdir -p "${PACKAGE_INSTALL_DIR}/bin"
+    wget -O- 'https://raw.githubusercontent.com/dae/anki/master/pkgkey.asc' | gpg --import
+    wget -O "${PACKAGE_INSTALL_DIR}/checksums.txt" "https://apps.ankiweb.net/downloads/archive/anki-${ANKI_VERSION}-checksums.txt"
+    gpg --verify "${PACKAGE_INSTALL_DIR}/checksums.txt"
+    wget -O "${PACKAGE_INSTALL_DIR}/${ANKI_DIST}.tar.zst" "https://apps.ankiweb.net/downloads/archive/${ANKI_DIST}.tar.zst"
+    TMPFILE="$(mktemp)"
+    grep "${ANKI_DIST}.tar.zst" "checksums.txt" > "${TMPFILE}"
+    sha256sum -c "${TMPFILE}"
+    rm "${TMPFILE}"
+    tar -xf "${ANKI_DIST}.tar.zst"
+    ln -s "${PACKAGE_INSTALL_DIR}/${ANKI_DIST}/anki" "${PACKAGE_INSTALL_DIR}/bin/anki"
+fi
