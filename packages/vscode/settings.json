@@ -5,10 +5,6 @@
     "files.insertFinalNewline": true,
     "files.trimFinalNewlines": true,
     "python.diagnostics.sourceMapsEnabled": true,
-    "python.linting.banditEnabled": false,
-    "python.linting.flake8Enabled": true,
-    "python.linting.mypyEnabled": true,
-    "python.linting.pylintEnabled": true,
     "python.testing.pytestEnabled": true,
     "editor.formatOnSave": true,
     "files.autoSave": "afterDelay",
@@ -95,8 +91,15 @@
         100
     ],
     "gitlens.advanced.fileHistoryFollowsRenames": true,
-    "python.formatting.provider": "black",
+    "python.formatting.provider": "none",
     "[dockerfile]": {
         "editor.defaultFormatter": "ms-azuretools.vscode-docker"
+    },
+    "[python]": {
+        "editor.defaultFormatter": "ms-python.black-formatter",
+        "editor.formatOnSave": true,
+        "editor.codeActionsOnSave": {
+            "source.organizeImports": true
+        },
     }
 }
