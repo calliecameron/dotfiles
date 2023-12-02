@@ -2,8 +2,7 @@
 
 set -eu
 
-sudo apt-get -y install --install-recommends wine-installer xserver-xephyr \
-    x11vnc xdotool vinagre
+sudo apt-get -y install --install-recommends xserver-xephyr x11vnc xdotool vinagre
 
 wget -O complete.zip 'http://www.ldraw.org/library/updates/complete.zip'
 unzip -o complete.zip
