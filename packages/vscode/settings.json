@@ -1,5 +1,5 @@
 {
-    "workbench.colorTheme": "Solarized Light",
+    "workbench.colorTheme": "Solarized Dark",
     "telemetry.telemetryLevel": "off",
     "workbench.enableExperiments": false,
     "files.insertFinalNewline": true,
@@ -96,7 +96,7 @@
         "editor.defaultFormatter": "ms-azuretools.vscode-docker"
     },
     "[python]": {
-        "editor.defaultFormatter": "ms-python.black-formatter",
+        "editor.defaultFormatter": "charliermarsh.ruff",
         "editor.formatOnSave": true,
         "editor.codeActionsOnSave": {
             "source.organizeImports": "explicit"

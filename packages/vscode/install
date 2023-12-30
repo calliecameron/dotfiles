@@ -14,17 +14,14 @@ sudo apt-get update
 sudo apt-get -y install code
 
 code --install-extension=BazelBuild.vscode-bazel \
+    --install-extension=charliermarsh.ruff \
     --install-extension=coolbear.systemd-unit-file \
     --install-extension=DavidAnson.vscode-markdownlint \
     --install-extension=eamodio.gitlens \
     --install-extension=foxundermoon.shell-format \
     --install-extension=jetmartin.bats \
     --install-extension=mads-hartmann.bash-ide-vscode \
-    --install-extension=ms-python.black-formatter \
-    --install-extension=ms-python.flake8 \
-    --install-extension=ms-python.isort \
     --install-extension=ms-python.mypy-type-checker \
-    --install-extension=ms-python.pylint \
     --install-extension=ms-python.python \
     --install-extension=redhat.ansible \
     --install-extension=redhat.vscode-yaml \
