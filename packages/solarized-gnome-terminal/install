@@ -5,4 +5,4 @@ set -eu
 dotfiles-clone-or-update-repo 'https://github.com/Anthony25/gnome-terminal-colors-solarized' \
     "${PACKAGE_INSTALL_DIR}/solarized" 'master'
 
-"${PACKAGE_INSTALL_DIR}/solarized/set_light.sh"
+"${PACKAGE_INSTALL_DIR}/solarized/set_dark.sh"
