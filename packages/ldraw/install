@@ -4,7 +4,7 @@ set -eu
 
 sudo apt-get -y install --install-recommends xserver-xephyr x11vnc xdotool vinagre
 
-wget -O complete.zip 'http://www.ldraw.org/library/updates/complete.zip'
+wget -O complete.zip 'https://library.ldraw.org/library/updates/complete.zip'
 unzip -o complete.zip
 
 cd ldraw
