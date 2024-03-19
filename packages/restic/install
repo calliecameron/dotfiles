@@ -1,0 +1,14 @@
+#!/bin/bash
+
+set -eu
+
+if [ ! -f "${PACKAGE_INSTALL_DIR}/bin/restic" ]; then
+    wget 'https://github.com/restic/restic/releases/download/v0.16.4/restic_0.16.4_linux_amd64.bz2'
+    echo '3d4d43c169a9e28ea76303b1e8b810f0dcede7478555fdaa8959971ad499e324  restic_0.16.4_linux_amd64.bz2' >checksum
+    sha256sum -c checksum
+    rm checksum
+    bunzip2 'restic_0.16.4_linux_amd64.bz2'
+    mkdir -p "${PACKAGE_INSTALL_DIR}/bin"
+    mv 'restic_0.16.4_linux_amd64' "${PACKAGE_INSTALL_DIR}/bin/restic"
+    chmod u=rwx "${PACKAGE_INSTALL_DIR}/bin/restic"
+fi
