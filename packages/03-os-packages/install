@@ -26,6 +26,10 @@ if dotfiles-linux-variant main; then
 
     sudo rm -f /etc/sudoers.d/0pwfeedback
     fc-cache
+
+    xdg-mime default calibre-ebook-viewer.desktop \
+        application/epub+zip \
+        application/x-mobipocket-ebook
 else
     dotfiles-echo-red "Unknown Linux variant."
     exit 1
