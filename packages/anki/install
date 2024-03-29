@@ -14,7 +14,7 @@ if [ ! -e "${PACKAGE_INSTALL_DIR}/bin/anki" ]; then
     gpg --verify "${PACKAGE_INSTALL_DIR}/checksums.txt"
     wget -O "${PACKAGE_INSTALL_DIR}/${ANKI_DIST}.tar.zst" "https://apps.ankiweb.net/downloads/archive/${ANKI_DIST}.tar.zst"
     TMPFILE="$(mktemp)"
-    grep "${ANKI_DIST}.tar.zst" "checksums.txt" > "${TMPFILE}"
+    grep "${ANKI_DIST}.tar.zst" "checksums.txt" >"${TMPFILE}"
     sha256sum -c "${TMPFILE}"
     rm "${TMPFILE}"
     tar -xf "${ANKI_DIST}.tar.zst"
