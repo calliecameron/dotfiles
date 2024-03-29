@@ -46,6 +46,7 @@ xdg-mime default emacs-daemon.desktop \
     text/x-tex \
     application/x-shellscript \
     text/x-c \
-    text/x-c++
+    text/x-c++ \
+    text/markdown
 mkdir -p "${HOME}/.config/autostart"
 cp "${PACKAGE_SOURCE_DIR}/emacs-daemon.desktop" "${HOME}/.config/autostart/emacs-daemon.desktop"
