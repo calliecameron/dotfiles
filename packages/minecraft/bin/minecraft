@@ -15,6 +15,7 @@ x11docker \
     --share minecraft \
     -- \
     --tmpfs /tmp:exec \
+    --hostname minecraft-atlauncher \
     -- \
     minecraft-atlauncher &
 

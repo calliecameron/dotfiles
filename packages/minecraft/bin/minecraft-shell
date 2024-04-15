@@ -1,0 +1,3 @@
+#!/bin/bash
+
+docker exec -it -e "TERM=${TERM}" -w /minecraft minecraft-atlauncher bash
