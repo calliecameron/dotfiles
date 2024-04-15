@@ -24,6 +24,8 @@ RUN curl -o 'atlauncher-1.4.1.deb' -q 'https://download.nodecdn.net/containers/a
     rm -rf /var/lib/apt/lists/* && \
     rm 'atlauncher-1.4.1.deb'
 
+COPY config_diff.sh /config_diff.sh
+
 ARG UID
 ARG GID
 RUN mkdir /minecraft && mkdir /minecraft/atlauncher && chown -R "$UID:$GID" /minecraft
