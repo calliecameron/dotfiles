@@ -25,6 +25,7 @@ RUN curl -o 'atlauncher-1.4.1.deb' -q 'https://download.nodecdn.net/containers/a
     rm 'atlauncher-1.4.1.deb'
 
 COPY config_diff.sh /config_diff.sh
+RUN chmod ugo=rx /config_diff.sh
 
 ARG UID
 ARG GID
