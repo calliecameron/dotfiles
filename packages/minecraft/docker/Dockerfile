@@ -26,6 +26,8 @@ RUN curl -o 'atlauncher-1.4.1.deb' -q 'https://download.nodecdn.net/containers/a
 
 COPY config_diff.sh /config_diff.sh
 RUN chmod ugo=rx /config_diff.sh
+COPY dynmap_diff.sh /dynmap_diff.sh
+RUN chmod ugo=rx /dynmap_diff.sh
 
 ARG UID
 ARG GID
