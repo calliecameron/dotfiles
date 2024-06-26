@@ -72,7 +72,7 @@ function check-for-updates() {
         local TARGET='2419200' # Seconds in four weeks
 
         if [ "${DIFF}" -ge "${TARGET}" ]; then
-            dotfiles-echo-blue "It's been a while since packages were checked for updates; run 'dotfiles-package-update'."
+            dotfiles-echo-blue "It's been a while since packages were checked for updates; run 'dotfiles-package-update-all'."
         fi
     fi
 }

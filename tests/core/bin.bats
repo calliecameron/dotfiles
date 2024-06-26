@@ -2037,7 +2037,7 @@ EOF
     assert [ ! -e "${TMP_DIR}/install/foo.installed" ]
 }
 
-@test 'dotfiles-package-update needs lock' {
+@test 'dotfiles-package-update-all needs lock' {
     local INSTALL_DIR="${TMP_DIR}/install"
     mkdir -p "${INSTALL_DIR}"
     local IGNORE_FILE="${TMP_DIR}/ignore"
@@ -2055,7 +2055,7 @@ EOF
     run_script \
         "PATH=${BIN_DIR}:${PATH}" \
         "DOTFILES_PACKAGE_MUTEX=${TMP_DIR}/mutex" \
-        "${BIN_DIR}/dotfiles-package-update"
+        "${BIN_DIR}/dotfiles-package-update-all"
 
     assert_failure
     assert [ -d "${TMP_DIR}/mutex" ]
@@ -2067,7 +2067,7 @@ EOF
     refute_line 'Reinstalled package foo'
 }
 
-@test 'dotfiles-package-update clean' {
+@test 'dotfiles-package-update-all clean' {
     local INSTALL_DIR="${TMP_DIR}/install"
     mkdir -p "${INSTALL_DIR}"
     local IGNORE_FILE="${TMP_DIR}/ignore"
@@ -2124,7 +2124,7 @@ EOF
         "DOTFILES_PRIVATE_DIR=${PRIVATE_DIR}" \
         "DOTFILES_PRIVATE_REPO=${TMP_DIR}/repo" \
         "DOTFILES_PRIVATE_BRANCH=" \
-        "${BIN_DIR}/dotfiles-package-update"
+        "${BIN_DIR}/dotfiles-package-update-all"
 
     assert_success
     refute_line --partial 'Usage:'
@@ -2145,7 +2145,7 @@ EOF
     assert_num_matching_lines 'Log out and log in again' '1'
 }
 
-@test 'dotfiles-package-update continue' {
+@test 'dotfiles-package-update-all continue' {
     local INSTALL_DIR="${TMP_DIR}/install"
     mkdir -p "${INSTALL_DIR}"
     local IGNORE_FILE="${TMP_DIR}/ignore"
@@ -2185,7 +2185,7 @@ EOF
         "DOTFILES_PRIVATE_DIR=${PRIVATE_DIR}" \
         "DOTFILES_PRIVATE_REPO=${TMP_DIR}/repo" \
         "DOTFILES_PRIVATE_BRANCH=" \
-        "${BIN_DIR}/dotfiles-package-update"
+        "${BIN_DIR}/dotfiles-package-update-all"
 
     assert_success
     refute_line --partial 'Usage:'
@@ -2202,7 +2202,7 @@ EOF
     assert_num_matching_lines 'Log out and log in again' '1'
 }
 
-@test 'dotfiles-package-update failure' {
+@test 'dotfiles-package-update-all failure' {
     local INSTALL_DIR="${TMP_DIR}/install"
     mkdir -p "${INSTALL_DIR}"
     local IGNORE_FILE="${TMP_DIR}/ignore"
@@ -2235,7 +2235,7 @@ EOF
         "DOTFILES_PACKAGE_ALREADY_UPDATED_FILE=${ALREADY_UPDATED_FILE}" \
         "DOTFILES_PRIVATE_DIR=${PRIVATE_DIR}" \
         "DOTFILES_PRIVATE_REPO=" \
-        "${BIN_DIR}/dotfiles-package-update"
+        "${BIN_DIR}/dotfiles-package-update-all"
 
     assert_failure
     refute_line --partial 'Usage:'
