@@ -4,17 +4,31 @@ RUN apt-get update && \
     apt-get install -y \
     ca-certificates-java && \
     apt-get install -y \
+    build-essential \
+    cmake \
     curl \
     firefox-esr \
     less \
+    libflite1 \
     libpulse0 \
     locales \
     lsb-release \
     mesa-utils \
     nano \
     openjdk-17-jre \
-    xdg-utils && \
+    unzip \
+    wget \
+    xdg-utils \
+    xorg-dev && \
     rm -rf /var/lib/apt/lists/*
+
+RUN wget -q -O 'glfw-3.4.zip' 'https://github.com/glfw/glfw/releases/download/3.4/glfw-3.4.zip' && \
+    unzip 'glfw-3.4.zip' && \
+    cmake -S 'glfw-3.4' -B 'glfw-3.4/build' -D BUILD_SHARED_LIBS=ON -D GLFW_BUILD_WAYLAND=OFF -D GLFW_BUILD_EXAMPLES=OFF -D GLFW_BUILD_TESTS=OFF -D GLFW_BUILD_DOCS=OFF && \
+    cmake --build 'glfw-3.4/build' && \
+    mkdir /glfw && \
+    cp glfw-3.4/build/src/libglfw* /glfw && \
+    rm -rf 'glfw-3.4'
 
 RUN sed -i '/en_GB.UTF-8/s/^# //g' /etc/locale.gen && locale-gen
 
