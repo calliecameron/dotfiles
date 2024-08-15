@@ -1,24 +1,11 @@
-FROM debian:bookworm
+FROM debian:bookworm AS glfw
 
 RUN apt-get update && \
     apt-get install -y \
-    ca-certificates-java && \
-    apt-get install -y \
     build-essential \
     cmake \
-    curl \
-    firefox-esr \
-    less \
-    libflite1 \
-    libpulse0 \
-    locales \
-    lsb-release \
-    mesa-utils \
-    nano \
-    openjdk-17-jre \
     unzip \
     wget \
-    xdg-utils \
     xorg-dev && \
     rm -rf /var/lib/apt/lists/*
 
@@ -30,6 +17,25 @@ RUN wget -q -O 'glfw-3.4.zip' 'https://github.com/glfw/glfw/releases/download/3.
     cp glfw-3.4/build/src/libglfw* /glfw && \
     rm -rf 'glfw-3.4'
 
+FROM debian:bookworm
+
+RUN apt-get update && \
+    apt-get install -y \
+    ca-certificates-java && \
+    apt-get install -y \
+    curl \
+    firefox-esr \
+    less \
+    libflite1 \
+    libpulse0 \
+    locales \
+    lsb-release \
+    mesa-utils \
+    nano \
+    openjdk-17-jre \
+    xdg-utils && \
+    rm -rf /var/lib/apt/lists/*
+
 RUN sed -i '/en_GB.UTF-8/s/^# //g' /etc/locale.gen && locale-gen
 
 RUN curl -o 'atlauncher-1.4.1.deb' -q 'https://download.nodecdn.net/containers/atl/app/dist/linux/atlauncher-1.4-1.deb' && \
@@ -38,10 +44,12 @@ RUN curl -o 'atlauncher-1.4.1.deb' -q 'https://download.nodecdn.net/containers/a
     rm -rf /var/lib/apt/lists/* && \
     rm 'atlauncher-1.4.1.deb'
 
-COPY config_diff.sh /config_diff.sh
-RUN chmod ugo=rx /config_diff.sh
-COPY dynmap_diff.sh /dynmap_diff.sh
-RUN chmod ugo=rx /dynmap_diff.sh
+RUN mkdir -p /opt/minecraft
+COPY --from=glfw /glfw /opt/minecraft/glfw
+COPY config_diff.sh /opt/minecraft/config_diff.sh
+RUN chmod ugo=rx /opt/minecraft/config_diff.sh
+COPY dynmap_diff.sh /opt/minecraft/dynmap_diff.sh
+RUN chmod ugo=rx /opt/minecraft/dynmap_diff.sh
 
 ARG UID
 ARG GID
