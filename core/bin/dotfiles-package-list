@@ -6,7 +6,6 @@ import subprocess
 import sys
 from collections import defaultdict
 from dataclasses import dataclass
-from typing import Dict, List, Set, Tuple
 
 
 def package_root_valid(root: str) -> bool:
@@ -17,7 +16,7 @@ def package_name_valid(name: str) -> bool:
     return subprocess.run(["dotfiles-package-name-valid", name], check=False).returncode == 0
 
 
-def package_roots() -> Tuple[List[pathlib.Path], Set[str]]:
+def package_roots() -> tuple[list[pathlib.Path], set[str]]:
     out = []
     invalid = set()
     for r in os.getenv("DOTFILES_PACKAGE_ROOTS", "").split(":"):
@@ -29,7 +28,7 @@ def package_roots() -> Tuple[List[pathlib.Path], Set[str]]:
     return out, invalid
 
 
-def packages_in_root(package_root: pathlib.Path) -> Tuple[List[pathlib.Path], Set[str]]:
+def packages_in_root(package_root: pathlib.Path) -> tuple[list[pathlib.Path], set[str]]:
     out = []
     invalid = set()
     if package_root.is_dir():
@@ -65,19 +64,19 @@ def package_can_install(package: pathlib.Path) -> bool:
 
 @dataclass
 class Packages:
-    ignored: Set[pathlib.Path]
-    installed: Set[pathlib.Path]
-    can_install: Set[pathlib.Path]
-    cant_install: Set[pathlib.Path]
-    install_not_needed: Set[pathlib.Path]
-    duplicates: Dict[str, Set[pathlib.Path]]
-    invalid_roots: Set[str]
-    invalid_names: Set[str]
+    ignored: set[pathlib.Path]
+    installed: set[pathlib.Path]
+    can_install: set[pathlib.Path]
+    cant_install: set[pathlib.Path]
+    install_not_needed: set[pathlib.Path]
+    duplicates: dict[str, set[pathlib.Path]]
+    invalid_roots: set[str]
+    invalid_names: set[str]
 
 
 def status() -> Packages:
     seen = set()
-    duplicates = defaultdict(set)  # type: Dict[str, Set[pathlib.Path]]
+    duplicates: dict[str, set[pathlib.Path]] = defaultdict(set)
     ignored = set()
     installed = set()
     can_install = set()
@@ -122,7 +121,7 @@ def status() -> Packages:
     )
 
 
-def print_set(heading: str, s: Set[pathlib.Path]) -> None:
+def print_set(heading: str, s: set[pathlib.Path]) -> None:
     if s:
         print(heading)
         for name in sorted([package.name for package in s]):
@@ -143,7 +142,7 @@ def print_status() -> None:
         print(
             "WARNING: duplicate package names found; only the first instance of each will be used: "
             + ", ".join(sorted(packages.duplicates))
-            + "\n"
+            + "\n",
         )
 
     print_set("Active without installing", packages.install_not_needed)
@@ -153,7 +152,7 @@ def print_status() -> None:
     print_set("Ignored ('dotfiles-package-unignore' to unignore)", packages.ignored)
 
 
-def print_package_names(packages: Set[pathlib.Path]) -> None:
+def print_package_names(packages: set[pathlib.Path]) -> None:
     names = set()
     for p in packages:
         names.add(p.name)
@@ -177,7 +176,7 @@ def print_can_install() -> None:
 
 
 def main() -> None:
-    if len(sys.argv) > 2:
+    if len(sys.argv) > 2:  # noqa: PLR2004
         raise ValueError("Too many args")
 
     if len(sys.argv) == 1:

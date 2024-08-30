@@ -5,7 +5,7 @@ import ast
 import os.path
 import subprocess
 import sys
-from typing import List, Tuple, cast
+from typing import cast
 
 GSETTINGS_SCHEMA = "org.cinnamon.desktop.keybindings"
 GSETTINGS_KEY = "custom-list"
@@ -16,21 +16,22 @@ def usage() -> None:
     sys.exit(1)
 
 
-def get_keybindings_list() -> List[str]:
+def get_keybindings_list() -> list[str]:
     s = subprocess.check_output(
-        ["gsettings", "get", GSETTINGS_SCHEMA, GSETTINGS_KEY], encoding="utf-8"
+        ["gsettings", "get", GSETTINGS_SCHEMA, GSETTINGS_KEY],
+        encoding="utf-8",
     ).strip()
     if s == "@as []":
         s = "[]"
-    return cast(List[str], ast.literal_eval(s))
+    return cast(list[str], ast.literal_eval(s))
 
 
-def set_keybindings_list(l: List[str]) -> None:
+def set_keybindings_list(l: list[str]) -> None:  # noqa: E741
     subprocess.call(["gsettings", "set", GSETTINGS_SCHEMA, GSETTINGS_KEY, str(l)])
 
 
 def dconf_keybinding_path(keybinding: str, attr: str) -> str:
-    return "/org/cinnamon/desktop/keybindings/custom-keybindings/%s/%s" % (keybinding, attr)
+    return f"/org/cinnamon/desktop/keybindings/custom-keybindings/{keybinding}/{attr}"
 
 
 def read_string(keybinding: str, attr: str) -> str:
@@ -38,25 +39,26 @@ def read_string(keybinding: str, attr: str) -> str:
         str,
         ast.literal_eval(
             subprocess.check_output(
-                ["dconf", "read", dconf_keybinding_path(keybinding, attr)], encoding="utf-8"
-            )
+                ["dconf", "read", dconf_keybinding_path(keybinding, attr)],
+                encoding="utf-8",
+            ),
         ),
     )
 
 
 def write_string(keybinding: str, attr: str, s: str) -> None:
-    subprocess.call(["dconf", "write", dconf_keybinding_path(keybinding, attr), "'%s'" % s])
+    subprocess.call(["dconf", "write", dconf_keybinding_path(keybinding, attr), f"'{s}'"])
 
 
-def read_list(keybinding: str, attr: str) -> List[str]:
-    return cast(List[str], read_string(keybinding, attr))
+def read_list(keybinding: str, attr: str) -> list[str]:
+    return cast(list[str], read_string(keybinding, attr))
 
 
 def write_single_element_list(keybinding: str, attr: str, s: str) -> None:
-    subprocess.call(["dconf", "write", dconf_keybinding_path(keybinding, attr), "['%s']" % s])
+    subprocess.call(["dconf", "write", dconf_keybinding_path(keybinding, attr), f"['{s}']"])
 
 
-def read_keybinding(keybinding: str) -> Tuple[str, str, List[str]]:
+def read_keybinding(keybinding: str) -> tuple[str, str, list[str]]:
     name = read_string(keybinding, "name")
     command = read_string(keybinding, "command")
     key = read_list(keybinding, "binding")
@@ -64,7 +66,7 @@ def read_keybinding(keybinding: str) -> Tuple[str, str, List[str]]:
 
 
 def main() -> None:
-    if len(sys.argv) < 4:
+    if len(sys.argv) < 4:  # noqa: PLR2004
         usage()
 
     name = sys.argv[1]
