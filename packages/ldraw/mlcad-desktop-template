@@ -2,8 +2,8 @@
 Version=1.0
 Name=MLCad
 Comment=Edit LDraw files
-Exec=mlcad-hidpi %F
-TryExec=mlcad-hidpi
+Exec=mlcad %F
+TryExec=mlcad
 Icon=@@@@@1@@@@@
 Type=Application
 Terminal=false

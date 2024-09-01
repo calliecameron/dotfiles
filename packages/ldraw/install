@@ -2,8 +2,6 @@
 
 set -eu
 
-sudo apt-get -y install --install-recommends xserver-xephyr x11vnc xdotool vinagre
-
 wget -O complete.zip 'https://library.ldraw.org/library/updates/complete.zip'
 unzip -o complete.zip
 
@@ -26,7 +24,6 @@ fi
 
 mkdir -p "${PACKAGE_INSTALL_DIR}/bin"
 cp "${PACKAGE_SOURCE_DIR}/mlcad" "${PACKAGE_INSTALL_DIR}/bin/mlcad"
-cp "${PACKAGE_SOURCE_DIR}/mlcad-hidpi" "${PACKAGE_INSTALL_DIR}/bin/mlcad-hidpi"
 sed "s|@@@@@1@@@@@|${PACKAGE_SOURCE_DIR}/logo.png|g" <"${PACKAGE_SOURCE_DIR}/mlcad-desktop-template" >"${PACKAGE_SOURCE_DIR}/mlcad.desktop"
 chmod u+x "${PACKAGE_SOURCE_DIR}/mlcad.desktop"
 xdg-desktop-menu install --novendor "${PACKAGE_SOURCE_DIR}/mlcad.desktop"
