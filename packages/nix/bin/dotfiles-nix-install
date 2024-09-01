@@ -1,0 +1,8 @@
+#!/bin/bash
+
+set -eu
+
+while (($#)); do
+    echo "${DOTFILES_NIXPKGS}#${1}"
+    shift
+done | xargs nix profile install --profile "${DOTFILES_NIX_PROFILE}"

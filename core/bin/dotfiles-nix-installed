@@ -1,0 +1,7 @@
+#!/bin/bash
+
+set -eu
+
+dotfiles-package-installed nix
+command -v nix &>/dev/null
+command -v dotfiles-nix-install &>/dev/null
