@@ -2,5 +2,5 @@
 
 set -eu
 
-dotfiles-linux-variant main
+dotfiles-nix-installed
 dotfiles-is-graphical
