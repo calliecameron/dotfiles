@@ -1,0 +1,23 @@
+#!/bin/bash
+
+set -eu
+
+source "${PACKAGE_SOURCE_DIR}/env.sh"
+
+if ! command -v nix &>/dev/null; then
+    wget https://releases.nixos.org/nix/nix-2.24.4/install
+    echo 'fcf36cda19d3ac568d71387264a4173c3c2452a6aa370f17d71dc966a5e02173  install' >checksum
+    sha256sum -c checksum
+    chmod u+x install
+    ./install --daemon --no-modify-profile --yes
+    source "${PACKAGE_SOURCE_DIR}/env.sh"
+fi
+
+# Update nix
+sudo "$(which nix-channel)" --update
+sudo "$(which nix-env)" --install --attr nixpkgs.nix nixpkgs.cacert
+sudo systemctl daemon-reload
+sudo systemctl restart nix-daemon
+
+mkdir -p "${DOTFILES_NIX_PROFILE_DIR}"
+nix profile upgrade --profile "${DOTFILES_NIX_PROFILE}" '.*'
