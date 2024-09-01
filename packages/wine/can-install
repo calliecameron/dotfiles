@@ -3,3 +3,4 @@
 set -eu
 
 dotfiles-nix-installed
+dotfiles-is-graphical
