@@ -2,5 +2,4 @@
 
 set -eu
 
-dotfiles-linux-variant main
-dotfiles-can-sudo
+dotfiles-nix-installed
