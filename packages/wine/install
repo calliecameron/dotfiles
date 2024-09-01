@@ -9,10 +9,9 @@ sudo wget -O /etc/apt/sources.list.d/winehq-jammy.sources https://dl.winehq.org/
 sudo apt-get update
 sudo apt-get -y install --install-recommends winehq-stable
 
-
 if [ ! -f "${PACKAGE_INSTALL_DIR}/bin/winetricks" ]; then
     wget -O 'winetricks-20240105.tar.gz' "https://github.com/Winetricks/winetricks/archive/refs/tags/20240105.tar.gz"
-    echo 'e92929045cf9ffb1e8d16ef8fd971ea1cf63a28a73916b1951e9553c94482f61  winetricks-20240105.tar.gz' > 'checksum'
+    echo 'e92929045cf9ffb1e8d16ef8fd971ea1cf63a28a73916b1951e9553c94482f61  winetricks-20240105.tar.gz' >'checksum'
     sha256sum -c 'checksum'
     tar -xf 'winetricks-20240105.tar.gz'
     mkdir -p 'bin'
