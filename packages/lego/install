@@ -2,6 +2,18 @@
 
 set -eu
 
+mkdir -p studio
+cd studio
+
+if [ ! -e 'Studio+2.0.exe' ]; then
+    wget -O 'Studio+2.0.exe' https://studio.download.bricklink.info/Studio2.0/Archive/2.24.6_2/Studio+2.0.exe
+    echo '279ada6f7cfa454dcb45148be40842ab725a9a0d6d4375294e3139abfb7f947c  Studio+2.0.exe' >checksum
+    sha256sum -c checksum
+    wine 'Studio+2.0.exe'
+fi
+
+cd "${PACKAGE_INSTALL_DIR}"
+
 wget -O complete.zip 'https://library.ldraw.org/library/updates/complete.zip'
 unzip -o complete.zip
 
