@@ -16,6 +16,12 @@ fi
 # Update nix
 sudo "$(which nix-channel)" --update
 sudo "$(which nix-env)" --install --attr nixpkgs.nix nixpkgs.cacert
+sudo cp /nix/var/nix/profiles/default/lib/systemd/system/nix-daemon.service /lib/systemd/system
+sudo cp /nix/var/nix/profiles/default/lib/systemd/system/nix-daemon.socket /lib/systemd/system
+sudo rm /etc/systemd/system/nix-daemon.service
+sudo rm /etc/systemd/system/nix-daemon.socket
+sudo ln -s /lib/systemd/system/nix-daemon.service /etc/systemd/system/nix-daemon.service
+sudo ln -s /lib/systemd/system/nix-daemon.socket /etc/systemd/system/nix-daemon.socket
 sudo systemctl daemon-reload
 sudo systemctl restart nix-daemon
 
