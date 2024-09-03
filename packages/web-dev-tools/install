@@ -2,14 +2,6 @@
 
 set -eu
 
-sudo apt-get -y install tidy
 npm install -g csslint eslint jsonlint js-yaml
 
-if [ ! -f "${PACKAGE_INSTALL_DIR}/bin/geckodriver" ]; then
-    wget 'https://github.com/mozilla/geckodriver/releases/download/v0.34.0/geckodriver-v0.34.0-linux64.tar.gz'
-    echo '79b2e77edd02c0ec890395140d7cdc04a7ff0ec64503e62a0b74f88674ef1313  geckodriver-v0.34.0-linux64.tar.gz' >checksum
-    sha256sum -c checksum
-    tar -xf geckodriver-v0.34.0-linux64.tar.gz
-    mkdir -p "${PACKAGE_INSTALL_DIR}/bin"
-    mv "${PACKAGE_INSTALL_DIR}/geckodriver" "${PACKAGE_INSTALL_DIR}/bin"
-fi
+dotfiles-nix-install html-tidy geckodriver
