@@ -8,24 +8,4 @@ sudo apt-get -y install bash-doc bison bison-doc build-essential ccache clang \
 
 npm install -g bats bats-support bats-assert @hyperupcall/autoenv
 
-mkdir -p "${PACKAGE_INSTALL_DIR}/bin"
-
-if [ ! -f "${PACKAGE_INSTALL_DIR}/bin/shellcheck" ]; then
-    wget -O shellcheck.tar.xz 'https://github.com/koalaman/shellcheck/releases/download/v0.9.0/shellcheck-v0.9.0.linux.x86_64.tar.xz'
-    echo '700324c6dd0ebea0117591c6cc9d7350d9c7c5c287acbad7630fa17b1d4d9e2f  shellcheck.tar.xz' >checksum
-    sha256sum -c checksum
-    rm checksum
-    tar -xf shellcheck.tar.xz
-    mv shellcheck-v0.9.0/shellcheck "${PACKAGE_INSTALL_DIR}/bin/shellcheck"
-    rm -rf shellcheck.tar.xz shellcheck-v0.9.0
-    chmod u+x "${PACKAGE_INSTALL_DIR}/bin/shellcheck"
-fi
-
-if [ ! -f "${PACKAGE_INSTALL_DIR}/bin/shfmt" ]; then
-    wget -O shfmt 'https://github.com/mvdan/sh/releases/download/v3.8.0/shfmt_v3.8.0_linux_amd64'
-    echo '27b3c6f9d9592fc5b4856c341d1ff2c88856709b9e76469313642a1d7b558fe0  shfmt' >checksum
-    sha256sum -c checksum
-    rm checksum
-    mv shfmt "${PACKAGE_INSTALL_DIR}/bin/shfmt"
-    chmod u+x "${PACKAGE_INSTALL_DIR}/bin/shfmt"
-fi
+dotfiles-nix-install shellcheck shfmt
