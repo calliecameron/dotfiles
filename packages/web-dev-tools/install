@@ -2,6 +2,4 @@
 
 set -eu
 
-npm install -g csslint eslint jsonlint js-yaml
-
-dotfiles-nix-install html-tidy geckodriver
+dotfiles-nix-install csslint html-tidy geckodriver nodePackages.eslint nodePackages.jsonlint nodePackages.js-yaml
