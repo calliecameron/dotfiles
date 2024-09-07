@@ -11,6 +11,7 @@ antigen bundle lukechilds/zsh-better-npm-completion
 antigen bundle fzf
 antigen bundle fd
 antigen bundle ripgrep
+antigen bundle nix-community/nix-zsh-completions
 antigen apply
 
 # Don't mess with my LESS, oh-my-zsh!
