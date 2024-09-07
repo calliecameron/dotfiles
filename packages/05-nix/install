@@ -27,3 +27,5 @@ sudo systemctl restart nix-daemon
 
 mkdir -p "${DOTFILES_NIX_PROFILE_DIR}"
 nix profile upgrade --profile "${DOTFILES_NIX_PROFILE}" '.*'
+
+nix-collect-garbage --delete-older-than 60d
