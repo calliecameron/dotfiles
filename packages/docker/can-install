@@ -4,3 +4,4 @@ set -eu
 
 dotfiles-known-linux-variant
 dotfiles-can-sudo
+dotfiles-nix-installed

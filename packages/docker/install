@@ -19,14 +19,6 @@ systemctl --user start docker.service
 
 docker context use rootless
 
-mkdir -p "${PACKAGE_INSTALL_DIR}/bin"
+dotfiles-nix-install x11docker
 
-if [ ! -f "${PACKAGE_INSTALL_DIR}/bin/x11docker" ]; then
-    wget -O "${PACKAGE_INSTALL_DIR}/bin/x11docker" 'https://raw.githubusercontent.com/mviereck/x11docker/v7.6.0/x11docker'
-    echo '917f06a59d1db5829c50a7796b3b99f0fa6257a5fb9c28dd9b475a1a012606ee  bin/x11docker' >checksum
-    sha256sum -c checksum
-    rm checksum
-    chmod u+x "${PACKAGE_INSTALL_DIR}/bin/x11docker"
-fi
-
-"${PACKAGE_INSTALL_DIR}/bin/x11docker" --build x11docker/xserver
+x11docker --build x11docker/xserver
