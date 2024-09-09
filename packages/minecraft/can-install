@@ -4,4 +4,4 @@ set -eu
 
 dotfiles-linux-variant main
 dotfiles-is-graphical
-dotfiles-package-installed docker
+dotfiles-package-installed containers
