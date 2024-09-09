@@ -2,11 +2,4 @@
 
 set -eu
 
-sudo dpkg --add-architecture i386
-sudo wget -O /etc/apt/keyrings/winehq-archive.key https://dl.winehq.org/wine-builds/winehq.key
-sudo wget -O /etc/apt/sources.list.d/winehq-jammy.sources https://dl.winehq.org/wine-builds/ubuntu/dists/jammy/winehq-jammy.sources
-
-sudo apt-get update
-sudo apt-get -y install --install-recommends winehq-stable
-
-dotfiles-nix-install winetricks
+dotfiles-nix-install winetricks wineWowPackages.stable

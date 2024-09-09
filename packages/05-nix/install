@@ -27,7 +27,7 @@ sudo systemctl restart nix-daemon
 
 mkdir -p "${DOTFILES_NIX_PROFILE_DIR}"
 
-nix profile install --profile "${DOTFILES_NIX_PROFILE}" 'github:nix-community/nixGL#nixGLIntel' --impure
+nix profile install --profile "${DOTFILES_NIX_PROFILE}" --impure 'github:nix-community/nixGL#nixGLIntel' 'github:nix-community/nixGL#nixVulkanIntel'
 nix profile upgrade --profile "${DOTFILES_NIX_PROFILE}" '.*'
 
 nix-collect-garbage --delete-older-than 60d
