@@ -19,6 +19,21 @@ systemctl --user start docker.service
 
 docker context use rootless
 
-dotfiles-nix-install x11docker
+
+dotfiles-nix-install crun podman podman.man x11docker
+
+PODMAN_CONF_DIR="${HOME}/.config/containers"
+dotfiles-home-link "${PACKAGE_SOURCE_DIR}/podman-policy.json" "${PODMAN_CONF_DIR}/policy.json"
+dotfiles-home-link "${PACKAGE_SOURCE_DIR}/podman-registries.conf" "${PODMAN_CONF_DIR}/registries.conf"
+
+echo '# Auto-generated, will be overwritten' > "${PODMAN_CONF_DIR}/storage.conf"
+cat "${PACKAGE_SOURCE_DIR}/podman-storage.conf" >> "${PODMAN_CONF_DIR}/storage.conf"
+
+if [ -n "${DOTFILES_PODMAN_STORAGE_DIR:-}" ]; then
+    echo "graphroot = \"${DOTFILES_PODMAN_STORAGE_DIR}\"" >> "${PODMAN_CONF_DIR}/storage.conf"
+    echo "rootless_storage_path = \"${DOTFILES_PODMAN_STORAGE_DIR}\"" >> "${PODMAN_CONF_DIR}/storage.conf"
+fi
+
 
 x11docker --build x11docker/xserver
+x11docker --backend=podman --build x11docker/xserver

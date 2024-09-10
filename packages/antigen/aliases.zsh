@@ -12,6 +12,7 @@ antigen bundle fzf
 antigen bundle fd
 antigen bundle ripgrep
 antigen bundle nix-community/nix-zsh-completions
+antigen bundle podman
 antigen apply
 
 # Don't mess with my LESS, oh-my-zsh!
