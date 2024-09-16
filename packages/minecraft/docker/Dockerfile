@@ -33,6 +33,7 @@ RUN apt-get update && \
     mesa-utils \
     nano \
     openjdk-17-jre \
+    socat \
     xdg-utils && \
     rm -rf /var/lib/apt/lists/*
 
@@ -51,9 +52,6 @@ RUN chmod ugo=rx /opt/minecraft/config_diff.sh
 COPY dynmap_diff.sh /opt/minecraft/dynmap_diff.sh
 RUN chmod ugo=rx /opt/minecraft/dynmap_diff.sh
 
-ARG UID
-ARG GID
-RUN mkdir /minecraft && mkdir /minecraft/atlauncher && chown -R "$UID:$GID" /minecraft
 WORKDIR /minecraft
 
 CMD atlauncher --working-dir /minecraft/atlauncher

@@ -3,6 +3,8 @@
 set -eu
 
 x11docker \
+    --backend=podman \
+    --fallback=no \
     --rootless \
     --xc \
     --gpu \
@@ -14,14 +16,15 @@ x11docker \
     --env HOME=/minecraft \
     --share minecraft \
     -- \
-    --tmpfs /tmp:exec \
     --hostname minecraft-atlauncher \
+    --cap-add sys_chroot \
+    "--umask=$(umask)" \
     -- \
     minecraft-atlauncher &
 
 PID="${!}"
 
 sleep 5
-docker cp "${HOME}/.config/pulse/cookie" "minecraft-atlauncher:/x11docker/pulseaudio.cookie"
+podman cp "${HOME}/.config/pulse/cookie" "minecraft-atlauncher:/x11docker/pulseaudio.cookie"
 
 wait "${PID}"

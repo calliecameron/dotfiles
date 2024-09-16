@@ -3,7 +3,7 @@
 set -eu
 
 cd "${PACKAGE_SOURCE_DIR}/docker"
-docker build -t minecraft-atlauncher --build-arg "UID=$(id -u)" --build-arg "GID=$(id -g)" .
+podman build -t minecraft-atlauncher .
 
 cp "${PACKAGE_SOURCE_DIR}/minecraft.png" "${PACKAGE_INSTALL_DIR}/minecraft.png"
 sed "s|@@@@@1@@@@@|${PACKAGE_INSTALL_DIR}|g" <"${PACKAGE_SOURCE_DIR}/minecraft.desktop.template" >"${PACKAGE_INSTALL_DIR}/minecraft.desktop"
