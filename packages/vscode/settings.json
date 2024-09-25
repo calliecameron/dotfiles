@@ -102,5 +102,8 @@
             "source.organizeImports": "explicit"
         },
     },
-    "makefile.configureOnOpen": false
+    "makefile.configureOnOpen": false,
+    "[shellscript]": {
+        "editor.defaultFormatter": "foxundermoon.shell-format"
+    }
 }
