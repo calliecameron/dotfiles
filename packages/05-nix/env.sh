@@ -13,6 +13,9 @@ if [ -e '/etc/profile.d/nix.sh' ]; then
     . '/etc/profile.d/nix.sh'
 fi
 
+# This stops interactive shells trying to load nix again and messing up the path order
+export __ETC_PROFILE_NIX_SOURCED
+
 if command -v nix-env >/dev/null 2>/dev/null; then
     nix-env --switch-profile "${DOTFILES_NIX_PROFILE}"
 fi
