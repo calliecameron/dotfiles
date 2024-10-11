@@ -1,0 +1,5 @@
+#!/bin/bash
+
+set -eu
+
+exec nixGLIntel "${DOTFILES_NIX_PROFILE}/bin/ebook-viewer" "${@}"

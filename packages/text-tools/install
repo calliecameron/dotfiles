@@ -2,9 +2,8 @@
 
 set -eu
 
-sudo apt-get -y install asciidoc aspell biber catdoc chktex dict dictd \
-    dict-foldoc dict-gcide dict-jargon dict-wn epstool hunspell hunspell-en-gb \
-    markdown strip-nondeterminism texinfo texlive-full transfig unoconv
+sudo apt-get -y install aspell catdoc chktex dict dictd dict-foldoc dict-gcide \
+     dict-jargon dict-wn hunspell hunspell-en-gb texinfo texlive-full
 
 if ! command -v pandoc &>/dev/null; then
     TMPDIR="$(mktemp -d)"
@@ -14,7 +13,8 @@ if ! command -v pandoc &>/dev/null; then
     rmdir "${TMPDIR}"
 fi
 
-# For markdown-makefile
-sudo apt-get install -y catdoc git gcc hunspell hunspell-en-gb libegl1 \
-    libopengl0 libxkbcommon0 poppler-utils python3-pip strip-nondeterminism \
-    texlive-xetex unoconv
+dotfiles-nix-install calibre
+
+xdg-mime default calibre-ebook-viewer.desktop \
+    application/epub+zip \
+    application/x-mobipocket-ebook

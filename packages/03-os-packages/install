@@ -20,16 +20,12 @@ if dotfiles-linux-variant main; then
         thunderbird transmission-common transmission-gtk
 
     sudo apt-get -y install apparmor-profiles apparmor-utils \
-        calibre fonts-crosextra-caladea fonts-crosextra-carlito inotify-tools \
+        fonts-crosextra-caladea fonts-crosextra-carlito inotify-tools \
         laptop-detect powertop sqlite3 ttf-ancient-fonts \
         ttf-mscorefonts-installer ubuntu-restricted-extras xclip
 
     sudo rm -f /etc/sudoers.d/0pwfeedback
     fc-cache
-
-    xdg-mime default calibre-ebook-viewer.desktop \
-        application/epub+zip \
-        application/x-mobipocket-ebook
 else
     dotfiles-echo-red "Unknown Linux variant."
     exit 1
