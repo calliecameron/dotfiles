@@ -1,5 +1,7 @@
 # shellcheck shell=sh
 
+export XDG_DATA_DIRS="${HOME}/.nix-profile/share:${XDG_DATA_DIRS}"
+
 export DOTFILES_NIXPKGS_VERSION='24.05'
 
 export DOTFILES_NIXPKGS="nixpkgs/release-${DOTFILES_NIXPKGS_VERSION}"
