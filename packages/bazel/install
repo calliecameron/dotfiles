@@ -2,4 +2,4 @@
 
 set -eu
 
-npm install -g @bazel/bazelisk @bazel/buildifier @bazel/buildozer
+dotfiles-nix-install bazelisk bazel-buildtools

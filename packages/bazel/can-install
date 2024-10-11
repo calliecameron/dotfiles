@@ -2,6 +2,4 @@
 
 set -eu
 
-dotfiles-linux-variant main
-dotfiles-package-installed antigen # Depends on antigen for npm
-command -v npm &>/dev/null
+dotfiles-nix-installed
