@@ -2,8 +2,8 @@
 
 set -eu
 
-sudo apt-get -y install aspell catdoc chktex dict dictd dict-foldoc dict-gcide \
-     dict-jargon dict-wn hunspell hunspell-en-gb texinfo texlive-full
+sudo apt-get -y install aspell catdoc dict dictd dict-foldoc dict-gcide \
+    dict-jargon dict-wn hunspell hunspell-en-gb
 
 if ! command -v pandoc &>/dev/null; then
     TMPDIR="$(mktemp -d)"
