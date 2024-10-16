@@ -13,7 +13,10 @@ antigen bundle fd
 antigen bundle ripgrep
 antigen bundle nix-community/nix-zsh-completions
 antigen bundle podman
+antigen bundle rust
 antigen apply
+
+mkdir -p "${ZSH_CACHE_DIR}/completions"
 
 # Don't mess with my LESS, oh-my-zsh!
 export LESS="${MY_LESS}"

@@ -1,0 +1,8 @@
+#!/bin/bash
+
+set -eu
+
+dotfiles-nix-install rustup
+
+rustup default stable
+rustup update
