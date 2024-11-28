@@ -78,7 +78,11 @@
     "files.associations": {
         "**/tasks/*.yml": "ansible",
         "**/defaults/*.yml": "ansible",
-        "**/handlers/*.yml": "ansible"
+        "**/handlers/*.yml": "ansible",
+        ".bazeliskrc": "plaintext",
+        ".gitconfig": "plaintext",
+        ".gitattributes": "plaintext",
+        ".bazelrc": "plaintext"
     },
     "diffEditor.ignoreTrimWhitespace": false,
     "workbench.editor.enablePreview": false,
