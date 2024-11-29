@@ -82,7 +82,9 @@
         ".bazeliskrc": "plaintext",
         ".gitconfig": "plaintext",
         ".gitattributes": "plaintext",
-        ".bazelrc": "plaintext"
+        ".bazelrc": "plaintext",
+        ".luacheckrc": "lua",
+        ".lua-format": "plaintext"
     },
     "diffEditor.ignoreTrimWhitespace": false,
     "workbench.editor.enablePreview": false,
