@@ -11,5 +11,9 @@ wget -qO- https://apt.releases.hashicorp.com/gpg | sudo gpg --dearmor --yes --ou
 echo 'deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com jammy main' | sudo tee /etc/apt/sources.list.d/hashicorp.list >/dev/null
 
 sudo apt-get update
-sudo apt-get -y install virtualbox-7.1 vagrant
+sudo apt-get -y install virtualbox-7.1 vagrant virt-manager
 sudo adduser "$(id -un)" vboxusers
+
+# Being in 'libvirt' is effectively passwordless root
+sudo gpasswd --delete "${USER}" libvirt || true
+
