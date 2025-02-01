@@ -16,4 +16,3 @@ sudo adduser "$(id -un)" vboxusers
 
 # Being in 'libvirt' is effectively passwordless root
 sudo gpasswd --delete "${USER}" libvirt || true
-

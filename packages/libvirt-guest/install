@@ -4,4 +4,3 @@ set -eu
 
 sudo apt-get update
 sudo apt-get -y install qemu-guest-agent spice-vdagent
-
