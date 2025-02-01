@@ -1,0 +1,6 @@
+[redshift]
+location-provider=manual
+
+[manual]
+lat=@@@@@1@@@@@
+lon=@@@@@2@@@@@

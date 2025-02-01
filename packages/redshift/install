@@ -2,11 +2,7 @@
 
 set -eu
 
-sudo apt-get -y install geoclue-2.0 redshift-gtk
-
-if [ ! -e "${HOME}/.config/redshift.conf" ]; then
-    ln -s "${PACKAGE_SOURCE_DIR}/redshift.conf" "${HOME}/.config/redshift.conf"
-fi
+sudo apt-get -y install redshift-gtk
 
 mkdir -p "${HOME}/.config/autostart"
 cp '/usr/share/applications/redshift-gtk.desktop' "${HOME}/.config/autostart/redshift-gtk.desktop"
