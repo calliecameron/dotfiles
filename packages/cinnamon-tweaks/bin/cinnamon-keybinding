@@ -92,7 +92,7 @@ def main() -> None:
             return
 
     # Not found; create a new binding
-    keybinding = "custom%d" % first_unused
+    keybinding = f"custom{first_unused}"
     write_string(keybinding, "name", name)
     write_string(keybinding, "command", command)
     write_single_element_list(keybinding, "binding", key)
