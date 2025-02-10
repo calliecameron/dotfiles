@@ -4,6 +4,6 @@ set -eu
 
 dotfiles-linux-variant main
 dotfiles-can-sudo
-dotfiles-package-installed antigen # Depends on antigen for npm
+dotfiles-package-installed 06-antigen # Depends on antigen for npm
 command -v npm &>/dev/null
 dotfiles-nix-installed
