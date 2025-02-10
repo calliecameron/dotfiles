@@ -3,12 +3,12 @@
 set -eu
 
 # Virtualbox
-echo 'deb [arch=amd64 signed-by=/usr/share/keyrings/oracle-virtualbox-2016.gpg] https://download.virtualbox.org/virtualbox/debian jammy contrib' | sudo tee /etc/apt/sources.list.d/virtualbox.list >/dev/null
+echo 'deb [arch=amd64 signed-by=/usr/share/keyrings/oracle-virtualbox-2016.gpg] https://download.virtualbox.org/virtualbox/debian noble contrib' | sudo tee /etc/apt/sources.list.d/virtualbox.list >/dev/null
 wget -qO- https://www.virtualbox.org/download/oracle_vbox_2016.asc | sudo gpg --dearmor --yes --output /usr/share/keyrings/oracle-virtualbox-2016.gpg
 
 # Vagrant
 wget -qO- https://apt.releases.hashicorp.com/gpg | sudo gpg --dearmor --yes --output /usr/share/keyrings/hashicorp-archive-keyring.gpg
-echo 'deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com jammy main' | sudo tee /etc/apt/sources.list.d/hashicorp.list >/dev/null
+echo 'deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com noble main' | sudo tee /etc/apt/sources.list.d/hashicorp.list >/dev/null
 
 sudo apt-get update
 sudo apt-get -y install virtualbox-7.1 vagrant virt-manager
