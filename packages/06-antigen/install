@@ -4,4 +4,4 @@ set -eu
 
 dotfiles-clone-or-update-repo 'https://github.com/zsh-users/antigen' "${PACKAGE_INSTALL_DIR}/antigen" 'develop'
 
-zsh -c "PACKAGE_INSTALL_DIR=\"${PACKAGE_INSTALL_DIR}\"; source \"${PACKAGE_SOURCE_DIR}/env.sh\" && source \"${PACKAGE_SOURCE_DIR}/aliases.zsh\" && antigen update && nvm upgrade"
+zsh -c "PACKAGE_INSTALL_DIR=\"${PACKAGE_INSTALL_DIR}\"; source \"${PACKAGE_SOURCE_DIR}/env.sh\" && source \"${PACKAGE_SOURCE_DIR}/aliases.zsh\" && antigen update && nvm upgrade && nvm install node"
