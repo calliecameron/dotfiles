@@ -8,9 +8,6 @@ antigen bundle vagrant
 antigen bundle zsh-users/zsh-completions
 antigen bundle lukechilds/zsh-nvm
 antigen bundle lukechilds/zsh-better-npm-completion
-antigen bundle fzf
-antigen bundle fd
-antigen bundle ripgrep
 antigen bundle nix-community/nix-zsh-completions
 antigen bundle podman
 antigen bundle rust
