@@ -5,15 +5,7 @@ set -eu
 sudo apt-get -y install aspell catdoc dict dictd dict-foldoc dict-gcide \
     dict-jargon dict-wn hunspell hunspell-en-gb
 
-if ! command -v pandoc &>/dev/null; then
-    TMPDIR="$(mktemp -d)"
-    wget -O "${TMPDIR}/pandoc.deb" https://github.com/jgm/pandoc/releases/download/3.1.2/pandoc-3.1.2-1-amd64.deb
-    sudo dpkg -i "${TMPDIR}/pandoc.deb"
-    rm "${TMPDIR}/pandoc.deb"
-    rmdir "${TMPDIR}"
-fi
-
-dotfiles-nix-install calibre
+dotfiles-nix-install calibre pandoc
 
 xdg-mime default calibre-ebook-viewer.desktop \
     application/epub+zip \
