@@ -4,4 +4,5 @@ set -eu
 
 dotfiles-linux-variant main
 dotfiles-is-graphical
-dotfiles-package-installed container-gui
+dotfiles-nix-installed
+dotfiles-package-installed container-tools

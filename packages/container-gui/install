@@ -1,0 +1,6 @@
+#!/bin/bash
+
+set -eu
+
+dotfiles-nix-install x11docker
+x11docker --backend=podman --build x11docker/xserver

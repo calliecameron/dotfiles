@@ -5,7 +5,7 @@ set -eu
 sudo apt-get update
 sudo apt-get -y install uidmap
 
-dotfiles-nix-install crun podman podman.man x11docker
+dotfiles-nix-install crun podman podman.man
 
 PODMAN_CONF_DIR="${HOME}/.config/containers"
 dotfiles-home-link "${PACKAGE_SOURCE_DIR}/podman-policy.json" "${PODMAN_CONF_DIR}/policy.json"
@@ -18,5 +18,3 @@ if [ -n "${DOTFILES_PODMAN_STORAGE_DIR:-}" ]; then
     echo "graphroot = \"${DOTFILES_PODMAN_STORAGE_DIR}\"" >>"${PODMAN_CONF_DIR}/storage.conf"
     echo "rootless_storage_path = \"${DOTFILES_PODMAN_STORAGE_DIR}\"" >>"${PODMAN_CONF_DIR}/storage.conf"
 fi
-
-x11docker --backend=podman --build x11docker/xserver
