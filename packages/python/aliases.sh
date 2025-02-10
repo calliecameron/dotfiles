@@ -10,8 +10,8 @@ function python-wrapper() {
 
 alias py='python-wrapper'
 
-if type virtualenvwrapper.sh &>/dev/null; then
-    source virtualenvwrapper.sh
+if [ -f /usr/share/virtualenvwrapper/virtualenvwrapper.sh ]; then
+    source /usr/share/virtualenvwrapper/virtualenvwrapper.sh
 fi
 
 if type pip &>/dev/null; then
