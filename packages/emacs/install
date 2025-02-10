@@ -5,12 +5,13 @@ set -eu
 sudo apt-get -y install attr autoconf automake build-essential emacs emacs-el \
     emacs-goodies-el libacl1-dev libasound2-dev libdbus-1-dev libgccjit-11-dev \
     libgconf2-dev libgif-dev libgnutls28-dev libgpm-dev libgtk-4-dev \
-    libjansson-dev libjpeg-dev liblockfile-dev libm17n-dev libncurses-dev \
-    libotf-dev libpng-dev libpoppler-glib-dev libpoppler-private-dev \
-    librsvg2-dev libselinux1-dev libsystemd-dev libtiff-dev \
-    libwebkit2gtk-4.0-dev libxpm-dev libz-dev paxctl texinfo valgrind
+    libjansson-dev libjpeg-dev liblcms2-dev liblockfile-dev libm17n-dev \
+    libncurses-dev libotf-dev libpng-dev libpoppler-glib-dev \
+    libpoppler-private-dev librsvg2-dev libselinux1-dev libsystemd-dev \
+    libtiff-dev libtree-sitter-dev libwebkit2gtk-4.0-dev libwebp-dev \
+    libxpm-dev libz-dev paxctl texinfo valgrind
 
-EMACS_VERSION='28.2'
+EMACS_VERSION='29.4'
 
 if [ ! -e "${PACKAGE_INSTALL_DIR}/bin/emacs" ]; then
     BUILD_DIR="$(mktemp -d)"
