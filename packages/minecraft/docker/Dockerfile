@@ -1,4 +1,4 @@
-FROM debian:bookworm AS glfw
+FROM ubuntu:24.04 AS glfw
 
 RUN apt-get update && \
     apt-get install -y \
@@ -17,14 +17,19 @@ RUN wget -q -O 'glfw-3.4.zip' 'https://github.com/glfw/glfw/releases/download/3.
     cp glfw-3.4/build/src/libglfw* /glfw && \
     rm -rf 'glfw-3.4'
 
-FROM debian:bookworm
+FROM ubuntu:24.04
 
 RUN apt-get update && \
+    apt-get upgrade -y && \
+    apt-get dist-upgrade -y && \
     apt-get install -y \
-    ca-certificates-java && \
+    ca-certificates-java \
+    software-properties-common && \
+    add-apt-repository ppa:kisak/kisak-mesa && \
+    apt-get update && \
     apt-get install -y \
     curl \
-    firefox-esr \
+    firefox \
     less \
     libflite1 \
     libpulse0 \
