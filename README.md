@@ -2,7 +2,7 @@
 
 Configurations for Zsh, Emacs, etc.
 
-Tested on Linux Mint 21.1 Cinnamon, but should work on any recent Ubuntu-like
+Tested on Linux Mint 22.1 Cinnamon, but should work on any recent Ubuntu-like
 system. Also installs packages through the package manager and does extensive.
 customisation.
 
