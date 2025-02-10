@@ -12,10 +12,10 @@ sudo apt-get -y install curl git mercurial nano ncurses-term netcat-openbsd \
     screen tmux tree zsh zsh-doc
 
 if dotfiles-linux-variant main; then
-    # Mint 21
-    sudo apt-get purge --auto-remove celluloid hexchat hexchat-common hypnotix \
-        pix rhythmbox samba-common samba-common-bin smbclient samba-libs \
-        thunderbird transmission-common transmission-gtk
+    # Mint 22
+    sudo apt-get purge --auto-remove celluloid hypnotix mintchat pix rhythmbox \
+        samba-common samba-common-bin smbclient samba-libs thunderbird \
+        transmission-common transmission-gtk
 
     sudo apt-get -y install apparmor-profiles apparmor-utils \
         fonts-crosextra-caladea fonts-crosextra-carlito inotify-tools \
