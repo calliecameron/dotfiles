@@ -713,25 +713,6 @@ dotfiles-org-linkify-suffix) appended."
   :config
   (volatile-highlights-mode t))
 
-(dotfiles-use-package webjump
-  :config
-  (setq
-   webjump-sites '(("google" . [simple-query
-                                "https://www.google.co.uk/"
-                                "https://www.google.co.uk/search?q="
-                                ""])
-                   ("maps" . [simple-query
-                              "https://maps.google.co.uk/"
-                              "https://maps.google.co.uk/maps?q="
-                              ""])
-                   ("scholar" . [simple-query
-                                 "https://scholar.google.co.uk/"
-                                 "http://scholar.google.co.uk/scholar?q="
-                                 ""])))
-  (bind-keys
-   :map dotfiles-open-map
-   ("w" . webjump)))
-
 (dotfiles-use-package winner
   :config
   (bind-keys
