@@ -1,10 +1,5 @@
 # shellcheck shell=sh
 
-export DOTFILES_HG_USERNAME="${DOTFILES_LOCAL_DIR}/hg-username"
-export DOTFILES_HG_LOCAL="${DOTFILES_LOCAL_DIR}/hg-local"
-
-dotfiles-home-link "${PACKAGE_SOURCE_DIR}/hgrc"
-
 # Git config complains if multiple copies try to run at once; protect it with a
 # mutex.
 MUTEX="${DOTFILES_LOCAL_DIR}/gitconfig-mutex"
@@ -28,23 +23,6 @@ fi
 
 rmdir "${MUTEX}"
 unset MUTEX
-
-if [ -n "${DOTFILES_VC_NAME}" ] && [ -n "${DOTFILES_VC_EMAIL}" ]; then
-    cat >"${DOTFILES_HG_USERNAME}" <<EOF
-# Automatically generated file - do not edit.
-# To change username, set the environment variables DOTFILES_VC_NAME and
-# DOTFILES_VC_EMAIL appropriately.
-
-[ui]
-username = ${DOTFILES_VC_NAME} <${DOTFILES_VC_EMAIL}>
-EOF
-else
-    touch "${DOTFILES_HG_USERNAME}"
-fi
-
-if [ ! -e "${DOTFILES_HG_LOCAL}" ]; then
-    touch "${DOTFILES_HG_LOCAL}"
-fi
 
 if [ -n "${DOTFILES_BITBUCKET_USERNAME}" ]; then
     export BITBUCKET="git@bitbucket.org:${DOTFILES_BITBUCKET_USERNAME}"

@@ -8,8 +8,8 @@ sudo apt-get update
 sudo apt-get upgrade
 sudo apt-get dist-upgrade
 
-sudo apt-get -y install curl git mercurial nano ncurses-term netcat-openbsd \
-    screen tmux tree zsh zsh-doc
+sudo apt-get -y install curl git nano ncurses-term netcat-openbsd screen tmux \
+    tree zsh zsh-doc
 
 if dotfiles-linux-variant main; then
     # Mint 22
