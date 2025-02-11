@@ -1,3 +1,3 @@
 # shellcheck shell=sh
 
-pip install ipython notebook pip-tools
+pip install ipython pip-tools
