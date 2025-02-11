@@ -462,14 +462,6 @@ If BUFFER is a string, it is the name of the buffer to find; if it is a predicat
 
 (dotfiles-use-package link)
 
-(dotfiles-use-package dictionary
-  :config
-  (when (executable-find "dictd")
-    (setq dictionary-server "localhost"))
-  (bind-keys
-   :map dotfiles-open-map
-   ("d" . dictionary-search)))
-
 (dotfiles-use-package doc-view
   :config
   (setq doc-view-continuous t))

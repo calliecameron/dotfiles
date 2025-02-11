@@ -2,8 +2,7 @@
 
 set -eu
 
-sudo apt-get -y install aspell catdoc dict dictd dict-foldoc dict-gcide \
-    dict-jargon dict-wn hunspell hunspell-en-gb
+sudo apt-get -y install aspell catdoc hunspell hunspell-en-gb
 
 dotfiles-nix-install calibre pandoc
 
