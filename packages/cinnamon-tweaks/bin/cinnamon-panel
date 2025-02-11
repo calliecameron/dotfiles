@@ -14,7 +14,7 @@ PANEL_FILE = os.path.join(
     "cinnamon",
     "spices",
     "panel-launchers@cinnamon.org",
-    "17.json",
+    "2.json",
 )
 
 
