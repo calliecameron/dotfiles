@@ -1,6 +1,0 @@
-#!/bin/bash
-# Change background randomly
-
-set -eu
-
-yabr -o
