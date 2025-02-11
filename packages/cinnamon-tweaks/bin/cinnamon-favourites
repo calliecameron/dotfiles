@@ -23,7 +23,7 @@ case "${COMMAND}" in
 l = ${LAUNCHERS}
 
 for s in l:
-    print s
+    print(s)
 
 EOF
     ;;
