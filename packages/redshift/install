@@ -1,8 +1,0 @@
-#!/bin/bash
-
-set -eu
-
-sudo apt-get -y install redshift-gtk
-
-mkdir -p "${HOME}/.config/autostart"
-cp '/usr/share/applications/redshift-gtk.desktop' "${HOME}/.config/autostart/redshift-gtk.desktop"
