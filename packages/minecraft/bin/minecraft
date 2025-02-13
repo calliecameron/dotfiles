@@ -10,7 +10,7 @@ x11docker \
     --gpu \
     --lang \
     --network \
-    --pulseaudio \
+    --pulseaudio=host \
     --hostdisplay \
     --name=minecraft-atlauncher \
     --env HOME=/minecraft \
