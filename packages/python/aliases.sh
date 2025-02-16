@@ -24,3 +24,12 @@ fi
 
 eval "$(pyenv init - "${DOTFILES_SHELL}")"
 pyenv virtualenvwrapper
+
+function pyenv-version-check() {
+    DOTFILES_PYENV_VERSION="$(pyenv version-name)"
+    if [ "${DOTFILES_PYENV_VERSION}" = 'system' ]; then
+        unset DOTFILES_PYENV_VERSION
+    fi
+}
+
+pyenv-version-check
