@@ -2,6 +2,7 @@
 *.pyc
 .mypy_cache/
 /.env
+/.env.leave
 /.vscode
 /.pytest_cache
 /.deps-installed
