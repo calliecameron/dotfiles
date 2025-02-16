@@ -8,7 +8,7 @@ deps: .deps-installed
 	pip install -r requirements-dev.txt
 	touch .deps-installed
 
-requirements-dev.txt: requirements-dev.in
+requirements-dev.txt: requirements-dev.in pyproject.toml
 	pip-compile -q requirements-dev.in
 
 .PHONY: lint
