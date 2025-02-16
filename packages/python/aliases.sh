@@ -26,4 +26,3 @@ if [ -n "${VIRTUAL_ENV}" ] &&
     source "${VIRTUAL_ENV}/bin/activate"
 fi
 
-alias j='jupyter notebook'
