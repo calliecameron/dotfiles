@@ -2,5 +2,27 @@
 
 set -eu
 
-sudo apt-get -y install ipython3 python3-dev python3-pygments virtualenv \
-    virtualenvwrapper
+sudo apt-get -y install build-essential curl git ipython3 libbz2-dev \
+    libffi-dev liblzma-dev libncursesw5-dev libreadline-dev libsqlite3-dev \
+    libssl-dev libxml2-dev libxmlsec1-dev python3-dev python3-pip \
+    python3-pygments tk-dev virtualenv virtualenvwrapper xz-utils zlib1g-dev
+
+# pyenv-virtualenvwrapper expects these in a specific place
+if [ ! -e /usr/bin/virtualenvwrapper.sh ]; then
+    sudo ln -s /usr/share/virtualenvwrapper/virtualenvwrapper.sh /usr/bin/virtualenvwrapper.sh
+fi
+
+if [ ! -e /usr/bin/virtualenvwrapper_lazy.sh ]; then
+    sudo ln -s /usr/share/virtualenvwrapper/virtualenvwrapper_lazy.sh /usr/bin/virtualenvwrapper_lazy.sh
+fi
+
+if ! command -v pyenv >/dev/null; then
+    wget 'https://raw.githubusercontent.com/pyenv/pyenv-installer/86a08ac9e38ec3a267e4b5c758891caf1233a2e4/bin/pyenv-installer'
+    echo 'a1ad63c22842dce498b441551e2f83ede3e3b6ebb33f62013607bba424683191  pyenv-installer' >checksum
+    sha256sum -c checksum
+    chmod u+x pyenv-installer
+    bash -c "source '${PACKAGE_SOURCE_DIR}/env.sh' && '${PACKAGE_INSTALL_DIR}/pyenv-installer'"
+    bash -c "source '${PACKAGE_SOURCE_DIR}/env.sh' && git clone 'https://github.com/pyenv/pyenv-virtualenvwrapper.git' \"\$(pyenv root)/plugins/pyenv-virtualenvwrapper\""
+else
+    bash -c "source '${PACKAGE_SOURCE_DIR}/env.sh' && pyenv update"
+fi

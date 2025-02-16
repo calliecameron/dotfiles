@@ -10,10 +10,6 @@ function python-wrapper() {
 
 alias py='python-wrapper'
 
-if [ -f /usr/share/virtualenvwrapper/virtualenvwrapper.sh ]; then
-    source /usr/share/virtualenvwrapper/virtualenvwrapper.sh
-fi
-
 if type pip &>/dev/null; then
     eval "$(pip completion "--${DOTFILES_SHELL}")"
 fi
@@ -26,3 +22,5 @@ if [ -n "${VIRTUAL_ENV}" ] &&
     source "${VIRTUAL_ENV}/bin/activate"
 fi
 
+eval "$(pyenv init - "${DOTFILES_SHELL}")"
+pyenv virtualenvwrapper
