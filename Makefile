@@ -27,4 +27,5 @@ test: deps
 
 .PHONY: clean
 clean:
-	rm -f .deps-installed *~
+	rm -f .deps-installed
+	find . -type f -name '*~' -delete
