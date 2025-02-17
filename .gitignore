@@ -1,8 +1,8 @@
+*.zwc
 *~
-*.pyc
-.mypy_cache/
+/.deps-installed
 /.env
 /.env.leave
-/.vscode
-/.pytest_cache
-/.deps-installed
+/.mypy_cache/
+/.vscode/
+__pycache__/

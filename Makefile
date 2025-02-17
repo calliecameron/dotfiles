@@ -28,4 +28,6 @@ test: deps
 .PHONY: clean
 clean:
 	rm -f .deps-installed
-	find . -type f -name '*~' -delete
+	find . -depth '(' -type d '(' -name '.mypy_cache' -o -name '.ruff_cache' -o -name '__pycache__' ')' ')' -exec rm -r '{}' ';'
+	find . '(' -type f -name '*~' ')' -delete
+
