@@ -3,6 +3,5 @@
 /.deps-installed
 /.env
 /.env.leave
-/.mypy_cache/
 /.vscode/
 __pycache__/
