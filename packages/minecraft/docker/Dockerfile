@@ -36,6 +36,7 @@ RUN apt-get update && \
     firefox \
     less \
     libflite1 \
+    libmtdev1t64 \
     libpulse0 \
     locales \
     lsb-release \
@@ -43,8 +44,13 @@ RUN apt-get update && \
     nano \
     openjdk-17-jre \
     socat \
-    xdg-utils && \
-    rm -rf /var/lib/apt/lists/*
+    unzip \
+    xclip \
+    xdg-utils \
+    xfonts-base \
+    xsel && \
+    rm -rf /var/lib/apt/lists/* && \
+    fc-cache
 
 RUN sed -i '/en_GB.UTF-8/s/^# //g' /etc/locale.gen && locale-gen
 
@@ -60,6 +66,12 @@ COPY config_diff.sh /opt/minecraft/config_diff.sh
 RUN chmod ugo=rx /opt/minecraft/config_diff.sh
 COPY dynmap_diff.sh /opt/minecraft/dynmap_diff.sh
 RUN chmod ugo=rx /opt/minecraft/dynmap_diff.sh
+
+RUN mkdir -p /opt/archipelago && \
+    cd /opt/archipelago && \
+    wget -q -O archipelago.tar.gz 'https://github.com/ArchipelagoMW/Archipelago/releases/download/0.5.1/Archipelago_0.5.1.Hotfix1_linux-x86_64.tar.gz' && \
+    tar xf archipelago.tar.gz && \
+    rm archipelago.tar.gz
 
 WORKDIR /minecraft
 
