@@ -36,7 +36,7 @@ fi
 
 mkdir -p "${PACKAGE_INSTALL_DIR}/bin"
 cp "${PACKAGE_SOURCE_DIR}/mlcad" "${PACKAGE_INSTALL_DIR}/bin/mlcad"
-sed "s|@@@@@1@@@@@|${PACKAGE_SOURCE_DIR}/logo.png|g" <"${PACKAGE_SOURCE_DIR}/mlcad-desktop-template" >"${PACKAGE_SOURCE_DIR}/mlcad.desktop"
-chmod u+x "${PACKAGE_SOURCE_DIR}/mlcad.desktop"
-xdg-desktop-menu install --novendor "${PACKAGE_SOURCE_DIR}/mlcad.desktop"
-xdg-desktop-icon install --novendor "${PACKAGE_SOURCE_DIR}/mlcad.desktop"
+sed "s|@@@@@1@@@@@|${PACKAGE_SOURCE_DIR}/logo.png|g" <"${PACKAGE_SOURCE_DIR}/mlcad-desktop-template" >"${PACKAGE_INSTALL_DIR}/mlcad.desktop"
+chmod u+x "${PACKAGE_INSTALL_DIR}/mlcad.desktop"
+xdg-desktop-menu install --novendor "${PACKAGE_INSTALL_DIR}/mlcad.desktop"
+xdg-desktop-icon install --novendor "${PACKAGE_INSTALL_DIR}/mlcad.desktop"
