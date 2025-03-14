@@ -29,4 +29,5 @@ code --install-extension=BazelBuild.vscode-bazel \
     --install-extension=streetsidesoftware.code-spell-checker \
     --install-extension=timonwong.shellcheck \
     --install-extension=VisualStudioExptTeam.vscodeintellicode \
-    --install-extension=wholroyd.jinja
+    --install-extension=wholroyd.jinja \
+    --install-extension=vscjava.vscode-java-pack
