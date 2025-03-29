@@ -34,6 +34,7 @@ RUN apt-get update && \
     apt-get install -y \
     curl \
     firefox \
+    htop \
     less \
     libflite1 \
     libmtdev1t64 \
@@ -42,7 +43,7 @@ RUN apt-get update && \
     lsb-release \
     mesa-utils \
     nano \
-    openjdk-17-jre \
+    openjdk-17-jdk \
     socat \
     unzip \
     xclip \
