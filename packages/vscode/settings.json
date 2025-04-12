@@ -87,7 +87,6 @@
         ".lua-format": "plaintext"
     },
     "diffEditor.ignoreTrimWhitespace": false,
-    "workbench.editor.enablePreview": false,
     "editor.bracketPairColorization.enabled": true,
     "editor.bracketPairColorization.independentColorPoolPerBracketType": true,
     "editor.scrollBeyondLastLine": false,
@@ -111,5 +110,6 @@
     "makefile.configureOnOpen": false,
     "[shellscript]": {
         "editor.defaultFormatter": "foxundermoon.shell-format"
-    }
+    },
+    "workbench.editor.enablePreview": false
 }
