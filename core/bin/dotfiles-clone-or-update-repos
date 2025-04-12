@@ -3,12 +3,13 @@
 set -eu
 
 function usage() {
-    echo "Usage: $(basename "${0}") base_dir repos..."
+    echo "Usage: $(basename "${0}") base_dir [repo branch]..."
     exit 1
 }
 
 test -z "${1:-}" && usage
 test -z "${2:-}" && usage
+test -z "${3:-}" && usage
 
 BASE_DIR="${1}"
 mkdir -p "${BASE_DIR}"
@@ -16,8 +17,11 @@ mkdir -p "${BASE_DIR}"
 shift
 
 while [ -n "${1:-}" ]; do
+    test -z "${2:-}" && usage
     REPO="${1}"
+    BRANCH="${2}"
     DIR="${BASE_DIR}/$(basename "${REPO}" '.git')"
-    dotfiles-clone-or-update-repo "${REPO}" "${DIR}" 'master'
+    dotfiles-clone-or-update-repo "${REPO}" "${DIR}" "${BRANCH}"
+    shift
     shift
 done
