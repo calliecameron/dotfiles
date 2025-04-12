@@ -4,7 +4,7 @@ set -eu
 
 sudo apt-get -y install aspell catdoc hunspell hunspell-en-gb
 
-dotfiles-nix-install pandoc
+dotfiles-nix-install libgourou pandoc
 
 # Calibre from 24.11 doesn't work in VMs, so we install an older version
 nix profile install --profile "${DOTFILES_NIX_PROFILE}" "nixpkgs/release-24.05#calibre"
