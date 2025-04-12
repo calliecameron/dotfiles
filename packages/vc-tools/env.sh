@@ -17,6 +17,7 @@ if command -v git >/dev/null; then
     git config --global core.autocrlf false
     git config --global pager.status true
     git config --global status.showUntrackedFiles all
+    git config --global pull.ff only
     git config --global push.default simple
     git config --global log.mailmap true
 fi
