@@ -1,42 +1,20 @@
 {
-    "workbench.colorTheme": "Solarized Dark",
-    "telemetry.telemetryLevel": "off",
-    "workbench.enableExperiments": false,
-    "files.insertFinalNewline": true,
-    "files.trimFinalNewlines": true,
-    "python.diagnostics.sourceMapsEnabled": true,
-    "python.testing.pytestEnabled": true,
-    "editor.formatOnSave": true,
-    "files.autoSave": "afterDelay",
-    "python.experiments.enabled": false,
-    "files.exclude": {
-        "**/__pycache__": true,
-        "**/.ipynb_checkpoints": true,
-        "**/.mypy_cache": true,
-        "**/.pytest_cache": true,
-        "**/.Trash-*": true,
-        "**/*~": true
+    "[dockerfile]": {
+        "editor.defaultFormatter": "ms-azuretools.vscode-docker"
     },
-    "workbench.startupEditor": "none",
-    "redhat.telemetry.enabled": false,
+    "[python]": {
+        "editor.defaultFormatter": "charliermarsh.ruff",
+        "editor.formatOnSave": true,
+        "editor.codeActionsOnSave": {
+            "source.organizeImports": "explicit"
+        }
+    },
+    "[shellscript]": {
+        "editor.defaultFormatter": "foxundermoon.shell-format"
+    },
+    "basedpyright.analysis.typeCheckingMode": "off",
     "bazel.buildifierFixOnFormat": true,
     "bazel.enableCodeLens": true,
-    "cSpell.language": "en-GB",
-    "gitlens.showWhatsNewAfterUpgrades": false,
-    "gitlens.currentLine.enabled": false,
-    "gitlens.currentLine.pullRequests.enabled": false,
-    "gitlens.codeLens.enabled": false,
-    "python.terminal.launchArgs": [
-        "-m",
-        "IPython",
-        "--no-autoindent",
-        "--no-confirm-exit"
-    ],
-    "bashIde.highlightParsingErrors": true,
-    "explorer.confirmDelete": false,
-    "explorer.confirmDragAndDrop": false,
-    "explorer.compactFolders": false,
-    "git.confirmSync": false,
     "cSpell.allowCompoundWords": true,
     "cSpell.enabledLanguageIds": [
         "asciidoc",
@@ -75,6 +53,20 @@
         "yaml",
         "yml"
     ],
+    "cSpell.language": "en-GB",
+    "chat.commandCenter.enabled": false,
+    "diffEditor.ignoreTrimWhitespace": false,
+    "editor.bracketPairColorization.enabled": true,
+    "editor.bracketPairColorization.independentColorPoolPerBracketType": true,
+    "editor.formatOnSave": true,
+    "editor.rulers": [
+        80,
+        100
+    ],
+    "editor.scrollBeyondLastLine": false,
+    "explorer.compactFolders": false,
+    "explorer.confirmDelete": false,
+    "explorer.confirmDragAndDrop": false,
     "files.associations": {
         "**/tasks/*.yml": "ansible",
         "**/defaults/*.yml": "ansible",
@@ -86,31 +78,36 @@
         ".luacheckrc": "lua",
         ".lua-format": "plaintext"
     },
-    "diffEditor.ignoreTrimWhitespace": false,
-    "editor.bracketPairColorization.enabled": true,
-    "editor.bracketPairColorization.independentColorPoolPerBracketType": true,
-    "editor.scrollBeyondLastLine": false,
+    "files.autoSave": "afterDelay",
+    "files.exclude": {
+        "**/__pycache__": true,
+        "**/.ipynb_checkpoints": true,
+        "**/.mypy_cache": true,
+        "**/.pytest_cache": true,
+        "**/.Trash-*": true,
+        "**/*~": true
+    },
+    "files.insertFinalNewline": true,
+    "files.trimFinalNewlines": true,
     "files.trimTrailingWhitespace": true,
-    "editor.rulers": [
-        80,
-        100
-    ],
+    "git.confirmSync": false,
     "gitlens.advanced.fileHistoryFollowsRenames": true,
-    "python.formatting.provider": "none",
-    "[dockerfile]": {
-        "editor.defaultFormatter": "ms-azuretools.vscode-docker"
-    },
-    "[python]": {
-        "editor.defaultFormatter": "charliermarsh.ruff",
-        "editor.formatOnSave": true,
-        "editor.codeActionsOnSave": {
-            "source.organizeImports": "explicit"
-        },
-    },
-    "makefile.configureOnOpen": false,
-    "[shellscript]": {
-        "editor.defaultFormatter": "foxundermoon.shell-format"
-    },
+    "gitlens.codeLens.enabled": false,
+    "gitlens.currentLine.enabled": false,
+    "gitlens.currentLine.pullRequests.enabled": false,
+    "gitlens.showWhatsNewAfterUpgrades": false,
+    "python.experiments.enabled": false,
+    "python.terminal.launchArgs": [
+        "-m",
+        "IPython",
+        "--no-autoindent",
+        "--no-confirm-exit"
+    ],
+    "python.testing.pytestEnabled": true,
+    "redhat.telemetry.enabled": false,
+    "telemetry.telemetryLevel": "off",
+    "workbench.colorTheme": "Solarized Dark",
     "workbench.editor.enablePreview": false,
-    "chat.commandCenter.enabled": false
+    "workbench.enableExperiments": false,
+    "workbench.startupEditor": "none"
 }
