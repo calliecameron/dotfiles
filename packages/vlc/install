@@ -2,7 +2,7 @@
 
 set -eu
 
-sudo apt-get -y install vlc
+sudo apt-get -y install vlc vlc-plugin-fluidsynth
 
 source "${PACKAGE_SOURCE_DIR}/env.sh"
 
@@ -37,5 +37,3 @@ xdg-mime default vlc.desktop application/vnd.adobe.flash.movie \
     application/xspf+xml audio/mpeg audio/mp4 audio/x-mpegurl audio/x-vorbis+ogg audio/x-wav \
     video/mpeg video/mp4 video/ogg video/quicktime video/x-msvideo \
     video/x-matroska
-"${PACKAGE_SOURCE_DIR}/non-default-association.el" 'inode/directory' \
-    'vlc.desktop' "${HOME}/.config/mimeapps.list"
