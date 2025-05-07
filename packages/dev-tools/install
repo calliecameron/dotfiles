@@ -6,8 +6,6 @@ sudo apt-get -y install bash-doc bison bison-doc build-essential clang \
     clang-format cmake devscripts flex info make-doc man-db manpages-posix \
     manpages-posix-dev valgrind
 
-npm install -g bats bats-support bats-assert
-
 dotfiles-clone-or-update-repo 'https://github.com/hyperupcall/autoenv' "${PACKAGE_INSTALL_DIR}/autoenv" 'master'
 
 dotfiles-nix-install shellcheck shfmt
