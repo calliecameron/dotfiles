@@ -10,7 +10,7 @@ if [ -n "${PROMPT_COMMAND}" ]; then
     SAVED_PROMPT_COMMAND="${PROMPT_COMMAND}"
 fi
 
-export LP_ENV_VARS=("DOTFILES_PYENV_VERSION py:%s")
+export LP_ENV_VARS=("DOTFILES_PYENV_VERSION py:%s" "DOTFILES_NVM_VERSION nd:%s")
 
 source "${PACKAGE_INSTALL_DIR}/liquidprompt/liquidprompt"
 

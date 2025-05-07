@@ -1,0 +1,12 @@
+#!/bin/bash
+
+set -eu
+
+if [ ! -f "${PACKAGE_INSTALL_DIR}/zsh-nvm.plugin.zsh" ]; then
+    wget 'https://raw.githubusercontent.com/lukechilds/zsh-nvm/745291dcf20686ec421935f1c3f8f3a2918dd106/zsh-nvm.plugin.zsh'
+    echo '0233d37b92ca880fa61cc9a7cf697a3be007670025581846970688c1e9f7bdff  zsh-nvm.plugin.zsh' >checksum
+    sha256sum -c checksum
+    zsh -c "PACKAGE_INSTALL_DIR=\"${PACKAGE_INSTALL_DIR}\" && source \"${PACKAGE_SOURCE_DIR}/env.sh\" && source \"${PACKAGE_SOURCE_DIR}/aliases.zsh\""
+else
+    zsh -c "PACKAGE_INSTALL_DIR=\"${PACKAGE_INSTALL_DIR}\" && source \"${PACKAGE_SOURCE_DIR}/env.sh\" && source \"${PACKAGE_SOURCE_DIR}/aliases.zsh\" && nvm upgrade && nvm install node && nvm install-latest-npm"
+fi
