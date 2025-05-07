@@ -1,1 +1,1 @@
-precmd_functions=(pyenv-version-check $precmd_functions)
+precmd_functions=(dotfiles-pyenv-version-check $precmd_functions)
