@@ -3,4 +3,4 @@ all: test
 
 .PHONY: test
 test:
-	bats -r .
+	./bats-runner.sh -r .

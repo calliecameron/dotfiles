@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "bats": "^1.11.1",
+    "bats-assert": "^2.0.0"
+  }
+}
