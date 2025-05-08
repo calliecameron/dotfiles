@@ -21,6 +21,7 @@ codium \
     --install-extension=DavidAnson.vscode-markdownlint \
     --install-extension=detachhead.basedpyright \
     --install-extension=eamodio.gitlens \
+    --install-extension=esbenp.prettier-vscode \
     --install-extension=foxundermoon.shell-format \
     --install-extension=jetmartin.bats \
     --install-extension=mads-hartmann.bash-ide-vscode \
