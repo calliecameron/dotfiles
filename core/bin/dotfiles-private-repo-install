@@ -6,7 +6,7 @@ dotfiles-package-lock
 trap dotfiles-package-unlock EXIT
 
 if [ -n "${DOTFILES_PRIVATE_REPO}" ]; then
-    BRANCH='master'
+    BRANCH='main'
     if [ -n "${DOTFILES_PRIVATE_BRANCH}" ]; then
         BRANCH="${DOTFILES_PRIVATE_BRANCH}"
     fi

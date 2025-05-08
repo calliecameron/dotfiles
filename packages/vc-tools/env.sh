@@ -13,6 +13,7 @@ if command -v git >/dev/null; then
         git config --global user.email "${DOTFILES_VC_EMAIL}"
     fi
 
+    git config --global init.defaultBranch main
     git config --global color.ui auto
     git config --global core.autocrlf false
     git config --global pager.status true
