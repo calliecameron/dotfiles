@@ -31,6 +31,7 @@ codium \
     --install-extension=redhat.vscode-yaml \
     --install-extension=rust-lang.rust-analyzer \
     --install-extension=streetsidesoftware.code-spell-checker \
+    --install-extension=stylelint.vscode-stylelint \
     --install-extension=timonwong.shellcheck \
     --install-extension=vscjava.vscode-java-pack \
     --install-extension=wholroyd.jinja

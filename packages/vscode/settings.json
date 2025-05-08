@@ -67,6 +67,7 @@
     ],
     "cSpell.language": "en-GB",
     "chat.commandCenter.enabled": false,
+    "css.validate": false,
     "diffEditor.ignoreTrimWhitespace": false,
     "editor.bracketPairColorization.enabled": true,
     "editor.bracketPairColorization.independentColorPoolPerBracketType": true,
@@ -108,6 +109,7 @@
     "gitlens.currentLine.enabled": false,
     "gitlens.currentLine.pullRequests.enabled": false,
     "gitlens.showWhatsNewAfterUpgrades": false,
+    "less.validate": false,
     "python.experiments.enabled": false,
     "python.terminal.launchArgs": [
         "-m",
@@ -117,6 +119,7 @@
     ],
     "python.testing.pytestEnabled": true,
     "redhat.telemetry.enabled": false,
+    "scss.validate": false,
     "telemetry.telemetryLevel": "off",
     "workbench.colorTheme": "Solarized Dark",
     "workbench.editor.enablePreview": false,
