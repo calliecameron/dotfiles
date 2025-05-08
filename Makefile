@@ -4,8 +4,9 @@ all: lint test
 .PHONY: deps
 deps: .deps-installed
 
-.deps-installed: requirements-dev.txt
+.deps-installed: requirements-dev.txt package.json package-lock.json
 	pip install -r requirements-dev.txt
+	npm install
 	touch .deps-installed
 
 requirements-dev.txt: requirements-dev.in pyproject.toml
