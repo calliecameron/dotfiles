@@ -19,6 +19,7 @@ codium \
     --install-extension=charliermarsh.ruff \
     --install-extension=coolbear.systemd-unit-file \
     --install-extension=DavidAnson.vscode-markdownlint \
+    --install-extension=dbaeumer.vscode-eslint \
     --install-extension=detachhead.basedpyright \
     --install-extension=eamodio.gitlens \
     --install-extension=esbenp.prettier-vscode \
