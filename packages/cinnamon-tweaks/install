@@ -3,6 +3,7 @@
 set -eu
 
 export PATH="${PACKAGE_SOURCE_DIR}/bin:${PATH}"
+source "${PACKAGE_SOURCE_DIR}/env.sh"
 
 # Theme
 dotfiles-set-theme dark
