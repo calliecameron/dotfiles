@@ -1,0 +1,22 @@
+#!/bin/bash
+
+set -eu
+
+function usage() {
+    echo "Usage: $(basename "${0}") light|dark"
+    exit 1
+}
+
+test -z "${1:-}" && usage
+THEME="${1}"
+
+if [ "${THEME}" != 'light' ] && [ "${THEME}" != 'dark' ]; then
+    usage
+fi
+
+PROFILE="$(dconf list /org/gnome/terminal/legacy/profiles:/ | head -n 1 | sed 's|:||g' | sed 's|/||g')"
+
+"${DOTFILES_PACKAGE_INSTALL_DIR}/solarized-gnome-terminal/solarized/install.sh" \
+    --scheme "${THEME}" \
+    --profile "${PROFILE}" \
+    --skip-dircolors

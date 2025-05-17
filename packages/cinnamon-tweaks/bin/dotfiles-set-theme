@@ -15,6 +15,10 @@ function set-theme() {
     gsettings set org.cinnamon.desktop.interface gtk-theme "${1}"
     gsettings set org.cinnamon.theme name "${1}"
     gsettings set org.gnome.desktop.interface gtk-theme "${1}"
+
+    if which dotfiles-gnome-terminal-set-theme >/dev/null; then
+        dotfiles-gnome-terminal-set-theme "${THEME}"
+    fi
 }
 
 if [ "${THEME}" = 'light' ]; then
