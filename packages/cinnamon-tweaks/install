@@ -90,6 +90,7 @@ add-key 'Nemo' 'nemo' '<Primary><Alt>h'
 add-key 'GnuCash' 'gnucash' '<Primary><Alt>g'
 add-key 'Calculator' 'gnome-calculator' '<Primary><Alt>c'
 add-key 'VSCodium' 'codium' '<Primary><Alt>v'
+add-key 'Discord' 'discord' '<Primary><Alt>d'
 add-key 'Toggle Theme' 'dotfiles-toggle-theme' '<Primary><Alt>backslash'
 
 gsettings-add-if-not-in-list org.gnome.libgnomekbd.keyboard options $'ctrl\tctrl:nocaps'
