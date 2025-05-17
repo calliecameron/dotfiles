@@ -429,6 +429,7 @@ If BUFFER is a string, it is the name of the buffer to find; if it is a predicat
   (setq alert-default-style 'notifications))
 
 (dotfiles-use-package auto-dark
+  :diminish auto-dark-mode
   :config
   (setq custom-safe-themes t)
   (setq auto-dark-themes '((solarized-dark) (solarized-light)))
