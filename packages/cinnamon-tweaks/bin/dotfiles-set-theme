@@ -1,0 +1,26 @@
+#!/bin/bash
+
+set -eu
+
+function usage() {
+    echo "Usage: $(basename "${0}") light|dark"
+    exit 1
+}
+
+test -z "${1:-}" && usage
+THEME="${1}"
+
+function set-theme() {
+    gsettings set org.x.apps.portal color-scheme "${2}"
+    gsettings set org.cinnamon.desktop.interface gtk-theme "${1}"
+    gsettings set org.cinnamon.theme name "${1}"
+    gsettings set org.gnome.desktop.interface gtk-theme "${1}"
+}
+
+if [ "${THEME}" = 'light' ]; then
+    set-theme "${DOTFILES_THEME_LIGHT}" 'prefer-light'
+elif [ "${THEME}" = 'dark' ]; then
+    set-theme "${DOTFILES_THEME_DARK}" 'prefer-dark'
+else
+    usage
+fi
