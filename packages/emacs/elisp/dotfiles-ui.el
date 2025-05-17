@@ -428,6 +428,12 @@ If BUFFER is a string, it is the name of the buffer to find; if it is a predicat
   :config
   (setq alert-default-style 'notifications))
 
+(dotfiles-use-package auto-dark
+  :config
+  (setq custom-safe-themes t)
+  (setq auto-dark-themes '((solarized-dark) (solarized-light)))
+  (auto-dark-mode))
+
 (dotfiles-use-package autorevert
   :config
   (setq auto-revert-verbose nil)
@@ -644,22 +650,7 @@ dotfiles-org-linkify-suffix) appended."
   (show-smartparens-global-mode 1)
   (setq sp-autoescape-string-quote nil))
 
-(dotfiles-use-package solarized-theme
-  :config
-  (defvar dotfiles-current-theme 'solarized-dark)
-  (defun dotfiles-toggle-theme ()
-    "Toggle between light and dark themes."
-    (interactive)
-    (let ((new-theme
-           (if (eq dotfiles-current-theme 'solarized-dark)
-               'solarized-light
-             'solarized-dark)))
-      (setq dotfiles-current-theme new-theme)
-      (load-theme new-theme t)))
-  (load-theme dotfiles-current-theme t)
-  (bind-keys
-   :map dotfiles-buffer-map
-   ("-" . dotfiles-toggle-theme)))
+(dotfiles-use-package solarized-theme)
 
 (dotfiles-use-package smart-mode-line
   :config
