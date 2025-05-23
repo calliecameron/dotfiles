@@ -4,6 +4,7 @@ set -eu
 
 TMPFILE="$(mktemp)"
 wget -O- https://updates.signal.org/desktop/apt/keys.asc | gpg --dearmor >"${TMPFILE}"
+# shellcheck disable=SC2024
 sudo tee /usr/share/keyrings/signal-desktop-keyring.gpg <"${TMPFILE}" >/dev/null
 echo 'deb [arch=amd64 signed-by=/usr/share/keyrings/signal-desktop-keyring.gpg] https://updates.signal.org/desktop/apt xenial main' |
     sudo tee /etc/apt/sources.list.d/signal.list >/dev/null
@@ -11,4 +12,3 @@ rm "${TMPFILE}"
 
 sudo apt-get update
 sudo apt-get -y install signal-desktop
-
