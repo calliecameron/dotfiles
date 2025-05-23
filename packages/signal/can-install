@@ -1,0 +1,8 @@
+#!/bin/bash
+
+set -eu
+
+dotfiles-linux-variant main
+dotfiles-is-graphical
+dotfiles-can-sudo
+
