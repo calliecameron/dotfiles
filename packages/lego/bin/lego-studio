@@ -1,0 +1,6 @@
+#!/bin/bash
+
+set -eu
+
+exec nixVulkanIntel wine explorer '/desktop=Studio,1280x1024' 'C:\Program Files\Studio 2.0\Studio.exe'
+
