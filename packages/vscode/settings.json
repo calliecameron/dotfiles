@@ -24,6 +24,8 @@
     "[shellscript]": {
         "editor.defaultFormatter": "foxundermoon.shell-format"
     },
+    "ansible.lightspeed.enabled": false,
+    "ansible.lightspeed.suggestions.enabled": false,
     "basedpyright.analysis.typeCheckingMode": "off",
     "bazel.buildifierFixOnFormat": true,
     "bazel.enableCodeLens": true,
