@@ -1,7 +1,0 @@
-#!/bin/bash
-
-set -eu
-
-sudo apt-get -y install nemo-dropbox
-
-sudo ufw allow 17500/tcp
