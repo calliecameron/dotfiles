@@ -2,6 +2,6 @@
 
 set -eu
 
-dotfiles-package-installed 05-nix
+dotfiles-package-installed 04-nix
 command -v nix &>/dev/null
 command -v dotfiles-nix-install &>/dev/null
