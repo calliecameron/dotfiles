@@ -15,3 +15,8 @@ export PATH="${PYENV_ROOT}/bin:${PATH}"
 if command -v pyenv >/dev/null; then
     eval "$(pyenv init --path)"
 fi
+
+export DOTFILES_PIPX_INSTALL_DIR="${HOME}/.pipx-install"
+export PIPX_BIN_DIR="${DOTFILES_PIPX_INSTALL_DIR}/bin"
+export PIPX_MAN_DIR="${DOTFILES_PIPX_INSTALL_DIR}/share/man"
+export PATH="${PIPX_BIN_DIR}:${PATH}"

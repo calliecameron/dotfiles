@@ -26,3 +26,5 @@ if ! command -v pyenv >/dev/null; then
 else
     bash -c "source '${PACKAGE_SOURCE_DIR}/env.sh' && pyenv update"
 fi
+
+dotfiles-nix-install pipx

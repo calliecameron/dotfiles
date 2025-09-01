@@ -3,3 +3,4 @@
 set -eu
 
 dotfiles-can-sudo
+dotfiles-nix-installed
