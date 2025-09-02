@@ -153,7 +153,8 @@
   (setq
    magit-diff-refine-hunk 'all
    magit-diff-paint-whitespace t
-   magit-diff-highlight-trailing t)
+   magit-diff-highlight-trailing t
+   magit-status-show-untracked-files 'all)
   (bind-keys
    ("s-g" . magit-status)
    ("C-S-g" . magit-status)
