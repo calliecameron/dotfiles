@@ -15,7 +15,7 @@ customisation.
 5. Start a shell and follow the instructions. You may need to log out and in
    again several times until all the packages are installed.
 
-If you set `DOTFILES_PRIVATE_REPO` in '~/.dotfiles-variables.sh' to the URL of a
-git repository, it will be cloned into '~/.dotfiles.d/private', and any packages
+If you set `DOTFILES_PRIVATE_REPO` in `~/.dotfiles-variables.sh` to the URL of a
+git repository, it will be cloned into `~/.dotfiles.d/private`, and any packages
 in a 'packages' directory within it will be loaded along with the packages in
 the main repository (see [PACKAGES.md](PACKAGES.md)).
