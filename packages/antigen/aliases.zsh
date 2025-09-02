@@ -7,9 +7,6 @@ antigen bundle zsh-users/zsh-syntax-highlighting
 antigen bundle vagrant
 antigen bundle zsh-users/zsh-completions
 antigen bundle lukechilds/zsh-better-npm-completion
-antigen bundle nix-community/nix-zsh-completions
-antigen bundle podman
-antigen bundle rust
 antigen apply
 
 mkdir -p "${ZSH_CACHE_DIR}/completions"
