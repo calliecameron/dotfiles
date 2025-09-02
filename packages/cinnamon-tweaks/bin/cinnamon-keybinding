@@ -23,7 +23,7 @@ def get_keybindings_list() -> list[str]:
     ).strip()
     if s == "@as []":
         s = "[]"
-    return cast(list[str], ast.literal_eval(s))
+    return cast("list[str]", ast.literal_eval(s))
 
 
 def set_keybindings_list(l: list[str]) -> None:  # noqa: E741
@@ -36,7 +36,7 @@ def dconf_keybinding_path(keybinding: str, attr: str) -> str:
 
 def read_string(keybinding: str, attr: str) -> str:
     return cast(
-        str,
+        "str",
         ast.literal_eval(
             subprocess.check_output(
                 ["dconf", "read", dconf_keybinding_path(keybinding, attr)],
@@ -51,7 +51,7 @@ def write_string(keybinding: str, attr: str, s: str) -> None:
 
 
 def read_list(keybinding: str, attr: str) -> list[str]:
-    return cast(list[str], read_string(keybinding, attr))
+    return cast("list[str]", read_string(keybinding, attr))
 
 
 def write_single_element_list(keybinding: str, attr: str, s: str) -> None:

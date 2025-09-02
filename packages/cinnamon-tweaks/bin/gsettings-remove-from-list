@@ -17,7 +17,7 @@ def gsettings_get_list(schema: str, key: str) -> list[str]:
     s = subprocess.check_output(["gsettings", "get", schema, key], encoding="utf-8").strip()
     if s == "@as []":
         s = "[]"
-    return cast(list[str], ast.literal_eval(s))
+    return cast("list[str]", ast.literal_eval(s))
 
 
 def main() -> None:
