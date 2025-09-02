@@ -28,3 +28,13 @@ else
 fi
 
 dotfiles-nix-install pipx
+
+if ! command -v uv >/dev/null; then
+    bash -c "source '${PACKAGE_SOURCE_DIR}/env.sh' && pipx install uv"
+else
+    bash -c "source '${PACKAGE_SOURCE_DIR}/env.sh' && pipx upgrade uv"
+fi
+
+bash -c "source '${PACKAGE_SOURCE_DIR}/env.sh' && mkdir -p \"\${DOTFILES_UV_ZSH_COMPLETIONS_DIR}\""
+bash -c "source '${PACKAGE_SOURCE_DIR}/env.sh' && uv generate-shell-completion zsh > \"\${DOTFILES_UV_ZSH_COMPLETIONS_DIR}/_uv\""
+bash -c "source '${PACKAGE_SOURCE_DIR}/env.sh' && uvx --generate-shell-completion zsh > \"\${DOTFILES_UV_ZSH_COMPLETIONS_DIR}/_uvx\""
