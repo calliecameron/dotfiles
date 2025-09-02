@@ -1,3 +1,15 @@
+[project]
+name = "dotfiles"
+version = "0.0.0"
+requires-python = "==3.12.3"
+dependencies = []
+
+[dependency-groups]
+dev = [
+    "mypy==1.17.1",
+    "ruff==0.12.11",
+]
+
 [tool.mypy]
 scripts_are_modules = true
 python_version = "3.12"
@@ -24,7 +36,3 @@ ignore = [
     "T20",
     "TRY003",
 ]
-
-[tool.pip-tools]
-generate-hashes = true
-strip-extras = true

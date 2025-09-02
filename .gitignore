@@ -1,8 +1,6 @@
 *.zwc
 *~
 /.deps-installed
-/.env
-/.env.leave
 /.vscode/
 /node_modules/
 __pycache__/
