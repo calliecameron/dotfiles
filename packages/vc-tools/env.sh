@@ -13,14 +13,15 @@ if command -v git >/dev/null; then
         git config --global user.email "${DOTFILES_VC_EMAIL}"
     fi
 
-    git config --global init.defaultBranch main
     git config --global color.ui auto
     git config --global core.autocrlf false
+    git config --global init.defaultBranch main
+    git config --global init.templateDir "${PACKAGE_SOURCE_DIR}/git-template"
+    git config --global log.mailmap true
     git config --global pager.status true
-    git config --global status.showUntrackedFiles all
     git config --global pull.ff only
     git config --global push.default simple
-    git config --global log.mailmap true
+    git config --global status.showUntrackedFiles all
 fi
 
 rmdir "${MUTEX}"
