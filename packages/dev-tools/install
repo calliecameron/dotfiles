@@ -8,4 +8,4 @@ sudo apt-get -y install bash-doc bison bison-doc build-essential clang \
 
 dotfiles-clone-or-update-repo 'https://github.com/hyperupcall/autoenv' "${PACKAGE_INSTALL_DIR}/autoenv" 'master'
 
-dotfiles-nix-install pre-commit shellcheck shfmt
+dotfiles-nix-install gitleaks pre-commit shellcheck shfmt
