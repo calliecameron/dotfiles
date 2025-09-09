@@ -48,28 +48,35 @@ repos:
       - id: validate-pyproject
   - repo: local
     hooks:
+      - id: shellcheck
+        name: shellcheck
+        language: system
+        entry: shellcheck
+        types: [shell]
+        exclude_types: [zsh]
+        exclude: ^packages/vc-tools/git-completion.bash$
+      - id: shfmt
+        name: shfmt
+        language: system
+        entry: shfmt -l -w -i 4
+        types: [shell]
+        exclude: ^packages/vc-tools/git-completion.bash$
       - id: ruff check
         name: ruff check
         language: system
         entry: uv run ruff check --fix
-        types: [python]
+        types_or: [python, pyi]
       - id: ruff format
         name: ruff format
         language: system
         entry: uv run ruff format
-        types: [python]
+        types_or: [python, pyi]
       - id: mypy
         name: mypy
         language: system
         entry: uv run mypy
-        types: [python]
+        types_or: [python, pyi]
       - id: prettier
         name: prettier
         language: system
         entry: npx prettier --write --ignore-unknown
-      - id: makefile
-        name: makefile
-        language: system
-        entry: make precommit
-        pass_filenames: false
-        always_run: true

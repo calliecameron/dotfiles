@@ -5,19 +5,9 @@ all: lint test
 lint:
 	pre-commit run -a
 
-.PHONY: lint_internal
-lint_internal:
-	tests/find-shell-files.sh | xargs -d '\n' shellcheck
-	tests/find-shell-files.sh | xargs -d '\n' shfmt -l -w -i 4
-	tests/find-bats-files.sh | xargs -d '\n' shellcheck
-	tests/find-bats-files.sh | xargs -d '\n' shfmt -l -w -i 4 -ln bats
-
 .PHONY: test
 test:
 	cd tests && make
-
-.PHONY: precommit
-precommit: lint_internal
 
 .PHONY: clean
 clean:
