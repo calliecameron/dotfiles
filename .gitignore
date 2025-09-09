@@ -1,6 +1,5 @@
 *.zwc
 *~
-/.deps-installed
 /.vscode/
 /node_modules/
 __pycache__/
