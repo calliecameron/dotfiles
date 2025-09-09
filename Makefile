@@ -1,26 +1,19 @@
 .PHONY: all
 all: lint test
 
-.PHONY: deps
-deps: .deps-installed
-
-.deps-installed: package.json package-lock.json
-	npm install
-	touch .deps-installed
-
 .PHONY: lint
 lint:
 	pre-commit run -a
 
 .PHONY: lint_internal
-lint_internal: deps
+lint_internal:
 	tests/find-shell-files.sh | xargs -d '\n' shellcheck
 	tests/find-shell-files.sh | xargs -d '\n' shfmt -l -w -i 4
 	tests/find-bats-files.sh | xargs -d '\n' shellcheck
 	tests/find-bats-files.sh | xargs -d '\n' shfmt -l -w -i 4 -ln bats
 
 .PHONY: test
-test: deps
+test:
 	cd tests && make
 
 .PHONY: precommit
@@ -32,7 +25,6 @@ clean:
 
 .PHONY: deepclean
 deepclean: clean
-	rm -f .deps-installed
 	find . -depth '(' -type d '(' -name '.mypy_cache' -o -name '.ruff_cache' -o -name '__pycache__' ')' ')' -exec rm -r '{}' ';'
 	rm -rf node_modules
 	rm -rf .venv
