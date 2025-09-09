@@ -23,7 +23,6 @@ codium \
     --install-extension=detachhead.basedpyright \
     --install-extension=editorconfig.editorconfig \
     --install-extension=esbenp.prettier-vscode \
-    --install-extension=foxundermoon.shell-format \
     --install-extension=jetmartin.bats \
     --install-extension=mads-hartmann.bash-ide-vscode \
     --install-extension=ms-python.mypy-type-checker \
