@@ -1,5 +1,9 @@
 exclude: ^packages/htop/htoprc$
 repos:
+  - repo: https://github.com/astral-sh/uv-pre-commit
+    rev: 0.8.15
+    hooks:
+      - id: uv-lock
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v6.0.0
     hooks:
@@ -21,14 +25,19 @@ repos:
         args:
           - --fix=lf
       - id: trailing-whitespace
-  - repo: https://github.com/astral-sh/uv-pre-commit
-    rev: 0.8.15
+  - repo: https://github.com/crate-ci/typos
+    rev: v1.36.2
     hooks:
-      - id: uv-lock
+      - id: typos
+        exclude: ^packages/vc-tools/git-completion.bash$
   - repo: https://github.com/gitleaks/gitleaks
     rev: v8.28.0
     hooks:
       - id: gitleaks
+  - repo: https://github.com/henryiii/validate-pyproject-schema-store
+    rev: 2025.08.29
+    hooks:
+      - id: validate-pyproject
   - repo: local
     hooks:
       - id: makefile
