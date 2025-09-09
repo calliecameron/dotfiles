@@ -6,6 +6,7 @@ dependencies = []
 
 [dependency-groups]
 dev = [
+    "codespell==2.4.1",
     "mypy==1.17.1",
     "ruff==0.12.12",
 ]
@@ -37,3 +38,6 @@ ignore = [
     "T20",
     "TRY003",
 ]
+
+[tool.codespell]
+skip = "./node_modules,./packages/vc-tools/git-completion.bash"

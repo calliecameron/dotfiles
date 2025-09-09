@@ -99,7 +99,7 @@
 (dotfiles--local-aliases dotfiles-local-zsh-aliases "zsh")
 
 (defun dotfiles--create-or-pop-to-buffer (buffer creator)
-  "Display a buffer in another window, or if no suitable buffer is found, create one and diaplay it.
+  "Display a buffer in another window, or if no suitable buffer is found, create one and display it.
 
 If BUFFER is a string, it is the name of the buffer to find; if it is a predicate, use the first buffer for which it returns true.  CREATOR is used to create a new buffer if no suitable existing one is found, and should return the new buffer."
   (pop-to-buffer

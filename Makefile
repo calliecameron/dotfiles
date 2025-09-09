@@ -22,6 +22,7 @@ lint_internal: deps
 	tests/find-python-files.sh | xargs -d '\n' uv run ruff format
 	tests/find-python-files.sh | xargs -d '\n' uv run mypy
 	npx prettier --write .
+	uv run codespell -w
 
 .PHONY: test
 test: deps
