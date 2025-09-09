@@ -4,6 +4,14 @@ repos:
     rev: 0.8.15
     hooks:
       - id: uv-lock
+  - repo: local
+    hooks:
+      - id: npm sync
+        name: npm sync
+        language: system
+        entry: npm install
+        pass_filenames: false
+        always_run: true
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v6.0.0
     hooks:
@@ -55,6 +63,10 @@ repos:
         language: system
         entry: uv run mypy
         types: [python]
+      - id: prettier
+        name: prettier
+        language: system
+        entry: npx prettier --write --ignore-unknown
       - id: makefile
         name: makefile
         language: system

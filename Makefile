@@ -18,7 +18,6 @@ lint_internal: deps
 	tests/find-shell-files.sh | xargs -d '\n' shfmt -l -w -i 4
 	tests/find-bats-files.sh | xargs -d '\n' shellcheck
 	tests/find-bats-files.sh | xargs -d '\n' shfmt -l -w -i 4 -ln bats
-	npx prettier --write .
 
 .PHONY: test
 test: deps
