@@ -6,7 +6,8 @@ cd "${PACKAGE_SOURCE_DIR}/docker"
 podman build -t minecraft-atlauncher .
 
 cp "${PACKAGE_SOURCE_DIR}/minecraft.png" "${PACKAGE_INSTALL_DIR}/minecraft.png"
-sed "s|@@@@@1@@@@@|${PACKAGE_INSTALL_DIR}|g" <"${PACKAGE_SOURCE_DIR}/minecraft.desktop.template" >"${PACKAGE_INSTALL_DIR}/minecraft.desktop"
+sed "s|@@@@@1@@@@@|${PACKAGE_INSTALL_DIR}|g" <"${PACKAGE_SOURCE_DIR}/minecraft-desktop-template" >"${PACKAGE_INSTALL_DIR}/minecraft.desktop"
+chmod u+x "${PACKAGE_INSTALL_DIR}/minecraft.desktop"
 
 xdg-desktop-menu install --novendor "${PACKAGE_INSTALL_DIR}/minecraft.desktop"
 xdg-desktop-icon install --novendor "${PACKAGE_INSTALL_DIR}/minecraft.desktop"

@@ -14,7 +14,7 @@ containing any of the following files:
 - `aliases.sh`: generic aliases. Called with working directory set to
   `PACKAGE_SOURCE_DIR`. Must work in bash and zsh.
 - `aliases.{bash|zsh}`: shell-specific aliases. Called with working directory
-   set to `PACKAGE_SOURCE_DIR`.
+  set to `PACKAGE_SOURCE_DIR`.
 - `emacs.el`: loaded by Emacs. Called with working directory set to
   `this-package-source-dir`.
 

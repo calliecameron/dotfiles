@@ -1,23 +1,23 @@
 {
-    "default": [
-        {
-            "type": "reject"
-        }
-    ],
-    "transports": {
-        "containers-storage": {
-            "": [
-                {
-                    "type": "insecureAcceptAnything"
-                }
-            ]
-        },
-        "docker": {
-            "docker.io": [
-                {
-                    "type": "insecureAcceptAnything"
-                }
-            ]
-        }
+  "default": [
+    {
+      "type": "reject"
     }
+  ],
+  "transports": {
+    "containers-storage": {
+      "": [
+        {
+          "type": "insecureAcceptAnything"
+        }
+      ]
+    },
+    "docker": {
+      "docker.io": [
+        {
+          "type": "insecureAcceptAnything"
+        }
+      ]
+    }
+  }
 }

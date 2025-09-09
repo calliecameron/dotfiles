@@ -1,133 +1,133 @@
 {
-    "[css]": {
-        "editor.defaultFormatter": "esbenp.prettier-vscode"
-    },
-    "[dockerfile]": {
-        "editor.defaultFormatter": "ms-azuretools.vscode-docker"
-    },
-    "[html]": {
-        "editor.defaultFormatter": "esbenp.prettier-vscode"
-    },
-    "[javascript]": {
-        "editor.defaultFormatter": "esbenp.prettier-vscode"
-    },
-    "[json]": {
-        "editor.defaultFormatter": "esbenp.prettier-vscode"
-    },
-    "[python]": {
-        "editor.defaultFormatter": "charliermarsh.ruff",
-        "editor.formatOnSave": true,
-        "editor.codeActionsOnSave": {
-            "source.organizeImports": "explicit"
-        }
-    },
-    "[shellscript]": {
-        "editor.defaultFormatter": "foxundermoon.shell-format"
-    },
-    "ansible.lightspeed.enabled": false,
-    "ansible.lightspeed.suggestions.enabled": false,
-    "basedpyright.analysis.typeCheckingMode": "off",
-    "bazel.buildifierFixOnFormat": true,
-    "bazel.enableCodeLens": true,
-    "cSpell.allowCompoundWords": true,
-    "cSpell.enabledLanguageIds": [
-        "asciidoc",
-        "c",
-        "cpp",
-        "csharp",
-        "css",
-        "git-commit",
-        "go",
-        "graphql",
-        "handlebars",
-        "haskell",
-        "html",
-        "jade",
-        "java",
-        "javascript",
-        "javascriptreact",
-        "json",
-        "jsonc",
-        "jupyter",
-        "latex",
-        "less",
-        "markdown",
-        "php",
-        "plaintext",
-        "pug",
-        "restructuredtext",
-        "rust",
-        "scala",
-        "scss",
-        "swift",
-        "text",
-        "typescript",
-        "typescriptreact",
-        "vue",
-        "yaml",
-        "yml"
-    ],
-    "cSpell.language": "en-GB",
-    "chat.commandCenter.enabled": false,
-    "css.validate": false,
-    "diffEditor.ignoreTrimWhitespace": false,
-    "editor.bracketPairColorization.enabled": true,
-    "editor.bracketPairColorization.independentColorPoolPerBracketType": true,
+  "[css]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[dockerfile]": {
+    "editor.defaultFormatter": "ms-azuretools.vscode-docker"
+  },
+  "[html]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[javascript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[json]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[python]": {
+    "editor.defaultFormatter": "charliermarsh.ruff",
     "editor.formatOnSave": true,
-    "editor.rulers": [
-        80,
-        100
-    ],
-    "editor.scrollBeyondLastLine": false,
-    "explorer.compactFolders": false,
-    "explorer.confirmDelete": false,
-    "explorer.confirmDragAndDrop": false,
-    "files.associations": {
-        "**/tasks/*.yml": "ansible",
-        "**/defaults/*.yml": "ansible",
-        "**/handlers/*.yml": "ansible",
-        ".bazeliskrc": "plaintext",
-        ".gitconfig": "plaintext",
-        ".gitattributes": "plaintext",
-        ".bazelrc": "plaintext",
-        ".luacheckrc": "lua",
-        ".lua-format": "plaintext"
-    },
-    "files.autoSave": "afterDelay",
-    "files.exclude": {
-        "**/__pycache__": true,
-        "**/.ipynb_checkpoints": true,
-        "**/.mypy_cache": true,
-        "**/.pytest_cache": true,
-        "**/.ruff_cache": true,
-        "**/.Trash-*": true,
-        "**/*~": true
-    },
-    "files.insertFinalNewline": true,
-    "files.trimFinalNewlines": true,
-    "files.trimTrailingWhitespace": true,
-    "git.confirmSync": false,
-    "gitlens.advanced.fileHistoryFollowsRenames": true,
-    "gitlens.codeLens.enabled": false,
-    "gitlens.currentLine.enabled": false,
-    "gitlens.currentLine.pullRequests.enabled": false,
-    "gitlens.showWhatsNewAfterUpgrades": false,
-    "less.validate": false,
-    "python.experiments.enabled": false,
-    "python.terminal.launchArgs": [
-        "-m",
-        "IPython",
-        "--no-autoindent",
-        "--no-confirm-exit"
-    ],
-    "python.testing.pytestEnabled": true,
-    "redhat.telemetry.enabled": false,
-    "scss.validate": false,
-    "telemetry.telemetryLevel": "off",
-    "window.autoDetectColorScheme": true,
-    "workbench.editor.enablePreview": false,
-    "workbench.enableExperiments": false,
-    "workbench.preferredDarkColorTheme": "Solarized Dark",
-    "workbench.preferredLightColorTheme": "Solarized Light",
-    "workbench.startupEditor": "none"
+    "editor.codeActionsOnSave": {
+      "source.organizeImports": "explicit"
+    }
+  },
+  "[shellscript]": {
+    "editor.defaultFormatter": "foxundermoon.shell-format"
+  },
+  "[yaml]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "ansible.lightspeed.enabled": false,
+  "ansible.lightspeed.suggestions.enabled": false,
+  "basedpyright.analysis.typeCheckingMode": "off",
+  "bazel.buildifierFixOnFormat": true,
+  "bazel.enableCodeLens": true,
+  "cSpell.allowCompoundWords": true,
+  "cSpell.enabledLanguageIds": [
+    "asciidoc",
+    "c",
+    "cpp",
+    "csharp",
+    "css",
+    "git-commit",
+    "go",
+    "graphql",
+    "handlebars",
+    "haskell",
+    "html",
+    "jade",
+    "java",
+    "javascript",
+    "javascriptreact",
+    "json",
+    "jsonc",
+    "jupyter",
+    "latex",
+    "less",
+    "markdown",
+    "php",
+    "plaintext",
+    "pug",
+    "restructuredtext",
+    "rust",
+    "scala",
+    "scss",
+    "swift",
+    "text",
+    "typescript",
+    "typescriptreact",
+    "vue",
+    "yaml",
+    "yml"
+  ],
+  "cSpell.language": "en-GB",
+  "chat.commandCenter.enabled": false,
+  "css.validate": false,
+  "diffEditor.ignoreTrimWhitespace": false,
+  "editor.bracketPairColorization.enabled": true,
+  "editor.bracketPairColorization.independentColorPoolPerBracketType": true,
+  "editor.formatOnSave": true,
+  "editor.rulers": [80, 100],
+  "editor.scrollBeyondLastLine": false,
+  "explorer.compactFolders": false,
+  "explorer.confirmDelete": false,
+  "explorer.confirmDragAndDrop": false,
+  "files.associations": {
+    "**/tasks/*.yml": "ansible",
+    "**/defaults/*.yml": "ansible",
+    "**/handlers/*.yml": "ansible",
+    ".bazeliskrc": "plaintext",
+    ".gitconfig": "plaintext",
+    ".gitattributes": "plaintext",
+    ".bazelrc": "plaintext",
+    ".luacheckrc": "lua",
+    ".lua-format": "plaintext"
+  },
+  "files.autoSave": "afterDelay",
+  "files.exclude": {
+    "**/__pycache__": true,
+    "**/.ipynb_checkpoints": true,
+    "**/.mypy_cache": true,
+    "**/.pytest_cache": true,
+    "**/.ruff_cache": true,
+    "**/.Trash-*": true,
+    "**/*~": true
+  },
+  "files.insertFinalNewline": true,
+  "files.trimFinalNewlines": true,
+  "files.trimTrailingWhitespace": true,
+  "git.confirmSync": false,
+  "gitlens.advanced.fileHistoryFollowsRenames": true,
+  "gitlens.codeLens.enabled": false,
+  "gitlens.currentLine.enabled": false,
+  "gitlens.currentLine.pullRequests.enabled": false,
+  "gitlens.showWhatsNewAfterUpgrades": false,
+  "less.validate": false,
+  "python.experiments.enabled": false,
+  "python.terminal.launchArgs": [
+    "-m",
+    "IPython",
+    "--no-autoindent",
+    "--no-confirm-exit"
+  ],
+  "python.testing.pytestEnabled": true,
+  "redhat.telemetry.enabled": false,
+  "scss.validate": false,
+  "telemetry.telemetryLevel": "off",
+  "window.autoDetectColorScheme": true,
+  "workbench.editor.enablePreview": false,
+  "workbench.enableExperiments": false,
+  "workbench.preferredDarkColorTheme": "Solarized Dark",
+  "workbench.preferredLightColorTheme": "Solarized Light",
+  "workbench.startupEditor": "none"
 }
