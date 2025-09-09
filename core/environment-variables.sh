@@ -80,6 +80,7 @@ if [ -z "${SSH_AUTH_SOCK}" ] && [ -z "${DISPLAY}" ] && command -v ssh-agent >/de
     export DOTFILES_SSH_ADDED_FILE
 fi
 
+# shellcheck disable=SC2329
 appendpackageroot() {
     # shellcheck disable=SC2317
     if dotfiles-package-root-valid "${1}"; then
@@ -89,6 +90,7 @@ appendpackageroot() {
     fi
 }
 
+# shellcheck disable=SC2329
 prependpackageroot() {
     # shellcheck disable=SC2317
     if dotfiles-package-root-valid "${1}"; then

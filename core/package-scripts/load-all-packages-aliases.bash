@@ -4,6 +4,7 @@
 source "${DOTFILES_PACKAGE_SCRIPTS}/load-package-env.sh"
 source "${DOTFILES_PACKAGE_SCRIPTS}/common-funcs.sh"
 
+# shellcheck disable=SC2329
 function load-aliases() {
     test ! -z "${DOTFILES_PROFILING}" && printf "package %s %s " "${@}" && date --rfc-3339=ns
     local PACKAGE_ROOT="${1}"
@@ -30,6 +31,7 @@ function load-aliases() {
     return 0
 }
 
+# shellcheck disable=SC2329
 function load-package-aliases() {
     local PACKAGE_ROOT="${1}"
     local PACKAGE_NAME="${2}"

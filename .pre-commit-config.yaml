@@ -33,7 +33,7 @@ repos:
         args:
           - --fix=lf
       - id: trailing-whitespace
-  - repo: https://github.com/crate-ci/typos
+  - repo: https://github.com/adhtruong/mirrors-typos
     rev: v1.36.2
     hooks:
       - id: typos
@@ -42,40 +42,41 @@ repos:
     rev: v8.28.0
     hooks:
       - id: gitleaks
+  - repo: https://github.com/shellcheck-py/shellcheck-py
+    rev: v0.11.0.1
+    hooks:
+      - id: shellcheck
+        exclude_types: [zsh]
+        exclude: ^packages/vc-tools/git-completion.bash$
+  - repo: https://github.com/scop/pre-commit-shfmt
+    rev: v3.12.0-2
+    hooks:
+      - id: shfmt
+        exclude: ^packages/vc-tools/git-completion.bash$
   - repo: https://github.com/henryiii/validate-pyproject-schema-store
     rev: 2025.08.29
     hooks:
       - id: validate-pyproject
   - repo: local
     hooks:
-      - id: shellcheck
-        name: shellcheck
-        language: system
-        entry: shellcheck
-        types: [shell]
-        exclude_types: [zsh]
-        exclude: ^packages/vc-tools/git-completion.bash$
-      - id: shfmt
-        name: shfmt
-        language: system
-        entry: shfmt -l -w -i 4
-        types: [shell]
-        exclude: ^packages/vc-tools/git-completion.bash$
       - id: ruff check
         name: ruff check
         language: system
-        entry: uv run ruff check --fix
+        entry: uv run ruff check --force-exclude --fix
         types_or: [python, pyi]
+        require_serial: true
       - id: ruff format
         name: ruff format
         language: system
-        entry: uv run ruff format
+        entry: uv run ruff format --force-exclude
         types_or: [python, pyi]
+        require_serial: true
       - id: mypy
         name: mypy
         language: system
         entry: uv run mypy
         types_or: [python, pyi]
+        require_serial: true
       - id: prettier
         name: prettier
         language: system
