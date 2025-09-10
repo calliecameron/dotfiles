@@ -1,7 +1,18 @@
 exclude: ^packages/htop/htoprc$
+default_stages:
+  - pre-commit
+  - pre-merge-commit
+default_install_hook_types:
+  - commit-msg
+  - pre-commit
+  - pre-merge-commit
 repos:
+  - repo: https://github.com/jorisroovers/gitlint
+    rev: v0.19.1
+    hooks:
+      - id: gitlint
   - repo: https://github.com/astral-sh/uv-pre-commit
-    rev: 0.8.15
+    rev: 0.8.16
     hooks:
       - id: uv-lock
   - repo: local
@@ -9,7 +20,7 @@ repos:
       - id: npm sync
         name: npm sync
         language: system
-        entry: npm install
+        entry: bash -c 'source "${NVM_DIR}/nvm.sh" && npm install'
         pass_filenames: false
         always_run: true
   - repo: https://github.com/pre-commit/pre-commit-hooks
@@ -21,7 +32,7 @@ repos:
       - id: check-illegal-windows-names
       - id: check-merge-conflict
       - id: check-shebang-scripts-are-executable
-        exclude: ^packages/vc-tools/git-completion.bash$
+        exclude: ^packages/vc-tools/git-completion\.bash$
       - id: check-symlinks
       - id: check-vcs-permalinks
       - id: destroyed-symlinks
@@ -36,7 +47,7 @@ repos:
     rev: v1.36.2
     hooks:
       - id: typos
-        exclude: ^packages/vc-tools/git-completion.bash$
+        exclude: ^packages/vc-tools/git-completion\.bash$
   - repo: https://github.com/gitleaks/gitleaks
     rev: v8.28.0
     hooks:
@@ -46,12 +57,12 @@ repos:
     hooks:
       - id: shellcheck
         exclude_types: [zsh]
-        exclude: ^packages/vc-tools/git-completion.bash$
+        exclude: ^packages/vc-tools/git-completion\.bash$
   - repo: https://github.com/scop/pre-commit-shfmt
     rev: v3.12.0-2
     hooks:
       - id: shfmt
-        exclude: ^packages/vc-tools/git-completion.bash$
+        exclude: ^packages/vc-tools/git-completion\.bash$
   - repo: local
     hooks:
       - id: ruff check
@@ -75,7 +86,8 @@ repos:
       - id: prettier
         name: prettier
         language: system
-        entry: npx prettier --write --ignore-unknown
+        entry: bash -c 'source "${NVM_DIR}/nvm.sh" && npx prettier --write --ignore-unknown "${@}"'
+        types: [text]
       - id: tombi format
         name: tombi format
         language: system
