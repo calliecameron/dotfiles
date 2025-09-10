@@ -28,6 +28,7 @@ codium \
     --install-extension=ms-python.mypy-type-checker \
     --install-extension=redhat.ansible \
     --install-extension=redhat.vscode-yaml \
+    --install-extension=remcohaszing.schemastore \
     --install-extension=rust-lang.rust-analyzer \
     --install-extension=streetsidesoftware.code-spell-checker \
     --install-extension=stylelint.vscode-stylelint \
