@@ -33,5 +33,6 @@ codium \
     --install-extension=stylelint.vscode-stylelint \
     --install-extension=tekumara.typos-vscode \
     --install-extension=timonwong.shellcheck \
+    --install-extension=tombi-toml.tombi \
     --install-extension=vscjava.vscode-java-pack \
     --install-extension=wholroyd.jinja

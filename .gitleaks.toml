@@ -3,5 +3,5 @@ useDefault = true
 
 [[allowlists]]
 stopwords = [
-    "ctrl+numpad0",
+  "ctrl+numpad0",
 ]

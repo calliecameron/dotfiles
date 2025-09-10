@@ -6,8 +6,9 @@ dependencies = []
 
 [dependency-groups]
 dev = [
-    "mypy==1.17.1",
-    "ruff==0.12.12",
+  "mypy==1.17.1",
+  "ruff==0.12.12",
+  "tombi==0.6.2",
 ]
 
 [tool.mypy]
@@ -22,18 +23,18 @@ target-version = "py312"
 [tool.ruff.lint]
 select = ["ALL"]
 ignore = [
-    "C90",
-    "D",
-    "EM",
-    "FBT",
-    "INP",
-    "PLR0912",
-    "PLR0913",
-    "PLR0915",
-    "PT",
-    "PTH",
-    "PYI025",
-    "S",
-    "T20",
-    "TRY003",
+  "C90",
+  "D",
+  "EM",
+  "FBT",
+  "INP",
+  "PLR0912",
+  "PLR0913",
+  "PLR0915",
+  "PT",
+  "PTH",
+  "PYI025",
+  "S",
+  "T20",
+  "TRY003",
 ]

@@ -24,6 +24,9 @@
   "[shellscript]": {
     "editor.defaultFormatter": "mads-hartmann.bash-ide-vscode"
   },
+  "[toml]": {
+    "editor.defaultFormatter": "tombi-toml.tombi"
+  },
   "[yaml]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },

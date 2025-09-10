@@ -23,7 +23,6 @@ repos:
       - id: check-shebang-scripts-are-executable
         exclude: ^packages/vc-tools/git-completion.bash$
       - id: check-symlinks
-      - id: check-toml
       - id: check-vcs-permalinks
       - id: destroyed-symlinks
       - id: end-of-file-fixer
@@ -53,10 +52,6 @@ repos:
     hooks:
       - id: shfmt
         exclude: ^packages/vc-tools/git-completion.bash$
-  - repo: https://github.com/henryiii/validate-pyproject-schema-store
-    rev: 2025.08.29
-    hooks:
-      - id: validate-pyproject
   - repo: local
     hooks:
       - id: ruff check
@@ -81,3 +76,13 @@ repos:
         name: prettier
         language: system
         entry: npx prettier --write --ignore-unknown
+      - id: tombi format
+        name: tombi format
+        language: system
+        entry: uv run tombi format
+        types: [toml]
+      - id: tombi lint
+        name: tombi lint
+        language: system
+        entry: uv run tombi lint
+        types: [toml]
