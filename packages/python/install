@@ -38,3 +38,7 @@ fi
 bash -c "source '${PACKAGE_SOURCE_DIR}/env.sh' && mkdir -p \"\${DOTFILES_UV_ZSH_COMPLETIONS_DIR}\""
 bash -c "source '${PACKAGE_SOURCE_DIR}/env.sh' && uv generate-shell-completion zsh > \"\${DOTFILES_UV_ZSH_COMPLETIONS_DIR}/_uv\""
 bash -c "source '${PACKAGE_SOURCE_DIR}/env.sh' && uvx --generate-shell-completion zsh > \"\${DOTFILES_UV_ZSH_COMPLETIONS_DIR}/_uvx\""
+
+bash -c "source '${PACKAGE_SOURCE_DIR}/env.sh' && uv tool install pre-commit"
+
+bash -c "source '${PACKAGE_SOURCE_DIR}/env.sh' && uv tool upgrade --all"
