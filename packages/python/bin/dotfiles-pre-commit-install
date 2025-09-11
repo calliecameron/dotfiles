@@ -1,0 +1,29 @@
+#!/bin/bash
+
+set -eu
+
+function is-uv-project() {
+    local DIR
+    DIR="$(readlink -f .)"
+    while true; do
+        if [ -f "${DIR}/uv.lock" ]; then
+            return 0
+        elif [ "${DIR}" = '/' ]; then
+            return 1
+        else
+            DIR="$(readlink -f "${DIR}/..")"
+        fi
+    done
+}
+
+if command -v uv &>/dev/null && is-uv-project; then
+    uv sync -q
+    if uv pip show -q pre-commit; then
+        echo 'Installing with uv'
+        uv run pre-commit install -f
+        exit 0
+    fi
+fi
+
+echo 'Installing with global pre-commit'
+pre-commit install -f

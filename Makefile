@@ -3,7 +3,7 @@ all: lint test
 
 .PHONY: lint
 lint:
-	pre-commit run -a
+	uv run pre-commit run -a
 
 .PHONY: test
 test:
