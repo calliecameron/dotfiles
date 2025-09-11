@@ -2,6 +2,7 @@
   "devDependencies": {
     "bats": "^1.11.1",
     "bats-assert": "^2.0.0",
+    "markdownlint-cli2": "^0.18.1",
     "prettier": "^3.6.2"
   }
 }

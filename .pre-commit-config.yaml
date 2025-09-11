@@ -86,8 +86,13 @@ repos:
       - id: prettier
         name: prettier
         language: system
-        entry: bash -c 'source "${NVM_DIR}/nvm.sh" && npx prettier --write --ignore-unknown "${@}"'
+        entry: bash -c 'source "${NVM_DIR}/nvm.sh" && npx prettier --write --ignore-unknown "${@}"' --
         types: [text]
+      - id: markdownlint
+        name: markdownlint
+        language: system
+        entry: bash -c 'source "${NVM_DIR}/nvm.sh" && npx markdownlint-cli2 --fix "${@}"' --
+        types: [markdown]
       - id: tombi format
         name: tombi format
         language: system
