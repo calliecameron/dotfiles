@@ -31,6 +31,7 @@ repos:
       - id: check-executables-have-shebangs
       - id: check-illegal-windows-names
       - id: check-merge-conflict
+        args: [--assume-in-merge]
       - id: check-shebang-scripts-are-executable
         exclude: ^packages/vc-tools/git-completion\.bash$
       - id: check-symlinks
