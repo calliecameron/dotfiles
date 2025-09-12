@@ -30,6 +30,7 @@ codium \
     --install-extension=redhat.vscode-yaml \
     --install-extension=remcohaszing.schemastore \
     --install-extension=rust-lang.rust-analyzer \
+    --install-extension=samuelcolvin.jinjahtml \
     --install-extension=streetsidesoftware.code-spell-checker \
     --install-extension=stylelint.vscode-stylelint \
     --install-extension=tekumara.typos-vscode \

@@ -66,6 +66,8 @@
     "**/.pytest_cache": true,
     "**/.ruff_cache": true,
     "**/.Trash-*": true,
+    "**/.venv": true,
+    "**/node_modules": true,
     "**/*~": true
   },
   "files.insertFinalNewline": true,
