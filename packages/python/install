@@ -40,6 +40,7 @@ bash -c "source '${PACKAGE_SOURCE_DIR}/env.sh' && uv generate-shell-completion z
 bash -c "source '${PACKAGE_SOURCE_DIR}/env.sh' && uvx --generate-shell-completion zsh > \"\${DOTFILES_UV_ZSH_COMPLETIONS_DIR}/_uvx\""
 
 bash -c "source '${PACKAGE_SOURCE_DIR}/env.sh' && uv tool install pre-commit"
+# With packages needed for https://github.com/calliecameron/copier-template
 bash -c "source '${PACKAGE_SOURCE_DIR}/env.sh' && uv tool install copier --with copier-template-extensions --with cookiecutter"
 
 bash -c "source '${PACKAGE_SOURCE_DIR}/env.sh' && uv tool upgrade --all"
