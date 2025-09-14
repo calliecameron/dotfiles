@@ -78,11 +78,6 @@
   "files.trimFinalNewlines": true,
   "files.trimTrailingWhitespace": true,
   "git.confirmSync": false,
-  "gitlens.advanced.fileHistoryFollowsRenames": true,
-  "gitlens.codeLens.enabled": false,
-  "gitlens.currentLine.enabled": false,
-  "gitlens.currentLine.pullRequests.enabled": false,
-  "gitlens.showWhatsNewAfterUpgrades": false,
   "less.validate": false,
   "python.experiments.enabled": false,
   "python.terminal.launchArgs": [
