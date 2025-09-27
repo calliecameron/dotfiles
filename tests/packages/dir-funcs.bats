@@ -25,7 +25,7 @@ run_script() {
 @test 'dotfiles-save-path default slot nonexisting' {
     run_script "DOTFILES_SAVED_PATHS=${TEST_SAVED_PATHS}" "${BIN_DIR}/dotfiles-save-path"
     assert_success
-    refute_line --partial 'Usage:'
+    refute_output --partial 'Usage:'
     assert [ -f "${TEST_SAVED_PATHS}/0" ]
     assert [ "$(cat "${TEST_SAVED_PATHS}/0")" = "${TMP_DIR}" ]
 }
@@ -35,7 +35,7 @@ run_script() {
     echo 'foo' >"${TEST_SAVED_PATHS}/0"
     run_script "DOTFILES_SAVED_PATHS=${TEST_SAVED_PATHS}" "${BIN_DIR}/dotfiles-save-path"
     assert_success
-    refute_line --partial 'Usage:'
+    refute_output --partial 'Usage:'
     assert [ -f "${TEST_SAVED_PATHS}/0" ]
     assert [ "$(cat "${TEST_SAVED_PATHS}/0")" = "${TMP_DIR}" ]
 }
@@ -43,7 +43,7 @@ run_script() {
 @test 'dotfiles-save-path other slot nonexisting' {
     run_script "DOTFILES_SAVED_PATHS=${TEST_SAVED_PATHS}" "${BIN_DIR}/dotfiles-save-path" 'foo'
     assert_success
-    refute_line --partial 'Usage:'
+    refute_output --partial 'Usage:'
     assert [ -f "${TEST_SAVED_PATHS}/foo" ]
     assert [ "$(cat "${TEST_SAVED_PATHS}/foo")" = "${TMP_DIR}" ]
 }
@@ -53,7 +53,7 @@ run_script() {
     echo 'foo' >"${TEST_SAVED_PATHS}/foo"
     run_script "DOTFILES_SAVED_PATHS=${TEST_SAVED_PATHS}" "${BIN_DIR}/dotfiles-save-path" 'foo'
     assert_success
-    refute_line --partial 'Usage:'
+    refute_output --partial 'Usage:'
     assert [ -f "${TEST_SAVED_PATHS}/foo" ]
     assert [ "$(cat "${TEST_SAVED_PATHS}/foo")" = "${TMP_DIR}" ]
 }
@@ -166,8 +166,8 @@ run_script() {
     echo "${TMP_DIR}/target" >"${TEST_SAVED_PATHS}/0"
     run_script "DOTFILES_SAVED_PATHS=${TEST_SAVED_PATHS}" "${BIN_DIR}/dotfiles-copy-to-saved-path" '0' "${TMP_DIR}/a" "${TMP_DIR}/b"
     assert_success
-    refute_line --partial 'Usage:'
-    refute_line 'No saved path.'
+    refute_output --partial 'Usage:'
+    refute_output --partial 'No saved path.'
     assert [ -d "${TEST_SAVED_PATHS}" ]
     assert [ -f "${TEST_SAVED_PATHS}/0" ]
     assert [ "$(cat "${TEST_SAVED_PATHS}/0")" = "${TMP_DIR}/target" ]
@@ -229,8 +229,8 @@ run_script() {
     echo "${TMP_DIR}/target" >"${TEST_SAVED_PATHS}/0"
     run_script "DOTFILES_SAVED_PATHS=${TEST_SAVED_PATHS}" "${BIN_DIR}/dotfiles-move-to-saved-path" '0' "${TMP_DIR}/a" "${TMP_DIR}/b"
     assert_success
-    refute_line --partial 'Usage:'
-    refute_line 'No saved path.'
+    refute_output --partial 'Usage:'
+    refute_output --partial 'No saved path.'
     assert [ -d "${TEST_SAVED_PATHS}" ]
     assert [ -f "${TEST_SAVED_PATHS}/0" ]
     assert [ "$(cat "${TEST_SAVED_PATHS}/0")" = "${TMP_DIR}/target" ]

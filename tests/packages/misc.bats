@@ -33,7 +33,7 @@ run_script() {
     echo 'foo' >"${TMP_DIR}zb"
     run_script "${BIN_DIR}/mvz" "${TMP_DIR}/a" "${TMP_DIR}/b" "${TMP_DIR}/c"
     assert_success
-    refute_line --partial 'Usage:'
+    refute_output --partial 'Usage:'
     assert [ ! -e "${TMP_DIR}/a" ]
     assert [ ! -e "${TMP_DIR}/b" ]
     assert [ ! -e "${TMP_DIR}/c" ]
@@ -58,7 +58,7 @@ run_script() {
     echo 'foo' >"${TMP_DIR}zb"
     run_script "${BIN_DIR}/cpz" "${TMP_DIR}/a" "${TMP_DIR}/b" "${TMP_DIR}/c"
     assert_success
-    refute_line --partial 'Usage:'
+    refute_output --partial 'Usage:'
     assert [ -f "${TMP_DIR}/a" ]
     assert [ "$(cat "${TMP_DIR}/a")" = 'foo' ]
     assert [ -f "${TMP_DIR}/b" ]
@@ -90,7 +90,7 @@ run_script() {
     echo 'bar' >"${TMP_DIR}/b"
     run_script "${BIN_DIR}/swap" "${TMP_DIR}/a" "${TMP_DIR}/b"
     assert_success
-    refute_line --partial 'Usage:'
+    refute_output --partial 'Usage:'
     assert [ -f "${TMP_DIR}/a" ]
     assert [ "$(cat "${TMP_DIR}/a")" = 'bar' ]
     assert [ -f "${TMP_DIR}/b" ]
@@ -116,7 +116,7 @@ run_script() {
     echo 'quux' >"${TMP_DIR}/b.txt2"
     run_script "${BIN_DIR}/change-file-ext" 'txt' 'txt2'
     assert_success
-    refute_line --partial 'Usage:'
+    refute_output --partial 'Usage:'
     assert [ ! -e "${TMP_DIR}/a.txt" ]
     assert [ ! -e "${TMP_DIR}/b.txt}" ]
     assert [ -f "${TMP_DIR}/c.foo" ]
@@ -334,7 +334,7 @@ EOF
     echo 'bar' >"${TMP_DIR}/e"
     run_script "${BIN_DIR}/mvlists" "${TMP_DIR}/src" "${TMP_DIR}/dest"
     assert_success
-    refute_line --partial 'Usage:'
+    refute_output --partial 'Usage:'
     assert [ -f "${TMP_DIR}/src" ]
     assert [ -f "${TMP_DIR}/dest" ]
     assert [ ! -e "${TMP_DIR}/a" ]
@@ -420,7 +420,7 @@ EOF
     echo 'bar' >"${TMP_DIR}/e"
     run_script "${BIN_DIR}/cplists" "${TMP_DIR}/src" "${TMP_DIR}/dest"
     assert_success
-    refute_line --partial 'Usage:'
+    refute_output --partial 'Usage:'
     assert [ -f "${TMP_DIR}/src" ]
     assert [ -f "${TMP_DIR}/dest" ]
     assert [ -f "${TMP_DIR}/a" ]

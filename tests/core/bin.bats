@@ -34,7 +34,7 @@ assert_num_matching_lines() {
 @test 'dotfiles-next-init nonexistent' {
     run_script "DOTFILES_NEXT_INIT=${TEST_NEXT_INIT}" "${BIN_DIR}/dotfiles-next-init" 'foo' 'bar'
     assert_success
-    refute_line --partial 'Usage:'
+    refute_output --partial 'Usage:'
     assert [ "$(grep -c 'This file will be run' <"${TEST_NEXT_INIT}")" = '1' ]
     assert [ "$(grep -c 'foo bar' <"${TEST_NEXT_INIT}")" = '1' ]
 }
@@ -43,7 +43,7 @@ assert_num_matching_lines() {
     echo 'foo bar' >"${TEST_NEXT_INIT}"
     run_script "DOTFILES_NEXT_INIT=${TEST_NEXT_INIT}" "${BIN_DIR}/dotfiles-next-init" 'foo' 'bar'
     assert_success
-    refute_line --partial 'Usage:'
+    refute_output --partial 'Usage:'
     assert [ "$(grep -c 'foo bar' <"${TEST_NEXT_INIT}")" = '1' ]
 }
 
@@ -51,7 +51,7 @@ assert_num_matching_lines() {
     echo 'foo bar' >"${TEST_NEXT_INIT}"
     run_script "DOTFILES_NEXT_INIT=${TEST_NEXT_INIT}" "${BIN_DIR}/dotfiles-next-init" 'foo' 'baz'
     assert_success
-    refute_line --partial 'Usage:'
+    refute_output --partial 'Usage:'
     assert [ "$(grep -c 'foo bar' <"${TEST_NEXT_INIT}")" = '1' ]
     assert [ "$(grep -c 'foo baz' <"${TEST_NEXT_INIT}")" = '1' ]
 }
@@ -65,7 +65,7 @@ assert_num_matching_lines() {
 @test 'dotfiles-next-login nonexistent' {
     run_script "DOTFILES_NEXT_LOGIN=${TEST_NEXT_LOGIN}" "${BIN_DIR}/dotfiles-next-login" 'foo' 'bar'
     assert_success
-    refute_line --partial 'Usage:'
+    refute_output --partial 'Usage:'
     assert [ "$(grep -c 'This file will be run' <"${TEST_NEXT_LOGIN}")" = '1' ]
     assert [ "$(grep -c 'foo bar' <"${TEST_NEXT_LOGIN}")" = '1' ]
 }
@@ -74,7 +74,7 @@ assert_num_matching_lines() {
     echo 'foo bar' >"${TEST_NEXT_LOGIN}"
     run_script "DOTFILES_NEXT_LOGIN=${TEST_NEXT_LOGIN}" "${BIN_DIR}/dotfiles-next-login" 'foo' 'bar'
     assert_success
-    refute_line --partial 'Usage:'
+    refute_output --partial 'Usage:'
     assert [ "$(grep -c 'foo bar' <"${TEST_NEXT_LOGIN}")" = '1' ]
 }
 
@@ -82,7 +82,7 @@ assert_num_matching_lines() {
     echo 'foo bar' >"${TEST_NEXT_LOGIN}"
     run_script "DOTFILES_NEXT_LOGIN=${TEST_NEXT_LOGIN}" "${BIN_DIR}/dotfiles-next-login" 'foo' 'baz'
     assert_success
-    refute_line --partial 'Usage:'
+    refute_output --partial 'Usage:'
     assert [ "$(grep -c 'foo bar' <"${TEST_NEXT_LOGIN}")" = '1' ]
     assert [ "$(grep -c 'foo baz' <"${TEST_NEXT_LOGIN}")" = '1' ]
 }
@@ -98,7 +98,7 @@ assert_num_matching_lines() {
     touch "${REPO}"
     run_script "${BIN_DIR}/dotfiles-repo-is-clean" "${REPO}"
     assert_success
-    refute_line --partial 'Usage:'
+    refute_output --partial 'Usage:'
 }
 
 @test 'dotfiles-repo-is-clean not a repo' {
@@ -106,7 +106,7 @@ assert_num_matching_lines() {
     mkdir -p "${REPO}"
     run_script "${BIN_DIR}/dotfiles-repo-is-clean" "${REPO}"
     assert_success
-    refute_line --partial 'Usage:'
+    refute_output --partial 'Usage:'
 }
 
 @test 'dotfiles-repo-is-clean empty repo' {
@@ -115,7 +115,7 @@ assert_num_matching_lines() {
     (cd "${REPO}" && git init .)
     run_script "${BIN_DIR}/dotfiles-repo-is-clean" "${REPO}"
     assert_success
-    refute_line --partial 'Usage:'
+    refute_output --partial 'Usage:'
 }
 
 @test 'dotfiles-repo-is-clean untracked file' {
@@ -125,7 +125,7 @@ assert_num_matching_lines() {
     touch "${REPO}/a"
     run_script "${BIN_DIR}/dotfiles-repo-is-clean" "${REPO}"
     assert_failure
-    refute_line --partial 'Usage:'
+    refute_output --partial 'Usage:'
 }
 
 @test 'dotfiles-repo-is-clean clean no upstream' {
@@ -136,7 +136,7 @@ assert_num_matching_lines() {
     (cd "${REPO}" && git add a && git commit -m 'Foo')
     run_script "${BIN_DIR}/dotfiles-repo-is-clean" "${REPO}"
     assert_success
-    refute_line --partial 'Usage:'
+    refute_output --partial 'Usage:'
 }
 
 @test 'dotfiles-repo-is-clean modified file' {
@@ -148,7 +148,7 @@ assert_num_matching_lines() {
     echo 'a' >"${REPO}/a"
     run_script "${BIN_DIR}/dotfiles-repo-is-clean" "${REPO}"
     assert_failure
-    refute_line --partial 'Usage:'
+    refute_output --partial 'Usage:'
 }
 
 @test 'dotfiles-repo-is-clean unpushed commit' {
@@ -163,7 +163,7 @@ assert_num_matching_lines() {
     (cd "${REPO}" && git add a && git commit -m 'Bar')
     run_script "${BIN_DIR}/dotfiles-repo-is-clean" "${REPO}"
     assert_failure
-    refute_line --partial 'Usage:'
+    refute_output --partial 'Usage:'
 }
 
 @test 'dotfiles-repo-is-clean pushed commit' {
@@ -178,7 +178,7 @@ assert_num_matching_lines() {
     (cd "${REPO}" && git add a && git commit -m 'Bar' && git push)
     run_script "${BIN_DIR}/dotfiles-repo-is-clean" "${REPO}"
     assert_success
-    refute_line --partial 'Usage:'
+    refute_output --partial 'Usage:'
 }
 
 @test 'dotfiles-echo-colour no args' {
@@ -333,31 +333,31 @@ assert_num_matching_lines() {
 @test 'dotfiles-in-list empty list' {
     run_script "${BIN_DIR}/dotfiles-in-list" '' 'foo'
     assert_failure
-    refute_line --partial 'Usage:'
+    refute_output --partial 'Usage:'
 }
 
 @test 'dotfiles-in-list simple list present' {
     run_script "${BIN_DIR}/dotfiles-in-list" 'foo' 'foo'
     assert_success
-    refute_line --partial 'Usage:'
+    refute_output --partial 'Usage:'
 }
 
 @test 'dotfiles-in-list simple list absent' {
     run_script "${BIN_DIR}/dotfiles-in-list" 'foo' 'bar'
     assert_failure
-    refute_line --partial 'Usage:'
+    refute_output --partial 'Usage:'
 }
 
 @test 'dotfiles-in-list complex list present' {
     run_script "${BIN_DIR}/dotfiles-in-list" 'foo:bar:baz' 'bar'
     assert_success
-    refute_line --partial 'Usage:'
+    refute_output --partial 'Usage:'
 }
 
 @test 'dotfiles-in-list complex list absent' {
     run_script "${BIN_DIR}/dotfiles-in-list" 'foo:bar:baz' 'quux'
     assert_failure
-    refute_line --partial 'Usage:'
+    refute_output --partial 'Usage:'
 }
 
 @test 'dotfiles-linux-variant none' {
@@ -412,7 +412,7 @@ assert_num_matching_lines() {
     touch "${TMP_DIR}/a/foo"
     run_script "${BIN_DIR}/dotfiles-symlink-dir-contents" "${TMP_DIR}/a" "${TMP_DIR}/b"
     assert_success
-    refute_line --partial 'Usage:'
+    refute_output --partial 'Usage:'
     assert [ ! -d "${TMP_DIR}/b" ]
 }
 
@@ -420,7 +420,7 @@ assert_num_matching_lines() {
     mkdir -p "${TMP_DIR}/b"
     run_script "${BIN_DIR}/dotfiles-symlink-dir-contents" "${TMP_DIR}/a" "${TMP_DIR}/b"
     assert_success
-    refute_line --partial 'Usage:'
+    refute_output --partial 'Usage:'
     assert [ "$(find "${TMP_DIR}/b" -mindepth 1 | wc -l)" = '0' ]
 }
 
@@ -433,7 +433,7 @@ assert_num_matching_lines() {
     touch "${TMP_DIR}/b/bar"
     run_script "${BIN_DIR}/dotfiles-symlink-dir-contents" "${TMP_DIR}/a" "${TMP_DIR}/b"
     assert_success
-    refute_line --partial 'Usage:'
+    refute_output --partial 'Usage:'
     assert [ -h "${TMP_DIR}/b/foo" ]
     assert [ "$(readlink -f "${TMP_DIR}/b/foo")" = "${TMP_DIR}/a/foo" ]
     assert [ -f "${TMP_DIR}/b/bar" ]
@@ -477,7 +477,7 @@ assert_num_matching_lines() {
 @test 'dotfiles-home-link nonexistent source' {
     run_script "PATH=${BIN_DIR}:${PATH}" "DOTFILES_PACKAGE_PROBLEMS_FILE=${TMP_DIR}/problems" "${BIN_DIR}/dotfiles-home-link" "${TMP_DIR}/a"
     assert_success
-    refute_line --partial 'Usage:'
+    refute_output --partial 'Usage:'
     assert [ ! -e "${TMP_DIR}/.a" ]
     assert [ ! -e "${TMP_DIR}/problems" ]
 }
@@ -487,7 +487,7 @@ assert_num_matching_lines() {
     touch "${TMP_DIR}/src/a"
     run_script "PATH=${BIN_DIR}:${PATH}" "DOTFILES_PACKAGE_PROBLEMS_FILE=${TMP_DIR}/problems" "${BIN_DIR}/dotfiles-home-link" "${TMP_DIR}/src/a"
     assert_success
-    refute_line --partial 'Usage:'
+    refute_output --partial 'Usage:'
     assert [ -h "${TMP_DIR}/.a" ]
     assert [ "$(readlink -f "${TMP_DIR}/.a")" = "${TMP_DIR}/src/a" ]
     assert [ ! -e "${TMP_DIR}/problems" ]
@@ -499,7 +499,7 @@ assert_num_matching_lines() {
     ln -s "${TMP_DIR}/src/a" "${TMP_DIR}/.a"
     run_script "PATH=${BIN_DIR}:${PATH}" "DOTFILES_PACKAGE_PROBLEMS_FILE=${TMP_DIR}/problems" "${BIN_DIR}/dotfiles-home-link" "${TMP_DIR}/src/a"
     assert_success
-    refute_line --partial 'Usage:'
+    refute_output --partial 'Usage:'
     assert [ -h "${TMP_DIR}/.a" ]
     assert [ "$(readlink -f "${TMP_DIR}/.a")" = "${TMP_DIR}/src/a" ]
     assert [ ! -e "${TMP_DIR}/problems" ]
@@ -511,7 +511,7 @@ assert_num_matching_lines() {
     touch "${TMP_DIR}/.a"
     run_script "PATH=${BIN_DIR}:${PATH}" "DOTFILES_PACKAGE_PROBLEMS_FILE=${TMP_DIR}/problems" "${BIN_DIR}/dotfiles-home-link" "${TMP_DIR}/src/a"
     assert_failure
-    refute_line --partial 'Usage:'
+    refute_output --partial 'Usage:'
     assert [ -f "${TMP_DIR}/.a" ]
     assert [ "$(wc -l <"${TMP_DIR}/problems")" = '1' ]
 }
@@ -523,7 +523,7 @@ assert_num_matching_lines() {
     ln -s "${TMP_DIR}/src/b" "${TMP_DIR}/.a"
     run_script "PATH=${BIN_DIR}:${PATH}" "DOTFILES_PACKAGE_PROBLEMS_FILE=${TMP_DIR}/problems" "${BIN_DIR}/dotfiles-home-link" "${TMP_DIR}/src/a"
     assert_failure
-    refute_line --partial 'Usage:'
+    refute_output --partial 'Usage:'
     assert [ -h "${TMP_DIR}/.a" ]
     assert [ "$(readlink -f "${TMP_DIR}/.a")" = "${TMP_DIR}/src/b" ]
     assert [ "$(wc -l <"${TMP_DIR}/problems")" = '1' ]
@@ -533,7 +533,7 @@ assert_num_matching_lines() {
     mkdir -p "${TMP_DIR}/src/a"
     run_script "PATH=${BIN_DIR}:${PATH}" "DOTFILES_PACKAGE_PROBLEMS_FILE=${TMP_DIR}/problems" "${BIN_DIR}/dotfiles-home-link" "${TMP_DIR}/src/a"
     assert_success
-    refute_line --partial 'Usage:'
+    refute_output --partial 'Usage:'
     assert [ -h "${TMP_DIR}/a" ]
     assert [ "$(readlink -f "${TMP_DIR}/a")" = "${TMP_DIR}/src/a" ]
     assert [ ! -e "${TMP_DIR}/problems" ]
@@ -544,7 +544,7 @@ assert_num_matching_lines() {
     ln -s "${TMP_DIR}/src/a" "${TMP_DIR}/a"
     run_script "PATH=${BIN_DIR}:${PATH}" "DOTFILES_PACKAGE_PROBLEMS_FILE=${TMP_DIR}/problems" "${BIN_DIR}/dotfiles-home-link" "${TMP_DIR}/src/a"
     assert_success
-    refute_line --partial 'Usage:'
+    refute_output --partial 'Usage:'
     assert [ -h "${TMP_DIR}/a" ]
     assert [ "$(readlink -f "${TMP_DIR}/a")" = "${TMP_DIR}/src/a" ]
     assert [ ! -e "${TMP_DIR}/problems" ]
@@ -555,7 +555,7 @@ assert_num_matching_lines() {
     mkdir -p "${TMP_DIR}/a"
     run_script "PATH=${BIN_DIR}:${PATH}" "DOTFILES_PACKAGE_PROBLEMS_FILE=${TMP_DIR}/problems" "${BIN_DIR}/dotfiles-home-link" "${TMP_DIR}/src/a"
     assert_failure
-    refute_line --partial 'Usage:'
+    refute_output --partial 'Usage:'
     assert [ -d "${TMP_DIR}/a" ]
     assert [ "$(wc -l <"${TMP_DIR}/problems")" = '1' ]
 }
@@ -566,7 +566,7 @@ assert_num_matching_lines() {
     ln -s "${TMP_DIR}/src/b" "${TMP_DIR}/a"
     run_script "PATH=${BIN_DIR}:${PATH}" "DOTFILES_PACKAGE_PROBLEMS_FILE=${TMP_DIR}/problems" "${BIN_DIR}/dotfiles-home-link" "${TMP_DIR}/src/a"
     assert_failure
-    refute_line --partial 'Usage:'
+    refute_output --partial 'Usage:'
     assert [ -h "${TMP_DIR}/a" ]
     assert [ "$(readlink -f "${TMP_DIR}/a")" = "${TMP_DIR}/src/b" ]
     assert [ "$(wc -l <"${TMP_DIR}/problems")" = '1' ]
@@ -577,7 +577,7 @@ assert_num_matching_lines() {
     touch "${TMP_DIR}/src/a"
     run_script "PATH=${BIN_DIR}:${PATH}" "DOTFILES_PACKAGE_PROBLEMS_FILE=${TMP_DIR}/problems" "${BIN_DIR}/dotfiles-home-link" "${TMP_DIR}/src/a" "${TMP_DIR}/b/a"
     assert_success
-    refute_line --partial 'Usage:'
+    refute_output --partial 'Usage:'
     assert [ -h "${TMP_DIR}/b/a" ]
     assert [ "$(readlink -f "${TMP_DIR}/b/a")" = "${TMP_DIR}/src/a" ]
     assert [ ! -e "${TMP_DIR}/problems" ]
@@ -590,7 +590,7 @@ assert_num_matching_lines() {
     ln -s "${TMP_DIR}/src/a" "${TMP_DIR}/b/a"
     run_script "PATH=${BIN_DIR}:${PATH}" "DOTFILES_PACKAGE_PROBLEMS_FILE=${TMP_DIR}/problems" "${BIN_DIR}/dotfiles-home-link" "${TMP_DIR}/src/a" "${TMP_DIR}/b/a"
     assert_success
-    refute_line --partial 'Usage:'
+    refute_output --partial 'Usage:'
     assert [ -h "${TMP_DIR}/b/a" ]
     assert [ "$(readlink -f "${TMP_DIR}/b/a")" = "${TMP_DIR}/src/a" ]
     assert [ ! -e "${TMP_DIR}/problems" ]
@@ -603,7 +603,7 @@ assert_num_matching_lines() {
     touch "${TMP_DIR}/b/a"
     run_script "PATH=${BIN_DIR}:${PATH}" "DOTFILES_PACKAGE_PROBLEMS_FILE=${TMP_DIR}/problems" "${BIN_DIR}/dotfiles-home-link" "${TMP_DIR}/src/a" "${TMP_DIR}/b/a"
     assert_failure
-    refute_line --partial 'Usage:'
+    refute_output --partial 'Usage:'
     assert [ -f "${TMP_DIR}/b/a" ]
     assert [ "$(wc -l <"${TMP_DIR}/problems")" = '1' ]
 }
@@ -616,7 +616,7 @@ assert_num_matching_lines() {
     ln -s "${TMP_DIR}/src/b" "${TMP_DIR}/b/a"
     run_script "PATH=${BIN_DIR}:${PATH}" "DOTFILES_PACKAGE_PROBLEMS_FILE=${TMP_DIR}/problems" "${BIN_DIR}/dotfiles-home-link" "${TMP_DIR}/src/a" "${TMP_DIR}/b/a"
     assert_failure
-    refute_line --partial 'Usage:'
+    refute_output --partial 'Usage:'
     assert [ -h "${TMP_DIR}/b/a" ]
     assert [ "$(readlink -f "${TMP_DIR}/b/a")" = "${TMP_DIR}/src/b" ]
     assert [ "$(wc -l <"${TMP_DIR}/problems")" = '1' ]
@@ -637,7 +637,7 @@ assert_num_matching_lines() {
 @test 'dotfiles-home-bin-link nonexistent command' {
     run_script "PATH=${BIN_DIR}:${PATH}" "DOTFILES_LOCAL_BIN=${TMP_DIR}/a" "DOTFILES_PACKAGE_PROBLEMS_FILE=${TMP_DIR}/problems" "${BIN_DIR}/dotfiles-home-bin-link" 'blahfoo' 'a'
     assert_success
-    refute_line --partial 'Usage:'
+    refute_output --partial 'Usage:'
     assert [ ! -e "${TMP_DIR}/a" ]
     assert [ ! -e "${TMP_DIR}/problems" ]
 }
@@ -645,7 +645,7 @@ assert_num_matching_lines() {
 @test 'dotfiles-home-bin-link nonexisting' {
     run_script "PATH=${BIN_DIR}:${PATH}" "DOTFILES_LOCAL_BIN=${TMP_DIR}/a" "DOTFILES_PACKAGE_PROBLEMS_FILE=${TMP_DIR}/problems" "${BIN_DIR}/dotfiles-home-bin-link" 'dotfiles-home-bin-link' 'a' 'b'
     assert_success
-    refute_line --partial 'Usage:'
+    refute_output --partial 'Usage:'
     assert [ -h "${TMP_DIR}/a/a" ]
     assert [ "$(readlink -f "${TMP_DIR}/a/a")" = "$(readlink -f "${BIN_DIR}/dotfiles-home-bin-link")" ]
     assert [ -h "${TMP_DIR}/a/b" ]
@@ -659,7 +659,7 @@ assert_num_matching_lines() {
     ln -s "$(readlink -f "${BIN_DIR}/dotfiles-home-bin-link")" "${TMP_DIR}/a/b"
     run_script "PATH=${BIN_DIR}:${PATH}" "DOTFILES_LOCAL_BIN=${TMP_DIR}/a" "DOTFILES_PACKAGE_PROBLEMS_FILE=${TMP_DIR}/problems" "${BIN_DIR}/dotfiles-home-bin-link" 'dotfiles-home-bin-link' 'a' 'b'
     assert_success
-    refute_line --partial 'Usage:'
+    refute_output --partial 'Usage:'
     assert [ -h "${TMP_DIR}/a/a" ]
     assert [ "$(readlink -f "${TMP_DIR}/a/a")" = "$(readlink -f "${BIN_DIR}/dotfiles-home-bin-link")" ]
     assert [ -h "${TMP_DIR}/a/b" ]
@@ -672,7 +672,7 @@ assert_num_matching_lines() {
     ln -s "$(readlink -f "${BIN_DIR}/dotfiles-home-link")" "${TMP_DIR}/a/a"
     run_script "PATH=${BIN_DIR}:${PATH}" "DOTFILES_LOCAL_BIN=${TMP_DIR}/a" "DOTFILES_PACKAGE_PROBLEMS_FILE=${TMP_DIR}/problems" "${BIN_DIR}/dotfiles-home-bin-link" 'dotfiles-home-bin-link' 'a' 'b'
     assert_success
-    refute_line --partial 'Usage:'
+    refute_output --partial 'Usage:'
     assert [ -h "${TMP_DIR}/a/a" ]
     assert [ "$(readlink -f "${TMP_DIR}/a/a")" = "$(readlink -f "${BIN_DIR}/dotfiles-home-link")" ]
     assert [ -h "${TMP_DIR}/a/b" ]
@@ -685,7 +685,7 @@ assert_num_matching_lines() {
     touch "${TMP_DIR}/a/a"
     run_script "PATH=${BIN_DIR}:${PATH}" "DOTFILES_LOCAL_BIN=${TMP_DIR}/a" "DOTFILES_PACKAGE_PROBLEMS_FILE=${TMP_DIR}/problems" "${BIN_DIR}/dotfiles-home-bin-link" 'dotfiles-home-bin-link' 'a' 'b'
     assert_success
-    refute_line --partial 'Usage:'
+    refute_output --partial 'Usage:'
     assert [ -f "${TMP_DIR}/a/a" ]
     assert [ -h "${TMP_DIR}/a/b" ]
     assert [ "$(readlink -f "${TMP_DIR}/a/b")" = "$(readlink -f "${BIN_DIR}/dotfiles-home-bin-link")" ]
@@ -709,7 +709,7 @@ assert_num_matching_lines() {
     run_script "PATH=${BIN_DIR}:${PATH}" "DOTFILES_NEEDS_LOGOUT=${TMP_DIR}/logout" "${BIN_DIR}/dotfiles-logout-needed-check"
     assert_success
     assert [ ! -e "${TMP_DIR}/logout" ]
-    refute_line --partial 'Log out and log in again'
+    refute_output --partial 'Log out and log in again'
 }
 
 @test 'dotfiles-logout-needed-check existing' {
@@ -717,7 +717,7 @@ assert_num_matching_lines() {
     run_script "PATH=${BIN_DIR}:${PATH}" "DOTFILES_NEEDS_LOGOUT=${TMP_DIR}/logout" "${BIN_DIR}/dotfiles-logout-needed-check"
     assert_success
     assert [ -f "${TMP_DIR}/logout" ]
-    assert_line --partial 'Log out and log in again'
+    assert_output --partial 'Log out and log in again'
 }
 
 @test 'dotfiles-logout-needed-check ignored' {
@@ -725,7 +725,7 @@ assert_num_matching_lines() {
     run_script "PATH=${BIN_DIR}:${PATH}" "DOTFILES_NEEDS_LOGOUT=${TMP_DIR}/logout" "DOTFILES_NO_LOGOUT_NEEDED_CHECK=t" "${BIN_DIR}/dotfiles-logout-needed-check"
     assert_success
     assert [ -f "${TMP_DIR}/logout" ]
-    refute_line --partial 'Log out and log in again'
+    refute_output --partial 'Log out and log in again'
 }
 
 @test 'dotfiles-clone-or-update-repo no args' {
@@ -1005,25 +1005,25 @@ assert_num_matching_lines() {
 @test 'dotfiles-package-root-valid good' {
     run_script "${BIN_DIR}/dotfiles-package-root-valid" '/foo/bar'
     assert_success
-    refute_line --partial 'Usage:'
+    refute_output --partial 'Usage:'
 }
 
 @test 'dotfiles-package-root-valid bad relative' {
     run_script "${BIN_DIR}/dotfiles-package-root-valid" 'foo/bar'
     assert_failure
-    refute_line --partial 'Usage:'
+    refute_output --partial 'Usage:'
 }
 
 @test 'dotfiles-package-root-valid bad colon' {
     run_script "${BIN_DIR}/dotfiles-package-root-valid" '/foo:bar'
     assert_failure
-    refute_line --partial 'Usage:'
+    refute_output --partial 'Usage:'
 }
 
 @test 'dotfiles-package-root-valid bad newline' {
     run_script "${BIN_DIR}/dotfiles-package-root-valid" "$(printf "/foo\nbar")"
     assert_failure
-    refute_line --partial 'Usage:'
+    refute_output --partial 'Usage:'
 }
 
 @test 'dotfiles-package-name-valid usage' {
@@ -1035,31 +1035,31 @@ assert_num_matching_lines() {
 @test 'dotfiles-package-name-valid good' {
     run_script "${BIN_DIR}/dotfiles-package-name-valid" 'foo'
     assert_success
-    refute_line --partial 'Usage:'
+    refute_output --partial 'Usage:'
 }
 
 @test 'dotfiles-package-name-valid bad slash' {
     run_script "${BIN_DIR}/dotfiles-package-name-valid" 'foo/bar'
     assert_failure
-    refute_line --partial 'Usage:'
+    refute_output --partial 'Usage:'
 }
 
 @test 'dotfiles-package-name-valid bad space' {
     run_script "${BIN_DIR}/dotfiles-package-name-valid" 'foo bar'
     assert_failure
-    refute_line --partial 'Usage:'
+    refute_output --partial 'Usage:'
 }
 
 @test 'dotfiles-package-name-valid bad colon' {
     run_script "${BIN_DIR}/dotfiles-package-name-valid" 'foo:bar'
     assert_failure
-    refute_line --partial 'Usage:'
+    refute_output --partial 'Usage:'
 }
 
 @test 'dotfiles-package-name-valid bad newline' {
     run_script "${BIN_DIR}/dotfiles-package-name-valid" "$(printf "foo\nbar")"
     assert_failure
-    refute_line --partial 'Usage:'
+    refute_output --partial 'Usage:'
 }
 
 @test 'dotfiles-package-ignored usage' {
@@ -1077,7 +1077,7 @@ assert_num_matching_lines() {
 @test 'dotfiles-package-ignored no file' {
     run_script "PATH=${BIN_DIR}:${PATH}" "DOTFILES_PACKAGE_IGNORE_FILE=${TMP_DIR}/a" "${BIN_DIR}/dotfiles-package-ignored" 'foo'
     assert_failure
-    refute_line --partial 'Usage:'
+    refute_output --partial 'Usage:'
 }
 
 @test 'dotfiles-package-ignored empty file' {
@@ -1085,7 +1085,7 @@ assert_num_matching_lines() {
     touch "${IGNORE}"
     run_script "PATH=${BIN_DIR}:${PATH}" "DOTFILES_PACKAGE_IGNORE_FILE=${IGNORE}" "${BIN_DIR}/dotfiles-package-ignored" 'foo'
     assert_failure
-    refute_line --partial 'Usage:'
+    refute_output --partial 'Usage:'
 }
 
 @test 'dotfiles-package-ignored success' {
@@ -1093,7 +1093,7 @@ assert_num_matching_lines() {
     printf "foo\nbar\nbaz\n" >"${IGNORE}"
     run_script "PATH=${BIN_DIR}:${PATH}" "DOTFILES_PACKAGE_IGNORE_FILE=${IGNORE}" "${BIN_DIR}/dotfiles-package-ignored" 'foo'
     assert_success
-    refute_line --partial 'Usage:'
+    refute_output --partial 'Usage:'
 }
 
 @test 'dotfiles-package-ignored failure' {
@@ -1101,7 +1101,7 @@ assert_num_matching_lines() {
     printf "foo\nbar\nbaz\n" >"${IGNORE}"
     run_script "PATH=${BIN_DIR}:${PATH}" "DOTFILES_PACKAGE_IGNORE_FILE=${IGNORE}" "${BIN_DIR}/dotfiles-package-ignored" 'quux'
     assert_failure
-    refute_line --partial 'Usage:'
+    refute_output --partial 'Usage:'
 }
 
 @test 'dotfiles-package-ignore usage' {
@@ -1121,7 +1121,7 @@ assert_num_matching_lines() {
     local IGNORE_FILE="${IGNORE_DIR}/a"
     run_script "PATH=${BIN_DIR}:${PATH}" "DOTFILES_PACKAGE_INSTALL_DIR=${IGNORE_DIR}" "DOTFILES_PACKAGE_IGNORE_FILE=${IGNORE_FILE}" "${BIN_DIR}/dotfiles-package-ignore" 'foo' 'bar'
     assert_success
-    refute_line --partial 'Usage:'
+    refute_output --partial 'Usage:'
     assert [ "$(wc -l <"${IGNORE_FILE}")" = '2' ]
     assert [ "$(cat "${IGNORE_FILE}")" = "$(printf "foo\nbar")" ]
 }
@@ -1133,7 +1133,7 @@ assert_num_matching_lines() {
     echo 'foo' >"${IGNORE_FILE}"
     run_script "PATH=${BIN_DIR}:${PATH}" "DOTFILES_PACKAGE_INSTALL_DIR=${IGNORE_DIR}" "DOTFILES_PACKAGE_IGNORE_FILE=${IGNORE_FILE}" "${BIN_DIR}/dotfiles-package-ignore" 'bar' 'baz'
     assert_success
-    refute_line --partial 'Usage:'
+    refute_output --partial 'Usage:'
     assert [ "$(wc -l <"${IGNORE_FILE}")" = '3' ]
     assert [ "$(cat "${IGNORE_FILE}")" = "$(printf 'foo\nbar\nbaz')" ]
 }
@@ -1145,7 +1145,7 @@ assert_num_matching_lines() {
     echo 'foo' >"${IGNORE_FILE}"
     run_script "PATH=${BIN_DIR}:${PATH}" "DOTFILES_PACKAGE_INSTALL_DIR=${IGNORE_DIR}" "DOTFILES_PACKAGE_IGNORE_FILE=${IGNORE_FILE}" "${BIN_DIR}/dotfiles-package-ignore" 'foo' 'bar'
     assert_success
-    refute_line --partial 'Usage:'
+    refute_output --partial 'Usage:'
     assert [ "$(wc -l <"${IGNORE_FILE}")" = '2' ]
     assert [ "$(cat "${IGNORE_FILE}")" = "$(printf "foo\nbar")" ]
 }
@@ -1166,7 +1166,7 @@ assert_num_matching_lines() {
     local IGNORE_FILE="${TMP_DIR}/a"
     run_script "PATH=${BIN_DIR}:${PATH}" "DOTFILES_PACKAGE_IGNORE_FILE=${IGNORE_FILE}" "${BIN_DIR}/dotfiles-package-unignore" 'foo' 'bar'
     assert_success
-    refute_line --partial 'Usage:'
+    refute_output --partial 'Usage:'
     assert [ ! -e "${IGNORE_FILE}" ]
 }
 
@@ -1175,7 +1175,7 @@ assert_num_matching_lines() {
     printf 'foo\nbar\nbaz\n' >"${IGNORE_FILE}"
     run_script "PATH=${BIN_DIR}:${PATH}" "DOTFILES_PACKAGE_IGNORE_FILE=${IGNORE_FILE}" "${BIN_DIR}/dotfiles-package-unignore" 'foo' 'bar'
     assert_success
-    refute_line --partial 'Usage:'
+    refute_output --partial 'Usage:'
     assert [ "$(wc -l <"${IGNORE_FILE}")" = '1' ]
     assert [ "$(cat "${IGNORE_FILE}")" = 'baz' ]
 }
@@ -1185,7 +1185,7 @@ assert_num_matching_lines() {
     printf 'foo\nbar\nbaz\n' >"${IGNORE_FILE}"
     run_script "PATH=${BIN_DIR}:${PATH}" "DOTFILES_PACKAGE_IGNORE_FILE=${IGNORE_FILE}" "${BIN_DIR}/dotfiles-package-unignore" 'quux' 'yay'
     assert_success
-    refute_line --partial 'Usage:'
+    refute_output --partial 'Usage:'
     assert [ "$(wc -l <"${IGNORE_FILE}")" = '3' ]
     assert [ "$(cat "${IGNORE_FILE}")" = "$(printf 'foo\nbar\nbaz')" ]
 }
@@ -1206,13 +1206,13 @@ assert_num_matching_lines() {
     touch "${TMP_DIR}/foo.installed"
     run_script "PATH=${BIN_DIR}:${PATH}" "DOTFILES_PACKAGE_INSTALL_DIR=${TMP_DIR}" "${BIN_DIR}/dotfiles-package-installed" 'foo'
     assert_success
-    refute_line --partial 'Usage:'
+    refute_output --partial 'Usage:'
 }
 
 @test 'dotfiles-package-installed failure' {
     run_script "PATH=${BIN_DIR}:${PATH}" "DOTFILES_PACKAGE_INSTALL_DIR=${TMP_DIR}" "${BIN_DIR}/dotfiles-package-installed" 'foo'
     assert_failure
-    refute_line --partial 'Usage:'
+    refute_output --partial 'Usage:'
 }
 
 @test 'dotfiles-package-source-path usage' {
@@ -1233,7 +1233,7 @@ assert_num_matching_lines() {
     run_script "PATH=${BIN_DIR}:${PATH}" "DOTFILES_PACKAGE_ROOTS=:${TMP_DIR}/a::${TMP_DIR}/b:${TMP_DIR}/c" "${BIN_DIR}/dotfiles-package-source-path" 'foo'
     assert_success
     assert_line "${TMP_DIR}/b/foo"
-    refute_line --partial 'Usage:'
+    refute_output --partial 'Usage:'
 }
 
 @test 'dotfiles-package-source-path name not found' {
@@ -1242,7 +1242,7 @@ assert_num_matching_lines() {
     run_script "PATH=${BIN_DIR}:${PATH}" "DOTFILES_PACKAGE_ROOTS=:${TMP_DIR}/a::${TMP_DIR}/b::${TMP_DIR}/c" "${BIN_DIR}/dotfiles-package-source-path" 'bar'
     assert_failure
     refute_output
-    refute_line --partial 'Usage:'
+    refute_output --partial 'Usage:'
 }
 
 @test 'dotfiles-package-source-path name skip invalid roots' {
@@ -1251,7 +1251,7 @@ assert_num_matching_lines() {
     run_script "PATH=${BIN_DIR}:${PATH}" "$(printf '%s' "DOTFILES_PACKAGE_ROOTS=:${TMP_DIR}/a::${TMP_DIR}/a\nb::${TMP_DIR}/c")" "${BIN_DIR}/dotfiles-package-source-path" 'foo'
     assert_failure
     refute_output
-    refute_line --partial 'Usage:'
+    refute_output --partial 'Usage:'
 }
 
 @test 'dotfiles-package-source-path path invalid root' {
@@ -1283,7 +1283,7 @@ assert_num_matching_lines() {
     mkdir -p "${TMP_DIR}/a"
     run_script "PATH=${BIN_DIR}:${PATH}" "DOTFILES_PACKAGE_ROOTS=${TMP_DIR}/a" "${BIN_DIR}/dotfiles-package-has-installer" 'foo'
     assert_failure
-    refute_line --partial 'Usage:'
+    refute_output --partial 'Usage:'
 }
 
 @test 'dotfiles-package-has-installer success' {
@@ -1291,14 +1291,14 @@ assert_num_matching_lines() {
     touch "${TMP_DIR}/a/foo/install"
     run_script "PATH=${BIN_DIR}:${PATH}" "DOTFILES_PACKAGE_ROOTS=${TMP_DIR}/a" "${BIN_DIR}/dotfiles-package-has-installer" 'foo'
     assert_success
-    refute_line --partial 'Usage:'
+    refute_output --partial 'Usage:'
 }
 
 @test 'dotfiles-package-has-installer failure' {
     mkdir -p "${TMP_DIR}/a/foo"
     run_script "PATH=${BIN_DIR}:${PATH}" "DOTFILES_PACKAGE_ROOTS=${TMP_DIR}/a" "${BIN_DIR}/dotfiles-package-has-installer" 'foo'
     assert_failure
-    refute_line --partial 'Usage:'
+    refute_output --partial 'Usage:'
 }
 
 @test 'dotfiles-package-has-installer path success' {
@@ -1306,14 +1306,14 @@ assert_num_matching_lines() {
     touch "${TMP_DIR}/a/foo/install"
     run_script "PATH=${BIN_DIR}:${PATH}" "${BIN_DIR}/dotfiles-package-has-installer" "${TMP_DIR}/a/foo"
     assert_success
-    refute_line --partial 'Usage:'
+    refute_output --partial 'Usage:'
 }
 
 @test 'dotfiles-package-has-installer path failure' {
     mkdir -p "${TMP_DIR}/a/foo"
     run_script "PATH=${BIN_DIR}:${PATH}" "${BIN_DIR}/dotfiles-package-has-installer" "${TMP_DIR}/a/foo"
     assert_failure
-    refute_line --partial 'Usage:'
+    refute_output --partial 'Usage:'
 }
 
 @test 'dotfiles-package-can-install usage' {
@@ -1326,14 +1326,14 @@ assert_num_matching_lines() {
     mkdir -p "${TMP_DIR}/a"
     run_script "PATH=${BIN_DIR}:${PATH}" "DOTFILES_PACKAGE_ROOTS=${TMP_DIR}/a" "${BIN_DIR}/dotfiles-package-can-install" 'foo'
     assert_failure
-    refute_line --partial 'Usage:'
+    refute_output --partial 'Usage:'
 }
 
 @test 'dotfiles-package-can-install package without installer' {
     mkdir -p "${TMP_DIR}/a/foo"
     run_script "PATH=${BIN_DIR}:${PATH}" "DOTFILES_PACKAGE_ROOTS=${TMP_DIR}/a" "${BIN_DIR}/dotfiles-package-can-install" 'foo'
     assert_failure
-    refute_line --partial 'Usage:'
+    refute_output --partial 'Usage:'
 }
 
 @test 'dotfiles-package-can-install package with installer, no requirements' {
@@ -1341,7 +1341,7 @@ assert_num_matching_lines() {
     touch "${TMP_DIR}/a/foo/install"
     run_script "PATH=${BIN_DIR}:${PATH}" "DOTFILES_PACKAGE_ROOTS=${TMP_DIR}/a" "${BIN_DIR}/dotfiles-package-can-install" 'foo'
     assert_success
-    refute_line --partial 'Usage:'
+    refute_output --partial 'Usage:'
 }
 
 @test 'dotfiles-package-can-install requirements met' {
@@ -1351,7 +1351,7 @@ assert_num_matching_lines() {
     chmod u+x "${TMP_DIR}/a/foo/can-install"
     run_script "PATH=${BIN_DIR}:${PATH}" "DOTFILES_PACKAGE_ROOTS=${TMP_DIR}/a" "${BIN_DIR}/dotfiles-package-can-install" 'foo'
     assert_success
-    refute_line --partial 'Usage:'
+    refute_output --partial 'Usage:'
 }
 
 @test 'dotfiles-package-can-install requirements unmet' {
@@ -1361,21 +1361,21 @@ assert_num_matching_lines() {
     chmod u+x "${TMP_DIR}/a/foo/can-install"
     run_script "PATH=${BIN_DIR}:${PATH}" "DOTFILES_PACKAGE_ROOTS=${TMP_DIR}/a" "${BIN_DIR}/dotfiles-package-can-install" 'foo'
     assert_failure
-    refute_line --partial 'Usage:'
+    refute_output --partial 'Usage:'
 }
 
 @test 'dotfiles-package-can-install nonexistent path' {
     mkdir -p "${TMP_DIR}/a"
     run_script "PATH=${BIN_DIR}:${PATH}" "${BIN_DIR}/dotfiles-package-can-install" "${TMP_DIR}/a/foo"
     assert_failure
-    refute_line --partial 'Usage:'
+    refute_output --partial 'Usage:'
 }
 
 @test 'dotfiles-package-can-install path without installer' {
     mkdir -p "${TMP_DIR}/a/foo"
     run_script "PATH=${BIN_DIR}:${PATH}" "${BIN_DIR}/dotfiles-package-can-install" "${TMP_DIR}/a/foo"
     assert_failure
-    refute_line --partial 'Usage:'
+    refute_output --partial 'Usage:'
 }
 
 @test 'dotfiles-package-can-install path with installer, no requirements' {
@@ -1383,7 +1383,7 @@ assert_num_matching_lines() {
     touch "${TMP_DIR}/a/foo/install"
     run_script "PATH=${BIN_DIR}:${PATH}" "${BIN_DIR}/dotfiles-package-can-install" "${TMP_DIR}/a/foo"
     assert_success
-    refute_line --partial 'Usage:'
+    refute_output --partial 'Usage:'
 }
 
 @test 'dotfiles-package-can-install path requirements met' {
@@ -1393,7 +1393,7 @@ assert_num_matching_lines() {
     chmod u+x "${TMP_DIR}/a/foo/can-install"
     run_script "PATH=${BIN_DIR}:${PATH}" "${BIN_DIR}/dotfiles-package-can-install" "${TMP_DIR}/a/foo"
     assert_success
-    refute_line --partial 'Usage:'
+    refute_output --partial 'Usage:'
 }
 
 @test 'dotfiles-package-can-install path requirements unmet' {
@@ -1403,7 +1403,7 @@ assert_num_matching_lines() {
     chmod u+x "${TMP_DIR}/a/foo/can-install"
     run_script "PATH=${BIN_DIR}:${PATH}" "${BIN_DIR}/dotfiles-package-can-install" "${TMP_DIR}/a/foo"
     assert_failure
-    refute_line --partial 'Usage:'
+    refute_output --partial 'Usage:'
 }
 
 @test 'dotfiles-package-list too many args' {
@@ -1679,7 +1679,7 @@ quux"
     assert [ ! -e "${MUTEX}" ]
     assert [ ! -e "${PRIVATE}" ]
     assert [ ! -e "${LOGOUT}" ]
-    refute_line --partial 'Log out and log in again'
+    refute_output --partial 'Log out and log in again'
 }
 
 @test 'dotfiles-private-repo-install clone, default branch' {
@@ -1954,10 +1954,10 @@ EOF
         "${BIN_DIR}/dotfiles-package-install" 'foo'
 
     assert_failure
-    refute_line --partial 'Usage:'
+    refute_output --partial 'Usage:'
     assert [ ! -e "${TMP_DIR}/mutex" ]
     assert [ ! -e "${TMP_DIR}/logout" ]
-    refute_line --partial 'Log out and log in again'
+    refute_output --partial 'Log out and log in again'
 }
 
 @test 'dotfiles-package-install ignored' {
