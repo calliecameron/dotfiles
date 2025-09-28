@@ -33,7 +33,6 @@ repos:
       - id: check-merge-conflict
         args: [--assume-in-merge]
       - id: check-shebang-scripts-are-executable
-        exclude: ^packages/vc-tools/git-completion\.bash$
       - id: check-symlinks
       - id: check-vcs-permalinks
       - id: destroyed-symlinks
@@ -48,7 +47,6 @@ repos:
     rev: v1.36.2
     hooks:
       - id: typos
-        exclude: ^packages/vc-tools/git-completion\.bash$
   - repo: https://github.com/gitleaks/gitleaks
     rev: v8.28.0
     hooks:
@@ -58,12 +56,10 @@ repos:
     hooks:
       - id: shellcheck
         exclude_types: [zsh]
-        exclude: ^packages/vc-tools/git-completion\.bash$
   - repo: https://github.com/scop/pre-commit-shfmt
     rev: v3.12.0-2
     hooks:
       - id: shfmt
-        exclude: ^packages/vc-tools/git-completion\.bash$
   - repo: local
     hooks:
       - id: ruff check
