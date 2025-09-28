@@ -21,14 +21,20 @@ assert_num_matching_lines() {
     assert_equal "$(echo "${output}" | grep -E -c "${1}")" "${2}"
 }
 
-git_init() {
-    local BRANCH="${1:-}"
-    if [ -z "${BRANCH}" ]; then
-        BRANCH='main'
-    fi
-    git init "--initial-branch=${BRANCH}" .
+git_config() {
     git config --local user.name Foo
     git config --local user.email test@example.com
+}
+
+git_init() {
+    local BRANCH="${1:-main}"
+    git init "--initial-branch=${BRANCH}" "${@:2}" .
+    git_config
+}
+
+git_clone() {
+    git clone "${1}" "${2}"
+    (cd "${2}" && git_config)
 }
 
 @test 'dotfiles-next-init usage' {
@@ -161,8 +167,8 @@ git_init() {
     local UPSTREAM="${BATS_TEST_TMPDIR}/a"
     local REPO="${BATS_TEST_TMPDIR}/b"
     mkdir -p "${UPSTREAM}"
-    (cd "${UPSTREAM}" && git init --bare .)
-    git clone "${UPSTREAM}" "${REPO}"
+    (cd "${UPSTREAM}" && git_init main --bare)
+    git_clone "${UPSTREAM}" "${REPO}"
     touch "${REPO}/a"
     (cd "${REPO}" && git add a && git commit -m 'Foo' && git push)
     echo 'a' >"${REPO}/a"
@@ -176,8 +182,8 @@ git_init() {
     local UPSTREAM="${BATS_TEST_TMPDIR}/a"
     local REPO="${BATS_TEST_TMPDIR}/b"
     mkdir -p "${UPSTREAM}"
-    (cd "${UPSTREAM}" && git init --bare .)
-    git clone "${UPSTREAM}" "${REPO}"
+    (cd "${UPSTREAM}" && git_init main --bare)
+    git_clone "${UPSTREAM}" "${REPO}"
     touch "${REPO}/a"
     (cd "${REPO}" && git add a && git commit -m 'Foo' && git push)
     echo 'a' >"${REPO}/a"
@@ -814,7 +820,7 @@ git_init() {
     mkdir -p "${BATS_TEST_TMPDIR}/foo"
     touch "${BATS_TEST_TMPDIR}/foo/a"
     (cd "${BATS_TEST_TMPDIR}/foo" && git_init && git add a && git commit -m 'Foo')
-    git clone "${BATS_TEST_TMPDIR}/foo" "${BATS_TEST_TMPDIR}/bar"
+    git_clone "${BATS_TEST_TMPDIR}/foo" "${BATS_TEST_TMPDIR}/bar"
     echo 'foo' >"${BATS_TEST_TMPDIR}/foo/a"
     (cd "${BATS_TEST_TMPDIR}/foo" && git add a && git commit -m 'Bar')
     run_script "PATH=${BIN_DIR}:${PATH}" "${BIN_DIR}/dotfiles-clone-or-update-repo" "${BATS_TEST_TMPDIR}/foo" "${BATS_TEST_TMPDIR}/bar" 'main'
@@ -830,7 +836,7 @@ git_init() {
     mkdir -p "${BATS_TEST_TMPDIR}/foo"
     touch "${BATS_TEST_TMPDIR}/foo/a"
     (cd "${BATS_TEST_TMPDIR}/foo" && git_init && git add a && git commit -m 'Foo')
-    git clone "${BATS_TEST_TMPDIR}/foo" "${BATS_TEST_TMPDIR}/bar"
+    git_clone "${BATS_TEST_TMPDIR}/foo" "${BATS_TEST_TMPDIR}/bar"
     (cd "${BATS_TEST_TMPDIR}/foo" && git checkout -b dev)
     echo 'foo' >"${BATS_TEST_TMPDIR}/foo/a"
     (cd "${BATS_TEST_TMPDIR}/foo" && git add a && git commit -m 'Bar')
@@ -847,7 +853,7 @@ git_init() {
     mkdir -p "${BATS_TEST_TMPDIR}/foo"
     touch "${BATS_TEST_TMPDIR}/foo/a"
     (cd "${BATS_TEST_TMPDIR}/foo" && git_init && git add a && git commit -m 'Foo' && git tag foo)
-    git clone "${BATS_TEST_TMPDIR}/foo" "${BATS_TEST_TMPDIR}/bar"
+    git_clone "${BATS_TEST_TMPDIR}/foo" "${BATS_TEST_TMPDIR}/bar"
     (cd "${BATS_TEST_TMPDIR}/bar" && git checkout foo)
     echo 'foo' >"${BATS_TEST_TMPDIR}/foo/a"
     (cd "${BATS_TEST_TMPDIR}/foo" && git add a && git commit -m 'Bar')
@@ -865,7 +871,7 @@ git_init() {
     mkdir -p "${BATS_TEST_TMPDIR}/foo"
     touch "${BATS_TEST_TMPDIR}/foo/a"
     (cd "${BATS_TEST_TMPDIR}/foo" && git_init && git add a && git commit -m 'Foo')
-    git clone "${BATS_TEST_TMPDIR}/foo" "${BATS_TEST_TMPDIR}/bar"
+    git_clone "${BATS_TEST_TMPDIR}/foo" "${BATS_TEST_TMPDIR}/bar"
     echo 'foo' >"${BATS_TEST_TMPDIR}/foo/a"
     (cd "${BATS_TEST_TMPDIR}/foo" && git add a && git commit -m 'Bar')
     run_script "PATH=${BIN_DIR}:${PATH}" "${BIN_DIR}/dotfiles-clone-or-update-repo" "${BATS_TEST_TMPDIR}/foo" "${BATS_TEST_TMPDIR}/bar" 'dev'
@@ -893,7 +899,7 @@ git_init() {
     mkdir -p "${BATS_TEST_TMPDIR}/foo"
     touch "${BATS_TEST_TMPDIR}/foo/a"
     (cd "${BATS_TEST_TMPDIR}/foo" && git_init && git add a && git commit -m 'Foo')
-    git clone "${BATS_TEST_TMPDIR}/foo" "${BATS_TEST_TMPDIR}/bar"
+    git_clone "${BATS_TEST_TMPDIR}/foo" "${BATS_TEST_TMPDIR}/bar"
     echo 'foo' >"${BATS_TEST_TMPDIR}/bar/a"
     run_script "PATH=${BIN_DIR}:${PATH}" "${BIN_DIR}/dotfiles-clone-or-update-repo" "${BATS_TEST_TMPDIR}/foo" "${BATS_TEST_TMPDIR}/bar" 'main'
     assert_failure
@@ -948,14 +954,14 @@ git_init() {
     mkdir -p "${BATS_TEST_TMPDIR}/foo"
     echo 'foo' >"${BATS_TEST_TMPDIR}/foo/a"
     (cd "${BATS_TEST_TMPDIR}/foo" && git_init && git add a && git commit -m 'Foo')
-    git clone "${BATS_TEST_TMPDIR}/foo" "${BATS_TEST_TMPDIR}/dir/foo"
+    git_clone "${BATS_TEST_TMPDIR}/foo" "${BATS_TEST_TMPDIR}/dir/foo"
     echo 'baz' >"${BATS_TEST_TMPDIR}/foo/a"
     (cd "${BATS_TEST_TMPDIR}/foo" && git add a && git commit -m 'Bar')
 
     mkdir -p "${BATS_TEST_TMPDIR}/bar"
     echo 'bar' >"${BATS_TEST_TMPDIR}/bar/b"
     (cd "${BATS_TEST_TMPDIR}/bar" && git_init master && git add b && git commit -m 'Foo')
-    git clone "${BATS_TEST_TMPDIR}/bar" "${BATS_TEST_TMPDIR}/dir/bar"
+    git_clone "${BATS_TEST_TMPDIR}/bar" "${BATS_TEST_TMPDIR}/dir/bar"
     echo 'quux' >"${BATS_TEST_TMPDIR}/bar/b"
     (cd "${BATS_TEST_TMPDIR}/bar" && git add b && git commit -m 'Bar')
 
@@ -1729,7 +1735,7 @@ quux"
     mkdir -p "${BATS_TEST_TMPDIR}/repo"
     touch "${BATS_TEST_TMPDIR}/repo/a"
     (cd "${BATS_TEST_TMPDIR}/repo" && git_init && git add a && git commit -m 'Foo')
-    git clone "${BATS_TEST_TMPDIR}/repo" "${PRIVATE}"
+    git_clone "${BATS_TEST_TMPDIR}/repo" "${PRIVATE}"
     echo 'foo' >"${BATS_TEST_TMPDIR}/repo/a"
     (cd "${BATS_TEST_TMPDIR}/repo" && git add a && git commit -m 'Bar')
     run_script "PATH=${BIN_DIR}:${PATH}" "DOTFILES_PACKAGE_MUTEX=${MUTEX}" "DOTFILES_PRIVATE_DIR=${PRIVATE}" "DOTFILES_PRIVATE_REPO=${BATS_TEST_TMPDIR}/repo" "DOTFILES_PRIVATE_BRANCH=" "DOTFILES_NEEDS_LOGOUT=${LOGOUT}" "${BIN_DIR}/dotfiles-private-repo-install"
@@ -1750,7 +1756,7 @@ quux"
     mkdir -p "${BATS_TEST_TMPDIR}/repo"
     touch "${BATS_TEST_TMPDIR}/repo/a"
     (cd "${BATS_TEST_TMPDIR}/repo" && git_init && git add a && git commit -m 'Foo')
-    git clone "${BATS_TEST_TMPDIR}/repo" "${PRIVATE}"
+    git_clone "${BATS_TEST_TMPDIR}/repo" "${PRIVATE}"
     echo 'foo' >"${PRIVATE}/a"
     run_script "PATH=${BIN_DIR}:${PATH}" "DOTFILES_PACKAGE_MUTEX=${MUTEX}" "DOTFILES_PRIVATE_DIR=${PRIVATE}" "DOTFILES_PRIVATE_REPO=${BATS_TEST_TMPDIR}/repo" "DOTFILES_PRIVATE_BRANCH=" "DOTFILES_NEEDS_LOGOUT=${LOGOUT}" "${BIN_DIR}/dotfiles-private-repo-install"
     assert_failure
@@ -2185,7 +2191,7 @@ EOF
     mkdir -p "${BATS_TEST_TMPDIR}/repo"
     touch "${BATS_TEST_TMPDIR}/repo/a"
     (cd "${BATS_TEST_TMPDIR}/repo" && git_init && git add a && git commit -m 'Foo')
-    git clone "${BATS_TEST_TMPDIR}/repo" "${BATS_TEST_TMPDIR}/private"
+    git_clone "${BATS_TEST_TMPDIR}/repo" "${BATS_TEST_TMPDIR}/private"
 
     mkdir -p "${BATS_TEST_TMPDIR}/a/foo"
     printf "#!/bin/bash\ntrue\n" >"${BATS_TEST_TMPDIR}/a/foo/install"
