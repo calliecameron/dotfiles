@@ -11,12 +11,8 @@ setup() {
     TEST_EMACS="$(command -v emacs)"
 }
 
-teardown() {
-    teardown_common
-}
-
 run_emacs() {
-    run env -i -C "${TMP_DIR}" HOME="${TMP_DIR}" TERM='xterm-256color' dash -l -c "'${TEST_EMACS}' -Q --script '${CORE_DIR}/dotfiles.el'" 3>&-
+    run env -i -C "${BATS_TEST_TMPDIR}" HOME="${BATS_TEST_TMPDIR}" TERM='xterm-256color' dash -l -c "'${TEST_EMACS}' -Q --script '${CORE_DIR}/dotfiles.el'" 3>&-
 }
 
 @test 'emacs' {

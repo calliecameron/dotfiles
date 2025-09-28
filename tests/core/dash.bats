@@ -9,10 +9,6 @@ setup() {
     setup_common
 }
 
-teardown() {
-    teardown_common
-}
-
 function assert_ran() {
     assert_stub_ran
 

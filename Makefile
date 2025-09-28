@@ -27,12 +27,12 @@ ci: precommit test_slow
 # Fast tests are run by pre-commit
 .PHONY: test_fast
 test_fast: deps
-	./.template_files/bats --filter-tags !slow -r tests
+	./.template_files/bats --pretty --filter-tags !slow -r tests
 
 # Slow tests are only run in CI
 .PHONY: test_slow
 test_slow: deps
-	./.template_files/bats --filter-tags slow -r tests
+	./.template_files/bats --pretty --filter-tags slow -r tests
 
 .PHONY: template_reapply
 template_reapply: deps

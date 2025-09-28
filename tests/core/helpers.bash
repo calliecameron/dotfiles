@@ -1,5 +1,3 @@
-# shellcheck disable=SC2034
-
 function init_shell_load_file() {
     local PACKAGE_NAME="${1}"
     local TYPE="${2}"
@@ -50,28 +48,28 @@ function init_package() {
     init_emacs_load_file "${VAR_PACKAGE_NAME}" >"${PACKAGE_SOURCE_DIR}/emacs.el"
 }
 
+# shellcheck disable=SC2034
 function setup_common() {
     THIS_DIR="$(cd "$(dirname "${BATS_TEST_FILENAME}")" && pwd)"
     CORE_DIR="$(readlink -f "${THIS_DIR}/../../core")"
-    TMP_DIR="$(mktemp -d)"
-    mkdir -p "${TMP_DIR}/.dotfiles.d"
+    mkdir -p "${BATS_TEST_TMPDIR}/.dotfiles.d"
 
-    TEST_NEEDS_LOGOUT="${TMP_DIR}/.dotfiles.d/needs-logout"
-    TEST_PACKAGE_MESSAGES="${TMP_DIR}/.dotfiles.d/package-messages"
-    TEST_PACKAGE_PROBLEMS="${TMP_DIR}/.dotfiles.d/package-problems"
-    TEST_NEXT_LOGIN="${TMP_DIR}/.dotfiles.d/next-login.bash"
-    TEST_NEXT_INIT="${TMP_DIR}/.dotfiles.d/next-init.bash"
-    TEST_PACKAGE_INSTALL_DIR="${TMP_DIR}/.dotfiles.d/packages"
-    TEST_PACKAGE_IGNORE_FILE="${TMP_DIR}/.dotfiles.d/package-ignored"
-    TEST_PACKAGE_MUTEX="${TMP_DIR}/.dotfiles.d/package-mutex"
-    TEST_PRIVATE_DIR="${TMP_DIR}/.dotfiles.d/private"
-    TEST_PACKAGE_LAST_UPDATE_FILE="${TMP_DIR}/.dotfiles.d/package-last-update"
+    TEST_NEEDS_LOGOUT="${BATS_TEST_TMPDIR}/.dotfiles.d/needs-logout"
+    TEST_PACKAGE_MESSAGES="${BATS_TEST_TMPDIR}/.dotfiles.d/package-messages"
+    TEST_PACKAGE_PROBLEMS="${BATS_TEST_TMPDIR}/.dotfiles.d/package-problems"
+    TEST_NEXT_LOGIN="${BATS_TEST_TMPDIR}/.dotfiles.d/next-login.bash"
+    TEST_NEXT_INIT="${BATS_TEST_TMPDIR}/.dotfiles.d/next-init.bash"
+    TEST_PACKAGE_INSTALL_DIR="${BATS_TEST_TMPDIR}/.dotfiles.d/packages"
+    TEST_PACKAGE_IGNORE_FILE="${BATS_TEST_TMPDIR}/.dotfiles.d/package-ignored"
+    TEST_PACKAGE_MUTEX="${BATS_TEST_TMPDIR}/.dotfiles.d/package-mutex"
+    TEST_PRIVATE_DIR="${BATS_TEST_TMPDIR}/.dotfiles.d/private"
+    TEST_PACKAGE_LAST_UPDATE_FILE="${BATS_TEST_TMPDIR}/.dotfiles.d/package-last-update"
 
     mkdir -p "${TEST_PACKAGE_INSTALL_DIR}"
-    mkdir -p "${TMP_DIR}/.local/share/nemo/scripts"
+    mkdir -p "${BATS_TEST_TMPDIR}/.local/share/nemo/scripts"
 
-    TEST_PACKAGE_ROOT_1="${TMP_DIR}/packages1"
-    TEST_PACKAGE_ROOT_2="${TMP_DIR}/packages2"
+    TEST_PACKAGE_ROOT_1="${BATS_TEST_TMPDIR}/packages1"
+    TEST_PACKAGE_ROOT_2="${BATS_TEST_TMPDIR}/packages2"
 
     # foo: active without installation
     init_package "${TEST_PACKAGE_ROOT_1}" 'foo'
@@ -125,12 +123,12 @@ function setup_common() {
     init_package "${TEST_PACKAGE_ROOT_2}" 'foo'
 
     # other in invalid root: ignored
-    init_package "$(printf "%s/packages\nbad" "${TMP_DIR}")" 'other'
+    init_package "$(printf "%s/packages\nbad" "${BATS_TEST_TMPDIR}")" 'other'
 
     # 'foo bar': ignored
     init_package "${TEST_PACKAGE_ROOT_1}" 'foo bar' 'foo_bar'
 
-    TEST_LOCAL_ENV_FILE="${TMP_DIR}/.dotfiles-variables.sh"
+    TEST_LOCAL_ENV_FILE="${BATS_TEST_TMPDIR}/.dotfiles-variables.sh"
     cat >"${TEST_LOCAL_ENV_FILE}" <<EOF
 if [ -n "\${ZSH_VERSION}" ]; then
     export TEST_LOCAL_ENV='zsh'
@@ -140,10 +138,10 @@ fi
 appendpackageroot /foo
 prependpackageroot /bar
 export TEST_PACKAGE_ROOTS="\${DOTFILES_PACKAGE_ROOTS}"
-export DOTFILES_PACKAGE_ROOTS='${TEST_PACKAGE_ROOT_1}:${TEST_PACKAGE_ROOT_2}:${TMP_DIR}/packages3:$(printf '%s/packages\nbad' "${TMP_DIR}")'
+export DOTFILES_PACKAGE_ROOTS='${TEST_PACKAGE_ROOT_1}:${TEST_PACKAGE_ROOT_2}:${BATS_TEST_TMPDIR}/packages3:$(printf '%s/packages\nbad' "${BATS_TEST_TMPDIR}")'
 EOF
 
-    TEST_LOCAL_GENERIC_ALIASES_FILE="${TMP_DIR}/.dotfiles-aliases.sh"
+    TEST_LOCAL_GENERIC_ALIASES_FILE="${BATS_TEST_TMPDIR}/.dotfiles-aliases.sh"
     cat >"${TEST_LOCAL_GENERIC_ALIASES_FILE}" <<EOF
 if [ -n "\${ZSH_VERSION}" ]; then
     export TEST_LOCAL_GENERIC_ALIASES='zsh'
@@ -152,7 +150,7 @@ else
 fi
 EOF
 
-    TEST_LOCAL_BASH_ALIASES_FILE="${TMP_DIR}/.dotfiles-aliases.bash"
+    TEST_LOCAL_BASH_ALIASES_FILE="${BATS_TEST_TMPDIR}/.dotfiles-aliases.bash"
     cat >"${TEST_LOCAL_BASH_ALIASES_FILE}" <<EOF
 if [ -n "\${ZSH_VERSION}" ]; then
     export TEST_LOCAL_BASH_ALIASES='zsh'
@@ -161,7 +159,7 @@ else
 fi
 EOF
 
-    TEST_LOCAL_ZSH_ALIASES_FILE="${TMP_DIR}/.dotfiles-aliases.zsh"
+    TEST_LOCAL_ZSH_ALIASES_FILE="${BATS_TEST_TMPDIR}/.dotfiles-aliases.zsh"
     cat >"${TEST_LOCAL_ZSH_ALIASES_FILE}" <<EOF
 if [ -n "\${ZSH_VERSION}" ]; then
     export TEST_LOCAL_ZSH_ALIASES='zsh'
@@ -171,40 +169,36 @@ else
 fi
 EOF
 
-    TEST_LOCAL_EMACS_FILE="${TMP_DIR}/.dotfiles-emacs.el"
+    TEST_LOCAL_EMACS_FILE="${BATS_TEST_TMPDIR}/.dotfiles-emacs.el"
     cat >"${TEST_LOCAL_EMACS_FILE}" <<EOF
 (message "TEST_LOCAL_EMACS=emacs")
 EOF
 
-    mkdir -p "${TMP_DIR}/.emacs.d"
-    TEST_EMACS_CUSTOM_FILE="${TMP_DIR}/.emacs.d/emacs-custom.el"
+    mkdir -p "${BATS_TEST_TMPDIR}/.emacs.d"
+    TEST_EMACS_CUSTOM_FILE="${BATS_TEST_TMPDIR}/.emacs.d/emacs-custom.el"
     cat >"${TEST_EMACS_CUSTOM_FILE}" <<EOF
 (message "TEST_EMACS_LOAD_PATH=%s" load-path)
 EOF
 
     INSTALL="${THIS_DIR}/../../install.sh"
-    HOME="${TMP_DIR}" "${INSTALL}" >/dev/null
-}
-
-function teardown_common() {
-    rm -rf "${TMP_DIR}"
+    HOME="${BATS_TEST_TMPDIR}" "${INSTALL}" >/dev/null
 }
 
 function run_dash() {
-    run env -i -C "${TMP_DIR}" HOME="${TMP_DIR}" TERM='xterm-256color' dash "${@}" -c 'env | LC_ALL=C sort' 3>&-
+    run env -i -C "${BATS_TEST_TMPDIR}" HOME="${BATS_TEST_TMPDIR}" TERM='xterm-256color' dash "${@}" -c 'env | LC_ALL=C sort' 3>&-
 }
 
 function run_bash() {
-    run env -i -C "${TMP_DIR}" HOME="${TMP_DIR}" TERM='xterm-256color' bash "${@}" -c 'env | LC_ALL=C sort' 3>&-
+    run env -i -C "${BATS_TEST_TMPDIR}" HOME="${BATS_TEST_TMPDIR}" TERM='xterm-256color' bash "${@}" -c 'env | LC_ALL=C sort' 3>&-
 }
 
 function run_zsh() {
-    run env -i -C "${TMP_DIR}" HOME="${TMP_DIR}" TERM='xterm-256color' zsh "${@}" -c 'env | LC_ALL=C sort' 3>&-
+    run env -i -C "${BATS_TEST_TMPDIR}" HOME="${BATS_TEST_TMPDIR}" TERM='xterm-256color' zsh "${@}" -c 'env | LC_ALL=C sort' 3>&-
 }
 
 function _after_login() {
     (
-        source <(env -i -C "${TMP_DIR}" HOME="${TMP_DIR}" TERM='xterm-256color' dash -l -c 'env -0' | xargs -0 bash -c 'printf "export %q\n" "$@"' -- | LC_ALL=C sort)
+        source <(env -i -C "${BATS_TEST_TMPDIR}" HOME="${BATS_TEST_TMPDIR}" TERM='xterm-256color' dash -l -c 'env -0' | xargs -0 bash -c 'printf "export %q\n" "$@"' -- | LC_ALL=C sort)
         bash -c "${1}"
         "${@:2}"
     )
@@ -241,7 +235,7 @@ function assert_num_matching_lines() {
 
 function assert_path() {
     assert_line --regexp "^PATH=.*$(readlink -f "${THIS_DIR}/../..")/core/bin.*\$"
-    assert_line --regexp "^PATH=.*$(readlink -f "${TMP_DIR}")/\\.dotfiles\\.d/local-bin.*\$"
+    assert_line --regexp "^PATH=.*$(readlink -f "${BATS_TEST_TMPDIR}")/\\.dotfiles\\.d/local-bin.*\$"
     assert_line --regexp "^PATH=.*$(readlink -f "${TEST_PACKAGE_ROOT_1}")/foo/bin.*\$"
     assert_line --regexp "^PATH=.*$(readlink -f "${TEST_PACKAGE_ROOT_1}")/baz/bin.*\$"
     refute_line --regexp "^PATH=.*$(readlink -f "${TEST_PACKAGE_ROOT_2}")/stuff/bin.*\$"
@@ -249,7 +243,7 @@ function assert_path() {
 
 function assert_not_path() {
     refute_line --regexp "^PATH=.*$(readlink -f "${THIS_DIR}/../..")/core/bin.*\$"
-    refute_line --regexp "^PATH=.*$(readlink -f "${TMP_DIR}")/\\.dotfiles\\.d/local-bin.*\$"
+    refute_line --regexp "^PATH=.*$(readlink -f "${BATS_TEST_TMPDIR}")/\\.dotfiles\\.d/local-bin.*\$"
     refute_line --regexp "^PATH=.*$(readlink -f "${TEST_PACKAGE_ROOT_1}")/foo/bin.*\$"
     refute_line --regexp "^PATH=.*$(readlink -f "${TEST_PACKAGE_ROOT_1}")/baz/bin.*\$"
     refute_line --regexp "^PATH=.*$(readlink -f "${TEST_PACKAGE_ROOT_2}")/stuff/bin.*\$"
@@ -262,7 +256,7 @@ function assert_emacs_load_path() {
 }
 
 function assert_package_roots() {
-    assert_line "TEST_PACKAGE_ROOTS=/bar:$(readlink -f "${TMP_DIR}")/.dotfiles.d/private/packages-pre:$(readlink -f "${THIS_DIR}/../..")/packages:$(readlink -f "${TMP_DIR}")/.dotfiles.d/private/packages:/foo"
+    assert_line "TEST_PACKAGE_ROOTS=/bar:$(readlink -f "${BATS_TEST_TMPDIR}")/.dotfiles.d/private/packages-pre:$(readlink -f "${THIS_DIR}/../..")/packages:$(readlink -f "${BATS_TEST_TMPDIR}")/.dotfiles.d/private/packages:/foo"
 }
 
 function assert_not_package_roots() {
@@ -270,14 +264,14 @@ function assert_not_package_roots() {
 }
 
 function assert_nemo_scripts() {
-    assert [ -h "${TMP_DIR}/.local/share/nemo/scripts/a" ]
-    assert [ "$(readlink -f "${TMP_DIR}/.local/share/nemo/scripts/a")" = "${TEST_PACKAGE_ROOT_1}/foo/nemo-scripts/a" ]
-    assert [ ! -e "${TMP_DIR}/.local/share/nemo/scripts/b" ]
+    assert [ -h "${BATS_TEST_TMPDIR}/.local/share/nemo/scripts/a" ]
+    assert [ "$(readlink -f "${BATS_TEST_TMPDIR}/.local/share/nemo/scripts/a")" = "${TEST_PACKAGE_ROOT_1}/foo/nemo-scripts/a" ]
+    assert [ ! -e "${BATS_TEST_TMPDIR}/.local/share/nemo/scripts/b" ]
 }
 
 function assert_not_nemo_scripts() {
-    assert [ ! -e "${TMP_DIR}/.local/share/nemo/scripts/a" ]
-    assert [ ! -e "${TMP_DIR}/.local/share/nemo/scripts/b" ]
+    assert [ ! -e "${BATS_TEST_TMPDIR}/.local/share/nemo/scripts/a" ]
+    assert [ ! -e "${BATS_TEST_TMPDIR}/.local/share/nemo/scripts/b" ]
 }
 
 function assert_zsh_completions() {

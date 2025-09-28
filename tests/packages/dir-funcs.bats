@@ -5,22 +5,17 @@ setup() {
     THIS_DIR="$(cd "$(dirname "${BATS_TEST_FILENAME}")" && pwd)"
     BIN_DIR="$(readlink -f "${THIS_DIR}/../../packages/dir-funcs/bin")"
 
-    TMP_DIR="$(mktemp -d)"
-    TEST_SAVED_PATHS="${TMP_DIR}/saved"
-    TEST_FOLLOW="${TMP_DIR}/follow"
+    TEST_SAVED_PATHS="${BATS_TEST_TMPDIR}/saved"
+    TEST_FOLLOW="${BATS_TEST_TMPDIR}/follow"
 
     bats_load_library 'bats-support'
     bats_load_library 'bats-assert'
 
-    cd "${TMP_DIR}" || exit 1
-}
-
-teardown() {
-    rm -rf "${TMP_DIR}"
+    cd "${BATS_TEST_TMPDIR}" || exit 1
 }
 
 run_script() {
-    run env -i -C "${TMP_DIR}" HOME="${TMP_DIR}" "PATH=${BIN_DIR}:${PATH}" "${@}"
+    run env -i -C "${BATS_TEST_TMPDIR}" HOME="${BATS_TEST_TMPDIR}" "PATH=${BIN_DIR}:${PATH}" "${@}"
 }
 
 @test 'dotfiles-save-path default slot nonexisting' {
@@ -28,7 +23,7 @@ run_script() {
     assert_success
     refute_output --partial 'Usage:'
     assert [ -f "${TEST_SAVED_PATHS}/0" ]
-    assert [ "$(cat "${TEST_SAVED_PATHS}/0")" = "${TMP_DIR}" ]
+    assert [ "$(cat "${TEST_SAVED_PATHS}/0")" = "${BATS_TEST_TMPDIR}" ]
 }
 
 @test 'dotfiles-save-path default slot existing' {
@@ -38,7 +33,7 @@ run_script() {
     assert_success
     refute_output --partial 'Usage:'
     assert [ -f "${TEST_SAVED_PATHS}/0" ]
-    assert [ "$(cat "${TEST_SAVED_PATHS}/0")" = "${TMP_DIR}" ]
+    assert [ "$(cat "${TEST_SAVED_PATHS}/0")" = "${BATS_TEST_TMPDIR}" ]
 }
 
 @test 'dotfiles-save-path other slot nonexisting' {
@@ -46,7 +41,7 @@ run_script() {
     assert_success
     refute_output --partial 'Usage:'
     assert [ -f "${TEST_SAVED_PATHS}/foo" ]
-    assert [ "$(cat "${TEST_SAVED_PATHS}/foo")" = "${TMP_DIR}" ]
+    assert [ "$(cat "${TEST_SAVED_PATHS}/foo")" = "${BATS_TEST_TMPDIR}" ]
 }
 
 @test 'dotfiles-save-path other slot existing' {
@@ -56,7 +51,7 @@ run_script() {
     assert_success
     refute_output --partial 'Usage:'
     assert [ -f "${TEST_SAVED_PATHS}/foo" ]
-    assert [ "$(cat "${TEST_SAVED_PATHS}/foo")" = "${TMP_DIR}" ]
+    assert [ "$(cat "${TEST_SAVED_PATHS}/foo")" = "${BATS_TEST_TMPDIR}" ]
 }
 
 @test 'dotfiles-save-path bad slot' {
@@ -142,45 +137,45 @@ run_script() {
 }
 
 @test 'dotfiles-copy-to-saved-path nonexisting' {
-    echo 'foo' >"${TMP_DIR}/a"
-    echo 'bar' >"${TMP_DIR}/b"
-    mkdir -p "${TMP_DIR}/target"
-    run_script "DOTFILES_SAVED_PATHS=${TEST_SAVED_PATHS}" "${BIN_DIR}/dotfiles-copy-to-saved-path" '0' "${TMP_DIR}/a" "${TMP_DIR}/b"
+    echo 'foo' >"${BATS_TEST_TMPDIR}/a"
+    echo 'bar' >"${BATS_TEST_TMPDIR}/b"
+    mkdir -p "${BATS_TEST_TMPDIR}/target"
+    run_script "DOTFILES_SAVED_PATHS=${TEST_SAVED_PATHS}" "${BIN_DIR}/dotfiles-copy-to-saved-path" '0' "${BATS_TEST_TMPDIR}/a" "${BATS_TEST_TMPDIR}/b"
     assert_failure
     refute_line --partial 'Usage:'
     assert_line 'No saved path.'
     assert [ ! -e "${TEST_SAVED_PATHS}" ]
-    assert [ -f "${TMP_DIR}/a" ]
-    assert [ "$(cat "${TMP_DIR}/a")" = 'foo' ]
-    assert [ -f "${TMP_DIR}/b" ]
-    assert [ "$(cat "${TMP_DIR}/b")" = 'bar' ]
-    assert [ -d "${TMP_DIR}/target" ]
-    assert [ ! -e "${TMP_DIR}/target/a" ]
-    assert [ ! -e "${TMP_DIR}/target/b" ]
+    assert [ -f "${BATS_TEST_TMPDIR}/a" ]
+    assert [ "$(cat "${BATS_TEST_TMPDIR}/a")" = 'foo' ]
+    assert [ -f "${BATS_TEST_TMPDIR}/b" ]
+    assert [ "$(cat "${BATS_TEST_TMPDIR}/b")" = 'bar' ]
+    assert [ -d "${BATS_TEST_TMPDIR}/target" ]
+    assert [ ! -e "${BATS_TEST_TMPDIR}/target/a" ]
+    assert [ ! -e "${BATS_TEST_TMPDIR}/target/b" ]
 }
 
 @test 'dotfiles-copy-to-saved-path existing' {
-    echo 'foo' >"${TMP_DIR}/a"
-    echo 'bar' >"${TMP_DIR}/b"
-    mkdir -p "${TMP_DIR}/target"
+    echo 'foo' >"${BATS_TEST_TMPDIR}/a"
+    echo 'bar' >"${BATS_TEST_TMPDIR}/b"
+    mkdir -p "${BATS_TEST_TMPDIR}/target"
     mkdir -p "${TEST_SAVED_PATHS}"
-    echo "${TMP_DIR}/target" >"${TEST_SAVED_PATHS}/0"
-    run_script "DOTFILES_SAVED_PATHS=${TEST_SAVED_PATHS}" "${BIN_DIR}/dotfiles-copy-to-saved-path" '0' "${TMP_DIR}/a" "${TMP_DIR}/b"
+    echo "${BATS_TEST_TMPDIR}/target" >"${TEST_SAVED_PATHS}/0"
+    run_script "DOTFILES_SAVED_PATHS=${TEST_SAVED_PATHS}" "${BIN_DIR}/dotfiles-copy-to-saved-path" '0' "${BATS_TEST_TMPDIR}/a" "${BATS_TEST_TMPDIR}/b"
     assert_success
     refute_output --partial 'Usage:'
     refute_output --partial 'No saved path.'
     assert [ -d "${TEST_SAVED_PATHS}" ]
     assert [ -f "${TEST_SAVED_PATHS}/0" ]
-    assert [ "$(cat "${TEST_SAVED_PATHS}/0")" = "${TMP_DIR}/target" ]
-    assert [ -f "${TMP_DIR}/a" ]
-    assert [ "$(cat "${TMP_DIR}/a")" = 'foo' ]
-    assert [ -f "${TMP_DIR}/b" ]
-    assert [ "$(cat "${TMP_DIR}/b")" = 'bar' ]
-    assert [ -d "${TMP_DIR}/target" ]
-    assert [ -f "${TMP_DIR}/target/a" ]
-    assert [ "$(cat "${TMP_DIR}/target/a")" = 'foo' ]
-    assert [ -f "${TMP_DIR}/target/b" ]
-    assert [ "$(cat "${TMP_DIR}/target/b")" = 'bar' ]
+    assert [ "$(cat "${TEST_SAVED_PATHS}/0")" = "${BATS_TEST_TMPDIR}/target" ]
+    assert [ -f "${BATS_TEST_TMPDIR}/a" ]
+    assert [ "$(cat "${BATS_TEST_TMPDIR}/a")" = 'foo' ]
+    assert [ -f "${BATS_TEST_TMPDIR}/b" ]
+    assert [ "$(cat "${BATS_TEST_TMPDIR}/b")" = 'bar' ]
+    assert [ -d "${BATS_TEST_TMPDIR}/target" ]
+    assert [ -f "${BATS_TEST_TMPDIR}/target/a" ]
+    assert [ "$(cat "${BATS_TEST_TMPDIR}/target/a")" = 'foo' ]
+    assert [ -f "${BATS_TEST_TMPDIR}/target/b" ]
+    assert [ "$(cat "${BATS_TEST_TMPDIR}/target/b")" = 'bar' ]
 }
 
 @test 'dotfiles-copy-to-saved-path bad slot' {
@@ -205,43 +200,43 @@ run_script() {
 }
 
 @test 'dotfiles-move-to-saved-path nonexisting' {
-    echo 'foo' >"${TMP_DIR}/a"
-    echo 'bar' >"${TMP_DIR}/b"
-    mkdir -p "${TMP_DIR}/target"
-    run_script "DOTFILES_SAVED_PATHS=${TEST_SAVED_PATHS}" "${BIN_DIR}/dotfiles-move-to-saved-path" '0' "${TMP_DIR}/a" "${TMP_DIR}/b"
+    echo 'foo' >"${BATS_TEST_TMPDIR}/a"
+    echo 'bar' >"${BATS_TEST_TMPDIR}/b"
+    mkdir -p "${BATS_TEST_TMPDIR}/target"
+    run_script "DOTFILES_SAVED_PATHS=${TEST_SAVED_PATHS}" "${BIN_DIR}/dotfiles-move-to-saved-path" '0' "${BATS_TEST_TMPDIR}/a" "${BATS_TEST_TMPDIR}/b"
     assert_failure
     refute_line --partial 'Usage:'
     assert_line 'No saved path.'
     assert [ ! -e "${TEST_SAVED_PATHS}" ]
-    assert [ -f "${TMP_DIR}/a" ]
-    assert [ "$(cat "${TMP_DIR}/a")" = 'foo' ]
-    assert [ -f "${TMP_DIR}/b" ]
-    assert [ "$(cat "${TMP_DIR}/b")" = 'bar' ]
-    assert [ -d "${TMP_DIR}/target" ]
-    assert [ ! -e "${TMP_DIR}/target/a" ]
-    assert [ ! -e "${TMP_DIR}/target/b" ]
+    assert [ -f "${BATS_TEST_TMPDIR}/a" ]
+    assert [ "$(cat "${BATS_TEST_TMPDIR}/a")" = 'foo' ]
+    assert [ -f "${BATS_TEST_TMPDIR}/b" ]
+    assert [ "$(cat "${BATS_TEST_TMPDIR}/b")" = 'bar' ]
+    assert [ -d "${BATS_TEST_TMPDIR}/target" ]
+    assert [ ! -e "${BATS_TEST_TMPDIR}/target/a" ]
+    assert [ ! -e "${BATS_TEST_TMPDIR}/target/b" ]
 }
 
 @test 'dotfiles-move-to-saved-path existing' {
-    echo 'foo' >"${TMP_DIR}/a"
-    echo 'bar' >"${TMP_DIR}/b"
-    mkdir -p "${TMP_DIR}/target"
+    echo 'foo' >"${BATS_TEST_TMPDIR}/a"
+    echo 'bar' >"${BATS_TEST_TMPDIR}/b"
+    mkdir -p "${BATS_TEST_TMPDIR}/target"
     mkdir -p "${TEST_SAVED_PATHS}"
-    echo "${TMP_DIR}/target" >"${TEST_SAVED_PATHS}/0"
-    run_script "DOTFILES_SAVED_PATHS=${TEST_SAVED_PATHS}" "${BIN_DIR}/dotfiles-move-to-saved-path" '0' "${TMP_DIR}/a" "${TMP_DIR}/b"
+    echo "${BATS_TEST_TMPDIR}/target" >"${TEST_SAVED_PATHS}/0"
+    run_script "DOTFILES_SAVED_PATHS=${TEST_SAVED_PATHS}" "${BIN_DIR}/dotfiles-move-to-saved-path" '0' "${BATS_TEST_TMPDIR}/a" "${BATS_TEST_TMPDIR}/b"
     assert_success
     refute_output --partial 'Usage:'
     refute_output --partial 'No saved path.'
     assert [ -d "${TEST_SAVED_PATHS}" ]
     assert [ -f "${TEST_SAVED_PATHS}/0" ]
-    assert [ "$(cat "${TEST_SAVED_PATHS}/0")" = "${TMP_DIR}/target" ]
-    assert [ ! -e "${TMP_DIR}/a" ]
-    assert [ ! -e "${TMP_DIR}/b" ]
-    assert [ -d "${TMP_DIR}/target" ]
-    assert [ -f "${TMP_DIR}/target/a" ]
-    assert [ "$(cat "${TMP_DIR}/target/a")" = 'foo' ]
-    assert [ -f "${TMP_DIR}/target/b" ]
-    assert [ "$(cat "${TMP_DIR}/target/b")" = 'bar' ]
+    assert [ "$(cat "${TEST_SAVED_PATHS}/0")" = "${BATS_TEST_TMPDIR}/target" ]
+    assert [ ! -e "${BATS_TEST_TMPDIR}/a" ]
+    assert [ ! -e "${BATS_TEST_TMPDIR}/b" ]
+    assert [ -d "${BATS_TEST_TMPDIR}/target" ]
+    assert [ -f "${BATS_TEST_TMPDIR}/target/a" ]
+    assert [ "$(cat "${BATS_TEST_TMPDIR}/target/a")" = 'foo' ]
+    assert [ -f "${BATS_TEST_TMPDIR}/target/b" ]
+    assert [ "$(cat "${BATS_TEST_TMPDIR}/target/b")" = 'bar' ]
 }
 
 @test 'dotfiles-move-to-saved-path bad slot' {
@@ -280,119 +275,119 @@ run_script() {
 }
 
 @test 'dotfiles-mv-cp-save-target normal' {
-    run_script "DOTFILES_MV_CP_FOLLOW=${TEST_FOLLOW}" "${BIN_DIR}/dotfiles-mv-cp-save-target" 'foo' "${TMP_DIR}/bar"
+    run_script "DOTFILES_MV_CP_FOLLOW=${TEST_FOLLOW}" "${BIN_DIR}/dotfiles-mv-cp-save-target" 'foo' "${BATS_TEST_TMPDIR}/bar"
     assert_success
     refute_output
     assert [ -f "${TEST_FOLLOW}" ]
-    assert [ "$(cat "${TEST_FOLLOW}")" = "${TMP_DIR}" ]
+    assert [ "$(cat "${TEST_FOLLOW}")" = "${BATS_TEST_TMPDIR}" ]
 }
 
 @test 'dotfiles-mv-cp-save-target dir' {
-    mkdir -p "${TMP_DIR}/bar"
-    run_script "DOTFILES_MV_CP_FOLLOW=${TEST_FOLLOW}" "${BIN_DIR}/dotfiles-mv-cp-save-target" 'foo' "${TMP_DIR}/bar"
+    mkdir -p "${BATS_TEST_TMPDIR}/bar"
+    run_script "DOTFILES_MV_CP_FOLLOW=${TEST_FOLLOW}" "${BIN_DIR}/dotfiles-mv-cp-save-target" 'foo' "${BATS_TEST_TMPDIR}/bar"
     assert_success
     refute_output
     assert [ -f "${TEST_FOLLOW}" ]
-    assert [ "$(cat "${TEST_FOLLOW}")" = "${TMP_DIR}/bar" ]
+    assert [ "$(cat "${TEST_FOLLOW}")" = "${BATS_TEST_TMPDIR}/bar" ]
 }
 
 @test 'dotfiles-mv-cp-save-target dir override' {
-    mkdir -p "${TMP_DIR}/bar"
-    run_script "DOTFILES_MV_CP_FOLLOW=${TEST_FOLLOW}" "${BIN_DIR}/dotfiles-mv-cp-save-target" '-T' 'foo' "${TMP_DIR}/bar"
+    mkdir -p "${BATS_TEST_TMPDIR}/bar"
+    run_script "DOTFILES_MV_CP_FOLLOW=${TEST_FOLLOW}" "${BIN_DIR}/dotfiles-mv-cp-save-target" '-T' 'foo' "${BATS_TEST_TMPDIR}/bar"
     assert_success
     refute_output
     assert [ -f "${TEST_FOLLOW}" ]
-    assert [ "$(cat "${TEST_FOLLOW}")" = "${TMP_DIR}" ]
+    assert [ "$(cat "${TEST_FOLLOW}")" = "${BATS_TEST_TMPDIR}" ]
 }
 
 @test 'dotfiles-mv-cp-save-target -t' {
-    mkdir -p "${TMP_DIR}/bar"
-    run_script "DOTFILES_MV_CP_FOLLOW=${TEST_FOLLOW}" "${BIN_DIR}/dotfiles-mv-cp-save-target" '-t' "${TMP_DIR}/bar" 'foo'
+    mkdir -p "${BATS_TEST_TMPDIR}/bar"
+    run_script "DOTFILES_MV_CP_FOLLOW=${TEST_FOLLOW}" "${BIN_DIR}/dotfiles-mv-cp-save-target" '-t' "${BATS_TEST_TMPDIR}/bar" 'foo'
     assert_success
     refute_output
     assert [ -f "${TEST_FOLLOW}" ]
-    assert [ "$(cat "${TEST_FOLLOW}")" = "${TMP_DIR}/bar" ]
+    assert [ "$(cat "${TEST_FOLLOW}")" = "${BATS_TEST_TMPDIR}/bar" ]
 }
 
 @test 'dotfiles-mv normal' {
-    echo 'foo' >"${TMP_DIR}/a"
-    run_script "DOTFILES_MV_CP_FOLLOW=${TEST_FOLLOW}" "${BIN_DIR}/dotfiles-mv" "${TMP_DIR}/a" "${TMP_DIR}/b"
+    echo 'foo' >"${BATS_TEST_TMPDIR}/a"
+    run_script "DOTFILES_MV_CP_FOLLOW=${TEST_FOLLOW}" "${BIN_DIR}/dotfiles-mv" "${BATS_TEST_TMPDIR}/a" "${BATS_TEST_TMPDIR}/b"
     assert_success
     refute_output
     assert [ -f "${TEST_FOLLOW}" ]
-    assert [ "$(cat "${TEST_FOLLOW}")" = "${TMP_DIR}" ]
-    assert [ ! -e "${TMP_DIR}/a" ]
-    assert [ -f "${TMP_DIR}/b" ]
-    assert [ "$(cat "${TMP_DIR}/b")" = 'foo' ]
+    assert [ "$(cat "${TEST_FOLLOW}")" = "${BATS_TEST_TMPDIR}" ]
+    assert [ ! -e "${BATS_TEST_TMPDIR}/a" ]
+    assert [ -f "${BATS_TEST_TMPDIR}/b" ]
+    assert [ "$(cat "${BATS_TEST_TMPDIR}/b")" = 'foo' ]
 }
 
 @test 'dotfiles-mv dir' {
-    echo 'foo' >"${TMP_DIR}/a"
-    mkdir -p "${TMP_DIR}/b"
-    run_script "DOTFILES_MV_CP_FOLLOW=${TEST_FOLLOW}" "${BIN_DIR}/dotfiles-mv" "${TMP_DIR}/a" "${TMP_DIR}/b"
+    echo 'foo' >"${BATS_TEST_TMPDIR}/a"
+    mkdir -p "${BATS_TEST_TMPDIR}/b"
+    run_script "DOTFILES_MV_CP_FOLLOW=${TEST_FOLLOW}" "${BIN_DIR}/dotfiles-mv" "${BATS_TEST_TMPDIR}/a" "${BATS_TEST_TMPDIR}/b"
     assert_success
     refute_output
     assert [ -f "${TEST_FOLLOW}" ]
-    assert [ "$(cat "${TEST_FOLLOW}")" = "${TMP_DIR}/b" ]
-    assert [ ! -e "${TMP_DIR}/a" ]
-    assert [ -d "${TMP_DIR}/b" ]
-    assert [ -f "${TMP_DIR}/b/a" ]
-    assert [ "$(cat "${TMP_DIR}/b/a")" = 'foo' ]
+    assert [ "$(cat "${TEST_FOLLOW}")" = "${BATS_TEST_TMPDIR}/b" ]
+    assert [ ! -e "${BATS_TEST_TMPDIR}/a" ]
+    assert [ -d "${BATS_TEST_TMPDIR}/b" ]
+    assert [ -f "${BATS_TEST_TMPDIR}/b/a" ]
+    assert [ "$(cat "${BATS_TEST_TMPDIR}/b/a")" = 'foo' ]
 }
 
 @test 'dotfiles-mv target' {
-    echo 'foo' >"${TMP_DIR}/a"
-    mkdir -p "${TMP_DIR}/b"
-    run_script "DOTFILES_MV_CP_FOLLOW=${TEST_FOLLOW}" "${BIN_DIR}/dotfiles-mv" '-t' "${TMP_DIR}/b" "${TMP_DIR}/a"
+    echo 'foo' >"${BATS_TEST_TMPDIR}/a"
+    mkdir -p "${BATS_TEST_TMPDIR}/b"
+    run_script "DOTFILES_MV_CP_FOLLOW=${TEST_FOLLOW}" "${BIN_DIR}/dotfiles-mv" '-t' "${BATS_TEST_TMPDIR}/b" "${BATS_TEST_TMPDIR}/a"
     assert_success
     refute_output
     assert [ -f "${TEST_FOLLOW}" ]
-    assert [ "$(cat "${TEST_FOLLOW}")" = "${TMP_DIR}/b" ]
-    assert [ ! -e "${TMP_DIR}/a" ]
-    assert [ -d "${TMP_DIR}/b" ]
-    assert [ -f "${TMP_DIR}/b/a" ]
-    assert [ "$(cat "${TMP_DIR}/b/a")" = 'foo' ]
+    assert [ "$(cat "${TEST_FOLLOW}")" = "${BATS_TEST_TMPDIR}/b" ]
+    assert [ ! -e "${BATS_TEST_TMPDIR}/a" ]
+    assert [ -d "${BATS_TEST_TMPDIR}/b" ]
+    assert [ -f "${BATS_TEST_TMPDIR}/b/a" ]
+    assert [ "$(cat "${BATS_TEST_TMPDIR}/b/a")" = 'foo' ]
 }
 
 @test 'dotfiles-cp normal' {
-    echo 'foo' >"${TMP_DIR}/a"
-    run_script "DOTFILES_MV_CP_FOLLOW=${TEST_FOLLOW}" "${BIN_DIR}/dotfiles-cp" "${TMP_DIR}/a" "${TMP_DIR}/b"
+    echo 'foo' >"${BATS_TEST_TMPDIR}/a"
+    run_script "DOTFILES_MV_CP_FOLLOW=${TEST_FOLLOW}" "${BIN_DIR}/dotfiles-cp" "${BATS_TEST_TMPDIR}/a" "${BATS_TEST_TMPDIR}/b"
     assert_success
     refute_output
     assert [ -f "${TEST_FOLLOW}" ]
-    assert [ "$(cat "${TEST_FOLLOW}")" = "${TMP_DIR}" ]
-    assert [ -f "${TMP_DIR}/a" ]
-    assert [ "$(cat "${TMP_DIR}/a")" = 'foo' ]
-    assert [ -f "${TMP_DIR}/b" ]
-    assert [ "$(cat "${TMP_DIR}/b")" = 'foo' ]
+    assert [ "$(cat "${TEST_FOLLOW}")" = "${BATS_TEST_TMPDIR}" ]
+    assert [ -f "${BATS_TEST_TMPDIR}/a" ]
+    assert [ "$(cat "${BATS_TEST_TMPDIR}/a")" = 'foo' ]
+    assert [ -f "${BATS_TEST_TMPDIR}/b" ]
+    assert [ "$(cat "${BATS_TEST_TMPDIR}/b")" = 'foo' ]
 }
 
 @test 'dotfiles-cp dir' {
-    echo 'foo' >"${TMP_DIR}/a"
-    mkdir -p "${TMP_DIR}/b"
-    run_script "DOTFILES_MV_CP_FOLLOW=${TEST_FOLLOW}" "${BIN_DIR}/dotfiles-cp" "${TMP_DIR}/a" "${TMP_DIR}/b"
+    echo 'foo' >"${BATS_TEST_TMPDIR}/a"
+    mkdir -p "${BATS_TEST_TMPDIR}/b"
+    run_script "DOTFILES_MV_CP_FOLLOW=${TEST_FOLLOW}" "${BIN_DIR}/dotfiles-cp" "${BATS_TEST_TMPDIR}/a" "${BATS_TEST_TMPDIR}/b"
     assert_success
     refute_output
     assert [ -f "${TEST_FOLLOW}" ]
-    assert [ "$(cat "${TEST_FOLLOW}")" = "${TMP_DIR}/b" ]
-    assert [ -f "${TMP_DIR}/a" ]
-    assert [ "$(cat "${TMP_DIR}/a")" = 'foo' ]
-    assert [ -d "${TMP_DIR}/b" ]
-    assert [ -f "${TMP_DIR}/b/a" ]
-    assert [ "$(cat "${TMP_DIR}/b/a")" = 'foo' ]
+    assert [ "$(cat "${TEST_FOLLOW}")" = "${BATS_TEST_TMPDIR}/b" ]
+    assert [ -f "${BATS_TEST_TMPDIR}/a" ]
+    assert [ "$(cat "${BATS_TEST_TMPDIR}/a")" = 'foo' ]
+    assert [ -d "${BATS_TEST_TMPDIR}/b" ]
+    assert [ -f "${BATS_TEST_TMPDIR}/b/a" ]
+    assert [ "$(cat "${BATS_TEST_TMPDIR}/b/a")" = 'foo' ]
 }
 
 @test 'dotfiles-cp target' {
-    echo 'foo' >"${TMP_DIR}/a"
-    mkdir -p "${TMP_DIR}/b"
-    run_script "DOTFILES_MV_CP_FOLLOW=${TEST_FOLLOW}" "${BIN_DIR}/dotfiles-cp" '-t' "${TMP_DIR}/b" "${TMP_DIR}/a"
+    echo 'foo' >"${BATS_TEST_TMPDIR}/a"
+    mkdir -p "${BATS_TEST_TMPDIR}/b"
+    run_script "DOTFILES_MV_CP_FOLLOW=${TEST_FOLLOW}" "${BIN_DIR}/dotfiles-cp" '-t' "${BATS_TEST_TMPDIR}/b" "${BATS_TEST_TMPDIR}/a"
     assert_success
     refute_output
     assert [ -f "${TEST_FOLLOW}" ]
-    assert [ "$(cat "${TEST_FOLLOW}")" = "${TMP_DIR}/b" ]
-    assert [ -f "${TMP_DIR}/a" ]
-    assert [ "$(cat "${TMP_DIR}/a")" = 'foo' ]
-    assert [ -d "${TMP_DIR}/b" ]
-    assert [ -f "${TMP_DIR}/b/a" ]
-    assert [ "$(cat "${TMP_DIR}/b/a")" = 'foo' ]
+    assert [ "$(cat "${TEST_FOLLOW}")" = "${BATS_TEST_TMPDIR}/b" ]
+    assert [ -f "${BATS_TEST_TMPDIR}/a" ]
+    assert [ "$(cat "${BATS_TEST_TMPDIR}/a")" = 'foo' ]
+    assert [ -d "${BATS_TEST_TMPDIR}/b" ]
+    assert [ -f "${BATS_TEST_TMPDIR}/b/a" ]
+    assert [ "$(cat "${BATS_TEST_TMPDIR}/b/a")" = 'foo' ]
 }

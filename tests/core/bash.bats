@@ -9,10 +9,6 @@ setup() {
     setup_common
 }
 
-teardown() {
-    teardown_common
-}
-
 function assert_ran() {
     assert_stub_ran
 
@@ -284,7 +280,7 @@ function assert_ran_env_only() {
 }
 
 @test 'check-init-file' {
-    echo 'true' >>"${TMP_DIR}/.zlogin"
+    echo 'true' >>"${BATS_TEST_TMPDIR}/.zlogin"
     run_bash -i
     assert_success
     assert_ran 'bash'
