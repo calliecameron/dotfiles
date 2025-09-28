@@ -26,7 +26,7 @@ def get_keybindings_list() -> list[str]:
     return cast("list[str]", ast.literal_eval(s))
 
 
-def set_keybindings_list(l: list[str]) -> None:  # noqa: E741
+def set_keybindings_list(l: list[str]) -> None:
     subprocess.call(["gsettings", "set", GSETTINGS_SCHEMA, GSETTINGS_KEY, str(l)])
 
 
@@ -47,7 +47,9 @@ def read_string(keybinding: str, attr: str) -> str:
 
 
 def write_string(keybinding: str, attr: str, s: str) -> None:
-    subprocess.call(["dconf", "write", dconf_keybinding_path(keybinding, attr), f"'{s}'"])
+    subprocess.call(
+        ["dconf", "write", dconf_keybinding_path(keybinding, attr), f"'{s}'"],
+    )
 
 
 def read_list(keybinding: str, attr: str) -> list[str]:
@@ -55,7 +57,9 @@ def read_list(keybinding: str, attr: str) -> list[str]:
 
 
 def write_single_element_list(keybinding: str, attr: str, s: str) -> None:
-    subprocess.call(["dconf", "write", dconf_keybinding_path(keybinding, attr), f"['{s}']"])
+    subprocess.call(
+        ["dconf", "write", dconf_keybinding_path(keybinding, attr), f"['{s}']"],
+    )
 
 
 def read_keybinding(keybinding: str) -> tuple[str, str, list[str]]:

@@ -9,11 +9,17 @@ from dataclasses import dataclass
 
 
 def package_root_valid(root: str) -> bool:
-    return subprocess.run(["dotfiles-package-root-valid", root], check=False).returncode == 0
+    return (
+        subprocess.run(["dotfiles-package-root-valid", root], check=False).returncode
+        == 0
+    )
 
 
 def package_name_valid(name: str) -> bool:
-    return subprocess.run(["dotfiles-package-name-valid", name], check=False).returncode == 0
+    return (
+        subprocess.run(["dotfiles-package-name-valid", name], check=False).returncode
+        == 0
+    )
 
 
 def package_roots() -> tuple[list[pathlib.Path], set[str]]:
@@ -42,23 +48,42 @@ def packages_in_root(package_root: pathlib.Path) -> tuple[list[pathlib.Path], se
 
 
 def package_ignored(package: pathlib.Path) -> bool:
-    return subprocess.run(["dotfiles-package-ignored", package.name], check=False).returncode == 0
+    return (
+        subprocess.run(
+            ["dotfiles-package-ignored", package.name],
+            check=False,
+        ).returncode
+        == 0
+    )
 
 
 def package_installed(package: pathlib.Path) -> bool:
-    return subprocess.run(["dotfiles-package-installed", package.name], check=False).returncode == 0
+    return (
+        subprocess.run(
+            ["dotfiles-package-installed", package.name],
+            check=False,
+        ).returncode
+        == 0
+    )
 
 
 def package_has_installer(package: pathlib.Path) -> bool:
     return (
-        subprocess.run(["dotfiles-package-has-installer", str(package)], check=False).returncode
+        subprocess.run(
+            ["dotfiles-package-has-installer", str(package)],
+            check=False,
+        ).returncode
         == 0
     )
 
 
 def package_can_install(package: pathlib.Path) -> bool:
     return (
-        subprocess.run(["dotfiles-package-can-install", str(package)], check=False).returncode == 0
+        subprocess.run(
+            ["dotfiles-package-can-install", str(package)],
+            check=False,
+        ).returncode
+        == 0
     )
 
 
@@ -133,21 +158,31 @@ def print_status() -> None:
     packages = status()
 
     if packages.invalid_roots:
-        print("WARNING: invalid package roots found: " + str(sorted(packages.invalid_roots)) + "\n")
+        print(
+            "WARNING: invalid package roots found: "
+            + str(sorted(packages.invalid_roots))
+            + "\n",
+        )
 
     if packages.invalid_names:
-        print("WARNING: invalid package names found: " + str(sorted(packages.invalid_names)) + "\n")
+        print(
+            "WARNING: invalid package names found: "
+            + str(sorted(packages.invalid_names))
+            + "\n",
+        )
 
     if packages.duplicates:
         print(
-            "WARNING: duplicate package names found; only the first instance of each will be used: "
-            + ", ".join(sorted(packages.duplicates))
-            + "\n",
+            "WARNING: duplicate package names found; only the first instance of each "
+            "will be used: " + ", ".join(sorted(packages.duplicates)) + "\n",
         )
 
     print_set("Active without installing", packages.install_not_needed)
     print_set("Installed", packages.installed)
-    print_set("Available to install ('dotfiles-package-install' to install)", packages.can_install)
+    print_set(
+        "Available to install ('dotfiles-package-install' to install)",
+        packages.can_install,
+    )
     print_set("Not available to install", packages.cant_install)
     print_set("Ignored ('dotfiles-package-unignore' to unignore)", packages.ignored)
 
@@ -162,7 +197,9 @@ def print_package_names(packages: set[pathlib.Path]) -> None:
 
 def print_can_ignore() -> None:
     packages = status()
-    print_package_names(packages.install_not_needed | packages.can_install | packages.installed)
+    print_package_names(
+        packages.install_not_needed | packages.can_install | packages.installed,
+    )
 
 
 def print_can_unignore() -> None:

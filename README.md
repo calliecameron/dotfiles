@@ -1,5 +1,9 @@
 # Dotfiles
 
+[![template](https://img.shields.io/badge/template-calliecameron%2Fcopier--template-brightgreen)](https://github.com/calliecameron/copier-template)
+[![pre-commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit)](https://github.com/pre-commit/pre-commit)
+[![CI](https://github.com/calliecameron/dotfiles/actions/workflows/ci.yml/badge.svg)](https://github.com/calliecameron/dotfiles/actions/workflows/ci.yml)
+
 Configurations for Zsh, Emacs, etc.
 
 Tested on Linux Mint 22.1 Cinnamon, but should work on any recent Ubuntu-like

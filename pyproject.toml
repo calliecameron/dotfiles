@@ -2,40 +2,73 @@
 name = "dotfiles"
 version = "0.0.0"
 requires-python = "==3.12.3"
+license = "MIT"
+license-files = ["LICENSE"]
 dependencies = []
 
 [dependency-groups]
 dev = [
-  "mypy==1.17.1",
-  "pre-commit>=4.3.0",
-  "ruff==0.12.12",
-  "tombi==0.6.2",
+  "cookiecutter==2.6.0",
+  "copier==9.10.2",
+  "copier-template-extensions==0.3.3",
+  "frozendict==2.4.6",
+  "gha-update==0.2.0",
+  "gitlint==0.19.1",
+  "identify==2.6.14",
+  "licensecheck==2025.1.0",
+  "mypy==1.18.2",
+  "pre-commit==4.3.0",
+  "ruff==0.13.2",
+  "shellcheck-py==0.11.0.1",
+  "tombi==0.6.17",
+  "typos==1.36.3",
+  "yamllint==1.37.1",
+  "zizmor==1.14.1",
 ]
 
 [tool.mypy]
-scripts_are_modules = true
+explicit_package_bases = true
+mypy_path = "stubs"
+namespace_packages = true
+pretty = true
 python_version = "3.12"
+scripts_are_modules = true
 strict = true
 
 [tool.ruff]
-line-length = 100
-target-version = "py312"
+line-length = 88
+namespace-packages = [
+  ".template_files",
+]
 
 [tool.ruff.lint]
 select = ["ALL"]
 ignore = [
   "C90",
-  "D",
+  "D1",
+  "E741",
   "EM",
-  "FBT",
-  "INP",
-  "PLR0912",
-  "PLR0913",
-  "PLR0915",
-  "PT",
+  "FIX",
+  "INP001",
+  "PLR09",
   "PTH",
   "PYI025",
-  "S",
+  "S603",
+  "S607",
   "T20",
+  "TD",
   "TRY003",
+  "TRY301",
+]
+
+[tool.tombi]
+
+[tool.typos]
+files.extend-exclude = [
+  "/.copier-answers.yml",
+]
+default.extend-ignore-re = [
+  "(?Rm)^.*(#|//)\\s*spellchecker: *disable-line$",
+  "(?s)(#|//)\\s*spellchecker:* off.*?\\n\\s*(#|//)\\s*spellchecker:* on",
+  "(#|//)\\s*spellchecker:* disable-next-line\\n.*",
 ]

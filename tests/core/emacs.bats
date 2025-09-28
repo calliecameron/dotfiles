@@ -1,4 +1,5 @@
 # shellcheck shell=bats
+# bats file_tags=slow
 
 setup() {
     bats_load_library 'bats-support'

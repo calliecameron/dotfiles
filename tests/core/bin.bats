@@ -1,4 +1,5 @@
 # shellcheck shell=bats
+# bats file_tags=slow
 
 setup() {
     THIS_DIR="$(cd "$(dirname "${BATS_TEST_FILENAME}")" && pwd)"

@@ -1,4 +1,1 @@
-/.mypy_cache/
-/.venv/
-/package.json
-/package-lock.json
+/.copier-answers.yml
