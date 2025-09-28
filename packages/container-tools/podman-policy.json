@@ -17,6 +17,11 @@
         {
           "type": "insecureAcceptAnything"
         }
+      ],
+      "ghcr.io": [
+        {
+          "type": "insecureAcceptAnything"
+        }
       ]
     }
   }

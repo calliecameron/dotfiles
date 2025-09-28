@@ -18,3 +18,8 @@ if [ -n "${DOTFILES_PODMAN_STORAGE_DIR:-}" ]; then
     echo "graphroot = \"${DOTFILES_PODMAN_STORAGE_DIR}\"" >>"${PODMAN_CONF_DIR}/storage.conf"
     echo "rootless_storage_path = \"${DOTFILES_PODMAN_STORAGE_DIR}\"" >>"${PODMAN_CONF_DIR}/storage.conf"
 fi
+
+ln -s "${HOME}/.nix-profile/share/systemd/user/podman.socket" "${HOME}/.local/share/systemd/user/podman.socket"
+ln -s "${HOME}/.nix-profile/share/systemd/user/podman.service" "${HOME}/.local/share/systemd/user/podman.service"
+systemctl --user daemon-reload
+systemctl --user enable podman.socket
