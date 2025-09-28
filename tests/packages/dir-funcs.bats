@@ -1,4 +1,4 @@
-#!/usr/bin/env bats
+# shellcheck shell=bats
 
 setup() {
     THIS_DIR="$(cd "$(dirname "${BATS_TEST_FILENAME}")" && pwd)"

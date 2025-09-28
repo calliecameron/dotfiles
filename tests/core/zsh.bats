@@ -1,4 +1,4 @@
-#!/usr/bin/env bats
+# shellcheck shell=bats
 
 setup() {
     bats_load_library 'bats-support'
