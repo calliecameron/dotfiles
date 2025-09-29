@@ -8,9 +8,6 @@
     "editor.autoIndent": "advanced",
     "editor.defaultFormatter": "redhat.vscode-yaml"
   },
-  "[dockerfile]": {
-    "editor.defaultFormatter": "ms-azuretools.vscode-docker"
-  },
   "[github-actions-workflow]": {
     "editor.defaultFormatter": "redhat.vscode-yaml"
   },
@@ -65,23 +62,38 @@
     "**/defaults/*.yml": "ansible",
     "**/handlers/*.yml": "ansible",
     ".bazeliskrc": "plaintext",
-    ".gitconfig": "plaintext",
-    ".gitattributes": "plaintext",
     ".bazelrc": "plaintext",
+    ".gitattributes": "plaintext",
+    ".gitconfig": "plaintext",
+    ".lua-format": "plaintext",
     ".luacheckrc": "lua",
-    ".lua-format": "plaintext"
+    "LICENSE": "plaintext",
+    "*.{py,pyi}.{jinja,j2}": "jinja-py",
+    "*.{py,pyi}[{]% endif %[}].{jinja,j2}": "jinja-py",
+    "*.{js,mjs}.{jinja,j2}": "jinja-js",
+    "*.{js,mjs}[{]% endif %[}].{jinja,j2}": "jinja-js",
+    "*.md.{jinja,j2}": "jinja-md",
+    "*.md[{]% endif %[}].{jinja,j2}": "jinja-md",
+    "*.json.{jinja,j2}": "jinja-json",
+    "*.json[{]% endif %[}].{jinja,j2}": "jinja-json",
+    "*.{yml,yaml}.{jinja,j2}": "jinja-yaml",
+    "*.{yml,yaml}[{]% endif %[}].{jinja,j2}": "jinja-yaml",
+    "*.toml.{jinja,j2}": "jinja-toml",
+    "*.toml[{]% endif %[}].{jinja,j2}": "jinja-toml",
+    "*.{jinja,j2}": "jinja"
   },
   "files.autoSave": "afterDelay",
   "files.exclude": {
     "**/__pycache__": true,
+    "**/.coverage": true,
     "**/.ipynb_checkpoints": true,
     "**/.mypy_cache": true,
     "**/.pytest_cache": true,
     "**/.ruff_cache": true,
     "**/.Trash-*": true,
     "**/.venv": true,
-    "**/node_modules": true,
-    "**/*~": true
+    "**/*~": true,
+    "**/node_modules": true
   },
   "files.insertFinalNewline": true,
   "files.trimFinalNewlines": true,
