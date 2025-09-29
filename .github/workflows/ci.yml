@@ -24,7 +24,9 @@ jobs:
         run: bash -c 'source "${NVM_DIR}/nvm.sh" && nvm install'
       - name: Install zsh
         run: sudo apt-get install zsh
+      - name: Build emacs
+        run: packages/emacs/install-emacs.sh "${HOME}/emacs"
       - name: Run tests
         env:
           TERM: dumb
-        run: make ci
+        run: PATH="${HOME}/emacs/bin:${PATH}" make ci
