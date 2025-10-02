@@ -19,6 +19,7 @@ fi
 
 mkdir -p "${PREFIX}"
 
+sudo apt-get update
 sudo apt-get -y install attr autoconf automake build-essential emacs emacs-el \
     emacs-goodies-el libacl1-dev libasound2-dev libdbus-1-dev libgccjit-13-dev \
     libgif-dev libgnutls28-dev libgpm-dev libgtk-4-dev libjansson-dev \
