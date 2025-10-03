@@ -4,16 +4,18 @@ all: precommit
 .PHONY: deps
 deps: .deps-installed
 
-.deps-installed: pyproject.toml uv.lock package.json package-lock.json
-	./.template_files/uv_install_deps
-	./.template_files/npm_install_deps
-	uv run pre-commit install -f
+.deps-installed: pyproject.toml uv.lock package.json package-lock.json .pre-commit-config.yaml .template_files/pre_push
+	.template_files/uv_install_deps
+	.template_files/npm_install_deps
+	.template_files/pre_commit_install
 	touch .deps-installed
 
 .PHONY: deps_update
 deps_update: deps
-	./.template_files/uv_update_deps
-	./.template_files/npm_update_deps
+	.template_files/uv_update_python
+	.template_files/uv_update_deps
+	.template_files/npm_update_node
+	.template_files/npm_update_deps
 	uv run pre-commit autoupdate
 	uv run gha-update
 
@@ -27,12 +29,12 @@ ci: precommit test_slow
 # Fast tests are run by pre-commit
 .PHONY: test_fast
 test_fast: deps
-	./.template_files/bats --pretty --filter-tags !slow -r tests
+	.template_files/bats --pretty --filter-tags !slow -r tests
 
 # Slow tests are only run in CI
 .PHONY: test_slow
 test_slow: deps
-	./.template_files/bats --pretty --filter-tags slow -r tests
+	.template_files/bats --pretty --filter-tags slow -r tests
 
 .PHONY: template_reapply
 template_reapply: deps

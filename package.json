@@ -7,5 +7,6 @@
     "markdownlint-cli2": "0.18.1",
     "prettier": "3.6.2"
   },
+  "name": "dotfiles",
   "prettier": {}
 }

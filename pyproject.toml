@@ -1,6 +1,7 @@
 [project]
 name = "dotfiles"
 version = "0.0.0"
+readme = "README.md"
 requires-python = "==3.12.3"
 license = "MIT"
 license-files = ["LICENSE"]
@@ -8,23 +9,35 @@ dependencies = []
 
 [dependency-groups]
 dev = [
+  "bump-my-version==1.2.3",
   "cookiecutter==2.6.0",
   "copier==9.10.2",
   "copier-template-extensions==0.3.3",
   "frozendict==2.4.6",
   "gha-update==0.2.0",
   "gitlint==0.19.1",
-  "identify==2.6.14",
+  "identify==2.6.15",
   "licensecheck==2025.1.0",
   "mypy==1.18.2",
+  "packaging==25.0",
   "pre-commit==4.3.0",
-  "ruff==0.13.2",
+  "ruff==0.13.3",
   "shellcheck-py==0.11.0.1",
-  "tombi==0.6.17",
-  "typos==1.36.3",
+  "tombi==0.6.19",
+  "typos==1.37.1",
   "yamllint==1.37.1",
-  "zizmor==1.14.1",
+  "zizmor==1.14.2",
 ]
+
+[build-system]
+requires = ["uv_build >= 0.8.22, <0.9.0"]
+build-backend = "uv_build"
+
+[tool.bumpversion]
+[[tool.bumpversion.files]]
+filename = "pyproject.toml"
+search = "version = \"{current_version}\""
+replace = "version = \"{new_version}\""
 
 [tool.mypy]
 explicit_package_bases = true
@@ -36,7 +49,6 @@ scripts_are_modules = true
 strict = true
 
 [tool.ruff]
-line-length = 88
 namespace-packages = [
   ".template_files",
 ]
@@ -72,3 +84,6 @@ default.extend-ignore-re = [
   "(?s)(#|//)\\s*spellchecker:* off.*?\\n\\s*(#|//)\\s*spellchecker:* on",
   "(#|//)\\s*spellchecker:* disable-next-line\\n.*",
 ]
+
+[tool.uv]
+package = false
