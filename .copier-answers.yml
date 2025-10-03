@@ -9,5 +9,4 @@ project_name: Dotfiles
 user_has_css: false
 user_has_html: false
 user_has_javascript: false
-user_is_python_package: false
 user_uses_pytest: false
