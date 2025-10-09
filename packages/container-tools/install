@@ -19,7 +19,9 @@ if [ -n "${DOTFILES_PODMAN_STORAGE_DIR:-}" ]; then
     echo "rootless_storage_path = \"${DOTFILES_PODMAN_STORAGE_DIR}\"" >>"${PODMAN_CONF_DIR}/storage.conf"
 fi
 
-ln -s "${HOME}/.nix-profile/share/systemd/user/podman.socket" "${HOME}/.local/share/systemd/user/podman.socket"
-ln -s "${HOME}/.nix-profile/share/systemd/user/podman.service" "${HOME}/.local/share/systemd/user/podman.service"
+rm -f "${HOME}/.local/share/systemd/user/podman.socket"
+dotfiles-home-link "${HOME}/.nix-profile/share/systemd/user/podman.socket" "${HOME}/.local/share/systemd/user/podman.socket"
+rm -f "${HOME}/.local/share/systemd/user/podman.service"
+dotfiles-home-link "${HOME}/.nix-profile/share/systemd/user/podman.service" "${HOME}/.local/share/systemd/user/podman.service"
 systemctl --user daemon-reload
 systemctl --user enable podman.socket
