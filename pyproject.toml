@@ -9,7 +9,7 @@ dependencies = []
 
 [dependency-groups]
 dev = [
-  "bump-my-version==1.2.3",
+  "bump-my-version==1.2.4",
   "cookiecutter==2.6.0",
   "copier==9.10.2",
   "copier-template-extensions==0.3.3",
@@ -21,10 +21,10 @@ dev = [
   "mypy==1.18.2",
   "packaging==25.0",
   "pre-commit==4.3.0",
-  "ruff==0.13.3",
+  "ruff==0.14.0",
   "shellcheck-py==0.11.0.1",
-  "tombi==0.6.19",
-  "typos==1.37.1",
+  "tombi==0.6.26",
+  "typos==1.38.1",
   "yamllint==1.37.1",
   "zizmor==1.14.2",
 ]
