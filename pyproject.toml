@@ -2,7 +2,7 @@
 name = "dotfiles"
 version = "0.0.0"
 readme = "README.md"
-requires-python = "==3.12.3"
+requires-python = "==3.12.*"
 license = "MIT"
 license-files = ["LICENSE"]
 dependencies = []
@@ -30,7 +30,7 @@ dev = [
 ]
 
 [build-system]
-requires = ["uv_build >= 0.8.22, <0.9.0"]
+requires = ["uv_build>=0.9.1,<0.10.0"]
 build-backend = "uv_build"
 
 [tool.bumpversion]
@@ -44,7 +44,6 @@ explicit_package_bases = true
 mypy_path = "stubs"
 namespace_packages = true
 pretty = true
-python_version = "3.12"
 scripts_are_modules = true
 strict = true
 
