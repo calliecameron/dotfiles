@@ -15,6 +15,7 @@ sudo apt-get update
 sudo apt-get -y install codium
 
 codium \
+    --install-extension=ast-grep.ast-grep-vscode \
     --install-extension=BazelBuild.vscode-bazel \
     --install-extension=charliermarsh.ruff \
     --install-extension=coolbear.systemd-unit-file \
