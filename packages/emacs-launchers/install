@@ -3,4 +3,4 @@
 set -eu
 
 dotfiles-clone-or-update-repo 'https://github.com/calliecameron/emacs-launchers' \
-    "${PACKAGE_INSTALL_DIR}/emacs-launchers" 'master'
+    "${PACKAGE_INSTALL_DIR}/emacs-launchers" 'main'
