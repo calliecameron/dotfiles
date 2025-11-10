@@ -2,4 +2,12 @@
 
 set -eu
 
-flatpak install -y flathub org.duckstation.DuckStation
+wget 'https://github.com/stenzek/duckstation/releases/download/latest/DuckStation-x64.AppImage'
+chmod u+x DuckStation-x64.AppImage
+
+cp "${PACKAGE_SOURCE_DIR}/duckstation.png" "${PACKAGE_INSTALL_DIR}/duckstation.png"
+sed "s|@@@@@1@@@@@|${PACKAGE_INSTALL_DIR}|g" <"${PACKAGE_SOURCE_DIR}/duckstation-desktop-template" >"${PACKAGE_INSTALL_DIR}/duckstation.desktop"
+chmod u+x "${PACKAGE_INSTALL_DIR}/duckstation.desktop"
+
+xdg-desktop-menu install --novendor "${PACKAGE_INSTALL_DIR}/duckstation.desktop"
+xdg-desktop-icon install --novendor "${PACKAGE_INSTALL_DIR}/duckstation.desktop"
