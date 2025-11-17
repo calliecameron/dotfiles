@@ -2,5 +2,5 @@
 
 set -eu
 
-dotfiles-nix-installed
+dotfiles-can-sudo
 dotfiles-is-graphical

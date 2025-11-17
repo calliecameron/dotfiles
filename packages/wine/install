@@ -2,4 +2,13 @@
 
 set -eu
 
-dotfiles-nix-install winetricks wineWowPackages.stable
+sudo add-apt-repository -y ppa:cdemu/ppa
+
+wget -O- https://dl.winehq.org/wine-builds/winehq.key | gpg --dearmor -o - - | sudo tee /etc/apt/keyrings/winehq-archive.key >/dev/null
+sudo dpkg --add-architecture i386
+sudo wget -NP /etc/apt/sources.list.d/ https://dl.winehq.org/wine-builds/ubuntu/dists/noble/winehq-noble.sources
+
+sudo apt-get update
+sudo apt-get install --install-recommends cdemu-client gcdemu winehq-stable winetricks
+
+winetricks dxvk gdiplus msftedit msls31
