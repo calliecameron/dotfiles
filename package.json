@@ -4,7 +4,7 @@
     "bats-assert": "2.2.4",
     "bats-support": "0.3.0",
     "license-checker-rseidelsohn": "4.4.2",
-    "markdownlint-cli2": "0.18.1",
+    "markdownlint-cli2": "0.19.1",
     "prettier": "3.6.2"
   },
   "name": "dotfiles",
