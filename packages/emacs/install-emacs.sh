@@ -10,7 +10,7 @@ function usage() {
 
 test -n "${1:-}" || usage
 PREFIX="${1}"
-EMACS_VERSION='29.4'
+EMACS_VERSION='30.2'
 
 if [ -e "${PREFIX}/bin/emacs" ]; then
     echo 'Emacs already installed'
@@ -36,7 +36,7 @@ wget "https://ftpmirror.gnu.org/gnu/emacs/emacs-${EMACS_VERSION}.tar.xz"
 gpg --verify --keyring ./gnu-keyring.gpg "emacs-${EMACS_VERSION}.tar.xz.sig"
 tar -xf "emacs-${EMACS_VERSION}.tar.xz"
 cd "emacs-${EMACS_VERSION}"
-./configure --with-native-compilation --with-xwidgets "--prefix=${PREFIX}"
+./configure "--prefix=${PREFIX}"
 make -j "$(nproc)"
 make -j "$(nproc)" install
 cd
