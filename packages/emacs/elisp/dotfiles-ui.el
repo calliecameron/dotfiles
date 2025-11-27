@@ -4,6 +4,8 @@
  backup-directory-alist nil
  case-fold-search t
  face-font-selection-order '(:width :height :weight :slant)
+ find-file-visit-truename t
+ inhibit-compacting-font-caches t
  inhibit-startup-screen t
  initial-major-mode 'text-mode
  initial-scratch-message nil
@@ -356,6 +358,14 @@ If BUFFER is a string, it is the name of the buffer to find; if it is a predicat
  ([remap split-window-below] . dotfiles-split-window-below-switch)
  ([remap split-window-right] . dotfiles-split-window-right-switch))
 
+(add-hook
+  'elpaca-manager-mode-hook
+  (lambda ()
+    (bind-keys
+     :map elpaca-manager-mode-map
+     ("<M-left>" . nil)
+     ("<M-right>" . nil))))
+
 (bind-keys
  :map visual-line-mode-map
  ([remap move-beginning-of-line] . dotfiles-smart-home-key)
@@ -397,6 +407,12 @@ If BUFFER is a string, it is the name of the buffer to find; if it is a predicat
  ("v" . dotfiles-local-variables)
  ("z" . dotfiles-local-zsh-aliases))
 
+(use-package ace-isearch
+  :diminish ace-isearch-mode
+  :config
+  (setq ace-isearch-input-length 2)
+  (global-ace-isearch-mode))
+
 (use-package ace-jump-mode
   :bind
   (("s-j" . ace-jump-mode)
@@ -410,7 +426,7 @@ If BUFFER is a string, it is the name of the buffer to find; if it is a predicat
   :diminish auto-dark-mode
   :config
   (setq custom-safe-themes t)
-  (setq auto-dark-themes '((solarized-dark) (solarized-light)))
+  (setq auto-dark-themes '((doom-solarized-dark) (doom-solarized-light)))
   (auto-dark-mode))
 
 (use-package autorevert
@@ -444,14 +460,23 @@ If BUFFER is a string, it is the name of the buffer to find; if it is a predicat
    :map wakib-keys-overriding-map
    ("M-#" . bm-remove-all-current-buffer)))
 
-(use-package connection)
-
-(use-package link)
+(use-package dirvish
+  :config
+  (setq dirvish-attributes '(nerd-icons))
+  (dirvish-override-dired-mode))
 
 (use-package doc-view
   :ensure nil
   :config
   (setq doc-view-continuous t))
+
+(use-package doom-modeline
+  :config
+  (doom-modeline-mode))
+
+(use-package doom-themes
+  :config
+  (doom-themes-org-config))
 
 (use-package ediff
   :ensure nil
@@ -514,11 +539,12 @@ If BUFFER is a string, it is the name of the buffer to find; if it is a predicat
   :bind
   ("C-<" . helm-flyspell-correct))
 
-(use-package ace-isearch
-  :diminish ace-isearch-mode
-  :config
-  (setq ace-isearch-input-length 2)
-  (global-ace-isearch-mode))
+(use-package helpful
+  :bind
+  (("C-h f" . helpful-callable)
+   ("C-h v" . helpful-variable)
+   ("C-h k" . helpful-key)
+   ("C-h x" . helpful-command)))
 
 (use-package highlight-indentation
   :diminish highlight-indentation-mode)
@@ -543,9 +569,7 @@ If BUFFER is a string, it is the name of the buffer to find; if it is a predicat
                nil
                frame))))
 
-(use-package mode-icons
-  :config
-  (mode-icons-mode))
+(use-package nerd-icons)
 
 (use-package org
   :ensure nil
@@ -634,19 +658,6 @@ dotfiles-org-linkify-suffix) appended."
   (require 'smartparens-config)
   (smartparens-global-mode 1)
   (show-smartparens-global-mode 1))
-
-(use-package solarized-theme)
-
-(use-package smart-mode-line
-  :config
-  (setq
-   sml/theme 'automatic
-   sml/no-confirm-load-theme t
-   sml/name-width '(16 . 44)
-   sml/col-number-format "%c"
-   sml/line-number-format "%l"
-   sml/show-eol t)
-  (sml/setup))
 
 (use-package switch-window
    :bind

@@ -4,3 +4,4 @@ set -eu
 
 dotfiles-is-graphical
 dotfiles-can-sudo
+dotfiles-package-installed web-fonts

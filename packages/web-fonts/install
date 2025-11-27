@@ -2,16 +2,29 @@
 
 set -eu
 
-dotfiles-clone-or-update-repo 'https://github.com/FortAwesome/Font-Awesome' "${PACKAGE_INSTALL_DIR}/font-awesome" '6.x'
+dotfiles-clone-or-update-repo 'https://github.com/FortAwesome/Font-Awesome' "${PACKAGE_INSTALL_DIR}/font-awesome" '7.x'
 dotfiles-clone-or-update-repo 'https://github.com/konpa/devicon' "${PACKAGE_INSTALL_DIR}/devicon" 'master'
 dotfiles-clone-or-update-repo 'https://github.com/fizzed/font-mfizz' "${PACKAGE_INSTALL_DIR}/font-mfizz" 'master'
 dotfiles-clone-or-update-repo 'https://github.com/Keyamoon/IcoMoon-Free' "${PACKAGE_INSTALL_DIR}/icomoon" 'master'
 
-dotfiles-home-link "${PACKAGE_INSTALL_DIR}/font-awesome/otfs/Font Awesome 6 Brands-Regular-400.otf" "${HOME}/.fonts/web-fonts/fontawesome/Font Awesome 6 Brands-Regular-400.otf"
-dotfiles-home-link "${PACKAGE_INSTALL_DIR}/font-awesome/otfs/Font Awesome 6 Free-Regular-400.otf" "${HOME}/.fonts/web-fonts/fontawesome/Font Awesome 6 Free-Regular-400.otf"
-dotfiles-home-link "${PACKAGE_INSTALL_DIR}/font-awesome/otfs/Font Awesome 6 Free-Solid-900.otf" "${HOME}/.fonts/web-fonts/fontawesome/Font Awesome 6 Free-Solid-900.otf"
+NERD_FONTS="${PACKAGE_INSTALL_DIR}/nerd-fonts"
+
+if [ ! -d "${NERD_FONTS}" ]; then
+    mkdir -p "${NERD_FONTS}"
+    (
+        cd "${NERD_FONTS}"
+        wget 'https://github.com/ryanoasis/nerd-fonts/releases/download/v3.4.0/NerdFontsSymbolsOnly.tar.xz'
+        tar xf NerdFontsSymbolsOnly.tar.xz
+    )
+fi
+
+dotfiles-home-link "${PACKAGE_INSTALL_DIR}/font-awesome/otfs/Font Awesome 7 Brands-Regular-400.otf" "${HOME}/.fonts/web-fonts/fontawesome/Font Awesome 7 Brands-Regular-400.otf"
+dotfiles-home-link "${PACKAGE_INSTALL_DIR}/font-awesome/otfs/Font Awesome 7 Free-Regular-400.otf" "${HOME}/.fonts/web-fonts/fontawesome/Font Awesome 7 Free-Regular-400.otf"
+dotfiles-home-link "${PACKAGE_INSTALL_DIR}/font-awesome/otfs/Font Awesome 7 Free-Solid-900.otf" "${HOME}/.fonts/web-fonts/fontawesome/Font Awesome 7 Free-Solid-900.otf"
 dotfiles-home-link "${PACKAGE_INSTALL_DIR}/devicon/fonts/devicon.ttf" "${HOME}/.fonts/web-fonts/devicon.ttf"
 dotfiles-home-link "${PACKAGE_INSTALL_DIR}/font-mfizz/dist/font-mfizz.ttf" "${HOME}/.fonts/web-fonts/font-mfizz.ttf"
 dotfiles-home-link "${PACKAGE_INSTALL_DIR}/icomoon/Font/IcoMoon-Free.ttf" "${HOME}/.fonts/web-fonts/IcoMoon-Free.ttf"
+dotfiles-home-link "${NERD_FONTS}/SymbolsNerdFont-Regular.ttf" "${HOME}/.fonts/web-fonts/SymbolsNerdFont-Regular.ttf"
+dotfiles-home-link "${NERD_FONTS}/SymbolsNerdFontMono-Regular.ttf" "${HOME}/.fonts/web-fonts/SymbolsNerdFontMono-Regular.ttf"
 
 fc-cache

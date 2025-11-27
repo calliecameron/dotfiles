@@ -15,6 +15,8 @@
    ("s-." . git-gutter:next-hunk)
    ("s-," . git-gutter:previous-hunk)))
 
+(use-package git-modes)
+
 (use-package transient)
 
 (use-package magit
