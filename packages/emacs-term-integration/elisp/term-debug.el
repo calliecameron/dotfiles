@@ -1,10 +1,4 @@
-;;; term-debug.el --- Debugging support for term.el  -*- lexical-binding: t; -*-
-
-;;; Commentary:
-
-;; Debugging support for term.el.
-
-;;; Code:
+;; -*- lexical-binding: t; -*-
 
 (require 'term)
 
@@ -109,5 +103,3 @@
 
 
 (provide 'term-debug)
-
-;;; term-debug.el ends here

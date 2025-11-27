@@ -1,5 +1,5 @@
 #!/bin/bash
-# Setup the basic dotfiles system, assuming everything is in the core/stubs
+# Setup the basic dotfiles system, assuming everything is in the core/templates
 # folder. Run this first, then log out and log in again.
 
 set -eu
@@ -10,7 +10,8 @@ PROCESSED_DIR="${HOME}/.dotfiles.d/processed"
 
 function dofile() {
     local SRC="${SRC_DIR}/${1}"
-    local PROCESSED="${PROCESSED_DIR}/${2}"
+    local PROCESSED
+    PROCESSED="${PROCESSED_DIR}/$(basename "${2}" | sed 's/^\.//g')"
     local DST="${HOME}/${2}"
 
     if [ ! -e "${SRC}" ]; then
@@ -47,5 +48,7 @@ dofile 'zlogin.zsh' '.zlogin'
 dofile 'zlogout.zsh' '.zlogout'
 dofile 'zshrc.zsh' '.zshrc'
 dofile 'emacs.el' '.emacs'
+mkdir -p "${HOME}/.emacs.d"
+dofile 'early-init.el' '.emacs.d/early-init.el'
 
 echo -e "\e[33mLog out and log in again to set everything up correctly.\e[0m"

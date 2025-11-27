@@ -12,7 +12,7 @@ setup() {
 }
 
 run_emacs() {
-    run env -i -C "${BATS_TEST_TMPDIR}" HOME="${BATS_TEST_TMPDIR}" TERM='xterm-256color' dash -l -c "'${TEST_EMACS}' -Q --script '${CORE_DIR}/dotfiles.el'" 3>&-
+    run env -i -C "${BATS_TEST_TMPDIR}" HOME="${BATS_TEST_TMPDIR}" TERM='xterm-256color' dash -l -c "DOTFILES_EMACS_LOCK='${TEST_EMACS_LOCK_FILE}' '${TEST_EMACS}' -Q --script '${CORE_DIR}/dotfiles.el'" 3>&-
 }
 
 @test 'emacs' {

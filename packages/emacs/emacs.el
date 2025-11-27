@@ -1,2 +1,8 @@
 (require 'dotfiles-ui)
+(require 'dotfiles-vc)
 (require 'dotfiles-prog)
+(require 'dotfiles-lisp)
+(require 'dotfiles-sh)
+(require 'dotfiles-c)
+(require 'dotfiles-tex)
+(require 'dotfiles-misc)

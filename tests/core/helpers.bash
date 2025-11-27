@@ -180,6 +180,9 @@ EOF
 (message "TEST_EMACS_LOAD_PATH=%s" load-path)
 EOF
 
+    TEST_EMACS_LOCK_FILE="${BATS_TEST_TMPDIR}/emacs-lock.el"
+    echo '()' >"${TEST_EMACS_LOCK_FILE}"
+
     INSTALL="${THIS_DIR}/../../install.sh"
     HOME="${BATS_TEST_TMPDIR}" "${INSTALL}" >/dev/null
 }

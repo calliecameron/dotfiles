@@ -20,7 +20,8 @@ fi
 
 function check-init-file() {
     local REPO_FILE="${DOTFILES_TEMPLATES}/${1}"
-    local PROCESSED_FILE="${DOTFILES_PROCESSED_DIR}/${2}"
+    local PROCESSED_FILE
+    PROCESSED_FILE="${DOTFILES_PROCESSED_DIR}/$(basename "${2}" | sed 's/^\.//g')"
     local INSTALLED_FILE="${HOME}/${2}"
     local MSG
     MSG="Your $(basename "${INSTALLED_FILE}") doesn't look right - maybe something has tampered with it, or you need to run install.sh again."

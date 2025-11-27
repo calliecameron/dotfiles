@@ -14,8 +14,10 @@ setup() {
     HOME="${BATS_TEST_TMPDIR}" run "${INSTALL}"
     assert_success
     assert_output --partial 'Log out and log in again to set everything up correctly.'
-    assert_equal "$(find "${BATS_TEST_TMPDIR}" -maxdepth 1 -type f -name '.*' | wc -l)" '11'
-    assert_equal "$(find "${PROCESSED_DIR}" -type f -name '.*' | wc -l)" '11'
+    assert_equal "$(find "${BATS_TEST_TMPDIR}" -maxdepth 1 -type f -name '*' | wc -l)" '11'
+    [ -d "${BATS_TEST_TMPDIR}/.emacs.d" ]
+    assert_equal "$(find "${BATS_TEST_TMPDIR}/.emacs.d" -maxdepth 1 -type f -name '*' | wc -l)" '1'
+    assert_equal "$(find "${PROCESSED_DIR}" -type f -name '*' | wc -l)" '12'
     run rgrep '@' "${BATS_TEST_TMPDIR}"
     assert_failure
 
@@ -23,8 +25,10 @@ setup() {
     HOME="${BATS_TEST_TMPDIR}" run "${INSTALL}"
     assert_success
     assert_output --partial 'Log out and log in again to set everything up correctly.'
-    assert_equal "$(find "${BATS_TEST_TMPDIR}" -maxdepth 1 -type f -name '.*' | wc -l)" '11'
-    assert_equal "$(find "${PROCESSED_DIR}" -type f -name '.*' | wc -l)" '11'
+    assert_equal "$(find "${BATS_TEST_TMPDIR}" -maxdepth 1 -type f -name '*' | wc -l)" '11'
+    [ -d "${BATS_TEST_TMPDIR}/.emacs.d" ]
+    assert_equal "$(find "${BATS_TEST_TMPDIR}/.emacs.d" -maxdepth 1 -type f -name '*' | wc -l)" '1'
+    assert_equal "$(find "${PROCESSED_DIR}" -type f -name '*' | wc -l)" '12'
     run rgrep '@' "${BATS_TEST_TMPDIR}"
     assert_failure
 
@@ -33,9 +37,11 @@ setup() {
     HOME="${BATS_TEST_TMPDIR}" run "${INSTALL}"
     assert_success
     assert_output --partial 'Log out and log in again to set everything up correctly.'
-    assert_equal "$(find "${BATS_TEST_TMPDIR}" -maxdepth 1 -type f -name '.*' | wc -l)" '12'
-    assert_equal "$(find "${BATS_TEST_TMPDIR}" -maxdepth 1 -type f -name '.*.backup' | wc -l)" '1'
-    assert_equal "$(find "${PROCESSED_DIR}" -type f -name '.*' | wc -l)" '11'
+    assert_equal "$(find "${BATS_TEST_TMPDIR}" -maxdepth 1 -type f -name '*' | wc -l)" '12'
+    assert_equal "$(find "${BATS_TEST_TMPDIR}" -maxdepth 1 -type f -name '*.backup' | wc -l)" '1'
+    [ -d "${BATS_TEST_TMPDIR}/.emacs.d" ]
+    assert_equal "$(find "${BATS_TEST_TMPDIR}/.emacs.d" -maxdepth 1 -type f -name '*' | wc -l)" '1'
+    assert_equal "$(find "${PROCESSED_DIR}" -type f -name '*' | wc -l)" '12'
     run rgrep '@' "${BATS_TEST_TMPDIR}"
     assert_failure
 
@@ -44,9 +50,11 @@ setup() {
     HOME="${BATS_TEST_TMPDIR}" run "${INSTALL}"
     assert_failure
     assert_output --partial 'backup already exists'
-    assert_equal "$(find "${BATS_TEST_TMPDIR}" -maxdepth 1 -type f -name '.*' | wc -l)" '12'
-    assert_equal "$(find "${BATS_TEST_TMPDIR}" -maxdepth 1 -type f -name '.*.backup' | wc -l)" '1'
-    assert_equal "$(find "${PROCESSED_DIR}" -type f -name '.*' | wc -l)" '11'
+    assert_equal "$(find "${BATS_TEST_TMPDIR}" -maxdepth 1 -type f -name '*' | wc -l)" '12'
+    assert_equal "$(find "${BATS_TEST_TMPDIR}" -maxdepth 1 -type f -name '*.backup' | wc -l)" '1'
+    [ -d "${BATS_TEST_TMPDIR}/.emacs.d" ]
+    assert_equal "$(find "${BATS_TEST_TMPDIR}/.emacs.d" -maxdepth 1 -type f -name '*' | wc -l)" '1'
+    assert_equal "$(find "${PROCESSED_DIR}" -type f -name '*' | wc -l)" '12'
     run rgrep '@' "${BATS_TEST_TMPDIR}"
     assert_failure
 }

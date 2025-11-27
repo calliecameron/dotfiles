@@ -2,7 +2,10 @@
 
 set -eu
 
-"${PACKAGE_SOURCE_DIR}/install-emacs.sh" "${PACKAGE_INSTALL_DIR}"
+"${PACKAGE_SOURCE_DIR}/install-emacs.sh" "${PACKAGE_INSTALL_DIR}/emacs"
+
+dotfiles-clone-or-update-repo 'https://github.com/calliecameron/emacs-launchers' \
+    "${PACKAGE_INSTALL_DIR}/emacs-launchers" 'main'
 
 sed "s|@@@@@1@@@@@|${PACKAGE_SOURCE_DIR}|g" <"${PACKAGE_SOURCE_DIR}/emacs-daemon-desktop-template" >"${PACKAGE_INSTALL_DIR}/emacs-daemon.desktop"
 chmod u+x "${PACKAGE_INSTALL_DIR}/emacs-daemon.desktop"
