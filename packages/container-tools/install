@@ -23,5 +23,9 @@ rm -f "${HOME}/.local/share/systemd/user/podman.socket"
 dotfiles-home-link "${HOME}/.nix-profile/share/systemd/user/podman.socket" "${HOME}/.local/share/systemd/user/podman.socket"
 rm -f "${HOME}/.local/share/systemd/user/podman.service"
 dotfiles-home-link "${HOME}/.nix-profile/share/systemd/user/podman.service" "${HOME}/.local/share/systemd/user/podman.service"
+rm -f "${HOME}/.config/systemd/user/podman.socket"
+dotfiles-home-link "${HOME}/.nix-profile/share/systemd/user/podman.socket" "${HOME}/.config/systemd/user/podman.socket"
+rm -f "${HOME}/.config/systemd/user/sockets.target.wants/podman.socket"
+dotfiles-home-link "${HOME}/.nix-profile/share/systemd/user/podman.socket" "${HOME}/.config/systemd/user/sockets.target.wants/podman.socket"
 systemctl --user daemon-reload
 systemctl --user enable podman.socket
