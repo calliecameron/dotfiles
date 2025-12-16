@@ -3,11 +3,4 @@
 set -eu
 
 sudo apt-get update
-sudo apt-get install -y intel-ipu6-dkms libbroxton-ia-pal-ipu6ep0 \
-    libcamhal-ipu6ep libcamhal0 libgcss-ipu6ep0 libia-aiq-ipu6ep0 \
-    libia-aiqb-parser-ipu6ep0 libia-bcomp-ipu6ep0 libia-cca-ipu6ep0 \
-    libia-ccat-ipu6ep0 libia-cmc-parser-ipu6ep0 libia-coordinate-ipu6ep0 \
-    libia-dvs-ipu6ep0 libia-emd-decoder-ipu6ep0 libia-exc-ipu6ep0 \
-    libia-isp-bxt-ipu6ep0 libia-lard-ipu6ep0 libia-log-ipu6ep0 \
-    libia-ltm-ipu6ep0 libia-mkn-ipu6ep0 libia-nvm-ipu6ep0 oem-somerville-meta \
-    ubuntu-oem-keyring
+sudo apt-get install -y oem-somerville-tentacool-meta ubuntu-oem-keyring
