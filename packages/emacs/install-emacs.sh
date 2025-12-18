@@ -20,13 +20,13 @@ fi
 mkdir -p "${PREFIX}"
 
 sudo apt-get update
-sudo apt-get -y install attr autoconf automake build-essential emacs emacs-el \
-    emacs-goodies-el libacl1-dev libasound2-dev libdbus-1-dev libgccjit-13-dev \
-    libgif-dev libgnutls28-dev libgpm-dev libgtk-4-dev libjansson-dev \
-    libjpeg-dev liblcms2-dev liblockfile-dev libm17n-dev libncurses-dev \
-    libotf-dev libpng-dev libpoppler-glib-dev libpoppler-private-dev \
-    librsvg2-dev libselinux1-dev libsystemd-dev libtiff-dev libtree-sitter-dev \
-    libwebkit2gtk-4.1-dev libwebp-dev libxpm-dev libz-dev texinfo valgrind
+sudo apt-get -y install attr autoconf automake build-essential libacl1-dev \
+    libasound2-dev libdbus-1-dev libgccjit-13-dev libgif-dev libgnutls28-dev \
+    libgpm-dev libgtk-4-dev libjansson-dev libjpeg-dev liblcms2-dev \
+    liblockfile-dev libm17n-dev libncurses-dev libotf-dev libpng-dev \
+    libpoppler-glib-dev libpoppler-private-dev librsvg2-dev libselinux1-dev \
+    libsystemd-dev libtiff-dev libtree-sitter-dev libwebkit2gtk-4.1-dev \
+    libwebp-dev libxpm-dev libz-dev texinfo valgrind
 
 BUILD_DIR="$(mktemp -d)"
 cd "${BUILD_DIR}"
