@@ -10,3 +10,5 @@ if [ ! -f "${PACKAGE_INSTALL_DIR}/zsh-nvm.plugin.zsh" ]; then
 else
     zsh -c "PACKAGE_INSTALL_DIR=\"${PACKAGE_INSTALL_DIR}\" && source \"${PACKAGE_SOURCE_DIR}/env.sh\" && source \"${PACKAGE_SOURCE_DIR}/aliases.zsh\" && nvm upgrade && nvm install node && nvm install-latest-npm"
 fi
+
+dotfiles-home-link "${PACKAGE_SOURCE_DIR}/npmrc" "${HOME}/.npmrc"
