@@ -2,6 +2,17 @@
 
 set -eu
 
+CLEANUP_SCRIPT='/usr/local/sbin/cinnamon-session-cleanup'
+sudo cp "${PACKAGE_SOURCE_DIR}/cinnamon-session-cleanup" "${CLEANUP_SCRIPT}"
+sudo chown root:root "${CLEANUP_SCRIPT}"
+sudo chmod u=rwx,go=rx "${CLEANUP_SCRIPT}"
+
+CLEANUP_CONFIG='/etc/lightdm/lightdm.conf.d/99-cleanup.conf'
+sed "s|@@@@@1@@@@@|${CLEANUP_SCRIPT}|g" <"${PACKAGE_SOURCE_DIR}/lightdm-cleanup-template" |
+    sudo tee "${CLEANUP_CONFIG}" >/dev/null
+sudo chown root:root "${CLEANUP_CONFIG}"
+sudo chmod u=rw,go=r "${CLEANUP_CONFIG}"
+
 export PATH="${PACKAGE_SOURCE_DIR}/bin:${PATH}"
 source "${PACKAGE_SOURCE_DIR}/env.sh"
 

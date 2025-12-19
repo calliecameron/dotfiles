@@ -1,0 +1,53 @@
+#!/bin/bash
+# Clean up lingering systemd user processes on logout, to fix SSH agent issues
+# Based on https://medium.com/@antoniogallo.it/fix-ssh-agent-on-linux-mint-22-cinnamon-solving-the-logout-bug-ba81face830b
+
+LOG_FILE='/tmp/cinnamon-cleanup.log'
+: >"${LOG_FILE}"
+
+function log() {
+    echo "$(date): ${1}" >>"${LOG_FILE}"
+}
+
+function fail() {
+    log "ERROR: ${1}"
+    exit 1
+}
+
+test -n "${USER}" || fail 'USER variable is not set'
+
+USER_ID="$(id -u "${USER}" 2>/dev/null)"
+if [ -z "${USER_ID}" ] || [ "${USER_ID}" = '0' ]; then
+    fail "Invalid or root USER_ID (${USER_ID}) for user ${USER}"
+fi
+
+log "Cleaning up processes for user ${USER} (UID: ${USER_ID})"
+
+SYSTEMD_PID="$(pgrep -u "${USER_ID}" 'systemd' | head -1)"
+if [ -n "${SYSTEMD_PID}" ]; then
+    log "Killing systemd user process: ${SYSTEMD_PID}"
+    kill "${SYSTEMD_PID}" 2>>"${LOG_FILE}"
+    sleep 1
+
+    # Force kill if still running
+    if kill -0 "${SYSTEMD_PID}" 2>/dev/null; then
+        log 'Force killing systemd user process'
+        kill -9 "${SYSTEMD_PID}" 2>>"${LOG_FILE}"
+    fi
+fi
+
+SSH_AGENT_PIDS="$(pgrep -u "${USER_ID}" 'ssh-agent')"
+if [ -n "${SSH_AGENT_PIDS}" ]; then
+    log "Killing ssh-agent processes: ${SSH_AGENT_PIDS}"
+    # shellcheck disable=SC2086
+    kill ${SSH_AGENT_PIDS} 2>>"${LOG_FILE}"
+fi
+
+KEYRING_PIDS="$(pgrep -u "${USER_ID}" 'gnome-keyring')"
+if [ -n "${KEYRING_PIDS}" ]; then
+    log "Killing gnome-keyring processes: ${KEYRING_PIDS}"
+    # shellcheck disable=SC2086
+    kill ${KEYRING_PIDS} 2>>"${LOG_FILE}"
+fi
+
+log 'Cleanup completed' >>"${LOG_FILE}"
