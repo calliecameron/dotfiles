@@ -10,6 +10,9 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
+env:
+  NIXPKGS_VERSION: "25.11"
+
 jobs:
   ci:
     name: CI
@@ -28,9 +31,13 @@ jobs:
         run: bash -c 'source "${NVM_DIR}/nvm.sh" && nvm install'
       - name: Install zsh
         run: sudo apt-get install zsh
-      - name: Build emacs
-        run: packages/emacs/install-emacs.sh "${HOME}/emacs"
+      - name: Install nix
+        uses: cachix/install-nix-action@4e002c8ec80594ecd40e759629461e26c8abed15 # v31.9.0
+        with:
+          nix_path: nixpkgs=channel:nixos-${{ env.NIXPKGS_VERSION }}
+      - name: Install emacs
+        run: nix profile add "nixpkgs/release-${NIXPKGS_VERSION}#emacs-nox"
       - name: Run tests
         env:
           TERM: dumb
-        run: PATH="${HOME}/emacs/bin:${PATH}" make ci
+        run: make ci

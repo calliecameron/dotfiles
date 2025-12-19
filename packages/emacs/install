@@ -2,7 +2,7 @@
 
 set -eu
 
-"${PACKAGE_SOURCE_DIR}/install-emacs.sh" "${PACKAGE_INSTALL_DIR}/emacs"
+dotfiles-nix-install emacs-gtk
 
 dotfiles-clone-or-update-repo 'https://github.com/calliecameron/emacs-launchers' \
     "${PACKAGE_INSTALL_DIR}/emacs-launchers" 'main'
