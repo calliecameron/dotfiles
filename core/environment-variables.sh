@@ -71,7 +71,7 @@ export PATH="${DOTFILES_CORE_BIN}:${PATH}"
 
 export EDITOR='nano'
 export PAGER='less'
-export LESS='FRMX'
+export LESS='FRMX --mouse --wheel-lines=5'
 
 # Create SSH agent if necessary
 if [ -z "${SSH_AUTH_SOCK}" ] && [ -z "${DISPLAY}" ] && command -v ssh-agent >/dev/null; then
