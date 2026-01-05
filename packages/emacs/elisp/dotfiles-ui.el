@@ -431,6 +431,7 @@ If BUFFER is a string, it is the name of the buffer to find; if it is a predicat
 
 (use-package autorevert
   :ensure nil
+  :diminish auto-revert-mode
   :config
   (setq auto-revert-verbose nil)
   (bind-keys
@@ -472,6 +473,9 @@ If BUFFER is a string, it is the name of the buffer to find; if it is a predicat
 
 (use-package doom-modeline
   :config
+  (setq
+   mode-line-right-align-edge 'right-fringe
+   doom-modeline-minor-modes t)
   (doom-modeline-mode))
 
 (use-package doom-themes

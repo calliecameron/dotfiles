@@ -29,6 +29,7 @@
   (company-quickhelp-mode))
 
 (use-package flycheck
+  :diminish flycheck-mode
   :bind
   (("C-." . flycheck-next-error)
    ("C-," . flycheck-previous-error))

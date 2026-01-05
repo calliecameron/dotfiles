@@ -1,5 +1,9 @@
 ;; -*- lexical-binding: t; -*-
 
+(use-package eldoc
+  :ensure nil
+  :diminish eldoc-mode)
+
 (use-package flycheck-cask
   :config
   (add-hook 'flycheck-mode-hook 'flycheck-cask-setup))
