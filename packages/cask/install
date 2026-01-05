@@ -3,4 +3,4 @@
 set -eu
 
 dotfiles-clone-or-update-repo 'https://github.com/cask/cask.git' \
-    "${PACKAGE_INSTALL_DIR}/cask" 'v0.9.0'
+    "${PACKAGE_INSTALL_DIR}/cask" 'v0.9.1'
