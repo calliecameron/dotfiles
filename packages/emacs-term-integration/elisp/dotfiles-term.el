@@ -339,7 +339,17 @@
    :map term-raw-map
    ("C-#" . term-alert-next-command-toggle)
    ("M-#" . term-alert-all-toggle)
-   ("C-'" . term-alert-runtime)))
+   ("C-'" . term-alert-runtime))
+
+  (bind-keys
+   :map eat-mode-map
+   ("C-#" . term-alert-next-command-toggle)
+   ("M-#" . term-alert-all-toggle)
+   ("C-'" . term-alert-runtime))
+
+  (bind-keys
+   :map eat-semi-char-mode-map
+   ("M-#" . term-alert-all-toggle)))
 
 
 (use-package term-debug

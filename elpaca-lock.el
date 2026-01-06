@@ -219,7 +219,7 @@
    "elpaca-menu-lock-file" :recipe
    (:source nil :protocol https :inherit ignore :depth 1 :repo
             "https://github.com/progfolio/elpaca.git" :ref
-            "b5ef5f19ac1224853234c9acdac0ec9ea1c440a1" :files
+            "1508298c1ed19c81fa4ebc5d22d945322e9e4c52" :files
             (:defaults "elpaca-test.el" (:exclude "extensions"))
             :build (:not elpaca--activate-package) :package "elpaca"))
  (elpaca-use-package :source "elpaca-menu-lock-file" :recipe
@@ -233,7 +233,7 @@
                                :source "elpaca-menu-lock-file"
                                :protocol https :inherit t :depth
                                treeless :ref
-                               "b5ef5f19ac1224853234c9acdac0ec9ea1c440a1"))
+                               "1508298c1ed19c81fa4ebc5d22d945322e9e4c52"))
  (f :source "elpaca-menu-lock-file" :recipe
     (:package "f" :fetcher github :repo "rejeep/f.el" :files
               ("*.el" "*.el.in" "dir" "*.info" "*.texi" "*.texinfo"
@@ -739,7 +739,7 @@
                        (:defaults "setup") :source
                        "elpaca-menu-lock-file" :protocol https
                        :inherit t :depth treeless :ref
-                       "8e7e744773e41355bcd9f5c911001be08bc79bec"))
+                       "d2eea58abe95de009e9c8ed3f814bd0dce2a5e2f"))
  (term-cmd :source "elpaca-menu-lock-file" :recipe
            (:package "term-cmd" :fetcher github :repo
                      "calliecameron/term-cmd" :files (:defaults "bin")
