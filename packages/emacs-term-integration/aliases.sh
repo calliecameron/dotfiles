@@ -19,3 +19,17 @@ function emacs-dir-tracking() {
 
 export PAGER='emacs-pager-wrapper'
 alias less='emacs-pager-wrapper'
+
+if [ -n "${EAT_SHELL_INTEGRATION_DIR}" ]; then
+    DOTFILES_EAT_DIR="$(readlink -f "${EAT_SHELL_INTEGRATION_DIR}/..")"
+else
+    DOTFILES_EAT_DIR="${PACKAGE_INSTALL_DIR}/eat"
+fi
+
+export DOTFILES_EAT_DIR
+export DOTFILES_EAT_INTEGRATION_DIR="${DOTFILES_EAT_DIR}/integration"
+export DOTFILES_EAT_TERMINFO_DIR="${DOTFILES_EAT_DIR}/terminfo"
+
+if [ "${TERM:0:4}" = "eat-" ] && [ -z "${TERMINFO}" ]; then
+    export TERMINFO="${DOTFILES_EAT_TERMINFO_DIR}"
+fi

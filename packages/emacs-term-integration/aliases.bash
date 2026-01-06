@@ -4,9 +4,9 @@ else
     PROMPT_COMMAND="${PROMPT_COMMAND}; emacs-dir-tracking"
 fi
 
-if [ -n "${EAT_SHELL_INTEGRATION_DIR}" ]; then
+if [ "${TERM:0:4}" = "eat-" ] && [ -d "${DOTFILES_EAT_INTEGRATION_DIR}" ]; then
     ORIGINAL_PROMPT_COMMAND="${PROMPT_COMMAND}"
-    source "${EAT_SHELL_INTEGRATION_DIR}/bash"
+    source "${DOTFILES_EAT_INTEGRATION_DIR}/bash"
     PROMPT_COMMAND="${PROMPT_COMMAND}; ${ORIGINAL_PROMPT_COMMAND}"
     unset ORIGINAL_PROMPT_COMMAND
 fi
