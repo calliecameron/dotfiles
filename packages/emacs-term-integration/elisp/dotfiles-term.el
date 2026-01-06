@@ -139,7 +139,7 @@
 (use-package eat
   :config
   (setq
-   eat-buffer-name "*eat-term*"
+   eat-buffer-name "*terminal*"
    eat-term-scrollback-size (* dotfiles--term-max-lines 100)
    eat-show-title-on-mode-line nil)
 
@@ -188,11 +188,11 @@
    ("C-S-i" . dotfiles-eat-term-do-interactive-command))
 
   (bind-keys
-   ("<C-f9>" . dotfiles-eat-term-new)
-   ("<C-f10>" . dotfiles-eat-term-prev)
-   ("<C-f11>" . dotfiles-eat-term-next)
-   ("M-{" . dotfiles-eat-term-prev)
-   ("M-}" . dotfiles-eat-term-next)))
+   ("<f9>" . dotfiles-eat-term-new)
+   ("<f10>" . dotfiles-eat-term-prev)
+   ("<f11>" . dotfiles-eat-term-next)
+   ("C-{" . dotfiles-eat-term-prev)
+   ("C-}" . dotfiles-eat-term-next)))
 
 
 (use-package term
@@ -203,7 +203,7 @@
    term-scroll-to-bottom-on-output t)
 
   (defun dotfiles--term-name (n)
-    (format "terminal<%d>" n))
+    (format "ansi-term<%d>" n))
 
   (dotfiles--term-setup
    dotfiles-term
@@ -264,11 +264,11 @@
    ("M-3" . nil))
 
   (bind-keys
-   ("<f9>" . dotfiles-term-new)
-   ("<f10>" . dotfiles-term-prev)
-   ("<f11>" . dotfiles-term-next)
-   ("C-}" . dotfiles-term-prev)
-   ("C-{" . dotfiles-term-next)))
+   ("<C-f9>" . dotfiles-term-new)
+   ("<C-f10>" . dotfiles-term-prev)
+   ("<C-f11>" . dotfiles-term-next)
+   ("M-}" . dotfiles-term-prev)
+   ("M-{" . dotfiles-term-next)))
 
 
 (use-package term-cmd
