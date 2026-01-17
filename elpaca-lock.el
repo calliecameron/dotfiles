@@ -739,13 +739,13 @@
                        (:defaults "setup") :source
                        "elpaca-menu-lock-file" :protocol https
                        :inherit t :depth treeless :ref
-                       "d2eea58abe95de009e9c8ed3f814bd0dce2a5e2f"))
+                       "093afcb21c79dc5c3ada1e7bed92325dd4dde701"))
  (term-cmd :source "elpaca-menu-lock-file" :recipe
            (:package "term-cmd" :fetcher github :repo
                      "calliecameron/term-cmd" :files (:defaults "bin")
                      :source "elpaca-menu-lock-file" :protocol https
                      :inherit t :depth treeless :ref
-                     "26c5a8cb6b55ac0d6c6bc08f6ea1b1e53f6e2654"))
+                     "0596a96b0e5a4e8a5f828951fb6e2c1af03914c8"))
  (transient :source "elpaca-menu-lock-file" :recipe
             (:package "transient" :fetcher github :repo
                       "magit/transient" :files

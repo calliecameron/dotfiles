@@ -8,3 +8,5 @@ EAT_VERSION='c8d54d649872bfe7b2b9f49ae5c2addbf12d3b99'
 dotfiles-clone-or-update-repo 'https://github.com/calliecameron/term-cmd' "${PACKAGE_INSTALL_DIR}/term-cmd" 'main'
 dotfiles-clone-or-update-repo 'https://github.com/calliecameron/term-alert' "${PACKAGE_INSTALL_DIR}/term-alert" 'main'
 dotfiles-clone-or-update-repo 'https://codeberg.org/akib/emacs-eat' "${PACKAGE_INSTALL_DIR}/eat" "${EAT_VERSION}"
+
+dotfiles-home-link "${PACKAGE_INSTALL_DIR}/eat/terminfo" "${HOME}/.terminfo"
