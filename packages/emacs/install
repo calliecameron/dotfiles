@@ -7,8 +7,8 @@ dotfiles-nix-install emacs-gtk
 dotfiles-clone-or-update-repo 'https://github.com/calliecameron/emacs-launchers' \
     "${PACKAGE_INSTALL_DIR}/emacs-launchers" 'main'
 
-sed "s|@@@@@1@@@@@|${PACKAGE_SOURCE_DIR}|g" <"${PACKAGE_SOURCE_DIR}/emacs-daemon-desktop-template" >"${PACKAGE_INSTALL_DIR}/emacs-daemon.desktop"
-chmod u+x "${PACKAGE_INSTALL_DIR}/emacs-daemon.desktop"
+sed "s|@@@@@1@@@@@|${PACKAGE_INSTALL_DIR}/emacs-launchers|g" <"${PACKAGE_SOURCE_DIR}/emacs-daemon-desktop-template" |
+    sed "s|@@@@@2@@@@@|${PACKAGE_SOURCE_DIR}|g" >"${PACKAGE_INSTALL_DIR}/emacs-daemon.desktop"
 xdg-desktop-menu install --novendor "${PACKAGE_INSTALL_DIR}/emacs-daemon.desktop"
 xdg-desktop-icon install --novendor "${PACKAGE_INSTALL_DIR}/emacs-daemon.desktop"
 xdg-mime default emacs-daemon.desktop \
