@@ -40,3 +40,5 @@ codium \
     --install-extension=tombi-toml.tombi \
     --install-extension=vscjava.vscode-java-pack \
     --install-extension=wholroyd.jinja
+
+xdg-desktop-icon install --novendor "/usr/share/applications/codium.desktop"

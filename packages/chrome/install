@@ -10,3 +10,5 @@ if ! command -v google-chrome &>/dev/null; then
     rm "${TMPDIR}/chrome.deb"
     rmdir "${TMPDIR}"
 fi
+
+xdg-desktop-icon install --novendor "/usr/share/applications/google-chrome.desktop"
