@@ -11,4 +11,8 @@ if ! command -v google-chrome &>/dev/null; then
     rmdir "${TMPDIR}"
 fi
 
-xdg-desktop-icon install --novendor "/usr/share/applications/google-chrome.desktop"
+sed 's|/usr/bin/google-chrome-stable|/usr/bin/google-chrome-stable --password-store=gnome-libsecret|g' \
+    <"/usr/share/applications/google-chrome.desktop" \
+    >"${HOME}/.local/share/applications/google-chrome.desktop"
+
+xdg-desktop-icon install --novendor "${HOME}/.local/share/applications/google-chrome.desktop"
