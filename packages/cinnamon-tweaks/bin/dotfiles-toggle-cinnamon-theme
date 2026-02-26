@@ -3,7 +3,7 @@
 set -eu
 
 if [ "$(gsettings get org.cinnamon.desktop.interface gtk-theme)" = "'${DOTFILES_CINNAMON_THEME_DARK}'" ]; then
-    dotfiles-set-theme light
+    dotfiles-set-cinnamon-theme light
 else
-    dotfiles-set-theme dark
+    dotfiles-set-cinnamon-theme dark
 fi
