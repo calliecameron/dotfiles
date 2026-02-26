@@ -11,4 +11,8 @@ sudo wget -NP /etc/apt/sources.list.d/ https://dl.winehq.org/wine-builds/ubuntu/
 sudo apt-get update
 sudo apt-get install --install-recommends cdemu-client gcdemu winehq-stable winetricks
 
+# Stop gcdemu from autostarting
+cp /etc/xdg/autostart/gcdemu.desktop "${HOME}/.config/autostart/gcdemu.desktop"
+echo 'Hidden=true' >>"${HOME}/.config/autostart/gcdemu.desktop"
+
 winetricks dxvk gdiplus msftedit msls31
