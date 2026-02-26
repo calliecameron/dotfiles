@@ -22,9 +22,9 @@ function set-theme() {
 }
 
 if [ "${THEME}" = 'light' ]; then
-    set-theme "${DOTFILES_THEME_LIGHT}" 'prefer-light'
+    set-theme "${DOTFILES_CINNAMON_THEME_LIGHT}" 'prefer-light'
 elif [ "${THEME}" = 'dark' ]; then
-    set-theme "${DOTFILES_THEME_DARK}" 'prefer-dark'
+    set-theme "${DOTFILES_CINNAMON_THEME_DARK}" 'prefer-dark'
 else
     usage
 fi
