@@ -29,6 +29,8 @@ kwriteconfig5 --file "${HOME}/.config/dolphinrc" --group ContentDisplay --key Us
 
 kwriteconfig5 --file "${HOME}/.config/konsolerc" --group KonsoleWindow --key RememberWindowSize --type bool false
 
+kwriteconfig5 --file "${HOME}/.config/kwriterc" --group General --key 'Show welcome view for new window' --type bool false
+
 ACTIVITY="$(kactivities-cli --bare --current-activity)"
 
 sed "s|@@@@@1@@@@@|${HOME}|g" <"${PACKAGE_SOURCE_DIR}/plasma-org.kde.plasma.desktop-appletsrc" |
