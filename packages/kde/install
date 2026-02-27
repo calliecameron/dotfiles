@@ -65,7 +65,7 @@ launcher-key 'google-chrome.desktop' 'Google Chrome' 'Ctrl+Alt+B'
 launcher-key 'vlc.desktop' 'VLC' 'Ctrl+Alt+M'
 launcher-key 'org.kde.dolphin.desktop' 'Dolphin' 'Ctrl+Alt+H'
 launcher-key 'gnucash.desktop' 'GnuCash' 'Ctrl+Alt+G'
-launcher-key 'gnome-calculator.desktop' 'Calculator' 'Ctrl+Alt+C'
+launcher-key 'org.gnome.Calculator.desktop' 'Calculator' 'Ctrl+Alt+C'
 launcher-key 'codium.desktop' 'VSCodium' 'Ctrl+Alt+V'
 launcher-key 'discord.desktop' 'Discord' 'Ctrl+Alt+D'
 # shellcheck disable=1003
