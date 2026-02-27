@@ -24,8 +24,10 @@ kwriteconfig5 --file "${HOME}/.config/dolphinrc" --group ContentDisplay --key Us
 
 kwriteconfig5 --file "${HOME}/.config/konsolerc" --group KonsoleWindow --key RememberWindowSize --type bool false
 
-sed "s|@@@@@1@@@@@|${HOME}|g" <"${PACKAGE_SOURCE_DIR}/plasma-org.kde.plasma.desktop-appletsrc" \
-    >"${HOME}/.config/plasma-org.kde.plasma.desktop-appletsrc"
+ACTIVITY="$(kactivities-cli --bare --current-activity)"
+
+sed "s|@@@@@1@@@@@|${HOME}|g" <"${PACKAGE_SOURCE_DIR}/plasma-org.kde.plasma.desktop-appletsrc" |
+    sed "s|@@@@@2@@@@@|${ACTIVITY}|g" >"${HOME}/.config/plasma-org.kde.plasma.desktop-appletsrc"
 
 xdg-desktop-menu install --novendor "${PACKAGE_SOURCE_DIR}/dotfiles-toggle-kde-theme.desktop"
 
