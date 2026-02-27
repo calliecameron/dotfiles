@@ -1,0 +1,7 @@
+[Desktop Entry]
+Version=1.0
+Name=Toggle KDE Theme
+Exec=dotfiles-toggle-kde-theme
+TryExec=dotfiles-toggle-kde-theme
+Terminal=false
+Type=Application

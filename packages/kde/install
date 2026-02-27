@@ -1,0 +1,74 @@
+#!/bin/bash
+
+set -eu
+
+export PATH="${PACKAGE_SOURCE_DIR}/bin:${PATH}"
+
+sudo apt-get update
+sudo apt-get -y --no-remove install kde-plasma-desktop plasma-workspace-wayland \
+    power-profiles-daemon- sddm- unattended-upgrades-
+
+kwriteconfig5 --file "${HOME}/.config/kdeglobals" --group KDE --key SingleClick --type bool false
+kwriteconfig5 --file "${HOME}/.config/kdeglobals" --group KDE --key ScrollbarLeftClickNavigatesByPage --type bool false
+
+kwriteconfig5 --file "${HOME}/.config/ksmserverrc" --group General --key loginMode emptySession
+
+kwriteconfig5 --file "${HOME}/.config/kscreenlockerrc" --group Daemon --key LockGrace 0
+
+kwriteconfig5 --file "${HOME}/.config/kwinrc" --group Effect-windowview --key BorderActivateAll 9
+
+kwriteconfig5 --file "${HOME}/.config/systemsettingsrc" --group systemsettings_sidebar_mode --key HighlightNonDefaultSettings --type bool true
+
+kwriteconfig5 --file "${HOME}/.config/dolphinrc" --group General --key RememberOpenedTabs --type bool false
+kwriteconfig5 --file "${HOME}/.config/dolphinrc" --group ContentDisplay --key UseShortRelativeDates --type bool false
+
+kwriteconfig5 --file "${HOME}/.config/konsolerc" --group KonsoleWindow --key RememberWindowSize --type bool false
+
+sed "s|@@@@@1@@@@@|${HOME}|g" <"${PACKAGE_SOURCE_DIR}/plasma-org.kde.plasma.desktop-appletsrc" \
+    >"${HOME}/.config/plasma-org.kde.plasma.desktop-appletsrc"
+
+xdg-desktop-menu install --novendor "${PACKAGE_SOURCE_DIR}/dotfiles-toggle-kde-theme.desktop"
+
+function bind-key() {
+    local GROUP="${1}"
+    local KEY="${2}"
+    local BINDING="${3}"
+    kwriteconfig5 --file "${HOME}/.config/kglobalshortcutsrc" --group "${GROUP}" --key "${KEY}" "${BINDING},${BINDING},${KEY}"
+}
+
+function unbind-key() {
+    bind-key "${1}" "${2}" 'none'
+}
+
+function launcher-key() {
+    local DESKTOP_FILE="${1}"
+    local NAME="${2}"
+    local BINDING="${3}"
+    kwriteconfig5 --file "${HOME}/.config/kglobalshortcutsrc" --group "${DESKTOP_FILE}" --key '_k_friendly_name' "${NAME}"
+    kwriteconfig5 --file "${HOME}/.config/kglobalshortcutsrc" --group "${DESKTOP_FILE}" --key '_launch' "${BINDING},none,${NAME}"
+}
+
+bind-key 'ksmserver' 'Lock Session' 'Ctrl+Alt+L'
+bind-key 'kwin' 'Walk Through Windows of Current Application (Reverse)' 'Alt+¬'
+bind-key 'kwin' 'Window Operations Menu' 'Alt+Space'
+unbind-key 'kwin' 'Window Quick Tile Bottom'
+unbind-key 'kwin' 'Window Quick Tile Left'
+unbind-key 'kwin' 'Window Quick Tile Right'
+unbind-key 'kwin' 'Window Quick Tile Top'
+bind-key 'mediacontrol' 'nextmedia' 'Ctrl+Alt+.'
+bind-key 'mediacontrol' 'previousmedia' 'Ctrl+Alt+\,'
+bind-key 'mediacontrol' 'playpausemedia' 'Ctrl+Alt+Space'
+bind-key 'org.kde.krunner.desktop' '_launch' 'Alt+F2'
+
+launcher-key 'emacs-daemon.desktop' 'GNU Emacs (Daemon Mode)' 'Ctrl+Alt+E'
+launcher-key 'google-chrome.desktop' 'Google Chrome' 'Ctrl+Alt+B'
+launcher-key 'vlc.desktop' 'VLC' 'Ctrl+Alt+M'
+launcher-key 'org.kde.dolphin.desktop' 'Dolphin' 'Ctrl+Alt+H'
+launcher-key 'gnucash.desktop' 'GnuCash' 'Ctrl+Alt+G'
+launcher-key 'gnome-calculator.desktop' 'Calculator' 'Ctrl+Alt+C'
+launcher-key 'codium.desktop' 'VSCodium' 'Ctrl+Alt+V'
+launcher-key 'discord.desktop' 'Discord' 'Ctrl+Alt+D'
+# shellcheck disable=1003
+launcher-key 'dotfiles-toggle-kde-theme.desktop' 'Toggle Theme' 'Ctrl+Alt+\\'
+
+dotfiles-set-kde-theme dark

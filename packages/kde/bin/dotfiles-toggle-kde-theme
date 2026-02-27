@@ -1,0 +1,9 @@
+#!/bin/bash
+
+set -eu
+
+if [ "$(plasma-apply-colorscheme --list-schemes | grep current | cut -d ' ' -f 3)" = 'BreezeDark' ]; then
+    dotfiles-set-kde-theme light
+else
+    dotfiles-set-kde-theme dark
+fi

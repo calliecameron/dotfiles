@@ -1,0 +1,23 @@
+#!/bin/bash
+
+set -eu
+
+function usage() {
+    echo "Usage: $(basename "${0}") light|dark" >&2
+    exit 1
+}
+
+test -z "${1:-}" && usage
+THEME="${1}"
+
+function set-theme() {
+    plasma-apply-lookandfeel --apply "${1}"
+}
+
+if [ "${THEME}" = 'light' ]; then
+    set-theme 'org.kde.breeze.desktop'
+elif [ "${THEME}" = 'dark' ]; then
+    set-theme 'org.kde.breezedark.desktop'
+else
+    usage
+fi
