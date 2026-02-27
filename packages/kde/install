@@ -4,9 +4,14 @@ set -eu
 
 export PATH="${PACKAGE_SOURCE_DIR}/bin:${PATH}"
 
+IGNORED_DEPS=''
+if dotfiles-package-installed laptop-mode-tools; then
+    IGNORED_DEPS='power-profiles-daemon-'
+fi
+
 sudo apt-get update
 sudo apt-get -y --no-remove install kde-plasma-desktop plasma-workspace-wayland \
-    power-profiles-daemon- sddm- unattended-upgrades-
+    sddm- unattended-upgrades- ${IGNORED_DEPS}
 
 kwriteconfig5 --file "${HOME}/.config/kdeglobals" --group KDE --key SingleClick --type bool false
 kwriteconfig5 --file "${HOME}/.config/kdeglobals" --group KDE --key ScrollbarLeftClickNavigatesByPage --type bool false
