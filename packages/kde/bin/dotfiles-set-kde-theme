@@ -23,6 +23,7 @@ function set-theme() {
     kwriteconfig5 --file "${KONSOLE_PROFILE_FILE}" --group Appearance --key ColorScheme "${2}"
     kwriteconfig5 --file "${HOME}/.config/konsolerc" --group 'Desktop Entry' --key DefaultProfile "${KONSOLE_PROFILE}.profile"
 
+    kwriteconfig5 --file "${HOME}/.config/kwriterc" --group 'KTextEditor Renderer' --key 'Auto Color Theme Selection' --type bool false
     kwriteconfig5 --file "${HOME}/.config/kwriterc" --group 'KTextEditor Renderer' --key 'Color Theme' "${3}"
 }
 
