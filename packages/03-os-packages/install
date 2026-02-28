@@ -23,6 +23,7 @@ if dotfiles-linux-variant main; then
         ttf-mscorefonts-installer ubuntu-restricted-extras xclip
 
     sudo rm -f /etc/sudoers.d/0pwfeedback
+    rm -f "${HOME}/.local/share/applications/webapp-OnlineChat4519.desktop"
     fc-cache
 else
     dotfiles-echo-red "Unknown Linux variant."
