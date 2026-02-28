@@ -1,0 +1,7 @@
+[Containments][2][Applets][@@@@@1@@@@@]
+immutability=1
+plugin=org.kde.plasma.icon
+
+[Containments][2][Applets][@@@@@1@@@@@][Configuration]
+localPath=@@@@@2@@@@@/.local/share/plasma_icons/@@@@@3@@@@@
+url=file://@@@@@4@@@@@/@@@@@3@@@@@

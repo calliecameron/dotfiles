@@ -38,9 +38,44 @@ kwriteconfig5 --file "${HOME}/.config/kwriterc" --group 'KTextEditor View' --key
 kwriteconfig5 --file "${HOME}/.config/kwriterc" --group 'KTextEditor View' --key 'Shoe Line Ending Type in Statusbar' --type bool true
 
 ACTIVITY="$(kactivities-cli --bare --current-activity)"
+APPLET_FILE='plasma-org.kde.plasma.desktop-appletsrc'
+ICON_APPLETS=''
 
-sed "s|@@@@@1@@@@@|${HOME}|g" <"${PACKAGE_SOURCE_DIR}/plasma-org.kde.plasma.desktop-appletsrc" |
-    sed "s|@@@@@2@@@@@|${ACTIVITY}|g" >"${HOME}/.config/plasma-org.kde.plasma.desktop-appletsrc"
+function add-panel-icon() {
+    local APPLET_NUMBER="${1}"
+    local DIR
+    DIR="$(dirname "${2}")"
+    local DESKTOP_FILE
+    DESKTOP_FILE="$(basename "${2}")"
+
+    sed "s|@@@@@1@@@@@|${APPLET_NUMBER}|g" <"${PACKAGE_SOURCE_DIR}/appletsrc-icon" |
+        sed "s|@@@@@2@@@@@|${HOME}|g" |
+        sed "s|@@@@@3@@@@@|${DESKTOP_FILE}|g" |
+        sed "s|@@@@@4@@@@@|${DIR}|g"
+    echo
+
+    ICON_APPLETS="${ICON_APPLETS}${APPLET_NUMBER};"
+}
+
+{
+    sed "s|@@@@@1@@@@@|${ACTIVITY}|g" <"${PACKAGE_SOURCE_DIR}/appletsrc-header"
+    echo
+
+    add-panel-icon 30 '/usr/share/applications/org.kde.konsole.desktop'
+    add-panel-icon 31 '/usr/share/applications/org.kde.dolphin.desktop'
+
+    if dotfiles-package-installed chrome; then
+        add-panel-icon 32 "${HOME}/.local/share/applications/google-chrome.desktop"
+    fi
+
+    if dotfiles-package-installed emacs; then
+        add-panel-icon 33 "${HOME}/.local/share/applications/emacs-daemon.desktop"
+    fi
+
+    sed "s|@@@@@1@@@@@|${ICON_APPLETS}|g" <"${PACKAGE_SOURCE_DIR}/appletsrc-footer"
+} >"${PACKAGE_INSTALL_DIR}/${APPLET_FILE}"
+
+cp "${PACKAGE_INSTALL_DIR}/${APPLET_FILE}" "${HOME}/.config/${APPLET_FILE}"
 
 xdg-desktop-menu install --novendor "${PACKAGE_SOURCE_DIR}/dotfiles-toggle-kde-theme.desktop"
 
