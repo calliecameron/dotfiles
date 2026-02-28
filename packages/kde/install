@@ -30,6 +30,12 @@ kwriteconfig5 --file "${HOME}/.config/dolphinrc" --group ContentDisplay --key Us
 kwriteconfig5 --file "${HOME}/.config/konsolerc" --group KonsoleWindow --key RememberWindowSize --type bool false
 
 kwriteconfig5 --file "${HOME}/.config/kwriterc" --group General --key 'Show welcome view for new window' --type bool false
+kwriteconfig5 --file "${HOME}/.config/kwriterc" --group 'KTextEditor Document' --key 'On-The-Fly Spellcheck' --type bool true
+kwriteconfig5 --file "${HOME}/.config/kwriterc" --group 'KTextEditor Document' --key 'Show Spaces' 1
+kwriteconfig5 --file "${HOME}/.config/kwriterc" --group 'KTextEditor Renderer' --key 'Word Wrap Marker' --type bool true
+kwriteconfig5 --file "${HOME}/.config/kwriterc" --group 'KTextEditor View' --key 'Auto Brackets' --type bool false
+# Yes that's 'shoe' not 'show'
+kwriteconfig5 --file "${HOME}/.config/kwriterc" --group 'KTextEditor View' --key 'Shoe Line Ending Type in Statusbar' --type bool true
 
 ACTIVITY="$(kactivities-cli --bare --current-activity)"
 
