@@ -14,7 +14,7 @@ sudo apt-get -y install curl git nano ncurses-term netcat-openbsd screen tmux \
 if dotfiles-linux-variant main; then
     # Mint 22
     sudo apt-get purge --auto-remove celluloid hypnotix mintchat pix rhythmbox \
-        samba-common samba-common-bin smbclient samba-libs thunderbird \
+        samba-common samba-common-bin smbclient thunderbird \
         transmission-common transmission-gtk
 
     sudo apt-get -y install apparmor-profiles apparmor-utils \
