@@ -24,6 +24,8 @@ kwriteconfig5 --file "${HOME}/.config/kwinrc" --group Effect-windowview --key Bo
 
 kwriteconfig5 --file "${HOME}/.config/systemsettingsrc" --group systemsettings_sidebar_mode --key HighlightNonDefaultSettings --type bool true
 
+kwriteconfig5 --file "${HOME}/.config/klipperrc" --group General --key KeepClipboardContents --type bool false
+
 kwriteconfig5 --file "${HOME}/.config/krunnerrc" --group Plugins --key PowerDevilEnabled --type bool false
 kwriteconfig5 --file "${HOME}/.config/krunnerrc" --group Plugins --key appstreamEnabled --type bool false
 kwriteconfig5 --file "${HOME}/.config/krunnerrc" --group Plugins --key baloosearchEnabled --type bool false
