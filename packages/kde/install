@@ -48,8 +48,9 @@ kwriteconfig5 --file "${HOME}/.config/kwriterc" --group 'KTextEditor View' --key
 # Yes that's 'shoe' not 'show'
 kwriteconfig5 --file "${HOME}/.config/kwriterc" --group 'KTextEditor View' --key 'Shoe Line Ending Type in Statusbar' --type bool true
 
-ACTIVITY="$(kactivities-cli --bare --current-activity)"
 APPLET_FILE='plasma-org.kde.plasma.desktop-appletsrc'
+ACTIVITY="$(kactivities-cli --bare --current-activity)"
+WALLPAPER="$(kreadconfig5 --file "${HOME}/.config/${APPLET_FILE}" --group Containments --group 1 --group Wallpaper --group org.kde.image --group General --key Image)"
 ICON_APPLETS=''
 
 function add-panel-icon() {
@@ -69,7 +70,15 @@ function add-panel-icon() {
 }
 
 {
-    sed "s|@@@@@1@@@@@|${ACTIVITY}|g" <"${PACKAGE_SOURCE_DIR}/appletsrc-header"
+    sed "s|@@@@@1@@@@@|${ACTIVITY}|g" <"${PACKAGE_SOURCE_DIR}/appletsrc-part1"
+    echo
+
+    if [ -n "${WALLPAPER}" ]; then
+        sed "s|@@@@@1@@@@@|${WALLPAPER}|g" <"${PACKAGE_SOURCE_DIR}/appletsrc-wallpaper"
+        echo
+    fi
+
+    cat "${PACKAGE_SOURCE_DIR}/appletsrc-part2"
     echo
 
     add-panel-icon 30 '/usr/share/applications/org.kde.konsole.desktop'
@@ -83,7 +92,7 @@ function add-panel-icon() {
         add-panel-icon 33 "${HOME}/.local/share/applications/emacs-daemon.desktop"
     fi
 
-    sed "s|@@@@@1@@@@@|${ICON_APPLETS}|g" <"${PACKAGE_SOURCE_DIR}/appletsrc-footer"
+    sed "s|@@@@@1@@@@@|${ICON_APPLETS}|g" <"${PACKAGE_SOURCE_DIR}/appletsrc-part3"
 } >"${PACKAGE_INSTALL_DIR}/${APPLET_FILE}"
 
 cp "${PACKAGE_INSTALL_DIR}/${APPLET_FILE}" "${HOME}/.config/${APPLET_FILE}"
