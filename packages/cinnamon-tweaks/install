@@ -66,7 +66,7 @@ add-panel emacs-daemon
 gsettings set org.cinnamon.desktop.interface clock-show-date true
 
 # Keyboard
-gsettings-add-if-not-in-list org.cinnamon.desktop.keybindings.wm maximize '<Control><Super>Up'
+gsettings-add-if-not-in-list org.cinnamon.desktop.keybindings.wm maximize '<Super>Page_Up'
 gsettings-remove-from-list org.cinnamon.desktop.keybindings.wm push-tile-up '<Super>Up'
 gsettings-remove-from-list org.cinnamon.desktop.keybindings.wm push-tile-down '<Super>Down'
 gsettings-remove-from-list org.cinnamon.desktop.keybindings.wm push-tile-left '<Super>Left'
