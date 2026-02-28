@@ -88,6 +88,8 @@ cp "${PACKAGE_INSTALL_DIR}/${APPLET_FILE}" "${HOME}/.config/${APPLET_FILE}"
 
 xdg-desktop-menu install --novendor "${PACKAGE_SOURCE_DIR}/dotfiles-toggle-kde-theme.desktop"
 
+xdg-mime default org.kde.dolphin.desktop inode/directory
+
 if ! dotfiles-package-installed emacs; then
     xdg-mime default org.kde.kwrite.desktop \
         text/english \
