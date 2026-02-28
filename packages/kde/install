@@ -10,8 +10,8 @@ if dotfiles-package-installed laptop-mode-tools; then
 fi
 
 sudo apt-get update
-sudo apt-get -y --no-remove install kde-plasma-desktop plasma-workspace-wayland \
-    sddm- unattended-upgrades- ${IGNORED_DEPS}
+sudo apt-get -y --no-remove install kde-plasma-desktop okular \
+    plasma-workspace-wayland sddm- unattended-upgrades- ${IGNORED_DEPS}
 
 kwriteconfig5 --file "${HOME}/.config/kdeglobals" --group KDE --key SingleClick --type bool false
 kwriteconfig5 --file "${HOME}/.config/kdeglobals" --group KDE --key ScrollbarLeftClickNavigatesByPage --type bool false
@@ -37,6 +37,26 @@ sed "s|@@@@@1@@@@@|${HOME}|g" <"${PACKAGE_SOURCE_DIR}/plasma-org.kde.plasma.desk
     sed "s|@@@@@2@@@@@|${ACTIVITY}|g" >"${HOME}/.config/plasma-org.kde.plasma.desktop-appletsrc"
 
 xdg-desktop-menu install --novendor "${PACKAGE_SOURCE_DIR}/dotfiles-toggle-kde-theme.desktop"
+
+if ! dotfiles-package-installed emacs; then
+    xdg-mime default org.kde.kwrite.desktop \
+        text/english \
+        text/plain \
+        text/x-makefile \
+        text/x-c++hdr \
+        text/x-c++src \
+        text/x-chdr \
+        text/x-csrc \
+        text/x-java \
+        text/x-moc \
+        text/x-pascal \
+        text/x-tcl \
+        text/x-tex \
+        application/x-shellscript \
+        text/x-c \
+        text/x-c++ \
+        text/markdown
+fi
 
 function bind-key() {
     local GROUP="${1}"
