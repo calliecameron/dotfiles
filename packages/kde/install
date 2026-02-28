@@ -24,6 +24,15 @@ kwriteconfig5 --file "${HOME}/.config/kwinrc" --group Effect-windowview --key Bo
 
 kwriteconfig5 --file "${HOME}/.config/systemsettingsrc" --group systemsettings_sidebar_mode --key HighlightNonDefaultSettings --type bool true
 
+kwriteconfig5 --file "${HOME}/.config/krunnerrc" --group Plugins --key PowerDevilEnabled --type bool false
+kwriteconfig5 --file "${HOME}/.config/krunnerrc" --group Plugins --key appstreamEnabled --type bool false
+kwriteconfig5 --file "${HOME}/.config/krunnerrc" --group Plugins --key baloosearchEnabled --type bool false
+kwriteconfig5 --file "${HOME}/.config/krunnerrc" --group Plugins --key browserhistoryEnabled --type bool false
+kwriteconfig5 --file "${HOME}/.config/krunnerrc" --group Plugins --key browsertabsEnabled --type bool false
+kwriteconfig5 --file "${HOME}/.config/krunnerrc" --group Plugins --key desktopsessionsEnabled --type bool false
+kwriteconfig5 --file "${HOME}/.config/krunnerrc" --group Plugins --key org.kde.windowedwidgetsEnabled --type bool false
+kwriteconfig5 --file "${HOME}/.config/krunnerrc" --group Plugins --key webshortcutsEnabled --type bool false
+
 kwriteconfig5 --file "${HOME}/.config/dolphinrc" --group General --key RememberOpenedTabs --type bool false
 kwriteconfig5 --file "${HOME}/.config/dolphinrc" --group ContentDisplay --key UseShortRelativeDates --type bool false
 
