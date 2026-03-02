@@ -10,3 +10,11 @@ dotfiles-clone-or-update-repo 'https://github.com/calliecameron/term-alert' "${P
 dotfiles-clone-or-update-repo 'https://codeberg.org/akib/emacs-eat' "${PACKAGE_INSTALL_DIR}/eat" "${EAT_VERSION}"
 
 dotfiles-home-link "${PACKAGE_INSTALL_DIR}/eat/terminfo" "${HOME}/.terminfo"
+
+if dotfiles-can-sudo; then
+    TARGET='/etc/sudoers.d/terminfo'
+    sudo cp "${PACKAGE_SOURCE_DIR}/sudoers" "${TARGET}"
+    sudo chown root:root "${TARGET}"
+    sudo chmod ug=r "${TARGET}"
+    sudo chmod o-rwx "${TARGET}"
+fi
