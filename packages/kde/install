@@ -121,6 +121,11 @@ if ! dotfiles-package-installed emacs; then
         text/markdown
 fi
 
+dotfiles-hide-kde-bookmark "${HOME}/.local/share/user-places.xbel" Documents
+dotfiles-hide-kde-bookmark "${HOME}/.local/share/user-places.xbel" Music
+dotfiles-hide-kde-bookmark "${HOME}/.local/share/user-places.xbel" Pictures
+dotfiles-hide-kde-bookmark "${HOME}/.local/share/user-places.xbel" Videos
+
 function bind-key() {
     local GROUP="${1}"
     local KEY="${2}"

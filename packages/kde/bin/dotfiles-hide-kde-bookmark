@@ -1,0 +1,81 @@
+#!/usr/bin/env python3
+
+import os.path
+import sys
+from xml.dom.minidom import Element, Node, parse
+
+
+def usage() -> None:
+    sys.stderr.write("Usage: " + os.path.basename(sys.argv[0]) + " file name\n")
+    sys.exit(1)
+
+
+def elements(n: Node, tag: str) -> list[Element]:
+    return [
+        c for c in n.childNodes if c.nodeType == Node.ELEMENT_NODE and c.tagName == tag
+    ]
+
+
+def element(n: Node, tag: str) -> Element | None:
+    e = elements(n, tag)
+    if e:
+        return e[0]
+    return None
+
+
+def text(n: Element) -> str:
+    for c in n.childNodes:
+        if c.nodeType == Node.TEXT_NODE:
+            return c.nodeValue
+    return ""
+
+
+def title(n: Element) -> str | None:
+    for c in elements(n, "title"):
+        return text(c)
+    return ""
+
+
+def bookmark(n: Element | None, name: str) -> Element | None:
+    if not n:
+        return None
+    for b in elements(n, "bookmark"):
+        if title(b) == name:
+            return b
+    return None
+
+
+def metadata(b: Element | None) -> Element | None:
+    if not b:
+        return None
+    for c in elements(b, "info"):
+        for c2 in elements(c, "metadata"):
+            if c2.getAttribute("owner") == "http://www.kde.org":
+                return c2
+    return None
+
+
+def main() -> None:
+    if len(sys.argv) < 3:  # noqa: PLR2004
+        usage()
+
+    file = sys.argv[1]
+    name = sys.argv[2]
+
+    d = parse(file)  # noqa: S318
+    x = element(d, "xbel")
+    b = bookmark(x, name)
+    m = metadata(b)
+
+    if m and not element(m, "IsHidden"):
+        n = d.createElement("IsHidden")
+        n.appendChild(d.createTextNode("true"))
+        m.appendChild(n)
+
+    with open(file, "w") as f:
+        d.writexml(f)
+        f.write("\n")
+
+
+if __name__ == "__main__":
+    main()
