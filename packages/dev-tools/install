@@ -2,6 +2,7 @@
 
 set -eu
 
+sudo apt-get update
 sudo apt-get -y install bash-doc bison bison-doc build-essential clang \
     clang-format cmake devscripts flex info make-doc man-db manpages-posix \
     manpages-posix-dev valgrind
