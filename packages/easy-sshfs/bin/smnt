@@ -4,7 +4,7 @@
 set -eu
 
 function usage() {
-    echo "Usage: $(basename "${0}") [user@]host [dir]"
+    echo "Usage: $(basename "${0}") [user@]host [dir]" >&2
     exit 1
 }
 
