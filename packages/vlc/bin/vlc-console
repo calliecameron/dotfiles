@@ -1,12 +1,14 @@
 #!/bin/bash
 
-if [ -n "${1}" ]; then
+set -eu
+
+if [ -n "${1:-}" ]; then
     HOST="${1}"
 else
     HOST='localhost'
 fi
 
-if [ -n "${2}" ]; then
+if [ -n "${2:-}" ]; then
     PORT="${2}"
 else
     PORT="${DOTFILES_VLC_PORT}"

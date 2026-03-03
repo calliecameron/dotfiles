@@ -2,6 +2,7 @@
 
 set -eu
 
+sudo apt-get update
 sudo apt-get -y install vlc vlc-plugin-fluidsynth
 
 source "${PACKAGE_SOURCE_DIR}/env.sh"
@@ -34,6 +35,6 @@ fi
 xdg-desktop-menu install --novendor "${PACKAGE_SOURCE_DIR}/vlc.desktop"
 xdg-desktop-icon install --novendor "${PACKAGE_SOURCE_DIR}/vlc.desktop"
 xdg-mime default vlc.desktop application/vnd.adobe.flash.movie \
-    application/xspf+xml audio/mpeg audio/mp4 audio/x-mpegurl audio/x-vorbis+ogg audio/x-wav \
-    video/mpeg video/mp4 video/ogg video/quicktime video/x-msvideo \
-    video/x-matroska
+    application/xspf+xml audio/mpeg audio/mp4 audio/x-mpegurl \
+    audio/x-vorbis+ogg audio/x-wav video/mpeg video/mp4 video/ogg \
+    video/quicktime video/x-msvideo video/x-matroska

@@ -1,22 +1,24 @@
 #!/bin/bash
 # Send a command to a running VLC instance
 
+set -eu
+
 function usage() {
-    echo "Usage: $(basename "${0}") command [host] [port]"
+    echo "Usage: $(basename "${0}") command [host] [port]" >&2
     exit 1
 }
 
-test -z "${1}" && usage
+test -z "${1:-}" && usage
 
 COMMAND="${1}"
 
-if [ -n "${2}" ]; then
+if [ -n "${2:-}" ]; then
     HOST="${2}"
 else
     HOST='localhost'
 fi
 
-if [ -n "${3}" ]; then
+if [ -n "${3:-}" ]; then
     PORT="${3}"
 else
     PORT="${DOTFILES_VLC_PORT}"
