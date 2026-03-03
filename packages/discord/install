@@ -1,0 +1,15 @@
+#!/bin/bash
+
+set -eu
+
+NEW="${PACKAGE_INSTALL_DIR}/discord.deb"
+PREV="${PACKAGE_INSTALL_DIR}/discord-prev.deb"
+
+wget -O "${NEW}" 'https://discord.com/api/download?platform=linux&format=deb'
+
+if [ ! -f "${PREV}" ] || ! cmp "${PREV}" "${NEW}" >/dev/null; then
+    sudo apt install "${NEW}"
+    mv "${NEW}" "${PREV}"
+fi
+
+xdg-desktop-icon install --novendor /usr/share/applications/discord.desktop
