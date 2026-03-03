@@ -3,12 +3,10 @@
 set -eu
 
 if ! command -v google-chrome &>/dev/null; then
-    wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | sudo apt-key add -
-    TMPDIR="$(mktemp -d)"
-    wget -O "${TMPDIR}/chrome.deb" https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
-    sudo apt-get -y --fix-broken install "${TMPDIR}/chrome.deb"
-    rm "${TMPDIR}/chrome.deb"
-    rmdir "${TMPDIR}"
+    wget -O- https://dl.google.com/linux/linux_signing_key.pub | sudo apt-key add -
+    wget -O "${PACKAGE_INSTALL_DIR}/chrome.deb" https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
+    sudo apt-get -y --fix-broken install "${PACKAGE_INSTALL_DIR}/chrome.deb"
+    rm "${PACKAGE_INSTALL_DIR}/chrome.deb"
 fi
 
 sed 's|/usr/bin/google-chrome-stable|/usr/bin/google-chrome-stable --password-store=gnome-libsecret|g' \
