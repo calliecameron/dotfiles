@@ -5,8 +5,8 @@ set -eu
 source "${PACKAGE_SOURCE_DIR}/env.sh"
 
 if ! command -v nix &>/dev/null; then
-    wget https://releases.nixos.org/nix/nix-2.24.4/install
-    echo 'fcf36cda19d3ac568d71387264a4173c3c2452a6aa370f17d71dc966a5e02173  install' >checksum
+    wget https://releases.nixos.org/nix/nix-2.31.2/install
+    echo '078e2ffeddf6a9c1f22adf41458ccc46a58bb26911a9e01579645314f9982994  install' >checksum
     sha256sum -c checksum
     chmod u+x install
     ./install --daemon --no-modify-profile --yes
