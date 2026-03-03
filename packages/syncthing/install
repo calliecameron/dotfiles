@@ -15,3 +15,7 @@ fi
 
 sudo ufw allow 22000/tcp
 sudo ufw allow 21027/udp
+
+# Hide duplicate entries
+dotfiles-hide-desktop-entry syncthing-start
+dotfiles-hide-desktop-entry syncthing-ui

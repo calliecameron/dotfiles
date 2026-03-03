@@ -1,0 +1,18 @@
+#!/bin/bash
+
+set -eu
+
+function usage() {
+    echo "Usage: $(basename "${0}") name"
+    exit 1
+}
+
+test -z "${1:-}" && usage
+NAME="${1}"
+
+cat >"${HOME}/.local/share/applications/${NAME}.desktop" <<EOF
+[Desktop Entry]
+Name=Hidden
+Type=Application
+NoDisplay=true
+EOF
