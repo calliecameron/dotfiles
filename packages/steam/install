@@ -2,6 +2,8 @@
 
 set -eu
 
+sudo true
+
 wget -O- https://repo.steampowered.com/steam/archive/stable/steam.gpg |
     sudo tee /usr/share/keyrings/steam.gpg >/dev/null
 
