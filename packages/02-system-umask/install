@@ -2,10 +2,10 @@
 
 set -eu
 
-# Umask for systemd user instances.
+# Umask for systemd user instances
 sudo chfn -o 'umask=077' "$(id -un)"
 
-# Umask for sudo.
+# Umask for sudo
 TARGET='/etc/sudoers.d/umask'
 sudo cp "${PACKAGE_SOURCE_DIR}/umask" "${TARGET}"
 sudo chown root:root "${TARGET}"
