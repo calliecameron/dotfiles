@@ -4,7 +4,7 @@
 set -eu
 
 function usage() {
-    echo "Usage: $(basename "${0}") {add app|remove app|list}"
+    echo "Usage: $(basename "${0}") {add app|remove app|list}" >&2
     exit 1
 }
 
@@ -30,12 +30,12 @@ EOF
 'add')
     test -z "${2:-}" && usage
     APP="${2}"
-    gsettings-add-if-not-in-list "${SCHEMA}" "${KEY}" "${APP}"
+    dotfiles-gsettings-add-if-not-in-list "${SCHEMA}" "${KEY}" "${APP}"
     ;;
 'remove')
     test -z "${2:-}" && usage
     APP="${2}"
-    gsettings-remove-from-list "${SCHEMA}" "${KEY}" "${APP}"
+    dotfiles-gsettings-remove-from-list "${SCHEMA}" "${KEY}" "${APP}"
     ;;
 *)
     usage

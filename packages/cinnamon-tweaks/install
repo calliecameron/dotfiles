@@ -29,13 +29,13 @@ gsettings set org.cinnamon panels-height '["1:27"]'
 # Menu
 function add-favourite() {
     if command -v "${1}" &>/dev/null; then
-        cinnamon-favourites add "${1}.desktop"
+        dotfiles-cinnamon-favourites add "${1}.desktop"
     fi
 }
 
-cinnamon-favourites remove mintinstall.desktop
-cinnamon-favourites remove xchat.desktop
-cinnamon-favourites remove firefox.desktop
+dotfiles-cinnamon-favourites remove mintinstall.desktop
+dotfiles-cinnamon-favourites remove xchat.desktop
+dotfiles-cinnamon-favourites remove firefox.desktop
 add-favourite google-chrome
 add-favourite emacs-daemon
 add-favourite vlc
@@ -51,11 +51,11 @@ gsettings set org.nemo.desktop volumes-visible true
 gsettings set org.nemo.desktop show-desktop-icons true
 
 # Panel
-cinnamon-panel remove firefox.desktop
+dotfiles-cinnamon-panel remove firefox.desktop
 
 function add-panel() {
     if command -v "${1}" &>/dev/null; then
-        cinnamon-panel add "${1}.desktop"
+        dotfiles-cinnamon-panel add "${1}.desktop"
     fi
 }
 
@@ -66,22 +66,21 @@ add-panel emacs-daemon
 gsettings set org.cinnamon.desktop.interface clock-show-date true
 
 # Keyboard
-gsettings-add-if-not-in-list org.cinnamon.desktop.keybindings.wm maximize '<Super>Page_Up'
-gsettings-remove-from-list org.cinnamon.desktop.keybindings.wm push-tile-up '<Super>Up'
-gsettings-remove-from-list org.cinnamon.desktop.keybindings.wm push-tile-down '<Super>Down'
-gsettings-remove-from-list org.cinnamon.desktop.keybindings.wm push-tile-left '<Super>Left'
-gsettings-remove-from-list org.cinnamon.desktop.keybindings.wm push-tile-right '<Super>Right'
-gsettings-remove-from-list org.cinnamon.desktop.keybindings.media-keys video-rotation-lock '<Super>o'
+dotfiles-gsettings-add-if-not-in-list org.cinnamon.desktop.keybindings.wm maximize '<Super>Page_Up'
+dotfiles-gsettings-remove-from-list org.cinnamon.desktop.keybindings.wm push-tile-up '<Super>Up'
+dotfiles-gsettings-remove-from-list org.cinnamon.desktop.keybindings.wm push-tile-down '<Super>Down'
+dotfiles-gsettings-remove-from-list org.cinnamon.desktop.keybindings.wm push-tile-left '<Super>Left'
+dotfiles-gsettings-remove-from-list org.cinnamon.desktop.keybindings.wm push-tile-right '<Super>Right'
+dotfiles-gsettings-remove-from-list org.cinnamon.desktop.keybindings.media-keys video-rotation-lock '<Super>o'
 
 function add-key() {
     if command -v "${2}" &>/dev/null; then
-        cinnamon-keybinding "${@}"
+        dotfiles-cinnamon-keybinding "${@}"
     fi
 }
 
 add-key 'Emacs' 'emacs-daemon' '<Primary><Alt>e'
 add-key 'Chrome' 'chrome-wrapper' '<Primary><Alt>b'
-add-key 'Chrome Extra' 'chrome-wrapper' 'HomePage'
 add-key 'VLC' 'vlc-wrapper' '<Primary><Alt>m'
 add-key 'VLC Pause' 'vlc-pause' '<Primary><Alt>space'
 add-key 'VLC Next' 'vlc-next' '<Primary><Alt>period'
@@ -93,7 +92,7 @@ add-key 'VSCodium' 'codium' '<Primary><Alt>v'
 add-key 'Discord' 'discord' '<Primary><Alt>d'
 add-key 'Toggle Theme' 'dotfiles-toggle-cinnamon-theme' '<Primary><Alt>backslash'
 
-gsettings-add-if-not-in-list org.gnome.libgnomekbd.keyboard options $'ctrl\tctrl:nocaps'
+dotfiles-gsettings-add-if-not-in-list org.gnome.libgnomekbd.keyboard options $'ctrl\tctrl:nocaps'
 
 # Sound effects
 function disable-sound() {

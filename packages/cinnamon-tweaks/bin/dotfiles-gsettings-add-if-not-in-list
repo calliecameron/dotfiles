@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# Remove a value from a gsettings list
+# Add a value to a gsettings list, but only if it isn't there already
 
 import ast
 import os.path
@@ -9,7 +9,7 @@ from typing import cast
 
 
 def usage() -> None:
-    print("Usage: " + os.path.basename(sys.argv[0]) + " schema key value")
+    sys.stderr.write("Usage: " + os.path.basename(sys.argv[0]) + " schema key value\n")
     sys.exit(1)
 
 
@@ -33,8 +33,8 @@ def main() -> None:
 
     l = gsettings_get_list(schema, key)
 
-    if value in l:
-        l.remove(value)
+    if value not in l:
+        l.append(value)
 
     subprocess.call(["gsettings", "set", schema, key, str(l)])
 

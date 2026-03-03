@@ -3,7 +3,7 @@
 set -eu
 
 function usage() {
-    echo "Usage: $(basename "${0}") light|dark"
+    echo "Usage: $(basename "${0}") light|dark" >&2
     exit 1
 }
 
