@@ -8,7 +8,8 @@ PREV="${PACKAGE_INSTALL_DIR}/discord-prev.deb"
 wget -O "${NEW}" 'https://discord.com/api/download?platform=linux&format=deb'
 
 if [ ! -f "${PREV}" ] || ! cmp "${PREV}" "${NEW}" >/dev/null; then
-    sudo apt install "${NEW}"
+    sudo apt-get update
+    sudo apt-get -y --fix-broken install "${NEW}"
     mv "${NEW}" "${PREV}"
 fi
 
