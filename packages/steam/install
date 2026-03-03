@@ -1,0 +1,17 @@
+#!/bin/bash
+
+set -eu
+
+wget -O- https://repo.steampowered.com/steam/archive/stable/steam.gpg |
+    sudo tee /usr/share/keyrings/steam.gpg >/dev/null
+
+sudo tee /etc/apt/sources.list.d/steam-stable.list >/dev/null <<'EOF'
+deb [arch=amd64,i386 signed-by=/usr/share/keyrings/steam.gpg] https://repo.steampowered.com/steam/ stable steam
+deb-src [arch=amd64,i386 signed-by=/usr/share/keyrings/steam.gpg] https://repo.steampowered.com/steam/ stable steam
+EOF
+
+sudo dpkg --add-architecture i386
+sudo apt-get update
+sudo apt-get -y install steam-launcher
+
+xdg-desktop-icon install --novendor /usr/share/applications/steam.desktop
