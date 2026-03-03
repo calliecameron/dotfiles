@@ -2,13 +2,19 @@
 
 set -eu
 
+sudo true
+
 # Virtualbox
-echo 'deb [arch=amd64 signed-by=/usr/share/keyrings/oracle-virtualbox-2016.gpg] https://download.virtualbox.org/virtualbox/debian noble contrib' | sudo tee /etc/apt/sources.list.d/virtualbox.list >/dev/null
-wget -qO- https://www.virtualbox.org/download/oracle_vbox_2016.asc | sudo gpg --dearmor --yes --output /usr/share/keyrings/oracle-virtualbox-2016.gpg
+wget -O- https://www.virtualbox.org/download/oracle_vbox_2016.asc | gpg --dearmor |
+    sudo tee /usr/share/keyrings/oracle-virtualbox-2016.gpg >/dev/null
+echo 'deb [arch=amd64 signed-by=/usr/share/keyrings/oracle-virtualbox-2016.gpg] https://download.virtualbox.org/virtualbox/debian noble contrib' |
+    sudo tee /etc/apt/sources.list.d/virtualbox.list >/dev/null
 
 # Vagrant
-wget -qO- https://apt.releases.hashicorp.com/gpg | sudo gpg --dearmor --yes --output /usr/share/keyrings/hashicorp-archive-keyring.gpg
-echo 'deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com noble main' | sudo tee /etc/apt/sources.list.d/hashicorp.list >/dev/null
+wget -O- https://apt.releases.hashicorp.com/gpg | gpg --dearmor |
+    sudo tee /usr/share/keyrings/hashicorp-archive-keyring.gpg >/dev/null
+echo 'deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com noble main' |
+    sudo tee /etc/apt/sources.list.d/hashicorp.list >/dev/null
 
 sudo apt-get update
 sudo apt-get -y install qemu-user-static virtualbox-7.2 vagrant virt-manager
