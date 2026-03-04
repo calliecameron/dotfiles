@@ -5,11 +5,12 @@
 set -eu
 
 function usage() {
-    echo "Usage: $(basename "${0}") repo_path"
+    echo "Usage: $(basename "${0}") repo_path" >&2
     exit 1
 }
 
 test -z "${1:-}" && usage
+test "${#}" -gt 1 && usage
 type git &>/dev/null || exit 1
 
 REPO="${1}"

@@ -2,6 +2,13 @@
 
 set -eu
 
+function usage() {
+    echo "Usage: $(basename "${0}")" >&2
+    exit 1
+}
+
+test "${#}" -gt 0 && usage
+
 if ! touch "${DOTFILES_NEEDS_LOGOUT}"; then
     dotfiles-echo-red 'Failed to set logout needed'
     exit 1

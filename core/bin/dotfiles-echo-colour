@@ -3,7 +3,7 @@
 set -eu
 
 function usage() {
-    echo "Usage: $(basename "${0}") colour_code msg..."
+    echo "Usage: $(basename "${0}") colour_code msg..." >&2
     exit 1
 }
 

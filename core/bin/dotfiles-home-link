@@ -5,11 +5,12 @@
 set -eu
 
 function usage() {
-    echo "Usage: $(basename "${0}") file [link]"
+    echo "Usage: $(basename "${0}") file [link]" >&2
     exit 1
 }
 
 test -z "${1:-}" && usage
+test "${#}" -gt 2 && usage
 SRC="${1}"
 
 if [ ! -e "${SRC}" ]; then

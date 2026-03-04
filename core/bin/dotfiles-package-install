@@ -3,7 +3,7 @@
 set -eu
 
 function usage() {
-    echo "Usage: $(basename "${0}") package_name_or_source_path..."
+    echo "Usage: $(basename "${0}") package_name_or_source_path..." >&2
     exit 1
 }
 
@@ -20,7 +20,12 @@ dotfiles-package-lock
 trap dotfiles-package-unlock EXIT
 
 while [ -n "${1:-}" ]; do
+    set +e
     PACKAGE_SOURCE_DIR="$(dotfiles-package-source-path "${1}")"
+    set -e
+    if [ -z "${PACKAGE_SOURCE_DIR}" ]; then
+        fail "No such package: ${1}"
+    fi
     PACKAGE_ROOT="$(dirname "${PACKAGE_SOURCE_DIR}")"
     PACKAGE_NAME="$(basename "${PACKAGE_SOURCE_DIR}")"
     PACKAGE_INSTALL_DIR="${DOTFILES_PACKAGE_INSTALL_DIR}/${PACKAGE_NAME}"

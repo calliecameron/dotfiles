@@ -2,6 +2,13 @@
 
 set -eu
 
+function usage() {
+    echo "Usage: $(basename "${0}")" >&2
+    exit 1
+}
+
+test "${#}" -gt 0 && usage
+
 dotfiles-package-installed 04-nix
 command -v nix &>/dev/null
 command -v dotfiles-nix-install &>/dev/null

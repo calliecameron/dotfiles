@@ -1,6 +1,8 @@
 # shellcheck shell=bats
 # bats file_tags=slow
 
+bats_require_minimum_version 1.5.0
+
 setup() {
     THIS_DIR="$(cd "$(dirname "${BATS_TEST_FILENAME}")" && pwd)"
     BIN_DIR="${THIS_DIR}/../../core/bin"
@@ -14,7 +16,7 @@ setup() {
 }
 
 run_script() {
-    run env -i -C "${BATS_TEST_TMPDIR}" HOME="${BATS_TEST_TMPDIR}" "${@}"
+    run --separate-stderr env -i -C "${BATS_TEST_TMPDIR}" HOME="${BATS_TEST_TMPDIR}" "${@}"
 }
 
 assert_num_matching_lines() {
@@ -40,13 +42,15 @@ git_clone() {
 @test 'dotfiles-next-init usage' {
     run_script "${BIN_DIR}/dotfiles-next-init"
     assert_failure
-    assert_line --partial 'Usage:'
+    refute_output
+    assert_stderr_line --partial 'Usage:'
 }
 
 @test 'dotfiles-next-init nonexistent' {
     run_script "DOTFILES_NEXT_INIT=${TEST_NEXT_INIT}" "${BIN_DIR}/dotfiles-next-init" 'foo' 'bar'
     assert_success
-    refute_output --partial 'Usage:'
+    refute_output
+    refute_stderr
     assert [ "$(grep -c 'This file will be run' <"${TEST_NEXT_INIT}")" = '1' ]
     assert [ "$(grep -c 'foo bar' <"${TEST_NEXT_INIT}")" = '1' ]
 }
@@ -55,7 +59,8 @@ git_clone() {
     echo 'foo bar' >"${TEST_NEXT_INIT}"
     run_script "DOTFILES_NEXT_INIT=${TEST_NEXT_INIT}" "${BIN_DIR}/dotfiles-next-init" 'foo' 'bar'
     assert_success
-    refute_output --partial 'Usage:'
+    refute_output
+    refute_stderr
     assert [ "$(grep -c 'foo bar' <"${TEST_NEXT_INIT}")" = '1' ]
 }
 
@@ -63,7 +68,8 @@ git_clone() {
     echo 'foo bar' >"${TEST_NEXT_INIT}"
     run_script "DOTFILES_NEXT_INIT=${TEST_NEXT_INIT}" "${BIN_DIR}/dotfiles-next-init" 'foo' 'baz'
     assert_success
-    refute_output --partial 'Usage:'
+    refute_output
+    refute_stderr
     assert [ "$(grep -c 'foo bar' <"${TEST_NEXT_INIT}")" = '1' ]
     assert [ "$(grep -c 'foo baz' <"${TEST_NEXT_INIT}")" = '1' ]
 }
@@ -71,13 +77,15 @@ git_clone() {
 @test 'dotfiles-next-login usage' {
     run_script "${BIN_DIR}/dotfiles-next-login"
     assert_failure
-    assert_line --partial 'Usage:'
+    refute_output
+    assert_stderr_line --partial 'Usage:'
 }
 
 @test 'dotfiles-next-login nonexistent' {
     run_script "DOTFILES_NEXT_LOGIN=${TEST_NEXT_LOGIN}" "${BIN_DIR}/dotfiles-next-login" 'foo' 'bar'
     assert_success
-    refute_output --partial 'Usage:'
+    refute_output
+    refute_stderr
     assert [ "$(grep -c 'This file will be run' <"${TEST_NEXT_LOGIN}")" = '1' ]
     assert [ "$(grep -c 'foo bar' <"${TEST_NEXT_LOGIN}")" = '1' ]
 }
@@ -86,7 +94,8 @@ git_clone() {
     echo 'foo bar' >"${TEST_NEXT_LOGIN}"
     run_script "DOTFILES_NEXT_LOGIN=${TEST_NEXT_LOGIN}" "${BIN_DIR}/dotfiles-next-login" 'foo' 'bar'
     assert_success
-    refute_output --partial 'Usage:'
+    refute_output
+    refute_stderr
     assert [ "$(grep -c 'foo bar' <"${TEST_NEXT_LOGIN}")" = '1' ]
 }
 
@@ -94,7 +103,8 @@ git_clone() {
     echo 'foo bar' >"${TEST_NEXT_LOGIN}"
     run_script "DOTFILES_NEXT_LOGIN=${TEST_NEXT_LOGIN}" "${BIN_DIR}/dotfiles-next-login" 'foo' 'baz'
     assert_success
-    refute_output --partial 'Usage:'
+    refute_output
+    refute_stderr
     assert [ "$(grep -c 'foo bar' <"${TEST_NEXT_LOGIN}")" = '1' ]
     assert [ "$(grep -c 'foo baz' <"${TEST_NEXT_LOGIN}")" = '1' ]
 }
@@ -102,7 +112,8 @@ git_clone() {
 @test 'dotfiles-repo-is-clean usage' {
     run_script "${BIN_DIR}/dotfiles-repo-is-clean"
     assert_failure
-    assert_line --partial 'Usage:'
+    refute_output
+    assert_stderr_line --partial 'Usage:'
 }
 
 @test 'dotfiles-repo-is-clean not a dir' {
@@ -110,7 +121,8 @@ git_clone() {
     touch "${REPO}"
     run_script "${BIN_DIR}/dotfiles-repo-is-clean" "${REPO}"
     assert_success
-    refute_output --partial 'Usage:'
+    refute_output
+    refute_stderr
 }
 
 @test 'dotfiles-repo-is-clean not a repo' {
@@ -118,7 +130,8 @@ git_clone() {
     mkdir -p "${REPO}"
     run_script "${BIN_DIR}/dotfiles-repo-is-clean" "${REPO}"
     assert_success
-    refute_output --partial 'Usage:'
+    refute_output
+    refute_stderr
 }
 
 @test 'dotfiles-repo-is-clean empty repo' {
@@ -127,7 +140,8 @@ git_clone() {
     (cd "${REPO}" && git_init)
     run_script "${BIN_DIR}/dotfiles-repo-is-clean" "${REPO}"
     assert_success
-    refute_output --partial 'Usage:'
+    refute_output
+    refute_stderr
 }
 
 @test 'dotfiles-repo-is-clean untracked file' {
@@ -137,7 +151,8 @@ git_clone() {
     touch "${REPO}/a"
     run_script "${BIN_DIR}/dotfiles-repo-is-clean" "${REPO}"
     assert_failure
-    refute_output --partial 'Usage:'
+    refute_output
+    refute_stderr
 }
 
 @test 'dotfiles-repo-is-clean clean no upstream' {
@@ -148,7 +163,8 @@ git_clone() {
     (cd "${REPO}" && git add a && git commit -m 'Foo')
     run_script "${BIN_DIR}/dotfiles-repo-is-clean" "${REPO}"
     assert_success
-    refute_output --partial 'Usage:'
+    refute_output
+    refute_stderr
 }
 
 @test 'dotfiles-repo-is-clean modified file' {
@@ -160,7 +176,8 @@ git_clone() {
     echo 'a' >"${REPO}/a"
     run_script "${BIN_DIR}/dotfiles-repo-is-clean" "${REPO}"
     assert_failure
-    refute_output --partial 'Usage:'
+    refute_output
+    refute_stderr
 }
 
 @test 'dotfiles-repo-is-clean unpushed commit' {
@@ -175,7 +192,8 @@ git_clone() {
     (cd "${REPO}" && git add a && git commit -m 'Bar')
     run_script "${BIN_DIR}/dotfiles-repo-is-clean" "${REPO}"
     assert_failure
-    refute_output --partial 'Usage:'
+    refute_output
+    refute_stderr
 }
 
 @test 'dotfiles-repo-is-clean pushed commit' {
@@ -190,233 +208,204 @@ git_clone() {
     (cd "${REPO}" && git add a && git commit -m 'Bar' && git push)
     run_script "${BIN_DIR}/dotfiles-repo-is-clean" "${REPO}"
     assert_success
-    refute_output --partial 'Usage:'
+    refute_output
+    refute_stderr
 }
 
 @test 'dotfiles-echo-colour no args' {
     run_script "${BIN_DIR}/dotfiles-echo-colour"
     assert_failure
-    assert_line --partial 'Usage:'
+    refute_output
+    assert_stderr_line --partial 'Usage:'
 }
 
 @test 'dotfiles-echo-colour one arg' {
     run_script "${BIN_DIR}/dotfiles-echo-colour" '31'
     assert_failure
-    assert_line --partial 'Usage:'
+    refute_output
+    assert_stderr_line --partial 'Usage:'
 }
 
 @test 'dotfiles-echo-colour success' {
     run_script "${BIN_DIR}/dotfiles-echo-colour" '31' 'foo' 'bar baz'
     assert_success
-    refute_line --partial 'Usage:'
     assert_line "$(echo -e "\e[31mfoo bar baz\e[0m")"
+    refute_stderr
 }
 
 @test 'dotfiles-echo-red usage' {
     run_script "PATH=${BIN_DIR}:${PATH}" "${BIN_DIR}/dotfiles-echo-red"
     assert_failure
-    assert_line --partial 'Usage:'
+    refute_output
+    assert_stderr_line --partial 'Usage:'
 }
 
 @test 'dotfiles-echo-red success' {
     run_script "PATH=${BIN_DIR}:${PATH}" "${BIN_DIR}/dotfiles-echo-red" 'foo' 'bar baz'
     assert_success
-    refute_line --partial 'Usage:'
     assert_line "$(echo -e "\e[31mfoo bar baz\e[0m")"
+    refute_stderr
 }
 
 @test 'dotfiles-echo-green usage' {
     run_script "PATH=${BIN_DIR}:${PATH}" "${BIN_DIR}/dotfiles-echo-green"
     assert_failure
-    assert_line --partial 'Usage:'
+    refute_output
+    assert_stderr_line --partial 'Usage:'
 }
 
 @test 'dotfiles-echo-green success' {
     run_script "PATH=${BIN_DIR}:${PATH}" "${BIN_DIR}/dotfiles-echo-green" 'foo' 'bar baz'
     assert_success
-    refute_line --partial 'Usage:'
     assert_line "$(echo -e "\e[32mfoo bar baz\e[0m")"
+    refute_stderr
 }
 
 @test 'dotfiles-echo-yellow usage' {
     run_script "PATH=${BIN_DIR}:${PATH}" "${BIN_DIR}/dotfiles-echo-yellow"
     assert_failure
-    assert_line --partial 'Usage:'
+    refute_output
+    assert_stderr_line --partial 'Usage:'
 }
 
 @test 'dotfiles-echo-yellow success' {
     run_script "PATH=${BIN_DIR}:${PATH}" "${BIN_DIR}/dotfiles-echo-yellow" 'foo' 'bar baz'
     assert_success
-    refute_line --partial 'Usage:'
     assert_line "$(echo -e "\e[33mfoo bar baz\e[0m")"
+    refute_stderr
 }
 
 @test 'dotfiles-echo-blue usage' {
     run_script "PATH=${BIN_DIR}:${PATH}" "${BIN_DIR}/dotfiles-echo-blue"
     assert_failure
-    assert_line --partial 'Usage:'
+    refute_output
+    assert_stderr_line --partial 'Usage:'
 }
 
 @test 'dotfiles-echo-blue success' {
     run_script "PATH=${BIN_DIR}:${PATH}" "${BIN_DIR}/dotfiles-echo-blue" 'foo' 'bar baz'
     assert_success
-    refute_line --partial 'Usage:'
     assert_line "$(echo -e "\e[34mfoo bar baz\e[0m")"
-}
-
-@test 'dotfiles-yn-y nothing' {
-    run_script "${BIN_DIR}/dotfiles-yn-y" 'foo' <<<''
-    assert_success
-}
-
-@test 'dotfiles-yn-y y' {
-    run_script "${BIN_DIR}/dotfiles-yn-y" 'foo' <<<'y'
-    assert_success
-}
-
-@test 'dotfiles-yn-y Y' {
-    run_script "${BIN_DIR}/dotfiles-yn-y" 'foo' <<<'Y'
-    assert_success
-}
-
-@test 'dotfiles-yn-y n' {
-    run_script "${BIN_DIR}/dotfiles-yn-y" 'foo' <<<'n'
-    assert_failure
-}
-
-@test 'dotfiles-yn-y N' {
-    run_script "${BIN_DIR}/dotfiles-yn-y" 'foo' <<<'N'
-    assert_failure
-}
-
-@test 'dotfiles-yn-y other' {
-    run_script "${BIN_DIR}/dotfiles-yn-y" 'foo' <<<'foo'
-    assert_success
-}
-
-@test 'dotfiles-yn-n nothing' {
-    run_script "${BIN_DIR}/dotfiles-yn-n" 'foo' <<<''
-    assert_failure
-}
-
-@test 'dotfiles-yn-n y' {
-    run_script "${BIN_DIR}/dotfiles-yn-n" 'foo' <<<'y'
-    assert_success
-}
-
-@test 'dotfiles-yn-n Y' {
-    run_script "${BIN_DIR}/dotfiles-yn-n" 'foo' <<<'Y'
-    assert_success
-}
-
-@test 'dotfiles-yn-n n' {
-    run_script "${BIN_DIR}/dotfiles-yn-n" 'foo' <<<'n'
-    assert_failure
-}
-
-@test 'dotfiles-yn-n N' {
-    run_script "${BIN_DIR}/dotfiles-yn-n" 'foo' <<<'N'
-    assert_failure
-}
-
-@test 'dotfiles-yn-n other' {
-    run_script "${BIN_DIR}/dotfiles-yn-n" 'foo' <<<'foo'
-    assert_failure
+    refute_stderr
 }
 
 @test 'dotfiles-in-list no args' {
     run_script "${BIN_DIR}/dotfiles-in-list"
     assert_failure
-    assert_line --partial 'Usage:'
+    refute_output
+    assert_stderr_line --partial 'Usage:'
 }
 
 @test 'dotfiles-in-list one arg' {
     run_script "${BIN_DIR}/dotfiles-in-list" 'foo'
     assert_failure
-    assert_line --partial 'Usage:'
+    refute_output
+    assert_stderr_line --partial 'Usage:'
 }
 
 @test 'dotfiles-in-list colon in item' {
     run_script "${BIN_DIR}/dotfiles-in-list" 'foo' 'foo:'
     assert_failure
-    assert_line --partial 'Usage:'
+    refute_output
+    assert_stderr_line --partial 'Usage:'
 }
 
 @test 'dotfiles-in-list empty list' {
     run_script "${BIN_DIR}/dotfiles-in-list" '' 'foo'
     assert_failure
-    refute_output --partial 'Usage:'
+    refute_output
+    refute_stderr
 }
 
 @test 'dotfiles-in-list simple list present' {
     run_script "${BIN_DIR}/dotfiles-in-list" 'foo' 'foo'
     assert_success
-    refute_output --partial 'Usage:'
+    refute_output
+    refute_stderr
 }
 
 @test 'dotfiles-in-list simple list absent' {
     run_script "${BIN_DIR}/dotfiles-in-list" 'foo' 'bar'
     assert_failure
-    refute_output --partial 'Usage:'
+    refute_output
+    refute_stderr
 }
 
 @test 'dotfiles-in-list complex list present' {
     run_script "${BIN_DIR}/dotfiles-in-list" 'foo:bar:baz' 'bar'
     assert_success
-    refute_output --partial 'Usage:'
+    refute_output
+    refute_stderr
 }
 
 @test 'dotfiles-in-list complex list absent' {
     run_script "${BIN_DIR}/dotfiles-in-list" 'foo:bar:baz' 'quux'
     assert_failure
-    refute_output --partial 'Usage:'
+    refute_output
+    refute_stderr
 }
 
 @test 'dotfiles-linux-variant none' {
     run_script "${BIN_DIR}/dotfiles-linux-variant" 'foo' 'bar'
     assert_failure
+    refute_output
+    refute_stderr
 }
 
 @test 'dotfiles-linux-variant success' {
     run_script 'DOTFILES_LINUX_VARIANT=foo' "${BIN_DIR}/dotfiles-linux-variant" 'foo' 'bar'
     assert_success
+    refute_output
+    refute_stderr
 }
 
 @test 'dotfiles-linux-variant failure' {
     run_script 'DOTFILES_LINUX_VARIANT=baz' "${BIN_DIR}/dotfiles-linux-variant" 'foo' 'bar'
     assert_failure
+    refute_output
+    refute_stderr
 }
 
 @test 'dotfiles-known-linux-variant success' {
     run_script 'DOTFILES_LINUX_VARIANT=foo' "${BIN_DIR}/dotfiles-known-linux-variant"
     assert_success
+    refute_output
+    refute_stderr
 }
 
 @test 'dotfiles-known-linux-variant failure' {
     run_script "${BIN_DIR}/dotfiles-known-linux-variant"
     assert_failure
+    refute_output
+    refute_stderr
 }
 
 @test 'dotfiles-is-graphical success' {
     run_script 'DISPLAY=foo' "${BIN_DIR}/dotfiles-is-graphical"
     assert_success
+    refute_output
+    refute_stderr
 }
 
 @test 'dotfiles-is-graphical failure' {
     run_script "${BIN_DIR}/dotfiles-is-graphical"
     assert_failure
+    refute_output
+    refute_stderr
 }
 
 @test 'dotfiles-symlink-dir-contents no args' {
     run_script "${BIN_DIR}/dotfiles-symlink-dir-contents"
     assert_failure
-    assert_line --partial 'Usage:'
+    refute_output
+    assert_stderr_line --partial 'Usage:'
 }
 
 @test 'dotfiles-symlink-dir-contents one args' {
     run_script "${BIN_DIR}/dotfiles-symlink-dir-contents" 'a'
     assert_failure
-    assert_line --partial 'Usage:'
+    refute_output
+    assert_stderr_line --partial 'Usage:'
 }
 
 @test 'dotfiles-symlink-dir-contents nonexistent link dir' {
@@ -424,7 +413,8 @@ git_clone() {
     touch "${BATS_TEST_TMPDIR}/a/foo"
     run_script "${BIN_DIR}/dotfiles-symlink-dir-contents" "${BATS_TEST_TMPDIR}/a" "${BATS_TEST_TMPDIR}/b"
     assert_success
-    refute_output --partial 'Usage:'
+    refute_output
+    refute_stderr
     assert [ ! -d "${BATS_TEST_TMPDIR}/b" ]
 }
 
@@ -432,7 +422,8 @@ git_clone() {
     mkdir -p "${BATS_TEST_TMPDIR}/b"
     run_script "${BIN_DIR}/dotfiles-symlink-dir-contents" "${BATS_TEST_TMPDIR}/a" "${BATS_TEST_TMPDIR}/b"
     assert_success
-    refute_output --partial 'Usage:'
+    refute_output
+    refute_stderr
     assert [ "$(find "${BATS_TEST_TMPDIR}/b" -mindepth 1 | wc -l)" = '0' ]
 }
 
@@ -445,7 +436,8 @@ git_clone() {
     touch "${BATS_TEST_TMPDIR}/b/bar"
     run_script "${BIN_DIR}/dotfiles-symlink-dir-contents" "${BATS_TEST_TMPDIR}/a" "${BATS_TEST_TMPDIR}/b"
     assert_success
-    refute_output --partial 'Usage:'
+    refute_output
+    refute_stderr
     assert [ -h "${BATS_TEST_TMPDIR}/b/foo" ]
     assert [ "$(readlink -f "${BATS_TEST_TMPDIR}/b/foo")" = "${BATS_TEST_TMPDIR}/a/foo" ]
     assert [ -f "${BATS_TEST_TMPDIR}/b/bar" ]
@@ -457,6 +449,8 @@ git_clone() {
 @test 'dotfiles-log-package-message empty' {
     run_script "DOTFILES_PACKAGE_MESSAGES_FILE=${BATS_TEST_TMPDIR}/a" "${BIN_DIR}/dotfiles-log-package-message" 'foo' 'bar baz'
     assert_success
+    refute_output
+    refute_stderr
     assert [ "$(cat "${BATS_TEST_TMPDIR}/a")" = 'foo bar baz' ]
 }
 
@@ -464,12 +458,16 @@ git_clone() {
     echo 'foo' >"${BATS_TEST_TMPDIR}/a"
     run_script "DOTFILES_PACKAGE_MESSAGES_FILE=${BATS_TEST_TMPDIR}/a" "${BIN_DIR}/dotfiles-log-package-message" 'foo' 'bar baz'
     assert_success
+    refute_output
+    refute_stderr
     assert [ "$(cat "${BATS_TEST_TMPDIR}/a")" = "$(printf 'foo\nfoo bar baz')" ]
 }
 
 @test 'dotfiles-log-package-problem empty' {
     run_script "DOTFILES_PACKAGE_PROBLEMS_FILE=${BATS_TEST_TMPDIR}/a" "${BIN_DIR}/dotfiles-log-package-problem" 'foo' 'bar baz'
     assert_success
+    refute_output
+    refute_stderr
     assert [ "$(cat "${BATS_TEST_TMPDIR}/a")" = 'foo bar baz' ]
 }
 
@@ -477,19 +475,23 @@ git_clone() {
     echo 'foo' >"${BATS_TEST_TMPDIR}/a"
     run_script "DOTFILES_PACKAGE_PROBLEMS_FILE=${BATS_TEST_TMPDIR}/a" "${BIN_DIR}/dotfiles-log-package-problem" 'foo' 'bar baz'
     assert_success
+    refute_output
+    refute_stderr
     assert [ "$(cat "${BATS_TEST_TMPDIR}/a")" = "$(printf 'foo\nfoo bar baz')" ]
 }
 
 @test 'dotfiles-home-link usage' {
     run_script "${BIN_DIR}/dotfiles-home-link"
     assert_failure
-    assert_line --partial 'Usage:'
+    refute_output
+    assert_stderr_line --partial 'Usage:'
 }
 
 @test 'dotfiles-home-link nonexistent source' {
     run_script "PATH=${BIN_DIR}:${PATH}" "DOTFILES_PACKAGE_PROBLEMS_FILE=${BATS_TEST_TMPDIR}/problems" "${BIN_DIR}/dotfiles-home-link" "${BATS_TEST_TMPDIR}/a"
     assert_success
-    refute_output --partial 'Usage:'
+    refute_output
+    refute_stderr
     assert [ ! -e "${BATS_TEST_TMPDIR}/.a" ]
     assert [ ! -e "${BATS_TEST_TMPDIR}/problems" ]
 }
@@ -499,7 +501,8 @@ git_clone() {
     touch "${BATS_TEST_TMPDIR}/src/a"
     run_script "PATH=${BIN_DIR}:${PATH}" "DOTFILES_PACKAGE_PROBLEMS_FILE=${BATS_TEST_TMPDIR}/problems" "${BIN_DIR}/dotfiles-home-link" "${BATS_TEST_TMPDIR}/src/a"
     assert_success
-    refute_output --partial 'Usage:'
+    refute_output
+    refute_stderr
     assert [ -h "${BATS_TEST_TMPDIR}/.a" ]
     assert [ "$(readlink -f "${BATS_TEST_TMPDIR}/.a")" = "${BATS_TEST_TMPDIR}/src/a" ]
     assert [ ! -e "${BATS_TEST_TMPDIR}/problems" ]
@@ -511,7 +514,8 @@ git_clone() {
     ln -s "${BATS_TEST_TMPDIR}/src/a" "${BATS_TEST_TMPDIR}/.a"
     run_script "PATH=${BIN_DIR}:${PATH}" "DOTFILES_PACKAGE_PROBLEMS_FILE=${BATS_TEST_TMPDIR}/problems" "${BIN_DIR}/dotfiles-home-link" "${BATS_TEST_TMPDIR}/src/a"
     assert_success
-    refute_output --partial 'Usage:'
+    refute_output
+    refute_stderr
     assert [ -h "${BATS_TEST_TMPDIR}/.a" ]
     assert [ "$(readlink -f "${BATS_TEST_TMPDIR}/.a")" = "${BATS_TEST_TMPDIR}/src/a" ]
     assert [ ! -e "${BATS_TEST_TMPDIR}/problems" ]
@@ -523,7 +527,8 @@ git_clone() {
     touch "${BATS_TEST_TMPDIR}/.a"
     run_script "PATH=${BIN_DIR}:${PATH}" "DOTFILES_PACKAGE_PROBLEMS_FILE=${BATS_TEST_TMPDIR}/problems" "${BIN_DIR}/dotfiles-home-link" "${BATS_TEST_TMPDIR}/src/a"
     assert_failure
-    refute_output --partial 'Usage:'
+    refute_output
+    refute_stderr
     assert [ -f "${BATS_TEST_TMPDIR}/.a" ]
     assert [ "$(wc -l <"${BATS_TEST_TMPDIR}/problems")" = '1' ]
 }
@@ -535,7 +540,8 @@ git_clone() {
     ln -s "${BATS_TEST_TMPDIR}/src/b" "${BATS_TEST_TMPDIR}/.a"
     run_script "PATH=${BIN_DIR}:${PATH}" "DOTFILES_PACKAGE_PROBLEMS_FILE=${BATS_TEST_TMPDIR}/problems" "${BIN_DIR}/dotfiles-home-link" "${BATS_TEST_TMPDIR}/src/a"
     assert_failure
-    refute_output --partial 'Usage:'
+    refute_output
+    refute_stderr
     assert [ -h "${BATS_TEST_TMPDIR}/.a" ]
     assert [ "$(readlink -f "${BATS_TEST_TMPDIR}/.a")" = "${BATS_TEST_TMPDIR}/src/b" ]
     assert [ "$(wc -l <"${BATS_TEST_TMPDIR}/problems")" = '1' ]
@@ -545,7 +551,8 @@ git_clone() {
     mkdir -p "${BATS_TEST_TMPDIR}/src/a"
     run_script "PATH=${BIN_DIR}:${PATH}" "DOTFILES_PACKAGE_PROBLEMS_FILE=${BATS_TEST_TMPDIR}/problems" "${BIN_DIR}/dotfiles-home-link" "${BATS_TEST_TMPDIR}/src/a"
     assert_success
-    refute_output --partial 'Usage:'
+    refute_output
+    refute_stderr
     assert [ -h "${BATS_TEST_TMPDIR}/a" ]
     assert [ "$(readlink -f "${BATS_TEST_TMPDIR}/a")" = "${BATS_TEST_TMPDIR}/src/a" ]
     assert [ ! -e "${BATS_TEST_TMPDIR}/problems" ]
@@ -556,7 +563,8 @@ git_clone() {
     ln -s "${BATS_TEST_TMPDIR}/src/a" "${BATS_TEST_TMPDIR}/a"
     run_script "PATH=${BIN_DIR}:${PATH}" "DOTFILES_PACKAGE_PROBLEMS_FILE=${BATS_TEST_TMPDIR}/problems" "${BIN_DIR}/dotfiles-home-link" "${BATS_TEST_TMPDIR}/src/a"
     assert_success
-    refute_output --partial 'Usage:'
+    refute_output
+    refute_stderr
     assert [ -h "${BATS_TEST_TMPDIR}/a" ]
     assert [ "$(readlink -f "${BATS_TEST_TMPDIR}/a")" = "${BATS_TEST_TMPDIR}/src/a" ]
     assert [ ! -e "${BATS_TEST_TMPDIR}/problems" ]
@@ -567,7 +575,8 @@ git_clone() {
     mkdir -p "${BATS_TEST_TMPDIR}/a"
     run_script "PATH=${BIN_DIR}:${PATH}" "DOTFILES_PACKAGE_PROBLEMS_FILE=${BATS_TEST_TMPDIR}/problems" "${BIN_DIR}/dotfiles-home-link" "${BATS_TEST_TMPDIR}/src/a"
     assert_failure
-    refute_output --partial 'Usage:'
+    refute_output
+    refute_stderr
     assert [ -d "${BATS_TEST_TMPDIR}/a" ]
     assert [ "$(wc -l <"${BATS_TEST_TMPDIR}/problems")" = '1' ]
 }
@@ -578,7 +587,8 @@ git_clone() {
     ln -s "${BATS_TEST_TMPDIR}/src/b" "${BATS_TEST_TMPDIR}/a"
     run_script "PATH=${BIN_DIR}:${PATH}" "DOTFILES_PACKAGE_PROBLEMS_FILE=${BATS_TEST_TMPDIR}/problems" "${BIN_DIR}/dotfiles-home-link" "${BATS_TEST_TMPDIR}/src/a"
     assert_failure
-    refute_output --partial 'Usage:'
+    refute_output
+    refute_stderr
     assert [ -h "${BATS_TEST_TMPDIR}/a" ]
     assert [ "$(readlink -f "${BATS_TEST_TMPDIR}/a")" = "${BATS_TEST_TMPDIR}/src/b" ]
     assert [ "$(wc -l <"${BATS_TEST_TMPDIR}/problems")" = '1' ]
@@ -589,7 +599,8 @@ git_clone() {
     touch "${BATS_TEST_TMPDIR}/src/a"
     run_script "PATH=${BIN_DIR}:${PATH}" "DOTFILES_PACKAGE_PROBLEMS_FILE=${BATS_TEST_TMPDIR}/problems" "${BIN_DIR}/dotfiles-home-link" "${BATS_TEST_TMPDIR}/src/a" "${BATS_TEST_TMPDIR}/b/a"
     assert_success
-    refute_output --partial 'Usage:'
+    refute_output
+    refute_stderr
     assert [ -h "${BATS_TEST_TMPDIR}/b/a" ]
     assert [ "$(readlink -f "${BATS_TEST_TMPDIR}/b/a")" = "${BATS_TEST_TMPDIR}/src/a" ]
     assert [ ! -e "${BATS_TEST_TMPDIR}/problems" ]
@@ -602,7 +613,8 @@ git_clone() {
     ln -s "${BATS_TEST_TMPDIR}/src/a" "${BATS_TEST_TMPDIR}/b/a"
     run_script "PATH=${BIN_DIR}:${PATH}" "DOTFILES_PACKAGE_PROBLEMS_FILE=${BATS_TEST_TMPDIR}/problems" "${BIN_DIR}/dotfiles-home-link" "${BATS_TEST_TMPDIR}/src/a" "${BATS_TEST_TMPDIR}/b/a"
     assert_success
-    refute_output --partial 'Usage:'
+    refute_output
+    refute_stderr
     assert [ -h "${BATS_TEST_TMPDIR}/b/a" ]
     assert [ "$(readlink -f "${BATS_TEST_TMPDIR}/b/a")" = "${BATS_TEST_TMPDIR}/src/a" ]
     assert [ ! -e "${BATS_TEST_TMPDIR}/problems" ]
@@ -615,7 +627,8 @@ git_clone() {
     touch "${BATS_TEST_TMPDIR}/b/a"
     run_script "PATH=${BIN_DIR}:${PATH}" "DOTFILES_PACKAGE_PROBLEMS_FILE=${BATS_TEST_TMPDIR}/problems" "${BIN_DIR}/dotfiles-home-link" "${BATS_TEST_TMPDIR}/src/a" "${BATS_TEST_TMPDIR}/b/a"
     assert_failure
-    refute_output --partial 'Usage:'
+    refute_output
+    refute_stderr
     assert [ -f "${BATS_TEST_TMPDIR}/b/a" ]
     assert [ "$(wc -l <"${BATS_TEST_TMPDIR}/problems")" = '1' ]
 }
@@ -628,7 +641,8 @@ git_clone() {
     ln -s "${BATS_TEST_TMPDIR}/src/b" "${BATS_TEST_TMPDIR}/b/a"
     run_script "PATH=${BIN_DIR}:${PATH}" "DOTFILES_PACKAGE_PROBLEMS_FILE=${BATS_TEST_TMPDIR}/problems" "${BIN_DIR}/dotfiles-home-link" "${BATS_TEST_TMPDIR}/src/a" "${BATS_TEST_TMPDIR}/b/a"
     assert_failure
-    refute_output --partial 'Usage:'
+    refute_output
+    refute_stderr
     assert [ -h "${BATS_TEST_TMPDIR}/b/a" ]
     assert [ "$(readlink -f "${BATS_TEST_TMPDIR}/b/a")" = "${BATS_TEST_TMPDIR}/src/b" ]
     assert [ "$(wc -l <"${BATS_TEST_TMPDIR}/problems")" = '1' ]
@@ -637,19 +651,22 @@ git_clone() {
 @test 'dotfiles-home-bin-link no args' {
     run_script "${BIN_DIR}/dotfiles-home-bin-link"
     assert_failure
-    assert_line --partial 'Usage:'
+    refute_output
+    assert_stderr_line --partial 'Usage:'
 }
 
 @test 'dotfiles-home-bin-link one arg' {
     run_script "${BIN_DIR}/dotfiles-home-bin-link" 'a'
     assert_failure
-    assert_line --partial 'Usage:'
+    refute_output
+    assert_stderr_line --partial 'Usage:'
 }
 
 @test 'dotfiles-home-bin-link nonexistent command' {
     run_script "PATH=${BIN_DIR}:${PATH}" "DOTFILES_LOCAL_BIN=${BATS_TEST_TMPDIR}/a" "DOTFILES_PACKAGE_PROBLEMS_FILE=${BATS_TEST_TMPDIR}/problems" "${BIN_DIR}/dotfiles-home-bin-link" 'blahfoo' 'a'
     assert_success
-    refute_output --partial 'Usage:'
+    refute_output
+    refute_stderr
     assert [ ! -e "${BATS_TEST_TMPDIR}/a" ]
     assert [ ! -e "${BATS_TEST_TMPDIR}/problems" ]
 }
@@ -657,7 +674,8 @@ git_clone() {
 @test 'dotfiles-home-bin-link nonexisting' {
     run_script "PATH=${BIN_DIR}:${PATH}" "DOTFILES_LOCAL_BIN=${BATS_TEST_TMPDIR}/a" "DOTFILES_PACKAGE_PROBLEMS_FILE=${BATS_TEST_TMPDIR}/problems" "${BIN_DIR}/dotfiles-home-bin-link" 'dotfiles-home-bin-link' 'a' 'b'
     assert_success
-    refute_output --partial 'Usage:'
+    refute_output
+    refute_stderr
     assert [ -h "${BATS_TEST_TMPDIR}/a/a" ]
     assert [ "$(readlink -f "${BATS_TEST_TMPDIR}/a/a")" = "$(readlink -f "${BIN_DIR}/dotfiles-home-bin-link")" ]
     assert [ -h "${BATS_TEST_TMPDIR}/a/b" ]
@@ -671,7 +689,8 @@ git_clone() {
     ln -s "$(readlink -f "${BIN_DIR}/dotfiles-home-bin-link")" "${BATS_TEST_TMPDIR}/a/b"
     run_script "PATH=${BIN_DIR}:${PATH}" "DOTFILES_LOCAL_BIN=${BATS_TEST_TMPDIR}/a" "DOTFILES_PACKAGE_PROBLEMS_FILE=${BATS_TEST_TMPDIR}/problems" "${BIN_DIR}/dotfiles-home-bin-link" 'dotfiles-home-bin-link' 'a' 'b'
     assert_success
-    refute_output --partial 'Usage:'
+    refute_output
+    refute_stderr
     assert [ -h "${BATS_TEST_TMPDIR}/a/a" ]
     assert [ "$(readlink -f "${BATS_TEST_TMPDIR}/a/a")" = "$(readlink -f "${BIN_DIR}/dotfiles-home-bin-link")" ]
     assert [ -h "${BATS_TEST_TMPDIR}/a/b" ]
@@ -684,7 +703,8 @@ git_clone() {
     ln -s "$(readlink -f "${BIN_DIR}/dotfiles-home-link")" "${BATS_TEST_TMPDIR}/a/a"
     run_script "PATH=${BIN_DIR}:${PATH}" "DOTFILES_LOCAL_BIN=${BATS_TEST_TMPDIR}/a" "DOTFILES_PACKAGE_PROBLEMS_FILE=${BATS_TEST_TMPDIR}/problems" "${BIN_DIR}/dotfiles-home-bin-link" 'dotfiles-home-bin-link' 'a' 'b'
     assert_success
-    refute_output --partial 'Usage:'
+    refute_output
+    refute_stderr
     assert [ -h "${BATS_TEST_TMPDIR}/a/a" ]
     assert [ "$(readlink -f "${BATS_TEST_TMPDIR}/a/a")" = "$(readlink -f "${BIN_DIR}/dotfiles-home-link")" ]
     assert [ -h "${BATS_TEST_TMPDIR}/a/b" ]
@@ -697,7 +717,8 @@ git_clone() {
     touch "${BATS_TEST_TMPDIR}/a/a"
     run_script "PATH=${BIN_DIR}:${PATH}" "DOTFILES_LOCAL_BIN=${BATS_TEST_TMPDIR}/a" "DOTFILES_PACKAGE_PROBLEMS_FILE=${BATS_TEST_TMPDIR}/problems" "${BIN_DIR}/dotfiles-home-bin-link" 'dotfiles-home-bin-link' 'a' 'b'
     assert_success
-    refute_output --partial 'Usage:'
+    refute_output
+    refute_stderr
     assert [ -f "${BATS_TEST_TMPDIR}/a/a" ]
     assert [ -h "${BATS_TEST_TMPDIR}/a/b" ]
     assert [ "$(readlink -f "${BATS_TEST_TMPDIR}/a/b")" = "$(readlink -f "${BIN_DIR}/dotfiles-home-bin-link")" ]
@@ -707,6 +728,8 @@ git_clone() {
 @test 'dotfiles-logout-needed-set nonexistent' {
     run_script "PATH=${BIN_DIR}:${PATH}" "DOTFILES_NEEDS_LOGOUT=${BATS_TEST_TMPDIR}/logout" "${BIN_DIR}/dotfiles-logout-needed-set"
     assert_success
+    refute_output
+    refute_stderr
     assert [ -f "${BATS_TEST_TMPDIR}/logout" ]
 }
 
@@ -714,6 +737,8 @@ git_clone() {
     touch "${BATS_TEST_TMPDIR}/logout"
     run_script "PATH=${BIN_DIR}:${PATH}" "DOTFILES_NEEDS_LOGOUT=${BATS_TEST_TMPDIR}/logout" "${BIN_DIR}/dotfiles-logout-needed-set"
     assert_success
+    refute_output
+    refute_stderr
     assert [ -f "${BATS_TEST_TMPDIR}/logout" ]
 }
 
@@ -721,7 +746,8 @@ git_clone() {
     run_script "PATH=${BIN_DIR}:${PATH}" "DOTFILES_NEEDS_LOGOUT=${BATS_TEST_TMPDIR}/logout" "${BIN_DIR}/dotfiles-logout-needed-check"
     assert_success
     assert [ ! -e "${BATS_TEST_TMPDIR}/logout" ]
-    refute_output --partial 'Log out and log in again'
+    refute_output
+    refute_stderr
 }
 
 @test 'dotfiles-logout-needed-check existing' {
@@ -730,6 +756,7 @@ git_clone() {
     assert_success
     assert [ -f "${BATS_TEST_TMPDIR}/logout" ]
     assert_output --partial 'Log out and log in again'
+    refute_stderr
 }
 
 @test 'dotfiles-logout-needed-check ignored' {
@@ -737,32 +764,37 @@ git_clone() {
     run_script "PATH=${BIN_DIR}:${PATH}" "DOTFILES_NEEDS_LOGOUT=${BATS_TEST_TMPDIR}/logout" "DOTFILES_NO_LOGOUT_NEEDED_CHECK=t" "${BIN_DIR}/dotfiles-logout-needed-check"
     assert_success
     assert [ -f "${BATS_TEST_TMPDIR}/logout" ]
-    refute_output --partial 'Log out and log in again'
+    refute_output
+    refute_stderr
 }
 
 @test 'dotfiles-clone-or-update-repo no args' {
     run_script "PATH=${BIN_DIR}:${PATH}" "${BIN_DIR}/dotfiles-clone-or-update-repo"
     assert_failure
-    assert_line --partial 'Usage:'
+    refute_output
+    assert_stderr_line --partial 'Usage:'
 }
 
 @test 'dotfiles-clone-or-update-repo one arg' {
     run_script "PATH=${BIN_DIR}:${PATH}" "${BIN_DIR}/dotfiles-clone-or-update-repo" 'foo'
     assert_failure
-    assert_line --partial 'Usage:'
+    refute_output
+    assert_stderr_line --partial 'Usage:'
 }
 
 @test 'dotfiles-clone-or-update-repo two args' {
     run_script "PATH=${BIN_DIR}:${PATH}" "${BIN_DIR}/dotfiles-clone-or-update-repo" 'foo' 'bar'
     assert_failure
-    assert_line --partial 'Usage:'
+    refute_output
+    assert_stderr_line --partial 'Usage:'
 }
 
 @test 'dotfiles-clone-or-update-repo clone fails' {
     mkdir -p "${BATS_TEST_TMPDIR}/foo"
     run_script "PATH=${BIN_DIR}:${PATH}" "${BIN_DIR}/dotfiles-clone-or-update-repo" "${BATS_TEST_TMPDIR}/foo" "${BATS_TEST_TMPDIR}/bar" 'main'
     assert_failure
-    refute_line --partial 'Usage:'
+    refute_output
+    refute_stderr_line --partial 'Usage:'
     assert [ ! -e "${BATS_TEST_TMPDIR}/bar" ]
 }
 
@@ -772,7 +804,7 @@ git_clone() {
     (cd "${BATS_TEST_TMPDIR}/foo" && git_init && git add a && git commit -m 'Foo')
     run_script "PATH=${BIN_DIR}:${PATH}" "${BIN_DIR}/dotfiles-clone-or-update-repo" "${BATS_TEST_TMPDIR}/foo" "${BATS_TEST_TMPDIR}/bar" 'main'
     assert_success
-    refute_line --partial 'Usage:'
+    refute_stderr_line --partial 'Usage:'
     assert [ -d "${BATS_TEST_TMPDIR}/bar" ]
     assert [ -f "${BATS_TEST_TMPDIR}/bar/a" ]
     (cd "${BATS_TEST_TMPDIR}/bar" && assert [ "$(git branch --show-current)" = 'main' ])
@@ -784,7 +816,7 @@ git_clone() {
     (cd "${BATS_TEST_TMPDIR}/foo" && git_init && git add a && git commit -m 'Foo' && git checkout -b dev)
     run_script "PATH=${BIN_DIR}:${PATH}" "${BIN_DIR}/dotfiles-clone-or-update-repo" "${BATS_TEST_TMPDIR}/foo" "${BATS_TEST_TMPDIR}/bar" 'dev'
     assert_success
-    refute_line --partial 'Usage:'
+    refute_stderr_line --partial 'Usage:'
     assert [ -d "${BATS_TEST_TMPDIR}/bar" ]
     assert [ -f "${BATS_TEST_TMPDIR}/bar/a" ]
     (cd "${BATS_TEST_TMPDIR}/bar" && assert [ "$(git branch --show-current)" = 'dev' ])
@@ -798,7 +830,7 @@ git_clone() {
     (cd "${BATS_TEST_TMPDIR}/foo" && git add b && git commit -m 'Bar')
     run_script "PATH=${BIN_DIR}:${PATH}" "${BIN_DIR}/dotfiles-clone-or-update-repo" "${BATS_TEST_TMPDIR}/foo" "${BATS_TEST_TMPDIR}/bar" 'foo'
     assert_success
-    refute_line --partial 'Usage:'
+    refute_stderr_line --partial 'Usage:'
     assert [ -d "${BATS_TEST_TMPDIR}/bar" ]
     assert [ -f "${BATS_TEST_TMPDIR}/bar/a" ]
     assert [ ! -e "${BATS_TEST_TMPDIR}/bar/b" ]
@@ -812,7 +844,7 @@ git_clone() {
     (cd "${BATS_TEST_TMPDIR}/foo" && git_init && git add a && git commit -m 'Foo')
     run_script "PATH=${BIN_DIR}:${PATH}" "${BIN_DIR}/dotfiles-clone-or-update-repo" "${BATS_TEST_TMPDIR}/foo" "${BATS_TEST_TMPDIR}/bar" 'dev'
     assert_failure
-    refute_line --partial 'Usage:'
+    refute_stderr_line --partial 'Usage:'
     assert [ ! -e "${BATS_TEST_TMPDIR}/bar" ]
 }
 
@@ -825,7 +857,7 @@ git_clone() {
     (cd "${BATS_TEST_TMPDIR}/foo" && git add a && git commit -m 'Bar')
     run_script "PATH=${BIN_DIR}:${PATH}" "${BIN_DIR}/dotfiles-clone-or-update-repo" "${BATS_TEST_TMPDIR}/foo" "${BATS_TEST_TMPDIR}/bar" 'main'
     assert_success
-    refute_line --partial 'Usage:'
+    refute_stderr_line --partial 'Usage:'
     assert [ -d "${BATS_TEST_TMPDIR}/bar" ]
     assert [ -f "${BATS_TEST_TMPDIR}/bar/a" ]
     assert [ "$(cat "${BATS_TEST_TMPDIR}/bar/a")" = 'foo' ]
@@ -842,7 +874,7 @@ git_clone() {
     (cd "${BATS_TEST_TMPDIR}/foo" && git add a && git commit -m 'Bar')
     run_script "PATH=${BIN_DIR}:${PATH}" "${BIN_DIR}/dotfiles-clone-or-update-repo" "${BATS_TEST_TMPDIR}/foo" "${BATS_TEST_TMPDIR}/bar" 'dev'
     assert_success
-    refute_line --partial 'Usage:'
+    refute_stderr_line --partial 'Usage:'
     assert [ -d "${BATS_TEST_TMPDIR}/bar" ]
     assert [ -f "${BATS_TEST_TMPDIR}/bar/a" ]
     assert [ "$(cat "${BATS_TEST_TMPDIR}/bar/a")" = 'foo' ]
@@ -859,7 +891,7 @@ git_clone() {
     (cd "${BATS_TEST_TMPDIR}/foo" && git add a && git commit -m 'Bar')
     run_script "PATH=${BIN_DIR}:${PATH}" "${BIN_DIR}/dotfiles-clone-or-update-repo" "${BATS_TEST_TMPDIR}/foo" "${BATS_TEST_TMPDIR}/bar" 'foo'
     assert_success
-    refute_line --partial 'Usage:'
+    refute_stderr_line --partial 'Usage:'
     assert [ -d "${BATS_TEST_TMPDIR}/bar" ]
     assert [ -f "${BATS_TEST_TMPDIR}/bar/a" ]
     assert [ "$(cat "${BATS_TEST_TMPDIR}/bar/a")" = '' ]
@@ -876,7 +908,7 @@ git_clone() {
     (cd "${BATS_TEST_TMPDIR}/foo" && git add a && git commit -m 'Bar')
     run_script "PATH=${BIN_DIR}:${PATH}" "${BIN_DIR}/dotfiles-clone-or-update-repo" "${BATS_TEST_TMPDIR}/foo" "${BATS_TEST_TMPDIR}/bar" 'dev'
     assert_failure
-    refute_line --partial 'Usage:'
+    refute_stderr_line --partial 'Usage:'
     assert [ -d "${BATS_TEST_TMPDIR}/bar" ]
     assert [ -f "${BATS_TEST_TMPDIR}/bar/a" ]
     assert [ "$(cat "${BATS_TEST_TMPDIR}/bar/a")" = '' ]
@@ -890,7 +922,7 @@ git_clone() {
     mkdir -p "${BATS_TEST_TMPDIR}/bar"
     run_script "PATH=${BIN_DIR}:${PATH}" "${BIN_DIR}/dotfiles-clone-or-update-repo" "${BATS_TEST_TMPDIR}/foo" "${BATS_TEST_TMPDIR}/bar" 'main'
     assert_failure
-    refute_line --partial 'Usage:'
+    refute_stderr_line --partial 'Usage:'
     assert [ -d "${BATS_TEST_TMPDIR}/bar" ]
     assert [ ! -e "${BATS_TEST_TMPDIR}/bar/a" ]
 }
@@ -903,7 +935,7 @@ git_clone() {
     echo 'foo' >"${BATS_TEST_TMPDIR}/bar/a"
     run_script "PATH=${BIN_DIR}:${PATH}" "${BIN_DIR}/dotfiles-clone-or-update-repo" "${BATS_TEST_TMPDIR}/foo" "${BATS_TEST_TMPDIR}/bar" 'main'
     assert_failure
-    refute_line --partial 'Usage:'
+    refute_stderr_line --partial 'Usage:'
     assert [ -d "${BATS_TEST_TMPDIR}/bar" ]
     assert [ -f "${BATS_TEST_TMPDIR}/bar/a" ]
     assert [ "$(cat "${BATS_TEST_TMPDIR}/bar/a")" = 'foo' ]
@@ -913,19 +945,22 @@ git_clone() {
 @test 'dotfiles-clone-or-update-repos no args' {
     run_script "PATH=${BIN_DIR}:${PATH}" "${BIN_DIR}/dotfiles-clone-or-update-repos"
     assert_failure
-    assert_line --partial 'Usage:'
+    refute_output
+    assert_stderr_line --partial 'Usage:'
 }
 
 @test 'dotfiles-clone-or-update-repos one arg' {
     run_script "PATH=${BIN_DIR}:${PATH}" "${BIN_DIR}/dotfiles-clone-or-update-repos" 'foo'
     assert_failure
-    assert_line --partial 'Usage:'
+    refute_output
+    assert_stderr_line --partial 'Usage:'
 }
 
 @test 'dotfiles-clone-or-update-repos two args' {
     run_script "PATH=${BIN_DIR}:${PATH}" "${BIN_DIR}/dotfiles-clone-or-update-repos" 'foo' 'bar'
     assert_failure
-    assert_line --partial 'Usage:'
+    refute_output
+    assert_stderr_line --partial 'Usage:'
 }
 
 @test 'dotfiles-clone-or-update-repos clone' {
@@ -937,7 +972,7 @@ git_clone() {
     (cd "${BATS_TEST_TMPDIR}/bar.git" && git_init master && git add b && git commit -m 'Foo')
     run_script "PATH=${BIN_DIR}:${PATH}" "${BIN_DIR}/dotfiles-clone-or-update-repos" "${BATS_TEST_TMPDIR}/dir" "${BATS_TEST_TMPDIR}/foo" 'main' "${BATS_TEST_TMPDIR}/bar.git" 'master'
     assert_success
-    refute_line --partial 'Usage:'
+    refute_stderr_line --partial 'Usage:'
     assert [ -d "${BATS_TEST_TMPDIR}/dir/foo" ]
     assert [ -f "${BATS_TEST_TMPDIR}/dir/foo/a" ]
     assert [ "$(cat "${BATS_TEST_TMPDIR}/dir/foo/a")" = 'foo' ]
@@ -967,7 +1002,7 @@ git_clone() {
 
     run_script "PATH=${BIN_DIR}:${PATH}" "${BIN_DIR}/dotfiles-clone-or-update-repos" "${BATS_TEST_TMPDIR}/dir" "${BATS_TEST_TMPDIR}/foo" 'main' "${BATS_TEST_TMPDIR}/bar.git" 'master'
     assert_success
-    refute_line --partial 'Usage:'
+    refute_stderr_line --partial 'Usage:'
     assert [ -d "${BATS_TEST_TMPDIR}/dir/foo" ]
     assert [ -f "${BATS_TEST_TMPDIR}/dir/foo/a" ]
     assert [ "$(cat "${BATS_TEST_TMPDIR}/dir/foo/a")" = 'baz' ]
@@ -986,7 +1021,7 @@ git_clone() {
     (cd "${BATS_TEST_TMPDIR}/bar.git" && git_init master && git add b && git commit -m 'Foo')
     run_script "PATH=${BIN_DIR}:${PATH}" "${BIN_DIR}/dotfiles-clone-or-update-repos" "${BATS_TEST_TMPDIR}/dir" "${BATS_TEST_TMPDIR}/foo" 'main' "${BATS_TEST_TMPDIR}/bar.git" 'master'
     assert_failure
-    refute_line --partial 'Usage:'
+    refute_stderr_line --partial 'Usage:'
     assert [ ! -e "${BATS_TEST_TMPDIR}/dir/foo" ]
     assert [ ! -e "${BATS_TEST_TMPDIR}/dir/bar" ]
 }
@@ -1000,7 +1035,7 @@ git_clone() {
     (cd "${BATS_TEST_TMPDIR}/bar.git" && git_init master && git add b && git commit -m 'Foo')
     run_script "PATH=${BIN_DIR}:${PATH}" "${BIN_DIR}/dotfiles-clone-or-update-repos" "${BATS_TEST_TMPDIR}/dir" "${BATS_TEST_TMPDIR}/foo" 'main' "${BATS_TEST_TMPDIR}/bar.git"
     assert_failure
-    assert_line --partial 'Usage:'
+    assert_stderr_line --partial 'Usage:'
     assert [ -d "${BATS_TEST_TMPDIR}/dir/foo" ]
     assert [ -f "${BATS_TEST_TMPDIR}/dir/foo/a" ]
     assert [ "$(cat "${BATS_TEST_TMPDIR}/dir/foo/a")" = 'foo' ]
@@ -1011,85 +1046,99 @@ git_clone() {
 @test 'dotfiles-package-root-valid usage' {
     run_script "${BIN_DIR}/dotfiles-package-root-valid"
     assert_failure
-    assert_line --partial 'Usage:'
+    refute_output
+    assert_stderr_line --partial 'Usage:'
 }
 
 @test 'dotfiles-package-root-valid good' {
     run_script "${BIN_DIR}/dotfiles-package-root-valid" '/foo/bar'
     assert_success
-    refute_output --partial 'Usage:'
+    refute_output
+    refute_stderr
 }
 
 @test 'dotfiles-package-root-valid bad relative' {
     run_script "${BIN_DIR}/dotfiles-package-root-valid" 'foo/bar'
     assert_failure
-    refute_output --partial 'Usage:'
+    refute_output
+    refute_stderr
 }
 
 @test 'dotfiles-package-root-valid bad colon' {
     run_script "${BIN_DIR}/dotfiles-package-root-valid" '/foo:bar'
     assert_failure
-    refute_output --partial 'Usage:'
+    refute_output
+    refute_stderr
 }
 
 @test 'dotfiles-package-root-valid bad newline' {
     run_script "${BIN_DIR}/dotfiles-package-root-valid" "$(printf "/foo\nbar")"
     assert_failure
-    refute_output --partial 'Usage:'
+    refute_output
+    refute_stderr
 }
 
 @test 'dotfiles-package-name-valid usage' {
     run_script "${BIN_DIR}/dotfiles-package-name-valid"
     assert_failure
-    assert_line --partial 'Usage:'
+    refute_output
+    assert_stderr_line --partial 'Usage:'
 }
 
 @test 'dotfiles-package-name-valid good' {
     run_script "${BIN_DIR}/dotfiles-package-name-valid" 'foo'
     assert_success
-    refute_output --partial 'Usage:'
+    refute_output
+    refute_stderr
 }
 
 @test 'dotfiles-package-name-valid bad slash' {
     run_script "${BIN_DIR}/dotfiles-package-name-valid" 'foo/bar'
     assert_failure
-    refute_output --partial 'Usage:'
+    refute_output
+    refute_stderr
 }
 
 @test 'dotfiles-package-name-valid bad space' {
     run_script "${BIN_DIR}/dotfiles-package-name-valid" 'foo bar'
     assert_failure
-    refute_output --partial 'Usage:'
+    refute_output
+    refute_stderr
 }
 
 @test 'dotfiles-package-name-valid bad colon' {
     run_script "${BIN_DIR}/dotfiles-package-name-valid" 'foo:bar'
     assert_failure
-    refute_output --partial 'Usage:'
+    refute_output
+    refute_stderr
 }
 
 @test 'dotfiles-package-name-valid bad newline' {
     run_script "${BIN_DIR}/dotfiles-package-name-valid" "$(printf "foo\nbar")"
     assert_failure
-    refute_output --partial 'Usage:'
+    refute_output
+    refute_stderr
 }
 
 @test 'dotfiles-package-ignored usage' {
     run_script "${BIN_DIR}/dotfiles-package-ignored"
     assert_failure
-    assert_line --partial 'Usage:'
+    refute_output
+    assert_stderr_line --partial 'Usage:'
 }
 
 @test 'dotfiles-package-ignored invalid package' {
     run_script "PATH=${BIN_DIR}:${PATH}" "${BIN_DIR}/dotfiles-package-ignored" 'foo/bar'
     assert_failure
-    assert_line --partial 'Usage:'
+    refute_output
+    assert_stderr_line --partial 'Usage:'
 }
 
 @test 'dotfiles-package-ignored no file' {
     run_script "PATH=${BIN_DIR}:${PATH}" "DOTFILES_PACKAGE_IGNORE_FILE=${BATS_TEST_TMPDIR}/a" "${BIN_DIR}/dotfiles-package-ignored" 'foo'
     assert_failure
-    refute_output --partial 'Usage:'
+    refute_output
+    refute_stderr
 }
 
 @test 'dotfiles-package-ignored empty file' {
@@ -1097,7 +1146,8 @@ git_clone() {
     touch "${IGNORE}"
     run_script "PATH=${BIN_DIR}:${PATH}" "DOTFILES_PACKAGE_IGNORE_FILE=${IGNORE}" "${BIN_DIR}/dotfiles-package-ignored" 'foo'
     assert_failure
-    refute_output --partial 'Usage:'
+    refute_output
+    refute_stderr
 }
 
 @test 'dotfiles-package-ignored success' {
@@ -1105,7 +1155,8 @@ git_clone() {
     printf "foo\nbar\nbaz\n" >"${IGNORE}"
     run_script "PATH=${BIN_DIR}:${PATH}" "DOTFILES_PACKAGE_IGNORE_FILE=${IGNORE}" "${BIN_DIR}/dotfiles-package-ignored" 'foo'
     assert_success
-    refute_output --partial 'Usage:'
+    refute_output
+    refute_stderr
 }
 
 @test 'dotfiles-package-ignored failure' {
@@ -1113,19 +1164,22 @@ git_clone() {
     printf "foo\nbar\nbaz\n" >"${IGNORE}"
     run_script "PATH=${BIN_DIR}:${PATH}" "DOTFILES_PACKAGE_IGNORE_FILE=${IGNORE}" "${BIN_DIR}/dotfiles-package-ignored" 'quux'
     assert_failure
-    refute_output --partial 'Usage:'
+    refute_output
+    refute_stderr
 }
 
 @test 'dotfiles-package-ignore usage' {
     run_script "PATH=${BIN_DIR}:${PATH}" "${BIN_DIR}/dotfiles-package-ignore"
     assert_failure
-    assert_line --partial 'Usage:'
+    refute_output
+    assert_stderr_line --partial 'Usage:'
 }
 
 @test 'dotfiles-package-ignore invalid package' {
     run_script "PATH=${BIN_DIR}:${PATH}" "${BIN_DIR}/dotfiles-package-ignore" 'foo/bar'
     assert_failure
-    assert_line --partial 'Usage:'
+    refute_output
+    assert_stderr_line --partial 'Usage:'
 }
 
 @test 'dotfiles-package-ignore no file' {
@@ -1133,7 +1187,8 @@ git_clone() {
     local IGNORE_FILE="${IGNORE_DIR}/a"
     run_script "PATH=${BIN_DIR}:${PATH}" "DOTFILES_PACKAGE_INSTALL_DIR=${IGNORE_DIR}" "DOTFILES_PACKAGE_IGNORE_FILE=${IGNORE_FILE}" "${BIN_DIR}/dotfiles-package-ignore" 'foo' 'bar'
     assert_success
-    refute_output --partial 'Usage:'
+    refute_output
+    refute_stderr
     assert [ "$(wc -l <"${IGNORE_FILE}")" = '2' ]
     assert [ "$(cat "${IGNORE_FILE}")" = "$(printf "foo\nbar")" ]
 }
@@ -1145,7 +1200,8 @@ git_clone() {
     echo 'foo' >"${IGNORE_FILE}"
     run_script "PATH=${BIN_DIR}:${PATH}" "DOTFILES_PACKAGE_INSTALL_DIR=${IGNORE_DIR}" "DOTFILES_PACKAGE_IGNORE_FILE=${IGNORE_FILE}" "${BIN_DIR}/dotfiles-package-ignore" 'bar' 'baz'
     assert_success
-    refute_output --partial 'Usage:'
+    refute_output
+    refute_stderr
     assert [ "$(wc -l <"${IGNORE_FILE}")" = '3' ]
     assert [ "$(cat "${IGNORE_FILE}")" = "$(printf 'foo\nbar\nbaz')" ]
 }
@@ -1157,7 +1213,8 @@ git_clone() {
     echo 'foo' >"${IGNORE_FILE}"
     run_script "PATH=${BIN_DIR}:${PATH}" "DOTFILES_PACKAGE_INSTALL_DIR=${IGNORE_DIR}" "DOTFILES_PACKAGE_IGNORE_FILE=${IGNORE_FILE}" "${BIN_DIR}/dotfiles-package-ignore" 'foo' 'bar'
     assert_success
-    refute_output --partial 'Usage:'
+    refute_output
+    refute_stderr
     assert [ "$(wc -l <"${IGNORE_FILE}")" = '2' ]
     assert [ "$(cat "${IGNORE_FILE}")" = "$(printf "foo\nbar")" ]
 }
@@ -1165,20 +1222,23 @@ git_clone() {
 @test 'dotfiles-package-unignore usage' {
     run_script "PATH=${BIN_DIR}:${PATH}" "${BIN_DIR}/dotfiles-package-unignore"
     assert_failure
-    assert_line --partial 'Usage:'
+    refute_output
+    assert_stderr_line --partial 'Usage:'
 }
 
 @test 'dotfiles-package-unignore invalid package' {
     run_script "PATH=${BIN_DIR}:${PATH}" "${BIN_DIR}/dotfiles-package-unignore" 'foo/bar'
     assert_failure
-    assert_line --partial 'Usage:'
+    refute_output
+    assert_stderr_line --partial 'Usage:'
 }
 
 @test 'dotfiles-package-unignore no file' {
     local IGNORE_FILE="${BATS_TEST_TMPDIR}/a"
     run_script "PATH=${BIN_DIR}:${PATH}" "DOTFILES_PACKAGE_IGNORE_FILE=${IGNORE_FILE}" "${BIN_DIR}/dotfiles-package-unignore" 'foo' 'bar'
     assert_success
-    refute_output --partial 'Usage:'
+    refute_output
+    refute_stderr
     assert [ ! -e "${IGNORE_FILE}" ]
 }
 
@@ -1187,7 +1247,8 @@ git_clone() {
     printf 'foo\nbar\nbaz\n' >"${IGNORE_FILE}"
     run_script "PATH=${BIN_DIR}:${PATH}" "DOTFILES_PACKAGE_IGNORE_FILE=${IGNORE_FILE}" "${BIN_DIR}/dotfiles-package-unignore" 'foo' 'bar'
     assert_success
-    refute_output --partial 'Usage:'
+    refute_output
+    refute_stderr
     assert [ "$(wc -l <"${IGNORE_FILE}")" = '1' ]
     assert [ "$(cat "${IGNORE_FILE}")" = 'baz' ]
 }
@@ -1197,7 +1258,8 @@ git_clone() {
     printf 'foo\nbar\nbaz\n' >"${IGNORE_FILE}"
     run_script "PATH=${BIN_DIR}:${PATH}" "DOTFILES_PACKAGE_IGNORE_FILE=${IGNORE_FILE}" "${BIN_DIR}/dotfiles-package-unignore" 'quux' 'yay'
     assert_success
-    refute_output --partial 'Usage:'
+    refute_output
+    refute_stderr
     assert [ "$(wc -l <"${IGNORE_FILE}")" = '3' ]
     assert [ "$(cat "${IGNORE_FILE}")" = "$(printf 'foo\nbar\nbaz')" ]
 }
@@ -1205,38 +1267,44 @@ git_clone() {
 @test 'dotfiles-package-installed usage' {
     run_script "${BIN_DIR}/dotfiles-package-installed"
     assert_failure
-    assert_line --partial 'Usage:'
+    refute_output
+    assert_stderr_line --partial 'Usage:'
 }
 
 @test 'dotfiles-package-installed invalid package' {
     run_script "PATH=${BIN_DIR}:${PATH}" "${BIN_DIR}/dotfiles-package-installed" 'foo/bar'
     assert_failure
-    assert_line --partial 'Usage:'
+    refute_output
+    assert_stderr_line --partial 'Usage:'
 }
 
 @test 'dotfiles-package-installed success' {
     touch "${BATS_TEST_TMPDIR}/foo.installed"
     run_script "PATH=${BIN_DIR}:${PATH}" "DOTFILES_PACKAGE_INSTALL_DIR=${BATS_TEST_TMPDIR}" "${BIN_DIR}/dotfiles-package-installed" 'foo'
     assert_success
-    refute_output --partial 'Usage:'
+    refute_output
+    refute_stderr
 }
 
 @test 'dotfiles-package-installed failure' {
     run_script "PATH=${BIN_DIR}:${PATH}" "DOTFILES_PACKAGE_INSTALL_DIR=${BATS_TEST_TMPDIR}" "${BIN_DIR}/dotfiles-package-installed" 'foo'
     assert_failure
-    refute_output --partial 'Usage:'
+    refute_output
+    refute_stderr
 }
 
 @test 'dotfiles-package-source-path usage' {
     run_script "${BIN_DIR}/dotfiles-package-source-path"
     assert_failure
-    assert_line --partial 'Usage:'
+    refute_output
+    assert_stderr_line --partial 'Usage:'
 }
 
 @test 'dotfiles-package-source-path name invalid' {
     run_script "PATH=${BIN_DIR}:${PATH}" "DOTFILES_PACKAGE_ROOTS=:${BATS_TEST_TMPDIR}/a::${BATS_TEST_TMPDIR}/b::${BATS_TEST_TMPDIR}/c" "${BIN_DIR}/dotfiles-package-source-path" 'foo bar'
     assert_failure
-    assert_line --partial 'Usage:'
+    refute_output
+    assert_stderr_line --partial 'Usage:'
 }
 
 @test 'dotfiles-package-source-path name found' {
@@ -1245,7 +1313,7 @@ git_clone() {
     run_script "PATH=${BIN_DIR}:${PATH}" "DOTFILES_PACKAGE_ROOTS=:${BATS_TEST_TMPDIR}/a::${BATS_TEST_TMPDIR}/b:${BATS_TEST_TMPDIR}/c" "${BIN_DIR}/dotfiles-package-source-path" 'foo'
     assert_success
     assert_line "${BATS_TEST_TMPDIR}/b/foo"
-    refute_output --partial 'Usage:'
+    refute_stderr
 }
 
 @test 'dotfiles-package-source-path name not found' {
@@ -1254,7 +1322,7 @@ git_clone() {
     run_script "PATH=${BIN_DIR}:${PATH}" "DOTFILES_PACKAGE_ROOTS=:${BATS_TEST_TMPDIR}/a::${BATS_TEST_TMPDIR}/b::${BATS_TEST_TMPDIR}/c" "${BIN_DIR}/dotfiles-package-source-path" 'bar'
     assert_failure
     refute_output
-    refute_output --partial 'Usage:'
+    refute_stderr
 }
 
 @test 'dotfiles-package-source-path name skip invalid roots' {
@@ -1263,39 +1331,43 @@ git_clone() {
     run_script "PATH=${BIN_DIR}:${PATH}" "$(printf '%s' "DOTFILES_PACKAGE_ROOTS=:${BATS_TEST_TMPDIR}/a::${BATS_TEST_TMPDIR}/a\nb::${BATS_TEST_TMPDIR}/c")" "${BIN_DIR}/dotfiles-package-source-path" 'foo'
     assert_failure
     refute_output
-    refute_output --partial 'Usage:'
+    refute_stderr
 }
 
 @test 'dotfiles-package-source-path path invalid root' {
     run_script "PATH=${BIN_DIR}:${PATH}" "${BIN_DIR}/dotfiles-package-source-path" 'foo/bar'
     assert_failure
-    assert_line --partial 'Usage:'
+    refute_output
+    assert_stderr_line --partial 'Usage:'
 }
 
 @test 'dotfiles-package-source-path path invalid name' {
     run_script "PATH=${BIN_DIR}:${PATH}" "${BIN_DIR}/dotfiles-package-source-path" '/foo/bar baz'
     assert_failure
-    assert_line --partial 'Usage:'
+    refute_output
+    assert_stderr_line --partial 'Usage:'
 }
 
 @test 'dotfiles-package-source-path path' {
     run_script "PATH=${BIN_DIR}:${PATH}" "${BIN_DIR}/dotfiles-package-source-path" '/foo/bar'
     assert_success
     assert_line "/foo/bar"
-    refute_line --partial 'Usage:'
+    refute_stderr
 }
 
 @test 'dotfiles-package-has-installer usage' {
     run_script "${BIN_DIR}/dotfiles-package-has-installer"
     assert_failure
-    assert_line --partial 'Usage:'
+    refute_output
+    assert_stderr_line --partial 'Usage:'
 }
 
 @test 'dotfiles-package-has-installer nonexistent package' {
     mkdir -p "${BATS_TEST_TMPDIR}/a"
     run_script "PATH=${BIN_DIR}:${PATH}" "DOTFILES_PACKAGE_ROOTS=${BATS_TEST_TMPDIR}/a" "${BIN_DIR}/dotfiles-package-has-installer" 'foo'
     assert_failure
-    refute_output --partial 'Usage:'
+    refute_output
+    refute_stderr
 }
 
 @test 'dotfiles-package-has-installer success' {
@@ -1303,14 +1375,16 @@ git_clone() {
     touch "${BATS_TEST_TMPDIR}/a/foo/install"
     run_script "PATH=${BIN_DIR}:${PATH}" "DOTFILES_PACKAGE_ROOTS=${BATS_TEST_TMPDIR}/a" "${BIN_DIR}/dotfiles-package-has-installer" 'foo'
     assert_success
-    refute_output --partial 'Usage:'
+    refute_output
+    refute_stderr
 }
 
 @test 'dotfiles-package-has-installer failure' {
     mkdir -p "${BATS_TEST_TMPDIR}/a/foo"
     run_script "PATH=${BIN_DIR}:${PATH}" "DOTFILES_PACKAGE_ROOTS=${BATS_TEST_TMPDIR}/a" "${BIN_DIR}/dotfiles-package-has-installer" 'foo'
     assert_failure
-    refute_output --partial 'Usage:'
+    refute_output
+    refute_stderr
 }
 
 @test 'dotfiles-package-has-installer path success' {
@@ -1318,34 +1392,39 @@ git_clone() {
     touch "${BATS_TEST_TMPDIR}/a/foo/install"
     run_script "PATH=${BIN_DIR}:${PATH}" "${BIN_DIR}/dotfiles-package-has-installer" "${BATS_TEST_TMPDIR}/a/foo"
     assert_success
-    refute_output --partial 'Usage:'
+    refute_output
+    refute_stderr
 }
 
 @test 'dotfiles-package-has-installer path failure' {
     mkdir -p "${BATS_TEST_TMPDIR}/a/foo"
     run_script "PATH=${BIN_DIR}:${PATH}" "${BIN_DIR}/dotfiles-package-has-installer" "${BATS_TEST_TMPDIR}/a/foo"
     assert_failure
-    refute_output --partial 'Usage:'
+    refute_output
+    refute_stderr
 }
 
 @test 'dotfiles-package-can-install usage' {
     run_script "${BIN_DIR}/dotfiles-package-can-install"
     assert_failure
-    assert_line --partial 'Usage:'
+    refute_output
+    assert_stderr_line --partial 'Usage:'
 }
 
 @test 'dotfiles-package-can-install nonexistent package' {
     mkdir -p "${BATS_TEST_TMPDIR}/a"
     run_script "PATH=${BIN_DIR}:${PATH}" "DOTFILES_PACKAGE_ROOTS=${BATS_TEST_TMPDIR}/a" "${BIN_DIR}/dotfiles-package-can-install" 'foo'
     assert_failure
-    refute_output --partial 'Usage:'
+    refute_output
+    refute_stderr
 }
 
 @test 'dotfiles-package-can-install package without installer' {
     mkdir -p "${BATS_TEST_TMPDIR}/a/foo"
     run_script "PATH=${BIN_DIR}:${PATH}" "DOTFILES_PACKAGE_ROOTS=${BATS_TEST_TMPDIR}/a" "${BIN_DIR}/dotfiles-package-can-install" 'foo'
     assert_failure
-    refute_output --partial 'Usage:'
+    refute_output
+    refute_stderr
 }
 
 @test 'dotfiles-package-can-install package with installer, no requirements' {
@@ -1353,7 +1432,8 @@ git_clone() {
     touch "${BATS_TEST_TMPDIR}/a/foo/install"
     run_script "PATH=${BIN_DIR}:${PATH}" "DOTFILES_PACKAGE_ROOTS=${BATS_TEST_TMPDIR}/a" "${BIN_DIR}/dotfiles-package-can-install" 'foo'
     assert_success
-    refute_output --partial 'Usage:'
+    refute_output
+    refute_stderr
 }
 
 @test 'dotfiles-package-can-install requirements met' {
@@ -1363,7 +1443,8 @@ git_clone() {
     chmod u+x "${BATS_TEST_TMPDIR}/a/foo/can-install"
     run_script "PATH=${BIN_DIR}:${PATH}" "DOTFILES_PACKAGE_ROOTS=${BATS_TEST_TMPDIR}/a" "${BIN_DIR}/dotfiles-package-can-install" 'foo'
     assert_success
-    refute_output --partial 'Usage:'
+    refute_output
+    refute_stderr
 }
 
 @test 'dotfiles-package-can-install requirements unmet' {
@@ -1373,21 +1454,24 @@ git_clone() {
     chmod u+x "${BATS_TEST_TMPDIR}/a/foo/can-install"
     run_script "PATH=${BIN_DIR}:${PATH}" "DOTFILES_PACKAGE_ROOTS=${BATS_TEST_TMPDIR}/a" "${BIN_DIR}/dotfiles-package-can-install" 'foo'
     assert_failure
-    refute_output --partial 'Usage:'
+    refute_output
+    refute_stderr
 }
 
 @test 'dotfiles-package-can-install nonexistent path' {
     mkdir -p "${BATS_TEST_TMPDIR}/a"
     run_script "PATH=${BIN_DIR}:${PATH}" "${BIN_DIR}/dotfiles-package-can-install" "${BATS_TEST_TMPDIR}/a/foo"
     assert_failure
-    refute_output --partial 'Usage:'
+    refute_output
+    refute_stderr
 }
 
 @test 'dotfiles-package-can-install path without installer' {
     mkdir -p "${BATS_TEST_TMPDIR}/a/foo"
     run_script "PATH=${BIN_DIR}:${PATH}" "${BIN_DIR}/dotfiles-package-can-install" "${BATS_TEST_TMPDIR}/a/foo"
     assert_failure
-    refute_output --partial 'Usage:'
+    refute_output
+    refute_stderr
 }
 
 @test 'dotfiles-package-can-install path with installer, no requirements' {
@@ -1395,7 +1479,8 @@ git_clone() {
     touch "${BATS_TEST_TMPDIR}/a/foo/install"
     run_script "PATH=${BIN_DIR}:${PATH}" "${BIN_DIR}/dotfiles-package-can-install" "${BATS_TEST_TMPDIR}/a/foo"
     assert_success
-    refute_output --partial 'Usage:'
+    refute_output
+    refute_stderr
 }
 
 @test 'dotfiles-package-can-install path requirements met' {
@@ -1405,7 +1490,8 @@ git_clone() {
     chmod u+x "${BATS_TEST_TMPDIR}/a/foo/can-install"
     run_script "PATH=${BIN_DIR}:${PATH}" "${BIN_DIR}/dotfiles-package-can-install" "${BATS_TEST_TMPDIR}/a/foo"
     assert_success
-    refute_output --partial 'Usage:'
+    refute_output
+    refute_stderr
 }
 
 @test 'dotfiles-package-can-install path requirements unmet' {
@@ -1415,7 +1501,8 @@ git_clone() {
     chmod u+x "${BATS_TEST_TMPDIR}/a/foo/can-install"
     run_script "PATH=${BIN_DIR}:${PATH}" "${BIN_DIR}/dotfiles-package-can-install" "${BATS_TEST_TMPDIR}/a/foo"
     assert_failure
-    refute_output --partial 'Usage:'
+    refute_output
+    refute_stderr
 }
 
 @test 'dotfiles-package-list too many args' {
@@ -1423,7 +1510,8 @@ git_clone() {
     local IGNORE_FILE="${BATS_TEST_TMPDIR}/ignore"
     run_script "PATH=${BIN_DIR}:${PATH}" "DOTFILES_PACKAGE_INSTALL_DIR=${INSTALL_DIR}" "DOTFILES_PACKAGE_IGNORE_FILE=${IGNORE_FILE}" "$(printf 'DOTFILES_PACKAGE_ROOTS=%s/a::%s/b:%s/c:%s/d\ne' "${BATS_TEST_TMPDIR}" "${BATS_TEST_TMPDIR}" "${BATS_TEST_TMPDIR}" "${BATS_TEST_TMPDIR}")" "${BIN_DIR}/dotfiles-package-list" 'a' 'b'
     assert_failure
-    assert_line --partial 'Too many args'
+    refute_output
+    assert_stderr_line --partial 'usage:'
 }
 
 @test 'dotfiles-package-list bad command' {
@@ -1431,7 +1519,8 @@ git_clone() {
     local IGNORE_FILE="${BATS_TEST_TMPDIR}/ignore"
     run_script "PATH=${BIN_DIR}:${PATH}" "DOTFILES_PACKAGE_INSTALL_DIR=${INSTALL_DIR}" "DOTFILES_PACKAGE_IGNORE_FILE=${IGNORE_FILE}" "$(printf 'DOTFILES_PACKAGE_ROOTS=%s/a::%s/b:%s/c:%s/d\ne' "${BATS_TEST_TMPDIR}" "${BATS_TEST_TMPDIR}" "${BATS_TEST_TMPDIR}" "${BATS_TEST_TMPDIR}")" "${BIN_DIR}/dotfiles-package-list" 'a'
     assert_failure
-    assert_line --partial 'Unknown command'
+    refute_output
+    assert_stderr_line --partial 'invalid choice'
 }
 
 @test 'dotfiles-package-list status' {
@@ -1496,6 +1585,7 @@ Not available to install
 Ignored ('dotfiles-package-unignore' to unignore)
     bar
     stuff"
+    refute_stderr
 }
 
 @test 'dotfiles-package-list can-ignore' {
@@ -1542,6 +1632,7 @@ Ignored ('dotfiles-package-unignore' to unignore)
 blah
 foo
 quux"
+    refute_stderr
 }
 
 @test 'dotfiles-package-list can-unignore' {
@@ -1586,6 +1677,7 @@ quux"
     assert_success
     assert_output "bar
 stuff"
+    refute_stderr
 }
 
 @test 'dotfiles-package-list can-install' {
@@ -1630,11 +1722,14 @@ stuff"
     assert_success
     assert_output "blah
 quux"
+    refute_stderr
 }
 
 @test 'dotfiles-package-lock not locked' {
     run_script "PATH=${BIN_DIR}:${PATH}" "DOTFILES_PACKAGE_MUTEX=${BATS_TEST_TMPDIR}/a" "${BIN_DIR}/dotfiles-package-lock"
     assert_success
+    refute_output
+    refute_stderr
     assert [ -d "${BATS_TEST_TMPDIR}/a" ]
 }
 
@@ -1642,6 +1737,8 @@ quux"
     mkdir -p "${BATS_TEST_TMPDIR}/a"
     run_script "PATH=${BIN_DIR}:${PATH}" "DOTFILES_PACKAGE_MUTEX=${BATS_TEST_TMPDIR}/a" "${BIN_DIR}/dotfiles-package-lock"
     assert_failure
+    assert_line --partial 'Another script is installing packages'
+    refute_stderr
     assert [ -d "${BATS_TEST_TMPDIR}/a" ]
 }
 
@@ -1649,12 +1746,16 @@ quux"
     mkdir -p "${BATS_TEST_TMPDIR}/a"
     run_script "PATH=${BIN_DIR}:${PATH}" "DOTFILES_PACKAGE_MUTEX=${BATS_TEST_TMPDIR}/a" "DOTFILES_NO_PACKAGE_LOCK=t" "${BIN_DIR}/dotfiles-package-lock"
     assert_success
+    refute_output
+    refute_stderr
     assert [ -d "${BATS_TEST_TMPDIR}/a" ]
 }
 
 @test 'dotfiles-package-unlock not locked' {
     run_script "PATH=${BIN_DIR}:${PATH}" "DOTFILES_PACKAGE_MUTEX=${BATS_TEST_TMPDIR}/a" "${BIN_DIR}/dotfiles-package-unlock"
     assert_success
+    assert_line --partial 'Failed to release package lock'
+    assert_stderr
     assert [ ! -e "${BATS_TEST_TMPDIR}/a" ]
 }
 
@@ -1662,6 +1763,8 @@ quux"
     mkdir -p "${BATS_TEST_TMPDIR}/a"
     run_script "PATH=${BIN_DIR}:${PATH}" "DOTFILES_PACKAGE_MUTEX=${BATS_TEST_TMPDIR}/a" "${BIN_DIR}/dotfiles-package-unlock"
     assert_success
+    refute_output
+    refute_stderr
     assert [ ! -e "${BATS_TEST_TMPDIR}/a" ]
 }
 
@@ -1669,6 +1772,8 @@ quux"
     mkdir -p "${BATS_TEST_TMPDIR}/a"
     run_script "PATH=${BIN_DIR}:${PATH}" "DOTFILES_PACKAGE_MUTEX=${BATS_TEST_TMPDIR}/a" "DOTFILES_NO_PACKAGE_LOCK=t" "${BIN_DIR}/dotfiles-package-unlock"
     assert_success
+    refute_output
+    refute_stderr
     assert [ -d "${BATS_TEST_TMPDIR}/a" ]
 }
 
@@ -1772,7 +1877,8 @@ quux"
 @test 'dotfiles-package-install usage' {
     run_script "${BIN_DIR}/dotfiles-package-install"
     assert_failure
-    assert_line --partial 'Usage:'
+    refute_output
+    assert_stderr_line --partial 'Usage:'
 }
 
 @test 'dotfiles-package-install needs lock' {
@@ -1797,7 +1903,7 @@ quux"
         "${BIN_DIR}/dotfiles-package-install" 'foo'
 
     assert_failure
-    refute_line --partial 'Usage:'
+    refute_stderr
     assert [ -d "${BATS_TEST_TMPDIR}/mutex" ]
     assert [ ! -e "${BATS_TEST_TMPDIR}/logout" ]
     refute_line --partial 'Log out and log in again'
@@ -1849,7 +1955,7 @@ EOF
         "${BIN_DIR}/dotfiles-package-install" 'foo' 'bar'
 
     assert_success
-    refute_line --partial 'Usage:'
+    refute_stderr
     assert [ ! -e "${BATS_TEST_TMPDIR}/mutex" ]
     assert [ -f "${BATS_TEST_TMPDIR}/logout" ]
     assert_line --partial 'Log out and log in again'
@@ -1921,7 +2027,7 @@ EOF
         "${BIN_DIR}/dotfiles-package-install" 'foo' 'bar'
 
     assert_success
-    refute_line --partial 'Usage:'
+    refute_stderr
     assert [ ! -e "${BATS_TEST_TMPDIR}/mutex" ]
     assert [ -f "${BATS_TEST_TMPDIR}/logout" ]
     assert_line --partial 'Log out and log in again'
@@ -1966,10 +2072,11 @@ EOF
         "${BIN_DIR}/dotfiles-package-install" 'foo'
 
     assert_failure
-    refute_output --partial 'Usage:'
+    refute_stderr
     assert [ ! -e "${BATS_TEST_TMPDIR}/mutex" ]
     assert [ ! -e "${BATS_TEST_TMPDIR}/logout" ]
-    refute_output --partial 'Log out and log in again'
+    assert_line --partial 'No such package'
+    refute_line --partial 'Log out and log in again'
 }
 
 @test 'dotfiles-package-install ignored' {
@@ -1995,9 +2102,10 @@ EOF
         "${BIN_DIR}/dotfiles-package-install" 'foo'
 
     assert_failure
-    refute_line --partial 'Usage:'
+    refute_stderr
     assert [ ! -e "${BATS_TEST_TMPDIR}/mutex" ]
     assert [ ! -e "${BATS_TEST_TMPDIR}/logout" ]
+    assert_line --partial 'Cannot install ignored package'
     refute_line --partial 'Log out and log in again'
 
     refute_line 'FOO INSTALLED'
@@ -2026,10 +2134,11 @@ EOF
         "${BIN_DIR}/dotfiles-package-install" 'foo'
 
     assert_failure
-    refute_line --partial 'Usage:'
+    refute_stderr
     assert [ ! -e "${BATS_TEST_TMPDIR}/mutex" ]
     assert [ ! -e "${BATS_TEST_TMPDIR}/logout" ]
     refute_line --partial 'Log out and log in again'
+    assert_line --partial 'Installation requirements not met'
 
     refute_line 'FOO ENV'
     assert [ ! -e "${BATS_TEST_TMPDIR}/install/foo" ]
@@ -2060,10 +2169,11 @@ EOF
         "${BIN_DIR}/dotfiles-package-install" 'foo'
 
     assert_failure
-    refute_line --partial 'Usage:'
+    refute_stderr
     assert [ ! -e "${BATS_TEST_TMPDIR}/mutex" ]
     assert [ ! -e "${BATS_TEST_TMPDIR}/logout" ]
     refute_line --partial 'Log out and log in again'
+    assert_line --partial 'Installation requirements not met'
 
     assert_line 'FOO CAN INSTALL'
     refute_line 'FOO INSTALLED'
@@ -2098,6 +2208,7 @@ EOF
     assert [ ! -e "${LAST_UPDATE_FILE}" ]
     assert [ ! -e "${ALREADY_UPDATED_FILE}" ]
 
+    refute_stderr
     assert_line --partial 'Another script is installing'
     refute_line 'Reinstalled package foo'
 }
@@ -2162,7 +2273,7 @@ EOF
         "${BIN_DIR}/dotfiles-package-update-all"
 
     assert_success
-    refute_line --partial 'Usage:'
+    refute_stderr_line --partial 'Usage:'
     assert [ ! -e "${BATS_TEST_TMPDIR}/mutex" ]
     assert [ -f "${BATS_TEST_TMPDIR}/logout" ]
     assert [ -f "${LAST_UPDATE_FILE}" ]
@@ -2223,7 +2334,7 @@ EOF
         "${BIN_DIR}/dotfiles-package-update-all"
 
     assert_success
-    refute_line --partial 'Usage:'
+    refute_stderr_line --partial 'Usage:'
     assert [ ! -e "${BATS_TEST_TMPDIR}/mutex" ]
     assert [ -f "${BATS_TEST_TMPDIR}/logout" ]
     assert [ -f "${LAST_UPDATE_FILE}" ]
@@ -2273,7 +2384,7 @@ EOF
         "${BIN_DIR}/dotfiles-package-update-all"
 
     assert_failure
-    refute_line --partial 'Usage:'
+    refute_stderr
     assert [ ! -e "${BATS_TEST_TMPDIR}/mutex" ]
     assert [ ! -e "${BATS_TEST_TMPDIR}/logout" ]
     assert [ ! -e "${LAST_UPDATE_FILE}" ]

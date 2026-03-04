@@ -4,11 +4,12 @@
 set -eu
 
 function usage() {
-    echo "Usage: $(basename "${0}") colon_delimited_list item"
+    echo "Usage: $(basename "${0}") colon_delimited_list item" >&2
     exit 1
 }
 
 test -z "${2:-}" && usage
+test "${#}" -gt 2 && usage
 
 LIST="${1}"
 ITEM="${2}"

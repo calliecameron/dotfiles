@@ -3,12 +3,12 @@
 set -eu
 
 function usage() {
-    echo "Usage: $(basename "${0}") repo dir branch"
+    echo "Usage: $(basename "${0}") repo dir branch" >&2
     exit 1
 }
 
 function fail() {
-    echo "${@}"
+    echo "${@}" >&2
     exit 1
 }
 
@@ -18,9 +18,10 @@ test -z "${2:-}" && usage
 DIR="$(readlink -f "${2}")"
 test -z "${3:-}" && usage
 BRANCH="${3}"
+test "${#}" -gt 3 && usage
 
 if [ -d "${DIR}" ]; then
-    echo 'Updating repo...'
+    echo 'Updating repo...' >&2
 
     if [ ! -d "${DIR}/.git" ]; then
         fail 'Dir is not a repo.'
@@ -43,9 +44,9 @@ if [ -d "${DIR}" ]; then
         fail 'Could not update branch.'
     fi
 
-    echo 'Updated repo'
+    echo 'Updated repo' >&2
 else
-    echo 'Cloning repo...'
+    echo 'Cloning repo...' >&2
 
     if ! git clone "${REPO}" "${DIR}"; then
         fail 'Could not clone repo.'
@@ -58,7 +59,7 @@ else
         fail "Could not check out branch '${BRANCH}'."
     fi
 
-    echo 'Cloned repo'
+    echo 'Cloned repo' >&2
 fi
 
 exit 0

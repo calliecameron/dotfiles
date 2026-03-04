@@ -3,11 +3,12 @@
 set -eu
 
 function usage() {
-    echo "Usage: $(basename "${0}") package_root"
+    echo "Usage: $(basename "${0}") package_root" >&2
     exit 1
 }
 
 test -z "${1:-}" && usage
+test "${#}" -gt 1 && usage
 PACKAGE_ROOT="${1}"
 
 [[ "${PACKAGE_ROOT}" == '/'* ]] &&

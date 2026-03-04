@@ -1,5 +1,12 @@
 #!/bin/bash
 
+function usage() {
+    echo "Usage: $(basename "${0}") variant..." >&2
+    exit 1
+}
+
+test -z "${1:-}" && usage
+
 while (($#)); do
     if [ "${DOTFILES_LINUX_VARIANT}" = "${1}" ]; then
         exit 0

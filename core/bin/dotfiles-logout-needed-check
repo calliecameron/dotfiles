@@ -2,6 +2,13 @@
 
 set -eu
 
+function usage() {
+    echo "Usage: $(basename "${0}")" >&2
+    exit 1
+}
+
+test "${#}" -gt 0 && usage
+
 if [ -n "${DOTFILES_NO_LOGOUT_NEEDED_CHECK:-}" ]; then
     exit 0
 fi

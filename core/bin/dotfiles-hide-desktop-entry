@@ -3,11 +3,12 @@
 set -eu
 
 function usage() {
-    echo "Usage: $(basename "${0}") name"
+    echo "Usage: $(basename "${0}") name" >&2
     exit 1
 }
 
 test -z "${1:-}" && usage
+test "${#}" -gt 1 && usage
 NAME="${1}"
 
 cat >"${HOME}/.local/share/applications/${NAME}.desktop" <<EOF
