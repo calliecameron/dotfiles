@@ -2,14 +2,10 @@
 
 set -eu
 
-sudo apt-get -y install apt-transport-https
-
-TMPFILE="$(mktemp)"
-wget https://gitlab.com/paulcarroty/vscodium-deb-rpm-repo/raw/master/pub.gpg -O "${TMPFILE}"
-sudo install -o root -g root -m 644 "${TMPFILE}" /usr/share/keyrings/vscodium-archive-keyring.asc
+wget -O- https://gitlab.com/paulcarroty/vscodium-deb-rpm-repo/raw/master/pub.gpg |
+    sudo tee /usr/share/keyrings/vscodium-archive-keyring.asc >/dev/null
 echo 'deb [ arch=amd64 signed-by=/usr/share/keyrings/vscodium-archive-keyring.asc ] https://paulcarroty.gitlab.io/vscodium-deb-rpm-repo/debs vscodium main' |
     sudo tee /etc/apt/sources.list.d/vscodium.list >/dev/null
-rm "${TMPFILE}"
 
 sudo apt-get update
 sudo apt-get -y install codium
@@ -41,4 +37,4 @@ codium \
     --install-extension=vscjava.vscode-java-pack \
     --install-extension=wholroyd.jinja
 
-xdg-desktop-icon install --novendor "/usr/share/applications/codium.desktop"
+xdg-desktop-icon install --novendor /usr/share/applications/codium.desktop
