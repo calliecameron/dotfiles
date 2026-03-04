@@ -2,6 +2,13 @@
 
 set -eu
 
+function usage() {
+    echo "Usage: $(basename "${0}") [host] [port]" >&2
+    exit 1
+}
+
+test -z "${1:-}" && usage
+
 if [ -n "${1:-}" ]; then
     HOST="${1}"
 else
@@ -13,5 +20,7 @@ if [ -n "${2:-}" ]; then
 else
     PORT="${DOTFILES_VLC_PORT}"
 fi
+
+test "${#}" -gt 2 && usage
 
 nc "${HOST}" "${PORT}"

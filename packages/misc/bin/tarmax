@@ -4,7 +4,7 @@
 set -eu
 
 function usage() {
-    echo "Usage: $(basename "${0}") infile [outfile]"
+    echo "Usage: $(basename "${0}") infile [outfile]" >&2
     exit 1
 }
 
@@ -16,5 +16,7 @@ if [ -n "${2:-}" ]; then
 else
     OUTFILE="${INFILE}.tar.xz"
 fi
+
+test "${#}" -gt 2 && usage
 
 XZ_OPT=-9 tar cJf "${OUTFILE}" "${INFILE}"

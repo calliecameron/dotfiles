@@ -3,7 +3,7 @@
 set -eu
 
 function usage() {
-    echo "Usage: $(basename "${0}") infile [outfile]"
+    echo "Usage: $(basename "${0}") infile [outfile]" >&2
     exit 1
 }
 
@@ -17,5 +17,7 @@ else
     DIRNAME="$(dirname "${INFILE}")"
     OUTFILE="${DIRNAME}/${BASE}.pdf"
 fi
+
+test "${#}" -gt 2 && usage
 
 inkscape --export-area-drawing "--export-pdf=${OUTFILE}" "${INFILE}"

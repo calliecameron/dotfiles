@@ -2,6 +2,13 @@
 
 set -eu
 
+function usage() {
+    echo "Usage: $(basename "${0}")" >&2
+    exit 1
+}
+
+test "${#}" -gt 0 && usage
+
 function is-uv-project() {
     local DIR
     DIR="$(readlink -f .)"
@@ -19,11 +26,11 @@ function is-uv-project() {
 if command -v uv &>/dev/null && is-uv-project; then
     uv sync -q
     if uv pip show -q pre-commit; then
-        echo 'Installing with uv'
+        echo 'Installing with uv' >&2
         uv run pre-commit install -f
         exit 0
     fi
 fi
 
-echo 'Installing with global pre-commit'
+echo 'Installing with global pre-commit' >&2
 pre-commit install -f

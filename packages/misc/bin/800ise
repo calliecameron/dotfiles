@@ -4,15 +4,15 @@
 set -eu
 
 function usage() {
-    echo "Usage: $(basename "${0}") files..."
+    echo "Usage: $(basename "${0}") files..." >&2
     exit 1
 }
+
+test -z "${1:-}" && usage
 
 function do-shrink() {
     convert "${1}" -resize 800 "${1}"
 }
-
-test -z "${1:-}" && usage
 
 while (($#)); do
     do-shrink "${1}"

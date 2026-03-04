@@ -5,12 +5,13 @@
 set -u
 
 function usage() {
-    echo "Usage: $(basename "${0}") source_ext target_ext"
+    echo "Usage: $(basename "${0}") source_ext target_ext" >&2
     exit 1
 }
 
 test -z "${1:-}" && usage
 test -z "${2:-}" && usage
+test "${#}" -gt 2 && usage
 
 for f in *."${1}"; do
     mv "${f}" "$(basename "${f}" ".${1}").${2}"

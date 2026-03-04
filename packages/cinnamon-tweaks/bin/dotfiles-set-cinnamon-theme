@@ -8,6 +8,7 @@ function usage() {
 }
 
 test -z "${1:-}" && usage
+test "${#}" -gt 1 && usage
 THEME="${1}"
 
 function set-theme() {

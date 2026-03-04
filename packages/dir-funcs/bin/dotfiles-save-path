@@ -3,7 +3,7 @@
 set -eu
 
 function usage() {
-    echo "Usage: $(basename "${0}") [slot=0]"
+    echo "Usage: $(basename "${0}") [slot=0]" >&2
     exit 1
 }
 
@@ -11,8 +11,9 @@ SLOT='0'
 if [ -n "${1:-}" ]; then
     SLOT="${1}"
 fi
-
 [[ "${SLOT}" == *'/'* ]] && usage
+
+test "${#}" -gt 1 && usage
 
 mkdir -p "${DOTFILES_SAVED_PATHS}"
 pwd >"${DOTFILES_SAVED_PATHS}/${SLOT}"

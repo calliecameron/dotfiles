@@ -3,7 +3,7 @@
 set -eu
 
 function usage() {
-    echo "Usage: $(basename "${0}") old_instance new_instance"
+    echo "Usage: $(basename "${0}") old_instance new_instance" >&2
     exit 1
 }
 
@@ -15,6 +15,7 @@ test -z "${2:-}" && usage
 test -d "${2}" || usage
 test -d "${2}/config"
 NEW="$(readlink -f "${2}/config")"
+test "${#}" -gt 2 && usage
 
 cd "${OLD}"
 

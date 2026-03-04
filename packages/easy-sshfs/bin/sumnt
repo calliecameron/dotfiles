@@ -9,11 +9,12 @@ function usage() {
 }
 
 test -z "${1:-}" && usage
+test "${#}" -gt 1 && usage
 
 DIR="${DOTFILES_SSH_MOUNT_DIR}/${1}"
 
 if [ ! -d "${DIR}" ]; then
-    echo "No such mount: ${DIR}"
+    echo "No such mount: ${DIR}" >&2
     exit 1
 fi
 

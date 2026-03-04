@@ -9,6 +9,7 @@ function usage() {
 }
 
 test -z "${1:-}" && usage
+test "${#}" -gt 2 && usage
 
 HOST="${1}"
 DIR="${2:-}"
@@ -18,7 +19,7 @@ NICEDIR="${DIR////_}"
 MOUNTPOINT="${DOTFILES_SSH_MOUNT_DIR}/${HOST}_${NICEDIR}"
 
 if [ -e "${MOUNTPOINT}" ]; then
-    echo 'Already mounted'
+    echo 'Already mounted' >&2
     exit 0
 fi
 

@@ -3,20 +3,22 @@
 set -eu
 
 function usage() {
-    echo "Usage: $(basename "${0}") [slot=0]"
+    echo "Usage: $(basename "${0}") [slot=0]" >&2
+    exit 1
 }
 
 SLOT='0'
 if [ -n "${1:-}" ]; then
     SLOT="${1}"
 fi
-
 [[ "${SLOT}" == *'/'* ]] && usage
+
+test "${#}" -gt 1 && usage
 
 FILE="${DOTFILES_SAVED_PATHS}/${SLOT}"
 
 if [ ! -e "${FILE}" ]; then
-    echo 'No path saved.'
+    echo 'No path saved' >&2
     exit 1
 fi
 

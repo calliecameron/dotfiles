@@ -3,7 +3,7 @@
 set -u
 
 function usage() {
-    echo "Usage: $(basename "${0}") slot files..."
+    echo "Usage: $(basename "${0}") slot files..." >&2
     exit 1
 }
 
@@ -17,7 +17,6 @@ TARGET_DIR="$(dotfiles-saved-path "${SLOT}")"
 SHOW_EXIT=$?
 
 if [ "${SHOW_EXIT}" != '0' ]; then
-    echo 'No saved path.'
     exit "${SHOW_EXIT}"
 fi
 

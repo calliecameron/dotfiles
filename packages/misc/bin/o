@@ -4,7 +4,7 @@
 set -eu
 
 function usage() {
-    echo "Usage: $(basename "${0}") paths_to_open..."
+    echo "Usage: $(basename "${0}") paths_to_open..." >&2
     exit 1
 }
 

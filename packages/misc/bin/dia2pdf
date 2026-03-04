@@ -3,7 +3,7 @@
 set -eu
 
 function usage() {
-    echo "Usage: $(basename "${0}") infile [outfile]"
+    echo "Usage: $(basename "${0}") infile [outfile]" >&2
     exit 1
 }
 
@@ -17,6 +17,8 @@ else
     DIRNAME="$(dirname "${INFILE}")"
     OUTFILE="${DIRNAME}/${BASE}.pdf"
 fi
+
+test "${#}" -gt 2 && usage
 
 TMPFILE="$(mktemp)"
 dia -e "${TMPFILE}" -t eps "${INFILE}"

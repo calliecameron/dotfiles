@@ -1,13 +1,14 @@
 #!/usr/bin/env python3
 
-import os.path
-import sys
+
+import argparse
 from xml.dom.minidom import Element, Node, parse
 
 
-def usage() -> None:
-    sys.stderr.write("Usage: " + os.path.basename(sys.argv[0]) + " file name\n")
-    sys.exit(1)
+def non_empty_string(s: str) -> str:
+    if not s:
+        raise argparse.ArgumentTypeError("must be non-empty")
+    return s
 
 
 def elements(n: Node, tag: str) -> list[Element]:
@@ -56,15 +57,15 @@ def metadata(b: Element | None) -> Element | None:
 
 
 def main() -> None:
-    if len(sys.argv) < 3:  # noqa: PLR2004
-        usage()
+    parser = argparse.ArgumentParser()
+    parser.add_argument("file", type=non_empty_string)
+    parser.add_argument("name", type=non_empty_string)
 
-    file = sys.argv[1]
-    name = sys.argv[2]
+    args = parser.parse_args()
 
-    d = parse(file)  # noqa: S318
+    d = parse(args.file)  # noqa: S318
     x = element(d, "xbel")
-    b = bookmark(x, name)
+    b = bookmark(x, args.name)
     m = metadata(b)
 
     if m and not element(m, "IsHidden"):
@@ -72,7 +73,7 @@ def main() -> None:
         n.appendChild(d.createTextNode("true"))
         m.appendChild(n)
 
-    with open(file, "w") as f:
+    with open(args.file, "w") as f:
         d.writexml(f)
         f.write("\n")
 

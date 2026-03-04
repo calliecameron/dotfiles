@@ -17,6 +17,7 @@ KEY='favorite-apps'
 
 case "${COMMAND}" in
 'list')
+    test "${#}" -gt 1 && usage
     LAUNCHERS="$(gsettings get "${SCHEMA}" "${KEY}")"
     python3 <<EOF
 
@@ -29,11 +30,13 @@ EOF
     ;;
 'add')
     test -z "${2:-}" && usage
+    test "${#}" -gt 2 && usage
     APP="${2}"
     dotfiles-gsettings-add-if-not-in-list "${SCHEMA}" "${KEY}" "${APP}"
     ;;
 'remove')
     test -z "${2:-}" && usage
+    test "${#}" -gt 2 && usage
     APP="${2}"
     dotfiles-gsettings-remove-from-list "${SCHEMA}" "${KEY}" "${APP}"
     ;;

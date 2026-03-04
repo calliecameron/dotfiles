@@ -4,7 +4,7 @@
 set -eu
 
 function usage() {
-    echo "Usage: $(basename "${0}") symbol location glob [readelf]"
+    echo "Usage: $(basename "${0}") symbol location glob [readelf]" >&2
     exit 1
 }
 
@@ -17,6 +17,8 @@ if [ -n "${4:-}" ]; then
 else
     READELF='readelf'
 fi
+
+test "${#}" -gt 4 && usage
 
 while IFS= read -d $'\0' -r file; do
     if "${READELF}" -s "${file}" | grep "${1}" >/dev/null; then

@@ -3,8 +3,15 @@
 
 set -eu
 
+function usage() {
+    echo "Usage: $(basename "${0}")" >&2
+    exit 1
+}
+
+test "${#}" -gt 0 && usage
+
 FULLNAME="$(basename "$(pwd)")_$(id -un)@$(hostname)_$(date '+%Y_%m_%d_%H_%M_%S').tar.gz"
 
-echo 'Compressing...'
+echo 'Compressing...' >&2
 tar -cvzf "${FULLNAME}" ./*
-echo "Done: ${FULLNAME}"
+echo "Done: ${FULLNAME}" >&2

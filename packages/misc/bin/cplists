@@ -1,25 +1,32 @@
 #!/usr/bin/env python3
-# Copy each file in a list to the corresponding file in another list
 
+import argparse
 import pathlib
 import shutil
 import sys
 
 
-def usage() -> None:
-    print("Usage: cplists src_list_file dest_list_file")
-    sys.exit(1)
+def non_empty_string(s: str) -> str:
+    if not s:
+        raise argparse.ArgumentTypeError("must be non-empty")
+    return s
 
 
 def main() -> None:
-    if len(sys.argv) < 3:  # noqa: PLR2004
-        usage()
+    parser = argparse.ArgumentParser(
+        description="Copy each file in a list to the corresponding file in another "
+        " list",
+    )
+    parser.add_argument("src_list_file", type=non_empty_string)
+    parser.add_argument("dest_list_file", type=non_empty_string)
 
-    src_file = pathlib.Path(sys.argv[1])
-    dest_file = pathlib.Path(sys.argv[2])
+    args = parser.parse_args()
+
+    src_file = pathlib.Path(args.src_list_file)
+    dest_file = pathlib.Path(args.dest_list_file)
 
     if not src_file.is_file() or not dest_file.is_file():
-        usage()
+        parser.error("args must be existing files")
 
     with src_file.open(encoding="utf-8") as f:
         src = [line.strip() for line in f]
@@ -28,12 +35,12 @@ def main() -> None:
         dest = [line.strip() for line in f]
 
     if len(src) != len(dest):
-        print("List lengths differ.")
+        sys.stderr.write("List lengths differ\n")
         sys.exit(1)
 
     for s, d in zip(src, dest, strict=True):
         if not s or not d:
-            print(f"Found empty line, skipping: src '{s}', dest '{d}")
+            sys.stderr.write(f"Found empty line, skipping: src '{s}', dest '{d}'\n")
             continue
         if pathlib.Path(s).exists():
             shutil.copy2(s, d)

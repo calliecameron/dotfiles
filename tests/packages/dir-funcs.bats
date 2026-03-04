@@ -1,6 +1,8 @@
 # shellcheck shell=bats
 # bats file_tags=slow
 
+bats_require_minimum_version 1.5.0
+
 setup() {
     THIS_DIR="$(cd "$(dirname "${BATS_TEST_FILENAME}")" && pwd)"
     BIN_DIR="$(readlink -f "${THIS_DIR}/../../packages/dir-funcs/bin")"
@@ -15,13 +17,22 @@ setup() {
 }
 
 run_script() {
-    run env -i -C "${BATS_TEST_TMPDIR}" HOME="${BATS_TEST_TMPDIR}" "PATH=${BIN_DIR}:${PATH}" "${@}"
+    run --separate-stderr env -i -C "${BATS_TEST_TMPDIR}" HOME="${BATS_TEST_TMPDIR}" "PATH=${BIN_DIR}:${PATH}" "${@}"
+}
+
+@test 'dotfiles-save-path too many args' {
+    run_script "DOTFILES_SAVED_PATHS=${TEST_SAVED_PATHS}" "${BIN_DIR}/dotfiles-save-path" 'foo' 'bar'
+    assert_failure
+    refute_output
+    assert_stderr_line --partial 'Usage:'
+    assert [ ! -e "${TEST_SAVED_PATHS}" ]
 }
 
 @test 'dotfiles-save-path default slot nonexisting' {
     run_script "DOTFILES_SAVED_PATHS=${TEST_SAVED_PATHS}" "${BIN_DIR}/dotfiles-save-path"
     assert_success
-    refute_output --partial 'Usage:'
+    refute_output
+    refute_stderr
     assert [ -f "${TEST_SAVED_PATHS}/0" ]
     assert [ "$(cat "${TEST_SAVED_PATHS}/0")" = "${BATS_TEST_TMPDIR}" ]
 }
@@ -31,7 +42,8 @@ run_script() {
     echo 'foo' >"${TEST_SAVED_PATHS}/0"
     run_script "DOTFILES_SAVED_PATHS=${TEST_SAVED_PATHS}" "${BIN_DIR}/dotfiles-save-path"
     assert_success
-    refute_output --partial 'Usage:'
+    refute_output
+    refute_stderr
     assert [ -f "${TEST_SAVED_PATHS}/0" ]
     assert [ "$(cat "${TEST_SAVED_PATHS}/0")" = "${BATS_TEST_TMPDIR}" ]
 }
@@ -39,7 +51,8 @@ run_script() {
 @test 'dotfiles-save-path other slot nonexisting' {
     run_script "DOTFILES_SAVED_PATHS=${TEST_SAVED_PATHS}" "${BIN_DIR}/dotfiles-save-path" 'foo'
     assert_success
-    refute_output --partial 'Usage:'
+    refute_output
+    refute_stderr
     assert [ -f "${TEST_SAVED_PATHS}/foo" ]
     assert [ "$(cat "${TEST_SAVED_PATHS}/foo")" = "${BATS_TEST_TMPDIR}" ]
 }
@@ -49,7 +62,8 @@ run_script() {
     echo 'foo' >"${TEST_SAVED_PATHS}/foo"
     run_script "DOTFILES_SAVED_PATHS=${TEST_SAVED_PATHS}" "${BIN_DIR}/dotfiles-save-path" 'foo'
     assert_success
-    refute_output --partial 'Usage:'
+    refute_output
+    refute_stderr
     assert [ -f "${TEST_SAVED_PATHS}/foo" ]
     assert [ "$(cat "${TEST_SAVED_PATHS}/foo")" = "${BATS_TEST_TMPDIR}" ]
 }
@@ -57,15 +71,25 @@ run_script() {
 @test 'dotfiles-save-path bad slot' {
     run_script "DOTFILES_SAVED_PATHS=${TEST_SAVED_PATHS}" "${BIN_DIR}/dotfiles-save-path" 'foo/bar'
     assert_failure
-    assert_line --partial 'Usage:'
+    refute_output
+    assert_stderr_line --partial 'Usage:'
+    assert [ ! -e "${TEST_SAVED_PATHS}" ]
+}
+
+@test 'dotfiles-saved-path too many args' {
+    run_script "DOTFILES_SAVED_PATHS=${TEST_SAVED_PATHS}" "${BIN_DIR}/dotfiles-saved-path" 'foo' 'bar'
+    assert_failure
+    refute_output
+    assert_stderr_line --partial 'Usage:'
     assert [ ! -e "${TEST_SAVED_PATHS}" ]
 }
 
 @test 'dotfiles-saved-path default slot nonexisting' {
     run_script "DOTFILES_SAVED_PATHS=${TEST_SAVED_PATHS}" "${BIN_DIR}/dotfiles-saved-path"
     assert_failure
-    refute_line --partial 'Usage:'
-    assert_line 'No path saved.'
+    refute_output
+    refute_stderr_line --partial 'Usage:'
+    assert_stderr_line 'No path saved'
     assert [ ! -e "${TEST_SAVED_PATHS}" ]
 }
 
@@ -74,8 +98,8 @@ run_script() {
     echo 'foo' >"${TEST_SAVED_PATHS}/0"
     run_script "DOTFILES_SAVED_PATHS=${TEST_SAVED_PATHS}" "${BIN_DIR}/dotfiles-saved-path"
     assert_success
-    refute_line --partial 'Usage:'
     assert_line 'foo'
+    refute_stderr
     assert [ -f "${TEST_SAVED_PATHS}/0" ]
     assert [ "$(cat "${TEST_SAVED_PATHS}/0")" = 'foo' ]
 }
@@ -83,8 +107,9 @@ run_script() {
 @test 'dotfiles-saved-path other slot nonexisting' {
     run_script "DOTFILES_SAVED_PATHS=${TEST_SAVED_PATHS}" "${BIN_DIR}/dotfiles-saved-path" 'foo'
     assert_failure
-    refute_line --partial 'Usage:'
-    assert_line 'No path saved.'
+    refute_output
+    refute_stderr_line --partial 'Usage:'
+    assert_stderr_line 'No path saved'
     assert [ ! -e "${TEST_SAVED_PATHS}" ]
 }
 
@@ -93,8 +118,8 @@ run_script() {
     echo 'bar' >"${TEST_SAVED_PATHS}/foo"
     run_script "DOTFILES_SAVED_PATHS=${TEST_SAVED_PATHS}" "${BIN_DIR}/dotfiles-saved-path" 'foo'
     assert_success
-    refute_line --partial 'Usage:'
     assert_line 'bar'
+    refute_stderr
     assert [ -f "${TEST_SAVED_PATHS}/foo" ]
     assert [ "$(cat "${TEST_SAVED_PATHS}/foo")" = 'bar' ]
 }
@@ -102,7 +127,16 @@ run_script() {
 @test 'dotfiles-saved-path bad slot' {
     run_script "DOTFILES_SAVED_PATHS=${TEST_SAVED_PATHS}" "${BIN_DIR}/dotfiles-saved-path" 'foo/bar'
     assert_failure
-    assert_line --partial 'Usage:'
+    refute_output
+    assert_stderr_line --partial 'Usage:'
+    assert [ ! -e "${TEST_SAVED_PATHS}" ]
+}
+
+@test 'dotfiles-clear-saved-paths too many args' {
+    run_script "DOTFILES_SAVED_PATHS=${TEST_SAVED_PATHS}" "${BIN_DIR}/dotfiles-clear-saved-paths" 'foo'
+    assert_failure
+    refute_output
+    assert_stderr_line --partial 'Usage:'
     assert [ ! -e "${TEST_SAVED_PATHS}" ]
 }
 
@@ -110,6 +144,7 @@ run_script() {
     run_script "DOTFILES_SAVED_PATHS=${TEST_SAVED_PATHS}" "${BIN_DIR}/dotfiles-clear-saved-paths"
     assert_success
     refute_output
+    refute_stderr
     assert [ ! -e "${TEST_SAVED_PATHS}" ]
 }
 
@@ -119,20 +154,23 @@ run_script() {
     run_script "DOTFILES_SAVED_PATHS=${TEST_SAVED_PATHS}" "${BIN_DIR}/dotfiles-clear-saved-paths"
     assert_success
     refute_output
+    refute_stderr
     assert [ ! -e "${TEST_SAVED_PATHS}" ]
 }
 
 @test 'dotfiles-copy-to-saved-path no args' {
     run_script "DOTFILES_SAVED_PATHS=${TEST_SAVED_PATHS}" "${BIN_DIR}/dotfiles-copy-to-saved-path"
     assert_failure
-    assert_line --partial 'Usage:'
+    refute_output
+    assert_stderr_line --partial 'Usage:'
     assert [ ! -e "${TEST_SAVED_PATHS}" ]
 }
 
 @test 'dotfiles-copy-to-saved-path one arg' {
     run_script "DOTFILES_SAVED_PATHS=${TEST_SAVED_PATHS}" "${BIN_DIR}/dotfiles-copy-to-saved-path" 'foo'
     assert_failure
-    assert_line --partial 'Usage:'
+    refute_output
+    assert_stderr_line --partial 'Usage:'
     assert [ ! -e "${TEST_SAVED_PATHS}" ]
 }
 
@@ -142,8 +180,9 @@ run_script() {
     mkdir -p "${BATS_TEST_TMPDIR}/target"
     run_script "DOTFILES_SAVED_PATHS=${TEST_SAVED_PATHS}" "${BIN_DIR}/dotfiles-copy-to-saved-path" '0' "${BATS_TEST_TMPDIR}/a" "${BATS_TEST_TMPDIR}/b"
     assert_failure
-    refute_line --partial 'Usage:'
-    assert_line 'No saved path.'
+    refute_output
+    refute_stderr_line --partial 'Usage:'
+    assert_stderr_line 'No path saved'
     assert [ ! -e "${TEST_SAVED_PATHS}" ]
     assert [ -f "${BATS_TEST_TMPDIR}/a" ]
     assert [ "$(cat "${BATS_TEST_TMPDIR}/a")" = 'foo' ]
@@ -162,8 +201,8 @@ run_script() {
     echo "${BATS_TEST_TMPDIR}/target" >"${TEST_SAVED_PATHS}/0"
     run_script "DOTFILES_SAVED_PATHS=${TEST_SAVED_PATHS}" "${BIN_DIR}/dotfiles-copy-to-saved-path" '0' "${BATS_TEST_TMPDIR}/a" "${BATS_TEST_TMPDIR}/b"
     assert_success
-    refute_output --partial 'Usage:'
-    refute_output --partial 'No saved path.'
+    refute_output
+    refute_stderr
     assert [ -d "${TEST_SAVED_PATHS}" ]
     assert [ -f "${TEST_SAVED_PATHS}/0" ]
     assert [ "$(cat "${TEST_SAVED_PATHS}/0")" = "${BATS_TEST_TMPDIR}/target" ]
@@ -181,21 +220,24 @@ run_script() {
 @test 'dotfiles-copy-to-saved-path bad slot' {
     run_script "DOTFILES_SAVED_PATHS=${TEST_SAVED_PATHS}" "${BIN_DIR}/dotfiles-copy-to-saved-path" 'foo/bar' 'a'
     assert_failure
-    assert_line --partial 'Usage:'
+    refute_output
+    assert_stderr_line --partial 'Usage:'
     assert [ ! -e "${TEST_SAVED_PATHS}" ]
 }
 
 @test 'dotfiles-move-to-saved-path no args' {
     run_script "DOTFILES_SAVED_PATHS=${TEST_SAVED_PATHS}" "${BIN_DIR}/dotfiles-move-to-saved-path"
     assert_failure
-    assert_line --partial 'Usage:'
+    refute_output
+    assert_stderr_line --partial 'Usage:'
     assert [ ! -e "${TEST_SAVED_PATHS}" ]
 }
 
 @test 'dotfiles-move-to-saved-path one arg' {
     run_script "DOTFILES_SAVED_PATHS=${TEST_SAVED_PATHS}" "${BIN_DIR}/dotfiles-move-to-saved-path" 'foo'
     assert_failure
-    assert_line --partial 'Usage:'
+    refute_output
+    assert_stderr_line --partial 'Usage:'
     assert [ ! -e "${TEST_SAVED_PATHS}" ]
 }
 
@@ -205,8 +247,9 @@ run_script() {
     mkdir -p "${BATS_TEST_TMPDIR}/target"
     run_script "DOTFILES_SAVED_PATHS=${TEST_SAVED_PATHS}" "${BIN_DIR}/dotfiles-move-to-saved-path" '0' "${BATS_TEST_TMPDIR}/a" "${BATS_TEST_TMPDIR}/b"
     assert_failure
-    refute_line --partial 'Usage:'
-    assert_line 'No saved path.'
+    refute_output
+    refute_stderr_line --partial 'Usage:'
+    assert_stderr_line 'No path saved'
     assert [ ! -e "${TEST_SAVED_PATHS}" ]
     assert [ -f "${BATS_TEST_TMPDIR}/a" ]
     assert [ "$(cat "${BATS_TEST_TMPDIR}/a")" = 'foo' ]
@@ -225,8 +268,8 @@ run_script() {
     echo "${BATS_TEST_TMPDIR}/target" >"${TEST_SAVED_PATHS}/0"
     run_script "DOTFILES_SAVED_PATHS=${TEST_SAVED_PATHS}" "${BIN_DIR}/dotfiles-move-to-saved-path" '0' "${BATS_TEST_TMPDIR}/a" "${BATS_TEST_TMPDIR}/b"
     assert_success
-    refute_output --partial 'Usage:'
-    refute_output --partial 'No saved path.'
+    refute_output
+    refute_stderr
     assert [ -d "${TEST_SAVED_PATHS}" ]
     assert [ -f "${TEST_SAVED_PATHS}/0" ]
     assert [ "$(cat "${TEST_SAVED_PATHS}/0")" = "${BATS_TEST_TMPDIR}/target" ]
@@ -242,7 +285,8 @@ run_script() {
 @test 'dotfiles-move-to-saved-path bad slot' {
     run_script "DOTFILES_SAVED_PATHS=${TEST_SAVED_PATHS}" "${BIN_DIR}/dotfiles-move-to-saved-path" 'foo/bar' 'a'
     assert_failure
-    assert_line --partial 'Usage:'
+    refute_output
+    assert_stderr_line --partial 'Usage:'
     assert [ ! -e "${TEST_SAVED_PATHS}" ]
 }
 
@@ -250,6 +294,7 @@ run_script() {
     run_script "DOTFILES_MV_CP_FOLLOW=${TEST_FOLLOW}" "${BIN_DIR}/dotfiles-mv-cp-save-target"
     assert_success
     refute_output
+    refute_stderr
     assert [ ! -e "${TEST_FOLLOW}" ]
 }
 
@@ -257,6 +302,7 @@ run_script() {
     run_script "DOTFILES_MV_CP_FOLLOW=${TEST_FOLLOW}" "${BIN_DIR}/dotfiles-mv-cp-save-target" 'foo'
     assert_success
     refute_output
+    refute_stderr
     assert [ ! -e "${TEST_FOLLOW}" ]
 }
 
@@ -264,6 +310,7 @@ run_script() {
     run_script "DOTFILES_MV_CP_FOLLOW=${TEST_FOLLOW}" "${BIN_DIR}/dotfiles-mv-cp-save-target" '-t'
     assert_success
     refute_output
+    refute_stderr
     assert [ ! -e "${TEST_FOLLOW}" ]
 }
 
@@ -271,6 +318,7 @@ run_script() {
     run_script "DOTFILES_MV_CP_FOLLOW=${TEST_FOLLOW}" "${BIN_DIR}/dotfiles-mv-cp-save-target" '-T'
     assert_success
     refute_output
+    refute_stderr
     assert [ ! -e "${TEST_FOLLOW}" ]
 }
 
@@ -278,6 +326,7 @@ run_script() {
     run_script "DOTFILES_MV_CP_FOLLOW=${TEST_FOLLOW}" "${BIN_DIR}/dotfiles-mv-cp-save-target" 'foo' "${BATS_TEST_TMPDIR}/bar"
     assert_success
     refute_output
+    refute_stderr
     assert [ -f "${TEST_FOLLOW}" ]
     assert [ "$(cat "${TEST_FOLLOW}")" = "${BATS_TEST_TMPDIR}" ]
 }
@@ -287,6 +336,7 @@ run_script() {
     run_script "DOTFILES_MV_CP_FOLLOW=${TEST_FOLLOW}" "${BIN_DIR}/dotfiles-mv-cp-save-target" 'foo' "${BATS_TEST_TMPDIR}/bar"
     assert_success
     refute_output
+    refute_stderr
     assert [ -f "${TEST_FOLLOW}" ]
     assert [ "$(cat "${TEST_FOLLOW}")" = "${BATS_TEST_TMPDIR}/bar" ]
 }
@@ -296,6 +346,7 @@ run_script() {
     run_script "DOTFILES_MV_CP_FOLLOW=${TEST_FOLLOW}" "${BIN_DIR}/dotfiles-mv-cp-save-target" '-T' 'foo' "${BATS_TEST_TMPDIR}/bar"
     assert_success
     refute_output
+    refute_stderr
     assert [ -f "${TEST_FOLLOW}" ]
     assert [ "$(cat "${TEST_FOLLOW}")" = "${BATS_TEST_TMPDIR}" ]
 }
@@ -305,6 +356,7 @@ run_script() {
     run_script "DOTFILES_MV_CP_FOLLOW=${TEST_FOLLOW}" "${BIN_DIR}/dotfiles-mv-cp-save-target" '-t' "${BATS_TEST_TMPDIR}/bar" 'foo'
     assert_success
     refute_output
+    refute_stderr
     assert [ -f "${TEST_FOLLOW}" ]
     assert [ "$(cat "${TEST_FOLLOW}")" = "${BATS_TEST_TMPDIR}/bar" ]
 }
@@ -314,6 +366,7 @@ run_script() {
     run_script "DOTFILES_MV_CP_FOLLOW=${TEST_FOLLOW}" "${BIN_DIR}/dotfiles-mv" "${BATS_TEST_TMPDIR}/a" "${BATS_TEST_TMPDIR}/b"
     assert_success
     refute_output
+    refute_stderr
     assert [ -f "${TEST_FOLLOW}" ]
     assert [ "$(cat "${TEST_FOLLOW}")" = "${BATS_TEST_TMPDIR}" ]
     assert [ ! -e "${BATS_TEST_TMPDIR}/a" ]
@@ -327,6 +380,7 @@ run_script() {
     run_script "DOTFILES_MV_CP_FOLLOW=${TEST_FOLLOW}" "${BIN_DIR}/dotfiles-mv" "${BATS_TEST_TMPDIR}/a" "${BATS_TEST_TMPDIR}/b"
     assert_success
     refute_output
+    refute_stderr
     assert [ -f "${TEST_FOLLOW}" ]
     assert [ "$(cat "${TEST_FOLLOW}")" = "${BATS_TEST_TMPDIR}/b" ]
     assert [ ! -e "${BATS_TEST_TMPDIR}/a" ]
@@ -341,6 +395,7 @@ run_script() {
     run_script "DOTFILES_MV_CP_FOLLOW=${TEST_FOLLOW}" "${BIN_DIR}/dotfiles-mv" '-t' "${BATS_TEST_TMPDIR}/b" "${BATS_TEST_TMPDIR}/a"
     assert_success
     refute_output
+    refute_stderr
     assert [ -f "${TEST_FOLLOW}" ]
     assert [ "$(cat "${TEST_FOLLOW}")" = "${BATS_TEST_TMPDIR}/b" ]
     assert [ ! -e "${BATS_TEST_TMPDIR}/a" ]
@@ -354,6 +409,7 @@ run_script() {
     run_script "DOTFILES_MV_CP_FOLLOW=${TEST_FOLLOW}" "${BIN_DIR}/dotfiles-cp" "${BATS_TEST_TMPDIR}/a" "${BATS_TEST_TMPDIR}/b"
     assert_success
     refute_output
+    refute_stderr
     assert [ -f "${TEST_FOLLOW}" ]
     assert [ "$(cat "${TEST_FOLLOW}")" = "${BATS_TEST_TMPDIR}" ]
     assert [ -f "${BATS_TEST_TMPDIR}/a" ]
@@ -368,6 +424,7 @@ run_script() {
     run_script "DOTFILES_MV_CP_FOLLOW=${TEST_FOLLOW}" "${BIN_DIR}/dotfiles-cp" "${BATS_TEST_TMPDIR}/a" "${BATS_TEST_TMPDIR}/b"
     assert_success
     refute_output
+    refute_stderr
     assert [ -f "${TEST_FOLLOW}" ]
     assert [ "$(cat "${TEST_FOLLOW}")" = "${BATS_TEST_TMPDIR}/b" ]
     assert [ -f "${BATS_TEST_TMPDIR}/a" ]
@@ -383,6 +440,7 @@ run_script() {
     run_script "DOTFILES_MV_CP_FOLLOW=${TEST_FOLLOW}" "${BIN_DIR}/dotfiles-cp" '-t' "${BATS_TEST_TMPDIR}/b" "${BATS_TEST_TMPDIR}/a"
     assert_success
     refute_output
+    refute_stderr
     assert [ -f "${TEST_FOLLOW}" ]
     assert [ "$(cat "${TEST_FOLLOW}")" = "${BATS_TEST_TMPDIR}/b" ]
     assert [ -f "${BATS_TEST_TMPDIR}/a" ]

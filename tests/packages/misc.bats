@@ -1,6 +1,8 @@
 # shellcheck shell=bats
 # bats file_tags=slow
 
+bats_require_minimum_version 1.5.0
+
 setup() {
     THIS_DIR="$(cd "$(dirname "${BATS_TEST_FILENAME}")" && pwd)"
     BIN_DIR="$(readlink -f "${THIS_DIR}/../../packages/misc/bin")"
@@ -12,13 +14,14 @@ setup() {
 }
 
 run_script() {
-    run env -i -C "${BATS_TEST_TMPDIR}" HOME="${BATS_TEST_TMPDIR}" "PATH=${BIN_DIR}:${PATH}" "${@}"
+    run --separate-stderr env -i -C "${BATS_TEST_TMPDIR}" HOME="${BATS_TEST_TMPDIR}" "PATH=${BIN_DIR}:${PATH}" "${@}"
 }
 
 @test 'mvz usage' {
     run_script "${BIN_DIR}/mvz"
     assert_failure
-    assert_line --partial 'Usage:'
+    refute_output
+    assert_stderr_line --partial 'Usage:'
 }
 
 @test 'mvz success' {
@@ -28,7 +31,8 @@ run_script() {
     echo 'foo' >"${BATS_TEST_TMPDIR}zb"
     run_script "${BIN_DIR}/mvz" "${BATS_TEST_TMPDIR}/a" "${BATS_TEST_TMPDIR}/b" "${BATS_TEST_TMPDIR}/c"
     assert_success
-    refute_output --partial 'Usage:'
+    refute_output
+    refute_stderr
     assert [ ! -e "${BATS_TEST_TMPDIR}/a" ]
     assert [ ! -e "${BATS_TEST_TMPDIR}/b" ]
     assert [ ! -e "${BATS_TEST_TMPDIR}/c" ]
@@ -43,7 +47,8 @@ run_script() {
 @test 'cpz usage' {
     run_script "${BIN_DIR}/cpz"
     assert_failure
-    assert_line --partial 'Usage:'
+    refute_output
+    assert_stderr_line --partial 'Usage:'
 }
 
 @test 'cpz success' {
@@ -53,7 +58,8 @@ run_script() {
     echo 'foo' >"${BATS_TEST_TMPDIR}zb"
     run_script "${BIN_DIR}/cpz" "${BATS_TEST_TMPDIR}/a" "${BATS_TEST_TMPDIR}/b" "${BATS_TEST_TMPDIR}/c"
     assert_success
-    refute_output --partial 'Usage:'
+    refute_output
+    refute_stderr
     assert [ -f "${BATS_TEST_TMPDIR}/a" ]
     assert [ "$(cat "${BATS_TEST_TMPDIR}/a")" = 'foo' ]
     assert [ -f "${BATS_TEST_TMPDIR}/b" ]
@@ -71,13 +77,22 @@ run_script() {
 @test 'swap no args' {
     run_script "${BIN_DIR}/swap"
     assert_failure
-    assert_line --partial 'Usage:'
+    refute_output
+    assert_stderr_line --partial 'Usage:'
 }
 
 @test 'swap one arg' {
     run_script "${BIN_DIR}/swap" 'a'
     assert_failure
-    assert_line --partial 'Usage:'
+    refute_output
+    assert_stderr_line --partial 'Usage:'
+}
+
+@test 'swap too many args' {
+    run_script "${BIN_DIR}/swap" 'a' 'b' 'c'
+    assert_failure
+    refute_output
+    assert_stderr_line --partial 'Usage:'
 }
 
 @test 'swap success' {
@@ -85,7 +100,8 @@ run_script() {
     echo 'bar' >"${BATS_TEST_TMPDIR}/b"
     run_script "${BIN_DIR}/swap" "${BATS_TEST_TMPDIR}/a" "${BATS_TEST_TMPDIR}/b"
     assert_success
-    refute_output --partial 'Usage:'
+    refute_output
+    refute_stderr
     assert [ -f "${BATS_TEST_TMPDIR}/a" ]
     assert [ "$(cat "${BATS_TEST_TMPDIR}/a")" = 'bar' ]
     assert [ -f "${BATS_TEST_TMPDIR}/b" ]
@@ -95,13 +111,22 @@ run_script() {
 @test 'change-file-ext no args' {
     run_script "${BIN_DIR}/change-file-ext"
     assert_failure
-    assert_line --partial 'Usage:'
+    refute_output
+    assert_stderr_line --partial 'Usage:'
 }
 
 @test 'change-file-ext one arg' {
     run_script "${BIN_DIR}/change-file-ext" 'a'
     assert_failure
-    assert_line --partial 'Usage:'
+    refute_output
+    assert_stderr_line --partial 'Usage:'
+}
+
+@test 'change-file-ext too many args' {
+    run_script "${BIN_DIR}/change-file-ext" 'a' 'b' 'c'
+    assert_failure
+    refute_output
+    assert_stderr_line --partial 'Usage:'
 }
 
 @test 'change-file-ext success' {
@@ -111,7 +136,8 @@ run_script() {
     echo 'quux' >"${BATS_TEST_TMPDIR}/b.txt2"
     run_script "${BIN_DIR}/change-file-ext" 'txt' 'txt2'
     assert_success
-    refute_output --partial 'Usage:'
+    refute_output
+    refute_stderr
     assert [ ! -e "${BATS_TEST_TMPDIR}/a.txt" ]
     assert [ ! -e "${BATS_TEST_TMPDIR}/b.txt}" ]
     assert [ -f "${BATS_TEST_TMPDIR}/c.foo" ]
@@ -125,26 +151,37 @@ run_script() {
 @test 'mvlist no args' {
     run_script "${BIN_DIR}/mvlist"
     assert_failure
-    assert_line --partial 'Usage:'
+    refute_output
+    assert_stderr_line --partial 'Usage:'
 }
 
 @test 'mvlist one arg' {
     run_script "${BIN_DIR}/mvlist" 'a'
     assert_failure
-    assert_line --partial 'Usage:'
+    refute_output
+    assert_stderr_line --partial 'Usage:'
+}
+
+@test 'mvlist too many args' {
+    run_script "${BIN_DIR}/mvlist" 'a' 'b' 'c'
+    assert_failure
+    refute_output
+    assert_stderr_line --partial 'Usage:'
 }
 
 @test 'mvlist bad file' {
     run_script "${BIN_DIR}/mvlist" "${BATS_TEST_TMPDIR}/list" "${BATS_TEST_TMPDIR}/dir"
     assert_failure
-    assert_line --partial 'Usage:'
+    refute_output
+    assert_stderr_line --partial 'Usage:'
 }
 
 @test 'mvlist bad dir' {
     touch "${BATS_TEST_TMPDIR}/list"
     run_script "${BIN_DIR}/mvlist" "${BATS_TEST_TMPDIR}/list" "${BATS_TEST_TMPDIR}/dir"
     assert_failure
-    assert_line --partial 'Usage:'
+    refute_output
+    assert_stderr_line --partial 'Usage:'
 }
 
 @test 'mvlist success' {
@@ -160,7 +197,8 @@ EOF
     echo 'quux' >"${BATS_TEST_TMPDIR}/dir/c"
     run_script "${BIN_DIR}/mvlist" "${BATS_TEST_TMPDIR}/list" "${BATS_TEST_TMPDIR}/dir"
     assert_success
-    refute_line --partial 'Usage:'
+    refute_output
+    refute_stderr_line --partial 'Usage:'
     assert [ -f "${BATS_TEST_TMPDIR}/list" ]
     assert [ ! -e "${BATS_TEST_TMPDIR}/a" ]
     assert [ ! -e "${BATS_TEST_TMPDIR}/b" ]
@@ -177,26 +215,37 @@ EOF
 @test 'cplist no args' {
     run_script "${BIN_DIR}/cplist"
     assert_failure
-    assert_line --partial 'Usage:'
+    refute_output
+    assert_stderr_line --partial 'Usage:'
 }
 
 @test 'cplist one arg' {
     run_script "${BIN_DIR}/cplist" 'a'
     assert_failure
-    assert_line --partial 'Usage:'
+    refute_output
+    assert_stderr_line --partial 'Usage:'
+}
+
+@test 'cplist too many args' {
+    run_script "${BIN_DIR}/cplist" 'a' 'b' 'c'
+    assert_failure
+    refute_output
+    assert_stderr_line --partial 'Usage:'
 }
 
 @test 'cplist bad file' {
     run_script "${BIN_DIR}/cplist" "${BATS_TEST_TMPDIR}/list" "${BATS_TEST_TMPDIR}/dir"
     assert_failure
-    assert_line --partial 'Usage:'
+    refute_output
+    assert_stderr_line --partial 'Usage:'
 }
 
 @test 'cplist bad dir' {
     touch "${BATS_TEST_TMPDIR}/list"
     run_script "${BIN_DIR}/cplist" "${BATS_TEST_TMPDIR}/list" "${BATS_TEST_TMPDIR}/dir"
     assert_failure
-    assert_line --partial 'Usage:'
+    refute_output
+    assert_stderr_line --partial 'Usage:'
 }
 
 @test 'cplist success' {
@@ -212,7 +261,8 @@ EOF
     echo 'quux' >"${BATS_TEST_TMPDIR}/dir/c"
     run_script "${BIN_DIR}/cplist" "${BATS_TEST_TMPDIR}/list" "${BATS_TEST_TMPDIR}/dir"
     assert_success
-    refute_line --partial 'Usage:'
+    refute_output
+    refute_stderr_line --partial 'Usage:'
     assert [ -f "${BATS_TEST_TMPDIR}/list" ]
     assert [ -f "${BATS_TEST_TMPDIR}/a" ]
     assert [ "$(cat "${BATS_TEST_TMPDIR}/a")" = 'foo' ]
@@ -231,13 +281,22 @@ EOF
 @test 'rmlist no args' {
     run_script "${BIN_DIR}/rmlist"
     assert_failure
-    assert_line --partial 'Usage:'
+    refute_output
+    assert_stderr_line --partial 'Usage:'
+}
+
+@test 'rmlist too many args' {
+    run_script "${BIN_DIR}/rmlist" 'a' 'b'
+    assert_failure
+    refute_output
+    assert_stderr_line --partial 'Usage:'
 }
 
 @test 'rmlist bad file' {
     run_script "${BIN_DIR}/rmlist" "${BATS_TEST_TMPDIR}/list"
     assert_failure
-    assert_line --partial 'Usage:'
+    refute_output
+    assert_stderr_line --partial 'Usage:'
 }
 
 @test 'rmlist success' {
@@ -250,7 +309,8 @@ EOF
     echo 'baz' >"${BATS_TEST_TMPDIR}/c"
     run_script "${BIN_DIR}/rmlist" "${BATS_TEST_TMPDIR}/list"
     assert_success
-    refute_line --partial 'Usage:'
+    refute_output
+    refute_stderr_line --partial 'Usage:'
     assert [ -f "${BATS_TEST_TMPDIR}/list" ]
     assert [ ! -e "${BATS_TEST_TMPDIR}/a" ]
     assert [ ! -e "${BATS_TEST_TMPDIR}/b" ]
@@ -260,26 +320,37 @@ EOF
 @test 'mvlists no args' {
     run_script "${BIN_DIR}/mvlists"
     assert_failure
-    assert_line --partial 'Usage:'
+    refute_output
+    assert_stderr_line --partial 'usage:'
 }
 
 @test 'mvlists one arg' {
     run_script "${BIN_DIR}/mvlists" 'src'
     assert_failure
-    assert_line --partial 'Usage:'
+    refute_output
+    assert_stderr_line --partial 'usage:'
+}
+
+@test 'mvlists too many args' {
+    run_script "${BIN_DIR}/mvlists" 'src' 'dst' 'foo'
+    assert_failure
+    refute_output
+    assert_stderr_line --partial 'usage:'
 }
 
 @test 'mvlists bad src' {
     run_script "${BIN_DIR}/mvlists" "${BATS_TEST_TMPDIR}/src" "${BATS_TEST_TMPDIR}/dest"
     assert_failure
-    assert_line --partial 'Usage:'
+    refute_output
+    assert_stderr_line --partial 'usage:'
 }
 
 @test 'mvlists bad dest' {
     touch "${BATS_TEST_TMPDIR}/src"
     run_script "${BIN_DIR}/mvlists" "${BATS_TEST_TMPDIR}/src" "${BATS_TEST_TMPDIR}/dest"
     assert_failure
-    assert_line --partial 'Usage:'
+    refute_output
+    assert_stderr_line --partial 'usage:'
 }
 
 @test 'mvlists lengths differ' {
@@ -298,7 +369,9 @@ EOF
     echo 'bar' >"${BATS_TEST_TMPDIR}/e"
     run_script "${BIN_DIR}/mvlists" "${BATS_TEST_TMPDIR}/src" "${BATS_TEST_TMPDIR}/dest"
     assert_failure
-    refute_line --partial 'Usage:'
+    refute_output
+    assert_stderr
+    refute_stderr_line --partial 'Usage:'
     assert [ -f "${BATS_TEST_TMPDIR}/src" ]
     assert [ -f "${BATS_TEST_TMPDIR}/dest" ]
     assert [ -f "${BATS_TEST_TMPDIR}/a" ]
@@ -329,7 +402,8 @@ EOF
     echo 'bar' >"${BATS_TEST_TMPDIR}/e"
     run_script "${BIN_DIR}/mvlists" "${BATS_TEST_TMPDIR}/src" "${BATS_TEST_TMPDIR}/dest"
     assert_success
-    refute_output --partial 'Usage:'
+    refute_output
+    refute_stderr
     assert [ -f "${BATS_TEST_TMPDIR}/src" ]
     assert [ -f "${BATS_TEST_TMPDIR}/dest" ]
     assert [ ! -e "${BATS_TEST_TMPDIR}/a" ]
@@ -346,26 +420,37 @@ EOF
 @test 'cplists no args' {
     run_script "${BIN_DIR}/cplists"
     assert_failure
-    assert_line --partial 'Usage:'
+    refute_output
+    assert_stderr_line --partial 'usage:'
 }
 
 @test 'cplists one arg' {
     run_script "${BIN_DIR}/cplists" 'src'
     assert_failure
-    assert_line --partial 'Usage:'
+    refute_output
+    assert_stderr_line --partial 'usage:'
+}
+
+@test 'cplists too many args' {
+    run_script "${BIN_DIR}/cplists" 'src' 'dst' 'foo'
+    assert_failure
+    refute_output
+    assert_stderr_line --partial 'usage:'
 }
 
 @test 'cplists bad src' {
     run_script "${BIN_DIR}/cplists" "${BATS_TEST_TMPDIR}/src" "${BATS_TEST_TMPDIR}/dest"
     assert_failure
-    assert_line --partial 'Usage:'
+    refute_output
+    assert_stderr_line --partial 'usage:'
 }
 
 @test 'cplists bad dest' {
     touch "${BATS_TEST_TMPDIR}/src"
     run_script "${BIN_DIR}/cplists" "${BATS_TEST_TMPDIR}/src" "${BATS_TEST_TMPDIR}/dest"
     assert_failure
-    assert_line --partial 'Usage:'
+    refute_output
+    assert_stderr_line --partial 'usage:'
 }
 
 @test 'cplists lengths differ' {
@@ -384,7 +469,9 @@ EOF
     echo 'bar' >"${BATS_TEST_TMPDIR}/e"
     run_script "${BIN_DIR}/cplists" "${BATS_TEST_TMPDIR}/src" "${BATS_TEST_TMPDIR}/dest"
     assert_failure
-    refute_line --partial 'Usage:'
+    refute_output
+    assert_stderr
+    refute_stderr_line --partial 'Usage:'
     assert [ -f "${BATS_TEST_TMPDIR}/src" ]
     assert [ -f "${BATS_TEST_TMPDIR}/dest" ]
     assert [ -f "${BATS_TEST_TMPDIR}/a" ]
@@ -415,7 +502,8 @@ EOF
     echo 'bar' >"${BATS_TEST_TMPDIR}/e"
     run_script "${BIN_DIR}/cplists" "${BATS_TEST_TMPDIR}/src" "${BATS_TEST_TMPDIR}/dest"
     assert_success
-    refute_output --partial 'Usage:'
+    refute_output
+    refute_stderr
     assert [ -f "${BATS_TEST_TMPDIR}/src" ]
     assert [ -f "${BATS_TEST_TMPDIR}/dest" ]
     assert [ -f "${BATS_TEST_TMPDIR}/a" ]
@@ -431,10 +519,18 @@ EOF
     assert [ "$(cat "${BATS_TEST_TMPDIR}/f")" = 'baz' ]
 }
 
+@test 'dirsummary too many args' {
+    run_script "${BIN_DIR}/dirsummary" 'a' 'b'
+    assert_failure
+    refute_output
+    assert_stderr_line --partial 'usage:'
+}
+
 @test 'dirsummary bad dir' {
     run_script "${BIN_DIR}/dirsummary" "${BATS_TEST_TMPDIR}/dir"
     assert_failure
-    assert_line --partial 'is not a directory'
+    refute_output
+    assert_stderr_line --partial 'must be a directory'
 }
 
 @test 'dirsummary default' {
@@ -448,10 +544,12 @@ EOF
     echo 'stuff' >"${BATS_TEST_TMPDIR}/dir/makefile"
     run_script "${BIN_DIR}/dirsummary"
     assert_success
-    assert_output "No extension: 1 file(s), 5.0 B
+    # There is an extra no-extension file here that stderr is being captured in
+    assert_output "No extension: 2 file(s), 5.0 B
 Makefile: 2 file(s), 10.0 B
 txt: 3 file(s), 12.0 B
 txt2: 1 file(s), 5.0 B"
+    refute_stderr
 }
 
 @test 'dirsummary dir' {
@@ -469,4 +567,5 @@ txt2: 1 file(s), 5.0 B"
 Makefile: 2 file(s), 10.0 B
 txt: 2 file(s), 8.0 B
 txt2: 1 file(s), 5.0 B"
+    refute_stderr
 }

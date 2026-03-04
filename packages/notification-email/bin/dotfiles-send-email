@@ -14,9 +14,10 @@ function usage() {
 
 test -z "${1:-}" && usage
 test -z "${2:-}" && usage
+test "${#}" -gt 2 && usage
 
 function no-values() {
-    echo 'Default values are invalid'
+    echo 'Default values are invalid' >&2
     exit 1
 }
 

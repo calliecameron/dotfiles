@@ -4,6 +4,13 @@
 
 set -eu
 
+function usage() {
+    echo "Usage: $(basename "${0}") [dir]" >&2
+    exit 1
+}
+
+test "${#}" -gt 1 && usage
+
 if [ -z "${1:-}" ]; then
     LOCATION='.'
 else

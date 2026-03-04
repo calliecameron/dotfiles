@@ -11,9 +11,17 @@ function dotfiles-cd-new() {
 }
 
 function dotfiles-follow() {
-    if [ -f "${DOTFILES_MV_CP_FOLLOW}" ]; then
-        cd "$(cat "${DOTFILES_MV_CP_FOLLOW}")" || return 1
+    if [ "${#}" -gt 0 ]; then
+        echo "Usage: dotfiles-follow" >&2
+        return 1
     fi
+
+    if [ ! -f "${DOTFILES_MV_CP_FOLLOW}" ]; then
+        echo 'No path saved' >&2
+        return 1
+    fi
+
+    cd "$(cat "${DOTFILES_MV_CP_FOLLOW}")" || return 1
 }
 
 function dotfiles-load-saved-path() {
@@ -22,8 +30,8 @@ function dotfiles-load-saved-path() {
         SLOT="${1}"
     fi
 
-    if [[ "${SLOT}" == *'/'* ]]; then
-        echo "Usage: dotfiles-load-saved-path [slot=0]"
+    if [[ "${SLOT}" == *'/'* ]] || [ "${#}" -gt 1 ]; then
+        echo "Usage: dotfiles-load-saved-path [slot=0]" >&2
         return 1
     fi
 
@@ -32,7 +40,6 @@ function dotfiles-load-saved-path() {
     SHOW_EXIT=$?
 
     if [ "${SHOW_EXIT}" != '0' ]; then
-        echo 'No save path.'
         return "${SHOW_EXIT}"
     fi
 

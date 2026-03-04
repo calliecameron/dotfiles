@@ -2,6 +2,13 @@
 
 set -eu
 
+function usage() {
+    echo "Usage: $(basename "${0}")" >&2
+    exit 1
+}
+
+test "${#}" -gt 0 && usage
+
 if [ -d "${DOTFILES_SAVED_PATHS}" ]; then
     rm -r "${DOTFILES_SAVED_PATHS}"
 fi
