@@ -15,6 +15,7 @@ THEME="${1}"
 KONSOLE_PROFILE='Dotfiles'
 KONSOLE_PROFILE_DIR="${HOME}/.local/share/konsole"
 KONSOLE_PROFILE_FILE="${KONSOLE_PROFILE_DIR}/${KONSOLE_PROFILE}.profile"
+KWRITERC="${HOME}/.config/kwriterc"
 
 function set-theme() {
     plasma-apply-lookandfeel --apply "${1}"
@@ -25,8 +26,8 @@ function set-theme() {
     kwriteconfig5 --file "${KONSOLE_PROFILE_FILE}" --group Appearance --key ColorScheme "${2}"
     kwriteconfig5 --file "${HOME}/.config/konsolerc" --group 'Desktop Entry' --key DefaultProfile "${KONSOLE_PROFILE}.profile"
 
-    kwriteconfig5 --file "${HOME}/.config/kwriterc" --group 'KTextEditor Renderer' --key 'Auto Color Theme Selection' --type bool false
-    kwriteconfig5 --file "${HOME}/.config/kwriterc" --group 'KTextEditor Renderer' --key 'Color Theme' "${3}"
+    kwriteconfig5 --file "${KWRITERC}" --group 'KTextEditor Renderer' --key 'Auto Color Theme Selection' --type bool false
+    kwriteconfig5 --file "${KWRITERC}" --group 'KTextEditor Renderer' --key 'Color Theme' "${3}"
 }
 
 if [ "${THEME}" = 'light' ]; then

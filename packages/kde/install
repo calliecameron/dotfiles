@@ -13,8 +13,11 @@ sudo apt-get update
 sudo apt-get -y --no-remove install kde-plasma-desktop okular \
     plasma-workspace-wayland sddm- unattended-upgrades- ${IGNORED_DEPS}
 
-kwriteconfig5 --file "${HOME}/.config/kdeglobals" --group KDE --key SingleClick --type bool false
-kwriteconfig5 --file "${HOME}/.config/kdeglobals" --group KDE --key ScrollbarLeftClickNavigatesByPage --type bool false
+# Settings
+
+KDEGLOBALS="${HOME}/.config/kdeglobals"
+kwriteconfig5 --file "${KDEGLOBALS}" --group KDE --key SingleClick --type bool false
+kwriteconfig5 --file "${KDEGLOBALS}" --group KDE --key ScrollbarLeftClickNavigatesByPage --type bool false
 
 kwriteconfig5 --file "${HOME}/.config/ksmserverrc" --group General --key loginMode emptySession
 
@@ -26,27 +29,32 @@ kwriteconfig5 --file "${HOME}/.config/systemsettingsrc" --group systemsettings_s
 
 kwriteconfig5 --file "${HOME}/.config/klipperrc" --group General --key KeepClipboardContents --type bool false
 
-kwriteconfig5 --file "${HOME}/.config/krunnerrc" --group Plugins --key PowerDevilEnabled --type bool false
-kwriteconfig5 --file "${HOME}/.config/krunnerrc" --group Plugins --key appstreamEnabled --type bool false
-kwriteconfig5 --file "${HOME}/.config/krunnerrc" --group Plugins --key baloosearchEnabled --type bool false
-kwriteconfig5 --file "${HOME}/.config/krunnerrc" --group Plugins --key browserhistoryEnabled --type bool false
-kwriteconfig5 --file "${HOME}/.config/krunnerrc" --group Plugins --key browsertabsEnabled --type bool false
-kwriteconfig5 --file "${HOME}/.config/krunnerrc" --group Plugins --key desktopsessionsEnabled --type bool false
-kwriteconfig5 --file "${HOME}/.config/krunnerrc" --group Plugins --key org.kde.windowedwidgetsEnabled --type bool false
-kwriteconfig5 --file "${HOME}/.config/krunnerrc" --group Plugins --key webshortcutsEnabled --type bool false
+KRUNNERRC="${HOME}/.config/krunnerrc"
+kwriteconfig5 --file "${KRUNNERRC}" --group Plugins --key PowerDevilEnabled --type bool false
+kwriteconfig5 --file "${KRUNNERRC}" --group Plugins --key appstreamEnabled --type bool false
+kwriteconfig5 --file "${KRUNNERRC}" --group Plugins --key baloosearchEnabled --type bool false
+kwriteconfig5 --file "${KRUNNERRC}" --group Plugins --key browserhistoryEnabled --type bool false
+kwriteconfig5 --file "${KRUNNERRC}" --group Plugins --key browsertabsEnabled --type bool false
+kwriteconfig5 --file "${KRUNNERRC}" --group Plugins --key desktopsessionsEnabled --type bool false
+kwriteconfig5 --file "${KRUNNERRC}" --group Plugins --key org.kde.windowedwidgetsEnabled --type bool false
+kwriteconfig5 --file "${KRUNNERRC}" --group Plugins --key webshortcutsEnabled --type bool false
 
-kwriteconfig5 --file "${HOME}/.config/dolphinrc" --group General --key RememberOpenedTabs --type bool false
-kwriteconfig5 --file "${HOME}/.config/dolphinrc" --group ContentDisplay --key UseShortRelativeDates --type bool false
+DOLPHINRC="${HOME}/.config/dolphinrc"
+kwriteconfig5 --file "${DOLPHINRC}" --group General --key RememberOpenedTabs --type bool false
+kwriteconfig5 --file "${DOLPHINRC}" --group ContentDisplay --key UseShortRelativeDates --type bool false
 
 kwriteconfig5 --file "${HOME}/.config/konsolerc" --group KonsoleWindow --key RememberWindowSize --type bool false
 
-kwriteconfig5 --file "${HOME}/.config/kwriterc" --group General --key 'Show welcome view for new window' --type bool false
-kwriteconfig5 --file "${HOME}/.config/kwriterc" --group 'KTextEditor Document' --key 'On-The-Fly Spellcheck' --type bool true
-kwriteconfig5 --file "${HOME}/.config/kwriterc" --group 'KTextEditor Document' --key 'Show Spaces' 1
-kwriteconfig5 --file "${HOME}/.config/kwriterc" --group 'KTextEditor Renderer' --key 'Word Wrap Marker' --type bool true
-kwriteconfig5 --file "${HOME}/.config/kwriterc" --group 'KTextEditor View' --key 'Auto Brackets' --type bool false
+KWRITERC="${HOME}/.config/kwriterc"
+kwriteconfig5 --file "${KWRITERC}" --group General --key 'Show welcome view for new window' --type bool false
+kwriteconfig5 --file "${KWRITERC}" --group 'KTextEditor Document' --key 'On-The-Fly Spellcheck' --type bool true
+kwriteconfig5 --file "${KWRITERC}" --group 'KTextEditor Document' --key 'Show Spaces' 1
+kwriteconfig5 --file "${KWRITERC}" --group 'KTextEditor Renderer' --key 'Word Wrap Marker' --type bool true
+kwriteconfig5 --file "${KWRITERC}" --group 'KTextEditor View' --key 'Auto Brackets' --type bool false
 # Yes that's 'shoe' not 'show'
-kwriteconfig5 --file "${HOME}/.config/kwriterc" --group 'KTextEditor View' --key 'Shoe Line Ending Type in Statusbar' --type bool true
+kwriteconfig5 --file "${KWRITERC}" --group 'KTextEditor View' --key 'Shoe Line Ending Type in Statusbar' --type bool true
+
+# Taskbar and desktop
 
 APPLET_FILE='plasma-org.kde.plasma.desktop-appletsrc'
 ACTIVITY="$(kactivities-cli --bare --current-activity)"
@@ -97,7 +105,7 @@ function add-panel-icon() {
 
 cp "${PACKAGE_INSTALL_DIR}/${APPLET_FILE}" "${HOME}/.config/${APPLET_FILE}"
 
-xdg-desktop-menu install --novendor "${PACKAGE_SOURCE_DIR}/dotfiles-toggle-kde-theme.desktop"
+# File associations
 
 cp "${PACKAGE_SOURCE_DIR}/kde-mimeapps.list" "${HOME}/.config/kde-mimeapps.list"
 
@@ -121,16 +129,30 @@ if ! dotfiles-package-installed emacs; then
         text/markdown
 fi
 
-dotfiles-hide-kde-bookmark "${HOME}/.local/share/user-places.xbel" Documents
-dotfiles-hide-kde-bookmark "${HOME}/.local/share/user-places.xbel" Music
-dotfiles-hide-kde-bookmark "${HOME}/.local/share/user-places.xbel" Pictures
-dotfiles-hide-kde-bookmark "${HOME}/.local/share/user-places.xbel" Videos
+# Bookmarks
+
+BOOKMARKS="${HOME}/.local/share/user-places.xbel"
+
+if [ -e "${BOOKMARKS}" ]; then
+    dotfiles-hide-kde-bookmark "${BOOKMARKS}" Documents
+    dotfiles-hide-kde-bookmark "${BOOKMARKS}" Music
+    dotfiles-hide-kde-bookmark "${BOOKMARKS}" Pictures
+    dotfiles-hide-kde-bookmark "${BOOKMARKS}" Videos
+fi
+
+# Launchers
+
+xdg-desktop-menu install --novendor "${PACKAGE_SOURCE_DIR}/dotfiles-toggle-kde-theme.desktop"
+
+# Keybindings
+
+SHORTCUTSRC="${HOME}/.config/kglobalshortcutsrc"
 
 function bind-key() {
     local GROUP="${1}"
     local KEY="${2}"
     local BINDING="${3}"
-    kwriteconfig5 --file "${HOME}/.config/kglobalshortcutsrc" --group "${GROUP}" --key "${KEY}" "${BINDING},${BINDING},${KEY}"
+    kwriteconfig5 --file "${SHORTCUTSRC}" --group "${GROUP}" --key "${KEY}" "${BINDING},${BINDING},${KEY}"
 }
 
 function unbind-key() {
@@ -141,8 +163,8 @@ function launcher-key() {
     local DESKTOP_FILE="${1}"
     local NAME="${2}"
     local BINDING="${3}"
-    kwriteconfig5 --file "${HOME}/.config/kglobalshortcutsrc" --group "${DESKTOP_FILE}" --key '_k_friendly_name' "${NAME}"
-    kwriteconfig5 --file "${HOME}/.config/kglobalshortcutsrc" --group "${DESKTOP_FILE}" --key '_launch' "${BINDING},none,${NAME}"
+    kwriteconfig5 --file "${SHORTCUTSRC}" --group "${DESKTOP_FILE}" --key '_k_friendly_name' "${NAME}"
+    kwriteconfig5 --file "${SHORTCUTSRC}" --group "${DESKTOP_FILE}" --key '_launch' "${BINDING},none,${NAME}"
 }
 
 bind-key 'ksmserver' 'Lock Session' 'Ctrl+Alt+L'
@@ -167,5 +189,7 @@ launcher-key 'codium.desktop' 'VSCodium' 'Ctrl+Alt+V'
 launcher-key 'discord.desktop' 'Discord' 'Ctrl+Alt+D'
 # shellcheck disable=1003
 launcher-key 'dotfiles-toggle-kde-theme.desktop' 'Toggle Theme' 'Ctrl+Alt+\\'
+
+# Theme
 
 dotfiles-set-kde-theme dark
