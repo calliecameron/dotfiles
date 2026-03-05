@@ -51,6 +51,7 @@ plugin=org.kde.plasma.taskmanager
 
 [Containments][2][Applets][16][Configuration][General]
 launchers=
+middleClickAction=close
 
 [Containments][2][Applets][17]
 immutability=1
