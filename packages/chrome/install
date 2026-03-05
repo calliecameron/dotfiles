@@ -11,7 +11,7 @@ if ! command -v google-chrome &>/dev/null; then
     rm "${PACKAGE_INSTALL_DIR}/chrome.deb"
 fi
 
-sed 's|/usr/bin/google-chrome-stable|/usr/bin/google-chrome-stable --password-store=gnome-libsecret|g' \
+sed 's|/usr/bin/google-chrome-stable|google-chrome-stable|g' \
     <"/usr/share/applications/google-chrome.desktop" \
     >"${HOME}/.local/share/applications/google-chrome.desktop"
 

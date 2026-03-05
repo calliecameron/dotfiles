@@ -1,0 +1,5 @@
+#!/bin/bash
+
+if [ -n "${DOTFILES_ORIGINAL_CHROME}" ]; then
+    exec "${DOTFILES_ORIGINAL_CHROME}" --password-store=gnome-libsecret "${@}"
+fi
