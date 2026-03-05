@@ -2,6 +2,8 @@
 
 set -eu
 
+sudo true
+
 wget -O- https://gitlab.com/paulcarroty/vscodium-deb-rpm-repo/raw/master/pub.gpg |
     sudo tee /usr/share/keyrings/vscodium-archive-keyring.asc >/dev/null
 echo 'deb [ arch=amd64 signed-by=/usr/share/keyrings/vscodium-archive-keyring.asc ] https://paulcarroty.gitlab.io/vscodium-deb-rpm-repo/debs vscodium main' |
