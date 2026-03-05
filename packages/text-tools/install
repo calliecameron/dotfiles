@@ -2,10 +2,10 @@
 
 set -eu
 
+sudo apt-get update
 sudo apt-get -y install aspell catdoc hunspell hunspell-en-gb
 
 dotfiles-nix-install calibre libgourou pandoc
 
-xdg-mime default calibre-ebook-viewer.desktop \
-    application/epub+zip \
+xdg-mime default calibre-ebook-viewer.desktop application/epub+zip \
     application/x-mobipocket-ebook
