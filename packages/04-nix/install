@@ -28,7 +28,11 @@ sudo systemctl restart nix-daemon
 mkdir -p "${DOTFILES_NIX_PROFILE_DIR}"
 
 "${PACKAGE_SOURCE_DIR}/bin/dotfiles-nix-install" nix
-nix profile add --profile "${DOTFILES_NIX_PROFILE}" --impure 'github:nix-community/nixGL#nixGLIntel' 'github:nix-community/nixGL#nixVulkanIntel'
+# Pinning commit because of https://github.com/nix-community/nixGL/issues/217;
+# otherwise doesn't work on nvidia
+NIXPKGS_ALLOW_UNFREE=1 nix profile add --profile "${DOTFILES_NIX_PROFILE}" --impure \
+    'github:nix-community/nixGL/a662aa32d0991aff5e8b7ef0905d0dc2d9da5eef' \
+    'github:nix-community/nixGL/a662aa32d0991aff5e8b7ef0905d0dc2d9da5eef#nixVulkanIntel'
 nix profile upgrade --profile "${DOTFILES_NIX_PROFILE}" --all
 
 nix-collect-garbage --delete-older-than 60d

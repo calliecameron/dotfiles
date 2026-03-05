@@ -2,4 +2,4 @@
 
 set -eu
 
-exec nixGLIntel "${DOTFILES_NIX_PROFILE}/bin/ebook-viewer" "${@}"
+exec nixGL "${DOTFILES_NIX_PROFILE}/bin/ebook-viewer" "${@}"
