@@ -217,7 +217,7 @@
                        "541a064c3ce27867872cf708354a65d83baf2a6d"))
  (elpaca :source
    "elpaca-menu-lock-file" :recipe
-   (:source nil :protocol https :inherit ignore :depth 1 :repo
+   (:source nil :protocol https :inherit ignore :depth treeless :repo
             "https://github.com/progfolio/elpaca.git" :ref
             "1508298c1ed19c81fa4ebc5d22d945322e9e4c52" :files
             (:defaults "elpaca-test.el" (:exclude "extensions"))
