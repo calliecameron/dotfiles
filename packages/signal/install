@@ -12,6 +12,10 @@ echo 'deb [arch=amd64 signed-by=/usr/share/keyrings/signal-desktop-keyring.gpg] 
 sudo apt-get update
 sudo apt-get -y install signal-desktop
 
-xdg-desktop-icon install --novendor /usr/share/applications/signal-desktop.desktop
+sed "s|/opt/Signal/signal-desktop|${PACKAGE_SOURCE_DIR}/bin/signal-desktop|g" \
+    <'/usr/share/applications/signal-desktop.desktop' \
+    >"${HOME}/.local/share/applications/signal-desktop.desktop"
 
-cp /usr/share/applications/signal-desktop.desktop "${HOME}/.config/autostart"
+xdg-desktop-icon install --novendor "${HOME}/.local/share/applications/signal-desktop.desktop"
+
+cp "${HOME}/.local/share/applications/signal-desktop.desktop" "${HOME}/.config/autostart"

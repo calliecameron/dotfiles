@@ -1,0 +1,5 @@
+#!/bin/bash
+
+if [ -n "${DOTFILES_ORIGINAL_SIGNAL}" ]; then
+    exec "${DOTFILES_ORIGINAL_SIGNAL}" --password-store=gnome-libsecret "${@}"
+fi
