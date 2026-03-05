@@ -1,0 +1,12 @@
+#!/bin/bash
+
+set -eu
+
+VERSION='0.5.22'
+FILE="${PACKAGE_INSTALL_DIR}/lutris_${VERSION}_all.deb"
+
+if [ ! -e "${FILE}" ]; then
+    wget -O "${FILE}" "https://github.com/lutris/lutris/releases/download/v${VERSION}/lutris_${VERSION}_all.deb"
+    sudo apt-get update
+    sudo apt-get -y --fix-broken install "${FILE}"
+fi
