@@ -3,9 +3,43 @@
 set -eu
 
 sudo apt-get update
-sudo apt-get -y install aspell catdoc hunspell hunspell-en-gb
+sudo apt-get -y install aspell catdoc hunspell hunspell-en-gb jq
 
 dotfiles-nix-install calibre libgourou pandoc
 
 xdg-mime default calibre-ebook-viewer.desktop application/epub+zip \
     application/x-mobipocket-ebook
+
+CONFIG_DIR="${HOME}/.config/calibre"
+
+mkdir -p "${CONFIG_DIR}"
+
+function set-json() {
+    local FILE="${1}"
+    local JSON="${2}"
+    local TMPFILE
+    TMPFILE="$(mktemp)"
+
+    {
+        if [ -f "${FILE}" ]; then
+            cat "${FILE}"
+        else
+            echo '{}'
+        fi
+    } | jq ".*${JSON}" >"${TMPFILE}"
+
+    mv "${TMPFILE}" "${FILE}"
+}
+
+set-json "${CONFIG_DIR}/viewer-webengine.json" \
+    '{"old_prefs_migrated": true, "session_data": {"standalone_misc_settings": {"save_annotations_in_ebook": false}}}'
+
+CONVERSION_DIR="${CONFIG_DIR}/conversion"
+mkdir -p "${CONVERSION_DIR}"
+cat >"${CONVERSION_DIR}/page_setup.py" <<EOF
+json:{
+  "output_profile": "kindle"
+}
+EOF
+
+set-json "${CONFIG_DIR}/global.py.json" '{"output_format": "mobi"}'
