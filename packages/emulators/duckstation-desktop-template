@@ -1,9 +1,0 @@
-[Desktop Entry]
-Version=1.0
-Name=DuckStation
-Exec=duckstation
-TryExec=duckstation
-Icon=@@@@@1@@@@@/duckstation.png
-Type=Application
-Terminal=false
-Categories=Game;Emulator;Qt;
