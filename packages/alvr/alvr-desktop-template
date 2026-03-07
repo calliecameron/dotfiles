@@ -1,0 +1,9 @@
+[Desktop Entry]
+Version=1.0
+Name=ALVR
+Exec=alvr
+TryExec=alvr
+Icon=@@@@@1@@@@@
+Type=Application
+Terminal=false
+Categories=Game;

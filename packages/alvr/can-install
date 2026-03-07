@@ -1,0 +1,9 @@
+#!/bin/bash
+
+set -eu
+
+dotfiles-linux-variant main
+dotfiles-is-graphical
+dotfiles-can-sudo
+dotfiles-package-installed steam
+dotfiles-package-installed firewall
