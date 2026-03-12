@@ -54,6 +54,7 @@ RUN apt-get update && \
     mesa-utils \
     mesa-utils-extra \
     nano \
+    nvidia-driver-590-open \
     openjdk-17-jdk \
     prismlauncher \
     socat \
