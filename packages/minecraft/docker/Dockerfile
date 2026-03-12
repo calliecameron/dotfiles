@@ -69,6 +69,13 @@ RUN apt-get update && \
     rm -rf /var/lib/apt/lists/* && \
     fc-cache
 
+RUN wget -O mrpack-install.deb https://github.com/nothub/mrpack-install/releases/download/v0.21.0-beta/mrpack-install_0.21.0-beta_linux_amd64.deb && \
+    apt-get update && \
+    apt-get -y --fix-broken install ./mrpack-install.deb && \
+    rm -rf /var/lib/apt/lists/*
+COPY minecraft-mrpack-install /usr/bin/minecraft-mrpack-install
+RUN chmod ugo=rx /usr/bin/minecraft-mrpack-install
+
 RUN sed -i '/en_GB.UTF-8/s/^# //g' /etc/locale.gen && locale-gen
 
 RUN mkdir -p /opt/minecraft
