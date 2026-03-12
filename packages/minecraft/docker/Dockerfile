@@ -4,14 +4,23 @@ RUN apt-get update && \
     apt-get -y install \
     build-essential \
     cmake \
+    libwayland-bin \
+    libwayland-dev \
+    libxkbcommon-dev \
     unzip \
+    wayland-protocols \
     wget \
     xorg-dev && \
     rm -rf /var/lib/apt/lists/*
 
-RUN wget -O 'glfw-3.4.zip' 'https://github.com/glfw/glfw/releases/download/3.4/glfw-3.4.zip' && \
-    unzip 'glfw-3.4.zip' && \
-    cmake -S 'glfw-3.4' -B 'glfw-3.4/build' -D BUILD_SHARED_LIBS=ON -D GLFW_BUILD_WAYLAND=OFF -D GLFW_BUILD_EXAMPLES=OFF -D GLFW_BUILD_TESTS=OFF -D GLFW_BUILD_DOCS=OFF && \
+RUN wget -O glfw-3.4.zip https://github.com/glfw/glfw/releases/download/3.4/glfw-3.4.zip && \
+    unzip glfw-3.4.zip && \
+    wget -O glfw-wayland-minecraft-cursorfix.tar.gz https://aur.archlinux.org/cgit/aur.git/snapshot/glfw-wayland-minecraft-cursorfix.tar.gz && \
+    echo '36dc6f5db7ed17e5d186b72c0c33496bad3efb4733a12251f80ec6a54ef8d428  glfw-wayland-minecraft-cursorfix.tar.gz' > checksum && \
+    sha256sum -c checksum && \
+    tar -xf glfw-wayland-minecraft-cursorfix.tar.gz && \
+    for patch in glfw-wayland-minecraft-cursorfix/*.patch; do patch -d glfw-3.4 -p1 < "${patch}"; done && \
+    cmake -S 'glfw-3.4' -B 'glfw-3.4/build' -D BUILD_SHARED_LIBS=ON -D GLFW_BUILD_EXAMPLES=OFF -D GLFW_BUILD_TESTS=OFF -D GLFW_BUILD_DOCS=OFF && \
     cmake --build 'glfw-3.4/build' && \
     mkdir /glfw && \
     cp glfw-3.4/build/src/libglfw* /glfw && \
