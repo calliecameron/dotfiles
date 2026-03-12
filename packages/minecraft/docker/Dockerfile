@@ -28,6 +28,8 @@ RUN apt-get update && \
     wget -O /etc/apt/keyrings/packages.mozilla.org.asc https://packages.mozilla.org/apt/repo-signing-key.gpg && \
     echo 'deb [signed-by=/etc/apt/keyrings/packages.mozilla.org.asc] https://packages.mozilla.org/apt mozilla main' > /etc/apt/sources.list.d/mozilla.list && \
     printf 'Package: *\nPin: origin packages.mozilla.org\nPin-Priority: 1000\n' > /etc/apt/preferences.d/mozilla && \
+    wget -O /usr/share/keyrings/prismlauncher-archive-keyring.gpg https://prism-launcher-for-debian.github.io/repo/prismlauncher.gpg && \
+    echo "deb [signed-by=/usr/share/keyrings/prismlauncher-archive-keyring.gpg] https://prism-launcher-for-debian.github.io/repo noble main" > /etc/apt/sources.list.d/prismlauncher.list && \
     apt-get update && \
     apt-get -y install \
     curl \
@@ -44,6 +46,7 @@ RUN apt-get update && \
     mesa-utils-extra \
     nano \
     openjdk-17-jdk \
+    prismlauncher \
     socat \
     unzip \
     va-driver-all \
@@ -58,12 +61,6 @@ RUN apt-get update && \
 
 RUN sed -i '/en_GB.UTF-8/s/^# //g' /etc/locale.gen && locale-gen
 
-RUN wget -O 'atlauncher-1.4.1.deb' 'https://download.nodecdn.net/containers/atl/app/dist/linux/atlauncher-1.4-1.deb' && \
-    apt-get update && \
-    apt-get -y --fix-broken install './atlauncher-1.4.1.deb' && \
-    rm -rf /var/lib/apt/lists/* && \
-    rm 'atlauncher-1.4.1.deb'
-
 RUN mkdir -p /opt/minecraft
 COPY --from=glfw /glfw /opt/minecraft/glfw
 COPY minecraft-config-diff /usr/bin/minecraft-config-diff
@@ -73,4 +70,4 @@ RUN chmod ugo=rx /usr/bin/minecraft-dynmap-diff
 
 WORKDIR /minecraft
 
-CMD atlauncher --working-dir /minecraft/atlauncher
+CMD prismlauncher --dir /minecraft/prismlauncher
