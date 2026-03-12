@@ -9,4 +9,4 @@ function usage() {
 
 test "${#}" -gt 0 && usage
 
-podman exec -it -e "TERM=${TERM}" -w /minecraft minecraft-atlauncher bash
+podman exec -it -e "TERM=${TERM}" -w /minecraft minecraft bash
