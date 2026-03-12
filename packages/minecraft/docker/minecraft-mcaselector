@@ -1,0 +1,7 @@
+#!/bin/bash
+
+set -eu
+
+java --module-path /opt/minecraft/openjfx/javafx-sdk-25.0.2/lib \
+    --add-modules ALL-MODULE-PATH --enable-native-access=javafx.graphics \
+    -jar /opt/minecraft/mcaselector/mcaselector-2.6.1.jar "${@}"

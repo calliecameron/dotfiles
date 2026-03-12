@@ -55,7 +55,7 @@ RUN apt-get update && \
     mesa-utils-extra \
     nano \
     nvidia-driver-590-open \
-    openjdk-17-jdk \
+    openjdk-25-jdk \
     prismlauncher \
     socat \
     unzip \
@@ -72,9 +72,22 @@ RUN apt-get update && \
 RUN sed -i '/en_GB.UTF-8/s/^# //g' /etc/locale.gen && locale-gen
 
 RUN mkdir -p /opt/minecraft
+
 COPY --from=glfw /glfw /opt/minecraft/glfw
+
+RUN mkdir -p /opt/minecraft/openjfx && \
+    wget -O /opt/minecraft/openjfx/openjfx.zip https://download2.gluonhq.com/openjfx/25.0.2/openjfx-25.0.2_linux-x64_bin-sdk.zip && \
+    unzip -d /opt/minecraft/openjfx /opt/minecraft/openjfx/openjfx.zip && \
+    rm /opt/minecraft/openjfx/openjfx.zip
+
+RUN mkdir -p /opt/minecraft/mcaselector && \
+    wget -O /opt/minecraft/mcaselector/mcaselector-2.6.1.jar https://github.com/Querz/mcaselector/releases/download/2.6.1/mcaselector-2.6.1.jar
+COPY minecraft-mcaselector /usr/bin/minecraft-mcaselector
+RUN chmod ugo=rx /usr/bin/minecraft-mcaselector
+
 COPY minecraft-config-diff /usr/bin/minecraft-config-diff
 RUN chmod ugo=rx /usr/bin/minecraft-config-diff
+
 COPY minecraft-dynmap-diff /usr/bin/minecraft-dynmap-diff
 RUN chmod ugo=rx /usr/bin/minecraft-dynmap-diff
 
