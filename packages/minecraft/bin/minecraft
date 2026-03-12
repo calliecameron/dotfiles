@@ -9,6 +9,11 @@ function usage() {
 
 test "${#}" -gt 0 && usage
 
+DISPLAY_ARG='--hostdisplay'
+if [ "${XDG_SESSION_TYPE}" = 'wayland' ]; then
+    DISPLAY_ARG='--hostwayland'
+fi
+
 x11docker \
     --backend=podman \
     --fallback=no \
@@ -18,7 +23,7 @@ x11docker \
     --lang \
     --network \
     --pulseaudio=host \
-    --hostdisplay \
+    "${DISPLAY_ARG}" \
     --name=minecraft \
     --env HOME=/minecraft \
     --env LC_ALL=en_GB.UTF-8 \

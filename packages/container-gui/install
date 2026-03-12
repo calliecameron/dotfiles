@@ -2,5 +2,5 @@
 
 set -eu
 
-dotfiles-nix-install x11docker
+dotfiles-nix-install catatonit x11docker
 podman pull x11docker/xserver
