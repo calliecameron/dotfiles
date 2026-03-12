@@ -28,11 +28,4 @@ x11docker \
     --cap-add sys_chroot \
     "--umask=$(umask)" \
     -- \
-    minecraft &
-
-PID="${!}"
-
-sleep 5
-podman cp "${HOME}/.config/pulse/cookie" "minecraft:/x11docker/pulseaudio.cookie"
-
-wait "${PID}"
+    minecraft

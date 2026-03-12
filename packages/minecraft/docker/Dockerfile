@@ -37,13 +37,18 @@ RUN apt-get update && \
     libflite1 \
     libmtdev1t64 \
     libpulse0 \
+    libxv1 \
     locales \
     lsb-release \
     mesa-utils \
+    mesa-utils-extra \
     nano \
     openjdk-17-jdk \
     socat \
     unzip \
+    va-driver-all \
+    vainfo \
+    vdpau-driver-all \
     xclip \
     xdg-utils \
     xfonts-base \
