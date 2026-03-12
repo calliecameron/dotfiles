@@ -98,6 +98,9 @@ RUN chmod ugo=rx /usr/bin/minecraft-config-diff
 COPY minecraft-dynmap-diff /usr/bin/minecraft-dynmap-diff
 RUN chmod ugo=rx /usr/bin/minecraft-dynmap-diff
 
+COPY minecraft-server /usr/bin/minecraft-server
+RUN chmod ugo=rx /usr/bin/minecraft-server
+
 WORKDIR /minecraft
 
 CMD prismlauncher --dir /minecraft/prismlauncher

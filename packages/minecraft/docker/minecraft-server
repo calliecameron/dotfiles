@@ -1,0 +1,27 @@
+#!/bin/bash
+
+set -eu
+
+function usage() {
+    echo "Usage: $(basename "${0}") java jar [memory=4g]" >&2
+    exit 1
+}
+
+test -z "${1:-}" && usage
+test -f "${1}" || usage
+JAVA="$(readlink -f "${1}")"
+
+test -z "${2:-}" && usage
+test -f "${2}" || usage
+JAR="$(readlink -f "${2}")"
+
+MEMORY='4g'
+if [ -n "${3:-}" ]; then
+    MEMORY="${3}"
+fi
+
+test "${#}" -gt 3 && usage
+
+cd "$(dirname "${JAR}")"
+
+"${JAVA}" "-Xmx${MEMORY}" -jar "${JAR}"
