@@ -487,16 +487,15 @@ If BUFFER is a string, it is the name of the buffer to find; if it is a predicat
   :config
   (setq ediff-window-setup-function 'ediff-setup-windows-plain))
 
-(use-package flyspell
-  :ensure nil
-  :diminish flyspell-mode
-  :bind
-  ("C->" . flyspell-goto-next-error)
-  :config
+(progn
+  (require 'flyspell)
+  (diminish 'flyspell-mode)
   (setq
    ispell-dictionary "en_GB"
    flyspell-issue-message-flag nil
    flyspell-large-region 1)
+  (bind-keys
+   ("C->" . flyspell-goto-next-error))
   (bind-keys
    :map flyspell-mode-map
    ("C-;" . nil)
