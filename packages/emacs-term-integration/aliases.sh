@@ -33,3 +33,9 @@ export DOTFILES_EAT_TERMINFO_DIR="${DOTFILES_EAT_DIR}/terminfo"
 if [ "${TERM:0:4}" = "eat-" ] && [ -z "${TERMINFO}" ]; then
     export TERMINFO="${DOTFILES_EAT_TERMINFO_DIR}"
 fi
+
+if [ -n "${INSIDE_EMACS}" ]; then
+    # Nix sets this when launching emacs, which interferes with non-nix GUI
+    # programs launched from the shell
+    unset GDK_PIXBUF_MODULE_FILE
+fi
