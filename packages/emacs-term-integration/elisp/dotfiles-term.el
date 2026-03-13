@@ -181,11 +181,38 @@
   (advice-add 'eat-emacs-mode :after
               'dotfiles--eat-term-update-mode-line)
 
+  (defun dotfiles-eat-term-ctrl-up ()
+    (interactive)
+    (when eat-terminal
+      (eat-term-send-string eat-terminal "\e[1;5A")))
+
+  (defun dotfiles-eat-term-ctrl-down ()
+    (interactive)
+    (when eat-terminal
+      (eat-term-send-string eat-terminal "\e[1;5B")))
+
+  (defun dotfiles-eat-term-ctrl-left ()
+    (interactive)
+    (when eat-terminal
+      (eat-term-send-string eat-terminal "\e[1;5D")))
+
+  (defun dotfiles-eat-term-ctrl-right ()
+    (interactive)
+    (when eat-terminal
+      (eat-term-send-string eat-terminal "\e[1;5C")))
+
   (bind-keys
    :map eat-mode-map
    ("C-;" . dotfiles-eat-term-toggle-sub-mode)
    ("s-i" . dotfiles-eat-term-do-interactive-command)
    ("C-S-i" . dotfiles-eat-term-do-interactive-command))
+
+  (bind-keys
+   :map eat-semi-char-mode-map
+   ("<C-up>" . dotfiles-eat-term-ctrl-up)
+   ("<C-down>" . dotfiles-eat-term-ctrl-down)
+   ("<C-left>" . dotfiles-eat-term-ctrl-left)
+   ("<C-right>" . dotfiles-eat-term-ctrl-right))
 
   (bind-keys
    ("<f9>" . dotfiles-eat-term-new)
