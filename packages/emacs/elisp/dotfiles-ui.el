@@ -410,7 +410,9 @@ If BUFFER is a string, it is the name of the buffer to find; if it is a predicat
 (use-package ace-isearch
   :diminish ace-isearch-mode
   :config
-  (setq ace-isearch-input-length 2)
+  (setq
+   ace-isearch-input-length 2
+   ace-isearch-jump-delay 2)
   (global-ace-isearch-mode))
 
 (use-package ace-jump-mode
