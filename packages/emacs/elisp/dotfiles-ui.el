@@ -530,6 +530,10 @@ If BUFFER is a string, it is the name of the buffer to find; if it is a predicat
   :bind
   ("C-\\" . helm-mini)
   :config
+  (setq helm-move-to-line-cycle-in-source nil)
+  (bind-keys
+   :map wakib-keys-overriding-map
+   ("C-o" . helm-find-files))
   (helm-mode 1)
   (helm-adaptive-mode 1)
   (helm-popup-tip-mode 1)
