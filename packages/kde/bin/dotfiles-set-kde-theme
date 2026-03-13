@@ -20,6 +20,8 @@ KWRITERC="${HOME}/.config/kwriterc"
 function set-theme() {
     plasma-apply-lookandfeel --apply "${1}"
 
+    kwriteconfig5 --file "${HOME}/.config/kwinrc" --group TabBox --key LayoutName thumbnail_grid
+
     mkdir -p "${KONSOLE_PROFILE_DIR}"
     kwriteconfig5 --file "${KONSOLE_PROFILE_FILE}" --group General --key Name "${KONSOLE_PROFILE}"
     kwriteconfig5 --file "${KONSOLE_PROFILE_FILE}" --group General --key Parent 'FALLBACK/'
