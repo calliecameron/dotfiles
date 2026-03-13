@@ -10,7 +10,7 @@ if dotfiles-package-installed laptop-mode-tools; then
 fi
 
 sudo apt-get update
-sudo apt-get -y --no-remove install kde-plasma-desktop okular \
+sudo apt-get -y --no-remove install kde-plasma-desktop kwin-addons okular \
     plasma-workspace-wayland sddm- unattended-upgrades- ${IGNORED_DEPS}
 
 # Settings
@@ -23,7 +23,9 @@ kwriteconfig5 --file "${HOME}/.config/ksmserverrc" --group General --key loginMo
 
 kwriteconfig5 --file "${HOME}/.config/kscreenlockerrc" --group Daemon --key LockGrace 0
 
-kwriteconfig5 --file "${HOME}/.config/kwinrc" --group Effect-windowview --key BorderActivateAll 9
+KWINRC="${HOME}/.config/kwinrc"
+kwriteconfig5 --file "${KWINRC}" --group Effect-windowview --key BorderActivateAll 9
+kwriteconfig5 --file "${KWINRC}" --group TabBox --key LayoutName thumbnail_grid
 
 kwriteconfig5 --file "${HOME}/.config/systemsettingsrc" --group systemsettings_sidebar_mode --key HighlightNonDefaultSettings --type bool true
 
