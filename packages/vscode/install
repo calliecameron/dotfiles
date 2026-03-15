@@ -12,6 +12,19 @@ echo 'deb [ arch=amd64 signed-by=/usr/share/keyrings/vscodium-archive-keyring.as
 sudo apt-get update
 sudo apt-get -y install codium
 
+sed 's|/usr/share/codium/codium|codium|g' \
+    <"/usr/share/applications/codium.desktop" \
+    >"${HOME}/.local/share/applications/codium.desktop"
+
+sed 's|/usr/share/codium/codium|codium|g' \
+    <"/usr/share/applications/codium-url-handler.desktop" \
+    >"${HOME}/.local/share/applications/codium-url-handler.desktop"
+
+xdg-desktop-icon install --novendor "${HOME}/.local/share/applications/codium.desktop"
+
+source "${PACKAGE_SOURCE_DIR}/env.sh"
+export PATH="${PACKAGE_SOURCE_DIR}/bin:${PATH}"
+
 codium \
     --install-extension=ast-grep.ast-grep-vscode \
     --install-extension=BazelBuild.vscode-bazel \
@@ -38,5 +51,3 @@ codium \
     --install-extension=tombi-toml.tombi \
     --install-extension=vscjava.vscode-java-pack \
     --install-extension=wholroyd.jinja
-
-xdg-desktop-icon install --novendor /usr/share/applications/codium.desktop

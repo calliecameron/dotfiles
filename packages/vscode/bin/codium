@@ -1,0 +1,5 @@
+#!/bin/bash
+
+if [ -n "${DOTFILES_ORIGINAL_VSCODE}" ]; then
+    exec "${DOTFILES_ORIGINAL_VSCODE}" --password-store=gnome-libsecret "${@}"
+fi
