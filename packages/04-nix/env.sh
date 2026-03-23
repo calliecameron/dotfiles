@@ -4,7 +4,7 @@ export XDG_DATA_DIRS="${HOME}/.nix-profile/share:${XDG_DATA_DIRS}"
 
 export DOTFILES_NIXPKGS_VERSION='25.11'
 
-export DOTFILES_NIXPKGS="nixpkgs/release-${DOTFILES_NIXPKGS_VERSION}"
+export DOTFILES_NIXPKGS="nixpkgs/nixos-${DOTFILES_NIXPKGS_VERSION}"
 export DOTFILES_NIX_PROFILE_DIR="${PACKAGE_INSTALL_DIR}/profiles"
 export DOTFILES_NIX_PROFILE="${DOTFILES_NIX_PROFILE_DIR}/dotfiles-${DOTFILES_NIXPKGS_VERSION}"
 export LOCALE_ARCHIVE='/usr/lib/locale/locale-archive'
