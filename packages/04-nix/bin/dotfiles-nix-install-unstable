@@ -1,0 +1,8 @@
+#!/bin/bash
+
+set -eu
+
+while (($#)); do
+    echo "${DOTFILES_NIXPKGS_UNSTABLE}#${1}"
+    shift
+done | xargs nix profile add --profile "${DOTFILES_NIX_PROFILE}"
