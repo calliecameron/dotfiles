@@ -4,6 +4,8 @@
 
 (use-package markdown-mode)
 
+(use-package nix-mode)
+
 (use-package nxml-mode
   :ensure nil
   :config

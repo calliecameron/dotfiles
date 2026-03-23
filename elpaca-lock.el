@@ -561,6 +561,14 @@
                        "elpaca-menu-lock-file" :protocol https
                        :inherit t :depth treeless :ref
                        "772987a28d6408f840331c52c91d04b623a87048"))
+ (nix-mode :source "elpaca-menu-lock-file" :recipe
+           (:package "nix-mode" :fetcher github :repo "NixOS/nix-mode"
+                     :files
+                     (:defaults
+                      (:exclude "nix-company.el" "nix-mode-mmm.el"))
+                     :source "elpaca-menu-lock-file" :protocol https
+                     :inherit t :depth treeless :ref
+                     "719feb7868fb567ecfe5578f6119892c771ac5e5"))
  (package-lint :source "elpaca-menu-lock-file" :recipe
                (:package "package-lint" :fetcher github :repo
                          "purcell/package-lint" :files
