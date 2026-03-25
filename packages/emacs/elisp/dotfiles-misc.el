@@ -2,7 +2,12 @@
 
 (use-package csv-mode)
 
-(use-package markdown-mode)
+(use-package markdown-mode
+  :config
+  (bind-keys
+   :map markdown-mode-map
+   ("<home>" . dotfiles-smart-home-key)
+   ("<end>" . dotfiles-smart-end-key)))
 
 (use-package nix-mode)
 
