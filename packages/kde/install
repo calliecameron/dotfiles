@@ -107,6 +107,11 @@ function add-panel-icon() {
 
 cp "${PACKAGE_INSTALL_DIR}/${APPLET_FILE}" "${HOME}/.config/${APPLET_FILE}"
 
+# Notifications
+
+cp "${PACKAGE_SOURCE_DIR}/networkmanagement.notifyrc" "${HOME}/.config/networkmanagement.notifyrc"
+cp "${PACKAGE_SOURCE_DIR}/powerdevil.notifyrc" "${HOME}/.config/powerdevil.notifyrc"
+
 # File associations
 
 cp "${PACKAGE_SOURCE_DIR}/kde-mimeapps.list" "${HOME}/.config/kde-mimeapps.list"
