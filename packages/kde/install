@@ -205,6 +205,10 @@ launcher-key 'discord.desktop' 'Discord' 'Ctrl+Alt+D'
 # shellcheck disable=1003
 launcher-key 'dotfiles-toggle-kde-theme.desktop' 'Toggle Theme' 'Ctrl+Alt+\\'
 
+KXKBRC="${HOME}/.config/kxkbrc"
+kwriteconfig5 --file "${KXKBRC}" --group Layout --key Options 'caps:ctrl_modifier'
+kwriteconfig5 --file "${KXKBRC}" --group Layout --key ResetOldOptions --type bool true
+
 # Theme
 
 dotfiles-set-kde-theme dark
