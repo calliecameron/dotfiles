@@ -13,6 +13,10 @@ sudo apt-get update
 sudo apt-get -y --no-remove install kde-plasma-desktop kwin-addons okular \
     plasma-workspace-wayland sddm- unattended-upgrades- ${IGNORED_DEPS}
 
+function install-config() {
+    cp "${PACKAGE_SOURCE_DIR}/${1}" "${HOME}/.config/${1}"
+}
+
 # Settings
 
 KDEGLOBALS="${HOME}/.config/kdeglobals"
@@ -109,12 +113,16 @@ cp "${PACKAGE_INSTALL_DIR}/${APPLET_FILE}" "${HOME}/.config/${APPLET_FILE}"
 
 # Notifications
 
-cp "${PACKAGE_SOURCE_DIR}/networkmanagement.notifyrc" "${HOME}/.config/networkmanagement.notifyrc"
-cp "${PACKAGE_SOURCE_DIR}/powerdevil.notifyrc" "${HOME}/.config/powerdevil.notifyrc"
+install-config 'devicenotifications.notifyrc'
+install-config 'kcm_touchpad.notifyrc'
+install-config 'kwrited.notifyrc'
+install-config 'networkmanagement.notifyrc'
+install-config 'plasma_workspace.notifyrc'
+install-config 'powerdevil.notifyrc'
 
 # File associations
 
-cp "${PACKAGE_SOURCE_DIR}/kde-mimeapps.list" "${HOME}/.config/kde-mimeapps.list"
+install-config 'kde-mimeapps.list'
 
 if ! dotfiles-package-installed emacs; then
     xdg-mime default org.kde.kwrite.desktop \
