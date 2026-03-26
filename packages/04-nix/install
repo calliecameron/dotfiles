@@ -14,6 +14,7 @@ if ! command -v nix &>/dev/null; then
 fi
 
 # Update nix
+sudo "$(which nix-channel)" --add "https://channels.nixos.org/${DOTFILES_NIXPKGS_CHANNEL}" nixpkgs
 sudo "$(which nix-channel)" --update
 sudo "$(which nix-env)" --install --attr nixpkgs.nix nixpkgs.cacert
 sudo cp /nix/var/nix/profiles/default/lib/systemd/system/nix-daemon.service /lib/systemd/system

@@ -4,9 +4,10 @@ export XDG_DATA_DIRS="${HOME}/.nix-profile/share:${XDG_DATA_DIRS}"
 
 export DOTFILES_NIXPKGS_VERSION='25.11'
 
-export DOTFILES_NIXPKGS="nixpkgs/nixos-${DOTFILES_NIXPKGS_VERSION}"
+export DOTFILES_NIXPKGS_CHANNEL="nixos-${DOTFILES_NIXPKGS_VERSION}"
+export DOTFILES_NIXPKGS="nixpkgs/${DOTFILES_NIXPKGS_CHANNEL}"
 export DOTFILES_NIXPKGS_UNSTABLE='nixpkgs/nixos-unstable'
-export DOTFILES_NIX_PROFILE_DIR="${PACKAGE_INSTALL_DIR}/profiles"
+export DOTFILES_NIX_PROFILE_DIR="${HOME}/.local/state/nix/profiles"
 export DOTFILES_NIX_PROFILE="${DOTFILES_NIX_PROFILE_DIR}/dotfiles-${DOTFILES_NIXPKGS_VERSION}"
 export LOCALE_ARCHIVE='/usr/lib/locale/locale-archive'
 
