@@ -14,9 +14,9 @@ if ! command -v nix &>/dev/null; then
 fi
 
 # Update nix
-sudo "$(which nix-channel)" --add "https://channels.nixos.org/${DOTFILES_NIXPKGS_CHANNEL}" nixpkgs
-sudo "$(which nix-channel)" --update
-sudo "$(which nix-env)" --install --attr nixpkgs.nix nixpkgs.cacert
+sudo bash -l -c "nix-channel --add 'https://channels.nixos.org/${DOTFILES_NIXPKGS_CHANNEL}' nixpkgs"
+sudo bash -l -c 'nix-channel --update'
+sudo bash -l -c "nix-env --install --file '<nixpkgs>' --attr cacert nix"
 sudo cp /nix/var/nix/profiles/default/lib/systemd/system/nix-daemon.service /lib/systemd/system
 sudo cp /nix/var/nix/profiles/default/lib/systemd/system/nix-daemon.socket /lib/systemd/system
 sudo rm /etc/systemd/system/nix-daemon.service
@@ -28,12 +28,12 @@ sudo systemctl restart nix-daemon
 
 mkdir -p "${DOTFILES_NIX_PROFILE_DIR}"
 
-"${PACKAGE_SOURCE_DIR}/bin/dotfiles-nix-install" nix
+nix-channel --add "https://channels.nixos.org/${DOTFILES_NIXPKGS_CHANNEL_UNSTABLE}" nixpkgs-unstable
 # Pinning commit because of https://github.com/nix-community/nixGL/issues/217;
 # otherwise doesn't work on nvidia
-NIXPKGS_ALLOW_UNFREE=1 nix profile add --profile "${DOTFILES_NIX_PROFILE}" --impure \
-    'github:nix-community/nixGL/a662aa32d0991aff5e8b7ef0905d0dc2d9da5eef' \
-    'github:nix-community/nixGL/a662aa32d0991aff5e8b7ef0905d0dc2d9da5eef#nixVulkanIntel'
-nix profile upgrade --profile "${DOTFILES_NIX_PROFILE}" --all
+nix-channel --add 'https://github.com/nix-community/nixGL/archive/a662aa32d0991aff5e8b7ef0905d0dc2d9da5eef.tar.gz' nixgl
 
-nix-collect-garbage --delete-older-than 60d
+nix-channel --update
+
+NIXPKGS_ALLOW_UNFREE=1 "${PACKAGE_SOURCE_DIR}/bin/dotfiles-nix-install-from-channel" \
+    nixgl auto.nixGLDefault nixVulkanIntel

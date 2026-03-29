@@ -5,7 +5,7 @@ set -eu
 sudo apt-get update
 sudo apt-get -y install uidmap
 
-dotfiles-nix-install crun podman podman.man
+dotfiles-nix-install crun podman
 
 PODMAN_CONF_DIR="${HOME}/.config/containers"
 dotfiles-home-link "${PACKAGE_SOURCE_DIR}/podman-policy.json" "${PODMAN_CONF_DIR}/policy.json"
