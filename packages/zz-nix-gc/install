@@ -2,7 +2,18 @@
 
 set -eu
 
-sudo bash -l -c "nix-env --delete-generations '${DOTFILES_NIX_GC_AFTER}'"
-nix-env --delete-generations --profile "${DOTFILES_NIX_PROFILE}" "${DOTFILES_NIX_GC_AFTER}"
+function cleanup-root() {
+    sudo bash -l -c "nix-env --profile '/nix/var/nix/profiles/per-user/root/${1}' --delete-generations '${DOTFILES_NIX_GC_AFTER}'"
+}
+
+cleanup-root profile
+cleanup-root channels
+
+function cleanup-user() {
+    nix-env --delete-generations --profile "${1}" "${DOTFILES_NIX_GC_AFTER}"
+}
+
+cleanup-user "${DOTFILES_NIX_PROFILE}"
+cleanup-user "${DOTFILES_NIX_CHANNELS}"
 
 nix-store --gc
