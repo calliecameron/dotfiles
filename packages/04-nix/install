@@ -35,5 +35,4 @@ nix-channel --add 'https://github.com/nix-community/nixGL/archive/a662aa32d0991a
 
 nix-channel --update
 
-NIXPKGS_ALLOW_UNFREE=1 "${PACKAGE_SOURCE_DIR}/bin/dotfiles-nix-install-from-channel" \
-    nixgl auto.nixGLDefault nixVulkanIntel
+"${PACKAGE_SOURCE_DIR}/bin/dotfiles-nix-install-from-channel" nixgl auto.nixGLDefault
