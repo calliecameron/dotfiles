@@ -22,6 +22,12 @@ if dotfiles-linux-variant main; then
         laptop-detect powertop sqlite3 ttf-ancient-fonts \
         ttf-mscorefonts-installer ubuntu-restricted-extras xclip
 
+    # Stop other services launching SSH agents
+    sudo systemctl --global disable gcr-ssh-agent.socket gcr-ssh-agent.service gpg-agent-ssh.socket
+    systemctl --user disable gcr-ssh-agent.socket gcr-ssh-agent.service gpg-agent-ssh.socket
+    cp /etc/xdg/autostart/gnome-keyring-ssh.desktop "${HOME}/.config/autostart/gnome-keyring-ssh.desktop"
+    echo 'Hidden=true' >>"${HOME}/.config/autostart/gnome-keyring-ssh.desktop"
+
     sudo rm -f /etc/sudoers.d/0pwfeedback
     rm -f "${HOME}/.local/share/applications/webapp-OnlineChat4519.desktop"
     fc-cache

@@ -73,13 +73,13 @@ export EDITOR='nano'
 export PAGER='less'
 export LESS='FRMX --mouse --wheel-lines=5'
 
-# Create SSH agent if necessary
-if [ -z "${SSH_AUTH_SOCK}" ] && [ -z "${DISPLAY}" ] && command -v ssh-agent >/dev/null; then
+# Start SSH agent. This gives us more control and consistent behaviour than
+# relying on whatever systemd units might try to start an SSH agent.
+if command -v ssh-agent >/dev/null; then
     eval "$(ssh-agent -s)" >/dev/null 2>/dev/null
     export DOTFILES_STARTED_SSH_AGENT='t'
-    DOTFILES_SSH_ADDED_FILE="$(readlink -f "$(mktemp)")"
-    export DOTFILES_SSH_ADDED_FILE
 fi
+export SSH_ASKPASS_REQUIRE='prefer'
 
 # shellcheck disable=SC2329
 appendpackageroot() {

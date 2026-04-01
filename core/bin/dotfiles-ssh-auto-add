@@ -1,8 +1,0 @@
-#!/bin/bash
-
-if [ -n "${DOTFILES_SSH_ADDED_FILE}" ] && [ ! -s "${DOTFILES_SSH_ADDED_FILE}" ]; then
-    ssh-add
-    echo t >"${DOTFILES_SSH_ADDED_FILE}"
-fi
-
-exec ssh "${@}"

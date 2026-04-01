@@ -36,7 +36,3 @@ if [ -n "${DOTFILES_GITHUB_USERNAME}" ]; then
     export GITHUB="git@github.com:${DOTFILES_GITHUB_USERNAME}"
     export GITHUB_HTTPS="https://github.com/${DOTFILES_GITHUB_USERNAME}"
 fi
-
-if [ -n "${DOTFILES_STARTED_SSH_AGENT}" ]; then
-    export GIT_SSH='dotfiles-ssh-auto-add'
-fi
