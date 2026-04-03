@@ -7,3 +7,4 @@ dotfiles-is-graphical
 dotfiles-can-sudo
 dotfiles-package-installed steam
 dotfiles-package-installed firewall
+dotfiles-package-installed avahi-daemon

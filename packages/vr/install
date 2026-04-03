@@ -2,6 +2,8 @@
 
 set -eu
 
+# ALVR
+
 if [ ! -d 'alvr_launcher_linux' ]; then
     wget -O alvr_launcher_linux.tar.gz \
         'https://github.com/alvr-org/ALVR/releases/download/v20.14.1/alvr_launcher_linux.tar.gz'
@@ -15,9 +17,17 @@ cp "${PACKAGE_SOURCE_DIR}/alvr" "${PACKAGE_INSTALL_DIR}/bin/alvr"
 sed "s|@@@@@1@@@@@|${PACKAGE_SOURCE_DIR}/alvr.svg|g" <"${PACKAGE_SOURCE_DIR}/alvr-desktop-template" >"${PACKAGE_INSTALL_DIR}/alvr.desktop"
 chmod u+x "${PACKAGE_INSTALL_DIR}/alvr.desktop"
 xdg-desktop-menu install --novendor "${PACKAGE_INSTALL_DIR}/alvr.desktop"
-xdg-desktop-icon install --novendor "${PACKAGE_INSTALL_DIR}/alvr.desktop"
 
 sudo ufw allow 9943/udp
 sudo ufw allow 9944/udp
 sudo ufw allow 9943/tcp
 sudo ufw allow 9944/tcp
+
+# WiVRn
+
+flatpak install flathub io.github.wivrn.wivrn
+
+xdg-desktop-icon install --novendor /var/lib/flatpak/app/io.github.wivrn.wivrn/current/active/export/share/applications/io.github.wivrn.wivrn.desktop
+
+sudo ufw allow 9757/udp
+sudo ufw allow 9757/tcp
