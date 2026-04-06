@@ -31,3 +31,13 @@ xdg-desktop-icon install --novendor /var/lib/flatpak/app/io.github.wivrn.wivrn/c
 
 sudo ufw allow 9757/udp
 sudo ufw allow 9757/tcp
+
+# WayVR
+
+if [ ! -f 'WayVR-v26.2.1-x86_64.AppImage' ]; then
+    wget -O WayVR-v26.2.1-x86_64.AppImage \
+        'https://github.com/wayvr-org/wayvr/releases/download/v26.2.1/WayVR-v26.2.1-x86_64.AppImage'
+    echo 'ef811255a0fb2cae5ad76021880d835829c00d9de6ddd6f416fa74820d5d518d  WayVR-v26.2.1-x86_64.AppImage' >checksum
+    sha256sum -c checksum
+    chmod u+x WayVR-v26.2.1-x86_64.AppImage
+fi

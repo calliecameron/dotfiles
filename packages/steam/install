@@ -17,3 +17,5 @@ sudo apt-get update
 sudo apt-get -y install steam-launcher
 
 xdg-desktop-icon install --novendor /usr/share/applications/steam.desktop
+
+echo 'ntsync' | sudo tee /etc/modules-load.d/ntsync.conf >/dev/null
