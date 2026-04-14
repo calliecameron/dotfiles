@@ -4,3 +4,5 @@ set -eu
 
 sudo apt-get update
 sudo apt-get -y install thunderbird
+
+xdg-desktop-icon install --novendor /usr/share/applications/thunderbird.desktop
