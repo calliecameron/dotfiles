@@ -36,3 +36,8 @@ if [ -n "${DOTFILES_GITHUB_USERNAME}" ]; then
     export GITHUB="git@github.com:${DOTFILES_GITHUB_USERNAME}"
     export GITHUB_HTTPS="https://github.com/${DOTFILES_GITHUB_USERNAME}"
 fi
+
+if [ -n "${DOTFILES_CODEBERG_USERNAME}" ]; then
+    export CODEBERG="git@codeberg.org:${DOTFILES_CODEBERG_USERNAME}"
+    export CODEBERG_HTTPS="https://codeberg.org/${DOTFILES_CODEBERG_USERNAME}"
+fi
