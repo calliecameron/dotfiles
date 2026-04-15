@@ -13,6 +13,12 @@ if command -v git >/dev/null; then
         git config --global user.email "${DOTFILES_VC_EMAIL}"
     fi
 
+    if [ -n "${DOTFILES_VC_SIGNING_KEY}" ]; then
+        git config --global user.signingKey "${DOTFILES_VC_SIGNING_KEY}"
+        git config --global commit.gpgSign true
+        git config --global tag.gpgSign true
+    fi
+
     git config --global color.ui auto
     git config --global core.autocrlf false
     git config --global init.defaultBranch main
