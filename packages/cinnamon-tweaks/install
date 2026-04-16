@@ -81,8 +81,8 @@ function add-key() {
 
 add-key 'Emacs' 'emacs-daemon' '<Primary><Alt>e'
 add-key 'Chrome' 'google-chrome' '<Primary><Alt>b'
-add-key 'Thunderbird' 'thunderbird' '<Primary><Alt>u'
-add-key 'VLC' 'vlc-wrapper' '<Primary><Alt>m'
+add-key 'Thunderbird' 'thunderbird' '<Primary><Alt>m'
+add-key 'VLC' 'vlc-wrapper' '<Primary><Alt>p'
 add-key 'VLC Pause' 'vlc-pause' '<Primary><Alt>space'
 add-key 'VLC Next' 'vlc-next' '<Primary><Alt>period'
 add-key 'VLC Previous' 'vlc-prev' '<Primary><Alt>comma'
