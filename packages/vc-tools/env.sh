@@ -44,6 +44,6 @@ if [ -n "${DOTFILES_GITHUB_USERNAME}" ]; then
 fi
 
 if [ -n "${DOTFILES_CODEBERG_USERNAME}" ]; then
-    export CODEBERG="git@codeberg.org:${DOTFILES_CODEBERG_USERNAME}"
+    export CODEBERG="ssh://git@codeberg.org:${DOTFILES_CODEBERG_USERNAME}"
     export CODEBERG_HTTPS="https://codeberg.org/${DOTFILES_CODEBERG_USERNAME}"
 fi

@@ -4,6 +4,7 @@ complainunset 'DOTFILES_VC_NAME' 'Version control name'
 complainunset 'DOTFILES_VC_EMAIL' 'Version control email'
 complainunset 'DOTFILES_BITBUCKET_USERNAME' 'Bitbucket username'
 complainunset 'DOTFILES_GITHUB_USERNAME' 'GitHub username'
+complainunset 'DOTFILES_CODEBERG_USERNAME' 'Codeberg username'
 
 alias g='git'
 alias s='git status'
