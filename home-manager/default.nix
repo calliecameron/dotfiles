@@ -16,5 +16,7 @@ in
   config = {
     programs.bash.enable = true;
     programs.zsh.enable = true;
+
+    dotfiles.git.enable = true;
   };
 }

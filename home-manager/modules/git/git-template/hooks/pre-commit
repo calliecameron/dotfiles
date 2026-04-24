@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 if [ -f .pre-commit-config.yaml ]; then
     echo "pre-commit config detected but not enabled; run 'dotfiles-pre-commit-install'." >&2
