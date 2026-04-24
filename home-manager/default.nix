@@ -1,7 +1,9 @@
 { lib, config, ... }:
 let
   inherit (builtins) map filter readDir;
+  inherit (lib) mkOption;
   inherit (lib.attrsets) attrsToList;
+  inherit (lib.types) lines;
 in
 {
   imports = [
@@ -13,9 +15,16 @@ in
       (a: a.value == "directory")
       (attrsToList (readDir ./modules)));
 
+  options.dotfiles = {
+    genericInitExtra = mkOption {
+      type = lines;
+      default = "";
+    };
+  };
+
   config = {
-    programs.bash.enable = true;
-    programs.zsh.enable = true;
+    dotfiles.bash.enable = true;
+    dotfiles.zsh.enable = true;
 
     dotfiles.git.enable = true;
   };
