@@ -28,6 +28,7 @@ sudo systemctl restart nix-daemon
 
 mkdir -p "${DOTFILES_NIX_PROFILE_DIR}"
 
+nix-channel --add "https://github.com/nix-community/home-manager/archive/release-${DOTFILES_NIXPKGS_VERSION}.tar.gz" home-manager
 nix-channel --add "https://channels.nixos.org/${DOTFILES_NIXPKGS_CHANNEL_UNSTABLE}" nixpkgs-unstable
 # Pinning commit because of https://github.com/nix-community/nixGL/issues/217;
 # otherwise doesn't work on nvidia
@@ -35,4 +36,22 @@ nix-channel --add 'https://github.com/nix-community/nixGL/archive/a662aa32d0991a
 
 nix-channel --update
 
+"${PACKAGE_SOURCE_DIR}/bin/dotfiles-nix-install-from-channel" home-manager home-manager
 "${PACKAGE_SOURCE_DIR}/bin/dotfiles-nix-install-from-channel" nixgl auto.nixGLDefault
+
+mkdir -p "${HOME}/.config/home-manager"
+sed "s|@@@@@1@@@@@|${USER}|g" <"${PACKAGE_SOURCE_DIR}/home-template.nix" |
+    sed "s|@@@@@2@@@@@|${HOME}|g" |
+    sed "s|@@@@@3@@@@@|${DOTFILES_HOME_MANAGER}|g" |
+    sed "s|@@@@@4@@@@@|${DOTFILES_LOCAL_HOME_MANAGER}|g" >"${HOME}/.config/home-manager/home.nix"
+
+if [ ! -f "${DOTFILES_LOCAL_HOME_MANAGER}" ]; then
+    cat >"${DOTFILES_LOCAL_HOME_MANAGER}" <<EOF
+{ ... }:
+{
+
+}
+EOF
+fi
+
+home-manager switch
