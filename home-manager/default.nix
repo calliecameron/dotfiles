@@ -27,5 +27,6 @@ in
     dotfiles.zsh.enable = true;
 
     dotfiles.git.enable = true;
+    dotfiles.magicL.enable = true;
   };
 }

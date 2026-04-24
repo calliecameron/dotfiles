@@ -28,5 +28,3 @@ function magic-l() {
         fi
     fi
 }
-
-alias l='magic-l'
