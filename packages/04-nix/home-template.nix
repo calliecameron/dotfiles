@@ -1,5 +1,5 @@
 # Auto-generated, will be overwritten
-{ config, pkgs, ... }:
+{ ... }:
 {
   home.username = "@@@@@1@@@@@";
   home.homeDirectory = "@@@@@2@@@@@";
@@ -10,4 +10,6 @@
     @@@@@3@@@@@
     @@@@@4@@@@@
   ];
+
+  dotfiles.subordinatePackageManager = true;
 }

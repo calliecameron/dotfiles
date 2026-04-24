@@ -1,0 +1,3 @@
+if [ -e "${DOTFILES_HOME_MANAGER_BASHRC}" ]; then
+    source "${DOTFILES_HOME_MANAGER_BASHRC}"
+fi

@@ -42,7 +42,7 @@ nix-channel --update
 mkdir -p "${HOME}/.config/home-manager"
 sed "s|@@@@@1@@@@@|${USER}|g" <"${PACKAGE_SOURCE_DIR}/home-template.nix" |
     sed "s|@@@@@2@@@@@|${HOME}|g" |
-    sed "s|@@@@@3@@@@@|${DOTFILES_HOME_MANAGER}|g" |
+    sed "s|@@@@@3@@@@@|${DOTFILES_HOME_MANAGER_DIR}|g" |
     sed "s|@@@@@4@@@@@|${DOTFILES_LOCAL_HOME_MANAGER}|g" >"${HOME}/.config/home-manager/home.nix"
 
 if [ ! -f "${DOTFILES_LOCAL_HOME_MANAGER}" ]; then
